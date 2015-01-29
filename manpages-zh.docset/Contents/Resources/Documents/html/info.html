@@ -1,0 +1,108 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of INFO</TITLE>
+</HEAD><BODY>
+<H1>INFO</H1>
+Section: User Commands (1)<BR>Updated: June 2003<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+info - 阅读 info 文档
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<B>info</B>
+
+[<I>OPTION</I>]... [<I>MENU-ITEM</I>...]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+阅读 info 格式的文档。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<DL COMPACT>
+<DT><B>--apropos</B>=<I>STRING</I><DD>
+在所有手册的索引中查找 STRING。
+<DT><B>-d</B>, <B>--directory</B>=<I>DIR</I><DD>
+将 DIR 添加到 INFOPATH。
+<DT><B>--dribble</B>=<I>FILENAME</I><DD>
+记录用户在查看 FILENAME 时的击键情况。
+<DT><B>-f</B>, <B>--file</B>=<I>FILENAME</I><DD>
+指定要阅读的 info 文件。
+<DT><B>-h</B>, <B>--help</B><DD>
+显示这份帮助，然后退出。
+<DT><B>--index-search</B>=<I>STRING</I><DD>
+转到索引项 STRING 指向的节点。
+<DT><B>-n</B>, <B>--node</B>=<I>NODENAME</I><DD>
+指定第一个阅读的 info 文件中的节点。
+<DT><B>-o</B>, <B>--output</B>=<I>FILENAME</I><DD>
+将所选的节点输出到 FILENAME。
+<DT><B>-R</B>, <B>--raw-escapes</B><DD>
+不要从 man 手册页中移除 ANSI 控制序列。
+<DT><B>--restore</B>=<I>FILENAME</I><DD>
+从 FILENAME 中读取初始的击键。
+<DT><B>-O</B>, <B>--show-options</B>, <B>--usage</B><DD>
+转到命令行选项节点。
+<DT><B>--subnodes</B><DD>
+递归地输出菜单项目。
+<DT><B>--vi-keys</B><DD>
+使用 vi 和 less 中的按键关联。
+<DT><B>--version</B><DD>
+显示版本信息，然后退出。
+</DL>
+<P>
+
+如果存在并非选项的参数，那么其中的第一个将成为目录项的起始点；它被从
+INFOPATH 的所有 "目录文件" 中搜索。如果它不存在，info 将合并所有的
+"目录文件"，并且显示结果。任何剩余的参数都被视为相对于阅读的初始节
+点的目录项的名称。
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 范例</H2>
+
+<DL COMPACT>
+<DT>info<DD>
+显示顶层目录菜单
+<DT>info emacs<DD>
+从 emacs 节点的顶层菜单开始
+<DT>info emacs buffers<DD>
+从 emacs 手册中的 buffers 节点开始
+<DT>info <B>--show-options</B> emacs<DD>
+从 emacs 的 "命令行选项" 节点开始
+<DT>info <B>-f</B> ./foo.info<DD>
+显示文件 ./foo.info，不搜索目录
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>REPORTING BUGS 报告错误</H2>
+
+将错误报告发送到 <A HREF="mailto:bug-texinfo@gnu.org">bug-texinfo@gnu.org</A>，一般的问题和讨论则发送到 <A HREF="mailto:help-texinfo@gnu.org">help-texinfo@gnu.org</A>。
+Texinfo 主页：<A HREF="http://www.gnu.org/software/texinfo/">http://www.gnu.org/software/texinfo/</A>
+<A NAME="lbAH">&nbsp;</A>
+<H2>COPYRIGHT</H2>
+
+Copyright &#169; 2003 Free Software Foundation, Inc.
+There is NO warranty.  You may redistribute this software
+under the terms of the GNU General Public License.
+For more information about these matters, see the files named COPYING.
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 范例</A><DD>
+<DT><A HREF="#lbAG">REPORTING BUGS 报告错误</A><DD>
+<DT><A HREF="#lbAH">COPYRIGHT</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

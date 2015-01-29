@@ -1,0 +1,200 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of POSTGRES</TITLE>
+</HEAD><BODY>
+<H1>POSTGRES</H1>
+Section: PostgreSQL Server Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+postgres - 以单用户模式运行一个 PostgreSQL服务器
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>postgres</B> [ <B>-A  </B><B> 0</B> | <B>1</B><B> </B>] [ <B>-B </B><I>nbuffers</I><B> </B>] [ <B>-c </B><I>name</I><B>=</B><I>value</I><B> </B>] [ <B>-d </B><I>debug-level</I><B> </B>] [ <B>--describe-config </B>] [ <B>-D </B><I>datadir</I><B> </B>] [ <B>-e </B>] [ <B>-E </B>] [ <B>-f </B><B> s</B> | <B>i</B> | <B>t</B> | <B>n</B> | <B>m</B> | <B>h</B><B> </B>] [ <B>-F </B>] [ <B>-N </B>] [ <B>-o </B><I>filename</I><B> </B>] [ <B>-O </B>] [ <B>-P </B>] [ <B>-s</B> | <B>-t </B><B> pa</B> | <B>pl</B> | <B>ex</B><B></B> ] [ <B>-S </B><I>sort-mem</I><B> </B>] [ <B>-W </B><I>seconds</I><B> </B>] [ <B>--</B><I>name</I><B>=</B><I>value</I><B> </B>] <B></B><I>database</I><B></B>
+<P>
+<B>postgres</B> [ <B>-A  </B><B> 0</B> | <B>1</B><B> </B>] [ <B>-B </B><I>nbuffers</I><B> </B>] [ <B>-c </B><I>name</I><B>=</B><I>value</I><B> </B>] [ <B>-d </B><I>debug-level</I><B> </B>] [ <B>-D </B><I>datadir</I><B> </B>] [ <B>-e </B>] [ <B>-f </B><B> s</B> | <B>i</B> | <B>t</B> | <B>n</B> | <B>m</B> | <B>h</B><B> </B>] [ <B>-F </B>] [ <B>-o </B><I>filename</I><B> </B>] [ <B>-O </B>] [ <B>-p </B><I>database</I><B> </B>] [ <B>-P </B>] [ <B>-s</B> | <B>-t </B><B> pa</B> | <B>pl</B> | <B>ex</B><B></B> ] [ <B>-S </B><I>sort-mem</I><B> </B>] [ <B>-v </B><I>protocol</I><B> </B>] [ <B>-W </B><I>seconds</I><B> </B>] [ <B>--</B><I>name</I><B>=</B><I>value</I><B> </B>]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+可执行程序 <B>postgres</B>  是真正处理查询的 PostgreSQL 服务器进程。 通常它是不会被直接调用的；而是启动一个 postmaster 多用户服务器。
+<P>
+
+<BR>&nbsp;上面的第二种形式就是&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+postmaster">postmaster</A></B>(1)&nbsp;调用&nbsp;postgres&nbsp;&nbsp;的方法（只是概念上的，因为&nbsp;postmaster&nbsp;&nbsp;和&nbsp;postgres&nbsp;实际上是一样的程序）；&nbsp;我们不能这样直接调用它。第一种形式以交互单用户模式直接调用该服务器。&nbsp;这种用法的主要用途是在&nbsp;initdb&nbsp;&nbsp;做初始化时用。有时候它被用做调试灾难性恢复。
+<P>
+
+<BR>&nbsp;当从&nbsp;shell&nbsp;上以交互模式调用时，用户可以输入查询并且结果会打印在屏幕上，&nbsp;不过格式对开发人员更有用，对用户却差好多。&nbsp;不过请记住，运行一个单用户服务器并不适合于调试该服务器，&nbsp;因为没有实际的进程间通讯和锁动作发生。
+<P>
+
+<BR>&nbsp;当运行一个单用户服务器时，将把会话用户设置为&nbsp;ID&nbsp;为&nbsp;1&nbsp;的用户。&nbsp;该用户不必实际存在，因此一个独立运行的服务器可以用于对某些意外损坏的系统表中进行手工恢复。&nbsp;在独立运行模式下，系统隐含地赋予&nbsp;ID&nbsp;为&nbsp;1&nbsp;的用户超级用户权限。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<BR>&nbsp;如果&nbsp;<B>postgres</B>&nbsp;是由一个&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+postmaster">postmaster</A></B>(1)&nbsp;&nbsp;启动的，那么它继承后者的所有选项集。另外&nbsp;<B>postgres</B>&nbsp;相关的选项可以用&nbsp;-o&nbsp;开关从&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+postmaster">postmaster</A></B>(1)&nbsp;传递。
+<P>
+
+<BR>&nbsp;你可以通过设置一个配置文件来避免键入这些选项。&nbsp;参阅Section&nbsp;16.4获取细节。&nbsp;有些（安全的）选项还可以从联接过来的客户端设置，&nbsp;这样就获得了一种应用无关的方法。&nbsp;比如，如果设置了&nbsp;<B>PGOPTIONS</B>&nbsp;环境变量，&nbsp;那么基于&nbsp;libpq&nbsp;的客户端就都把那个字串传递给服务器，&nbsp;会解释成&nbsp;postgres&nbsp;命令行选项。
+<A NAME="lbAF">&nbsp;</A>
+<H3>GENERAL PURPOSE 通用用途</H3>
+
+<P>
+
+选项 <B>-A</B>, <B>-B</B>,
+<B>-c</B>, <B>-d</B>, <B>-D</B>,
+<B>-F</B>, 和 <B>--</B><I>name</I><B></B> 和 <B><A HREF="/cgi-bin/man/man2html?1+postmaster">postmaster</A></B>(1)  里的有相同的含义。只是 -d 0 避免 <B><A HREF="/cgi-bin/man/man2html?1+postmaster">postmaster</A></B>(1) 的调试级别传播到 postgres。
+<DL COMPACT>
+<DT><B>-e</B><DD>
+<BR>&nbsp;把缺省日期风格设置为&nbsp;&quot;European&quot;，也就是说用&quot;DMY&quot;规则解释日期输入，&nbsp;并且在一些日期输出格式里日子在月份前面打印。&nbsp;参阅&nbsp;Section&nbsp;8.5&nbsp;``Date/Time&nbsp;Types''&nbsp;获取更多细节。
+<DT><B>-o </B><I>filename</I><B></B><DD>
+<BR>&nbsp;把所有服务器日志输出到&nbsp;filename。&nbsp;如果服务器是由&nbsp;postmaster运行的，&nbsp;则忽略这个选项，并且使用从&nbsp;postmaster&nbsp;继承过来的stderr。
+<DT><B>-P</B><DD>
+<BR>&nbsp;扫描/更新系统记录时忽略系统表。对系统表/索引使用&nbsp;REINDEX&nbsp;时需要这个选项。
+<DT><B>-s</B><DD>
+<BR>&nbsp;在每条命令结束时打印时间信息和其他统计信息。&nbsp;这个开关对测试性能和调节缓冲区数量有好处。
+<DT><B>-S </B><I>sort-mem</I><B></B><DD>
+<BR>&nbsp;声明内部排序和散列在求助于临时磁盘文件之前可以使用的内存数量。&nbsp;该值是以&nbsp;KB&nbsp;（千字节）为单位的，缺省是&nbsp;1024&nbsp;KB。&nbsp;注意对于复杂查询，可能有好几个并行的排序和/或散列，&nbsp;而在它们把数据放到临时文件前，每个都会允许使用最多&nbsp;<I>sort-mem</I>&nbsp;&nbsp;KB的内存。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H3>OPTIONS FOR STAND-ALONE MODE 单用户模式的选项</H3>
+
+<DL COMPACT>
+<DT><B></B><I>database</I><B></B><DD>
+<BR>&nbsp;声明要访问的数据库的名字。如果忽略掉则缺省为用户名。
+<DT><B>-E</B><DD>
+<BR>&nbsp;回显所有命令。
+<DT><B>-N</B><DD>
+<BR>&nbsp;禁止把新行作为语句分隔符。
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H3>SEMI-INTERNAL OPTIONS 半内部选项</H3>
+
+<P>
+
+<BR>&nbsp;还有几个其他的选项可以声明，主要用于调试用途。&nbsp;这些东西在这里列出只是给&nbsp;PostgreSQL&nbsp;系统开发人员使用的。&nbsp;我们强烈反对使用这些选项。&nbsp;另外这些选项的任何一项都可能在未来版本中消失而不加说明。
+<DL COMPACT>
+<DT><B>-f { s | i | m | n | h }</B><DD>
+<BR>&nbsp;禁止某种扫描和连接方法的使用：&nbsp;s&nbsp;和&nbsp;i&nbsp;&nbsp;分别关闭顺序和索引扫描，而&nbsp;n，m，和&nbsp;h&nbsp;&nbsp;分别关闭嵌套循环，融合（merge）和散列连接。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  顺序扫描和嵌套循环都不可能完全被关闭。 -fs 和 -fn  选项仅仅是在存在其他方法时阻 碍优化器使用这些方法罢了。
+</DL>
+
+<P>
+<DT><B>-O</B><DD>
+<BR>&nbsp;允许修改系统表的结构。这个参数用于&nbsp;<B>initdb</B>。
+<DT><B>-p </B><I>database</I><B></B><DD>
+<BR>&nbsp;告诉服务器服务器它是由一个&nbsp;postmaster&nbsp;启动的并声明要使用的数据库等。
+<DT><B>-t pa[rser] | pl[anner] | e[xecutor]</B><DD>
+<BR>&nbsp;打印与每个主要系统模块相关的查询记时统计。&nbsp;它不能和&nbsp;-s选项一块使用。
+<DT><B>-v </B><I>protocol</I><B></B><DD>
+<BR>&nbsp;声明这次会话使用的前/服务器协议的版本数。
+<DT><B>-W </B><I>seconds</I><B></B><DD>
+<BR>&nbsp;一旦看见这个选项，进程就睡眠标出的秒数。&nbsp;这样就给开发者一些时间把调试器附着在该服务器进程上。
+<DT><B>--describe-config</B><DD>
+<BR>&nbsp;这个选项以&nbsp;tab&nbsp;分隔的&nbsp;COPY&nbsp;格式，倒出服务器内部配置变量，描述和缺省之。&nbsp;设计它主要是给管理工具使用。
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>PGDATA</B><DD>
+<BR>&nbsp;缺省数据目录位置
+</DL>
+<P>
+
+<BR>&nbsp;对于其它的在单用户模式里有一点点影响的环境变量，请参阅&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+postmaster">postmaster</A></B>(1).
+<P>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;要停止运行一个查询，使用&nbsp;SIGINT&nbsp;给正在运行该命令的&nbsp;postgres&nbsp;进程发信号。
+<P>
+
+<BR>&nbsp;要告诉&nbsp;postgres&nbsp;重新读取配置文件，&nbsp;使用一个&nbsp;SIGHUP&nbsp;信号。&nbsp;通常我们最好给&nbsp;postmaster&nbsp;发送&nbsp;SIGHUP；&nbsp;postmaster&nbsp;将随后&nbsp;SIGHUP&nbsp;他的每个子进程。&nbsp;但是有时候我们可能想只让一个&nbsp;postgres&nbsp;进程重装载配置文件。
+<P>
+
+<B>postmaster</B> 使用 SIGTERM 告诉postgres进程正常退出， 而 SIGQUIT 是不
+经过正常清理的退出。 这些信号不应该由用户使用。 给一个 postgres 进程发送
+SIGKILL 也是不明智的: postmaster 将把这个信号解释成一次在 postgres 里的
+崩溃， 并且会强制所有他的子 postgres 进程像在一个标准的崩溃－恢复过程里一
+样退出。
+<A NAME="lbAK">&nbsp;</A>
+<H2>USAGE 用法</H2>
+
+<P>
+
+<BR>&nbsp;用下面这样的命令启动一个独立的服务器
+<P>
+<PRE>
+<B>postgres -D /usr/local/pgsql/data </B><I>other-options</I><B> my_database</B>
+
+</PRE>
+
+<BR>&nbsp;用&nbsp;-D&nbsp;给服务器提供正确的数据库目录的路径，&nbsp;或者确保环境变量&nbsp;PGDATA&nbsp;已经正确设置。&nbsp;同时还要声名你象用的特定数据库名字。
+<P>
+
+<BR>&nbsp;通常，独立运行的服务器把换行符当做命令输入完成字符；&nbsp;它还不懂分号的作用，因为那些东西是在&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1)&nbsp;里的。&nbsp;要想把一行分成多行写，你必需在除最后一个换行符以外的每个换行符前面敲一个反斜杠。
+<P>
+
+<BR>&nbsp;但是如果你使用&nbsp;-N&nbsp;命令行开关，那么换行符就不会中止命令输入。&nbsp;服务器将从标准输入读取数据，直到碰到文件结尾（EOF），&nbsp;然后把输入当做一个单个的命令字串处理。这个时候反斜杠-换行符就不再当做特殊情况处理。
+<P>
+
+<BR>&nbsp;要退出会话，键入EOF&nbsp;(通常是&nbsp;<B>Control</B>+<B>D</B>)。&nbsp;如果你已经使用了&nbsp;-N，需要用两个连续的EOF来退出。
+<P>
+
+<BR>&nbsp;请注意独立运行的服务器不会提供复杂的行编辑功能（比如，没有命令行历史）。
+<A NAME="lbAL">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?1+initdb">initdb</A></B>(1),
+<B><A HREF="/cgi-bin/man/man2html?1+ipcclean">ipcclean</A></B>(1),
+<B><A HREF="/cgi-bin/man/man2html?1+postmaster">postmaster</A></B>(1)
+<A NAME="lbAM">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DL>
+<DT><A HREF="#lbAF">GENERAL PURPOSE 通用用途</A><DD>
+<DT><A HREF="#lbAG">OPTIONS FOR STAND-ALONE MODE 单用户模式的选项</A><DD>
+<DT><A HREF="#lbAH">SEMI-INTERNAL OPTIONS 半内部选项</A><DD>
+</DL>
+<DT><A HREF="#lbAI">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAJ">NOTES 注意</A><DD>
+<DT><A HREF="#lbAK">USAGE 用法</A><DD>
+<DT><A HREF="#lbAL">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAM">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

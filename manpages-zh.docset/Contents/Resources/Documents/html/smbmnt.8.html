@@ -1,0 +1,108 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SMBMNT</TITLE>
+</HEAD><BODY>
+<H1>SMBMNT</H1>
+Section: Maintenance Commands (8)<BR>Updated: 26 Apr 2000<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME 名字 </H2>
+
+smbmnt - 装载 SMB 文件系统的协助工具。
+<P>
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 </H2>
+
+<B>smbmnt</B> mount-point [ -s share ] [ -r ] [ -u uid ] [ -g gid ] [ -f mask ] [ -d mask ] 
+<P>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 </H2>
+
+<P>
+
+smbmnt 用于协助 smbmount 程序完成实际装载 SMB 共享资源。
+smbmnt 必须以 root 用 setuid 来安装，这样普通用户才能
+装载他们的 SMB 共享资源。它在装载点和装载目录上检查
+用户是否有写权限。
+<P>
+
+smbmnt 通常由 smbmount 来调用。用户不能直接调用它。
+<P>
+
+<DL COMPACT>
+<DT><B>-r</B><DD>
+以只读方式装载文件系统
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-u uid</B><DD>
+指定要装载文件者的用户标识符。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-g gid</B><DD>
+指定要装载文件者的组标识符。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-f mask</B><DD>
+声明用八进制数表示的文件掩码。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-d mask</B><DD>
+声明用八进制数表示的文件掩码。
+</DL>
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>作者 </H2>
+
+smbfs、smbmnt 和 smbmount 的维护人是 Andrew Tridgell <A HREF="mailto:tridge@samba.org">tridge@samba.org</A>
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/04/14</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME 名字 </A><DD>
+<DT><A HREF="#lbAC">总览 </A><DD>
+<DT><A HREF="#lbAD">描述 </A><DD>
+<DT><A HREF="#lbAE">作者 </A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

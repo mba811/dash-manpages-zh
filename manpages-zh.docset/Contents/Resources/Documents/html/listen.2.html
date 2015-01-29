@@ -1,0 +1,177 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LISTEN</TITLE>
+</HEAD><BODY>
+<H1>LISTEN</H1>
+Section: Linux Programmer's Manual (2)<BR>Updated: 23 July 1993<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME 名称</H2>
+
+listen - listen for connections on a socket 在一个套接字上倾听连接
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 概述</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/sys/socket.h">sys/socket.h</A>&gt;</B>
+
+<P>
+<B>int listen(int </B><I>s</I><B>, int </B><I>backlog</I><B>);</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+在接收连接之前,首先要使用
+<B><A HREF="/cgi-bin/man/man2html?2+socket">socket</A></B>(2)
+
+创建一个套接字,然后调用
+<B>listen</B>
+
+使其能够自动接收到来的连接并且为连接队列指定一个长度限制.
+之后就可以使用
+<B><A HREF="/cgi-bin/man/man2html?2+accept">accept</A></B>(2)
+
+接收连接.
+<B>listen</B>
+
+调用仅适用于
+<B>SOCK_STREAM</B>
+
+或者
+<B>SOCK_SEQPACKET</B>
+
+类型的套接字.
+<P>
+
+参数
+<I>backlog</I>
+
+指定未完成连接队列的最大长度.如果一个连接请求到达时未完成连接
+队列已满,那么客户端将接收到错误
+<B>ECONNREFUSED.</B>
+
+或者,如果下层协议支持重发,那么这个连接请求将被忽略,这样客户端
+在重试的时候就有成功的机会.
+<A NAME="lbAE">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+在TCP套接字中
+<I>backlog </I>
+
+的含义在Linux 2.2中已经改变.
+它指定了已经完成连接正等待应用程序接收的套接字队列的长度,而不是
+未完成连接的数目.未完成连接套接字队列的最大长度可以使用
+<B>tcp_max_syn_backlog</B>
+
+sysctl设置
+当打开syncookies时不存在逻辑上的最大长度,此设置将被忽略.参见
+<B><A HREF="/cgi-bin/man/man2html?7+tcp">tcp</A></B>(7)
+
+以获取更多信息.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>RETURN VALUE 返回值</H2>
+
+函数执行成功时返回0.错误时返回-1,并置相应错误代码.
+<I>errno</I>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>ERRORS 错误</H2>
+
+<DL COMPACT>
+<DT><B>EBADF</B>
+
+<DD>
+参数
+<I>s</I>
+
+不是合法的描述符.
+<DT><B>ENOTSOCK</B>
+
+<DD>
+参数
+<I>s</I>
+
+不是一个套接字.
+<DT><B>EOPNOTSUPP</B>
+
+<DD>
+套接字类型不支持
+<B>listen </B>
+
+操作.
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>CONFORMING TO 兼容于</H2>
+
+Single Unix, 4.4BSD, POSIX 1003.1g.
+<B>listen</B>
+
+函数调用最初出现于4.2BSD. 
+<A NAME="lbAI">&nbsp;</A>
+<H2>BUGS 勘误</H2>
+
+如果套接字类型是 
+<B>AF_INET</B>,
+
+并且参数
+<I>backlog</I>
+
+大于常量 
+<B>SOMAXCONN </B>
+
+(Linux 2.0&amp;2.2中是128),它将被自动截断为
+<B>SOMAXCONN</B>
+
+的值. 
+有的BSD系统(以及一些BSD扩展)将backlog值限制为5.
+<A NAME="lbAJ">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+accept">accept</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+connect">connect</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+socket">socket</A></B>(2)
+
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>byeyear &lt;<A HREF="mailto:love_my_love@263.net">love_my_love@263.net</A> &gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002.01.27</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME 名称</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 概述</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">NOTES 注意</A><DD>
+<DT><A HREF="#lbAF">RETURN VALUE 返回值</A><DD>
+<DT><A HREF="#lbAG">ERRORS 错误</A><DD>
+<DT><A HREF="#lbAH">CONFORMING TO 兼容于</A><DD>
+<DT><A HREF="#lbAI">BUGS 勘误</A><DD>
+<DT><A HREF="#lbAJ">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

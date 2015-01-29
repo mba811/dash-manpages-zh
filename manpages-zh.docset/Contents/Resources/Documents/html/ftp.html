@@ -1,0 +1,1704 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of FTP</TITLE>
+</HEAD><BODY>
+<H1>FTP</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+<BR>BSD mandoc<BR>
+Linux NetKit  (0.16) 
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>ftp</B>
+
+ - <B>Internet</B>
+
+
+
+文件传输程序 (file transfer program)
+<A NAME="lbAC">&nbsp;</A>
+<H2>概述 (SYNOPSIS)</H2>
+
+<B>ftp</B>
+
+[-<B>pinegvd</B>
+
+]
+
+[<I>host</I>
+
+]
+
+<B>pftp</B>
+
+[-<B>inegvd</B>
+
+]
+
+[<I>host</I>
+
+]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>说明 (DESCRIPTION)</H2>
+
+用户通过
+<B>Ftp</B>
+
+这个程序来使用
+<B>Internet</B>
+
+上的标准文件传输协议 (File Transfer  Protocol).
+本程序允许用户向远端网站发送文件, 或从远端网站接收文件.
+<P>
+
+参数选项可以在命令行启动ftp时指定, 也可以在ftp命令解释模式下输入.
+<DL COMPACT>
+<P>
+
+<DT><B>-p</B>
+
+
+<DD>
+使用被动模式进行数据传输. 如果你本地网络有防火墙,
+外部主机不能连接到你这个客户端, 这个选项就派上用场了.
+本选项要求 ftp 服务器支持 PASV 命令.
+如果使用 pftp 从命令行启动 ftp, 本选项是默认打开的.
+<DT><B>-i</B>
+
+
+<DD>
+进行多个文件传输时关掉交互式的确认提示.
+<DT><B>-n</B>
+
+
+<DD>
+一般，在启动 ftp 时, ftp 会试着进行自动登录. 本选项可以关掉这个功能.
+如果 auto-login 功能被启用的话,  ftp 会在用户 home 目录下的 .netrc
+(参阅
+<A HREF="/cgi-bin/man/man2html?5+netrc">netrc</A>(5))
+
+
+文件中查找远端主机上的用户帐号.
+如果 .netrc 文件中用户帐号这一项不存在,
+ftp 会提示用户输入远端主机上的登录名 (缺省为用户在本地机器上的帐号),
+如果需要, 还会提示你输入密码和用来登录的帐号. ??
+<P>
+
+(译者注: 使用本选项, 可以实现所谓的 &quot;非交互式登录&quot;.
+你可以试试下面这条命令:
+<P>
+
+echo open ftp_server &quot;\n&quot; user my_name my_password &quot;\n&quot; dir &quot;\n&quot; bye | ftp -n
+不能使用 rcp 的时候, 可以用这条 ftp 命令来代替.)
+<DT><B>-e</B>
+
+
+<DD>
+如果被编译成了 ftp 可执行格式, 本选项会关掉命令编辑和历史命令功能;
+否则什么也不做. ??
+<DT><B>-g</B>
+
+
+<DD>
+关掉文件名匹配功能.
+<DT><B>-v</B>
+
+
+<DD>
+显示详细信息. 本选项使得 ftp 显示远端服务器的所有响应,
+并在数据传输完成后显示传输数据的统计信息.
+<DT><B>-d</B>
+
+
+<DD>
+打开 debug 模式.
+</DL>
+<P>
+
+<P>
+
+从命令行启动
+<B>ftp</B>
+
+时, 可指定欲与之通讯的远端主机. 如果指定了,
+<B>ftp</B>
+
+会立即尝试与远端
+<B>FTP</B>
+
+服务器建立连接; 否则,
+<B>ftp</B>
+
+会进入其命令解释模式, 等待用户进一步的指令.
+<B>ftp</B>
+
+在等待用户指令时, 会显示提示符
+`ftp&gt;'
+
+<P>
+
+<B>ftp</B>
+
+能够识别以下的命令:
+<DL COMPACT>
+<P>
+
+<DT><B>! </B>[<I>command </I>[<I>args</I>
+
+]
+
+
+
+]
+
+
+
+
+<DD>
+在本地机器上启动一个交互的shell. 如果本命令带有参数,
+第一个参数作为 shell 命令直接执行, 其它的参数成为这个 shell 命令的参数.
+<DT><B>$ </B><I>macro-name </I>[<I>args</I>
+
+]
+
+
+
+
+
+
+<DD>
+执行宏
+<I>macro-name</I>
+
+所指代的命令. 宏使用
+<B>macdef</B>
+
+命令来定义. 本命令中的参数不进行文件名匹配, 直接传给这个宏.
+<DT><B>account </B>[<I>passwd</I>
+
+]
+
+
+
+
+<DD>
+在你成功登录以后, 本命令可以提供一个附加的密码,
+远端系统会用这个密码来访问某些资源.
+如果不指定参数, 则会提示用户输入密码;
+输入密码时, 回显会被禁止.
+<DT><B>append </B><I>local-file </I>[<I>remote-file</I>
+
+]
+
+
+
+
+
+
+<DD>
+添加本地文件到远端机器上. 如果没有指定
+<I>remote-file,</I>
+
+则本地文件名在经过
+<B>ntrans</B>
+
+或
+<B>nmap</B>
+
+转换后, 作为远端文件名使用.
+在文件传输过程中还会使用
+<B>type,</B>
+
+<B>forma,</B>
+
+<B>mode</B>
+
+和
+<B>structure</B>
+
+的当前设置.
+<DT><B>ascii</B>
+
+
+<DD>
+将当前文件传输方式设置为网络
+<B>ASCII</B>
+
+方式, 即文本模式.
+这也是缺省的文件传送方式.
+<DT><B>bell</B>
+
+
+<DD>
+每个文件传送命令完成后响铃提示.
+<DT><B>binary</B>
+
+
+<DD>
+将当前文件传输方式设置为 binary image, 即二进制模式.
+<DT><B>bye</B>
+
+
+<DD>
+终止与当前
+<B>FTP</B>
+
+服务器的连接, 退出
+<B>ftp.</B>
+
+文件结束符 (译者注: ctrl-D) 有同样的功能.
+<DT><B>case</B>
+
+
+<DD>
+转换 case 状态, 即远端主机文件名大小写转换规则.
+<B>mget</B>
+
+命令会中用到本状态.
+<B>case</B>
+
+状态若为 on, 远端主机文件传输到本地时,
+文件名中的大写字母会被转换为小写. 缺省的 case 状态为 off.
+(译者注: toggle 这个词我翻译成转换. 意思是说,
+如果当前 case 状态为 on, 你执行 case 这个命令,
+case 状态就转成了 off; 如果当前为 off, 则会变成 on. 下同.)
+<DT><B>cd </B><I>remote-directory</I>
+
+
+
+
+<DD>
+改变远端机器上的当前目录到
+<I>remote-directory.</I>
+
+<DT><B>cdup</B>
+
+
+<DD>
+改变远端机器上的当前目录到其父目录, 即其上级目录.
+<DT><B>chmod </B><I>mode file-name</I>
+
+
+
+
+<DD>
+将远端系统上文件
+<I>file-name</I>
+
+的权限改为
+<I>mode.</I>
+
+<DT><B>close</B>
+
+
+<DD>
+终止与当前远端服务器的
+<B>FTP</B>
+
+连接, 回到命令解释模式. 所有定义的宏都会被清除.
+<DT><B>cr</B>
+
+
+<DD>
+转换 cr 状态, 即 ascii 方式下取文件时的回车换行转换规则.
+用 ascii 方式获取文件时, 文件内容被分割为一条条纪录, 以回车换行符为分隔符;
+如果
+<B>cr</B>
+
+状态为 on, 回车换行符会被转换为
+UNIX
+系统的单个换行符.
+非
+UNIX
+系统的文本文件中可能含有单个换行符; 在进行 ascii 方式的文件传输时,
+只有将
+<B>cr</B>
+
+状态设置为 off, 这些单个换行符才能与回车换行符区分开来.
+<B>cr</B>
+
+的缺省状态为 on.
+(译者注: 回车符的 ASCII 码为 0D, 对应的 C 语言转义字符为 \r;
+换行符的 ASCII 码为 0A , 对应的 C 语言转义字符为 \n;
+UNIX 下的文本文件, 换行的时候就一个换行符;
+DOS  下的文本文件, 换行的时候是两个字符: 回车 + 换行.
+服务器端 ftpd 在用 ascii 方式发送文件时,
+会先把单个换行转换为回车 + 换行, 再送到网络上传输;
+客户端 ftp 在用 ascii 方式接受文件时, 如果 cr 状态为 on,
+ftp 会把回车 + 换行转换为单个换行; 如果为 off,
+则不进行这种转换. 如果网上传输的数据中同时含有单个换行和回车 + 换行,
+你就一定要把 cr 状态设为 off, 才能把数据原样取回来;
+否则, 取回来的单个换行和回车 + 换行都转换成了单个换行,
+你就分不清这两种了. 还是使用 binary 最好.)
+<DT><B>delete </B><I>remote-file</I>
+
+
+
+
+<DD>
+删除远端机器上的文件
+<I>remote-file.</I>
+
+<DT><B>debug </B>[<I>debug-value</I>
+
+]
+
+
+
+
+<DD>
+转换 debugging 状态, 即是否跟踪每条指令.
+<I>debug-value</I>
+
+是可选的, 其值用来设置跟踪的级别.
+当 debigging 状态为 on 时,
+<B>ftp</B>
+
+会显示每条送往远端机器的指令, 并在显示的指令前加上
+`--&gt;'
+
+<DT><B>
+</B>
+
+<B>dir</B>
+
+[<I>remote-directory</I>
+
+]
+
+[<I>local-file</I>
+
+]
+
+<DD>
+
+显示远端机器目录
+<I>remote-director</I>
+
+下的文件名.
+<I>local-file</I>
+
+这个参数是可选的.
+如果指定了这个参数, 本命令的显示结果会保存在
+<I>local-file</I>
+
+这个本地文件中.
+如果 prompt 状态为 on,
+<B>ftp</B>
+
+会提示用户确认最后这个参数是用来存放
+<B>dir</B>
+
+显示结果的本地文件. 如果不指定
+<I>remote-director,</I>
+
+则本命令显示远端机器当前目录下的文件名.
+如果不指定
+<I>local-file,</I>
+
+或
+<I>local-file</I>
+
+指定为
+-<B>,</B>
+
+则输出结果显示在你的终端上.
+<DT><B>disconnect</B>
+
+
+<DD>
+同
+<I>close.</I>
+
+<DT><B>form </B><I>format</I>
+
+
+
+
+<DD>
+将文件传输格式设置为
+<I>format.</I>
+
+缺省格式为 &ldquo;file&rdquo;. ??
+<DT><B>get </B><I>remote-file </I>[<I>local-file</I>
+
+]
+
+
+
+
+
+
+<DD>
+把远端机器上的文件
+<I>remote-file</I>
+
+取回到本地.
+如果不指定本地文件名, 则远端文件名在经过
+<B>case,</B>
+
+<B>ntrans</B>
+
+和
+<B>nmap</B>
+
+转换后, 作为本地文件名使用. 文件传输过程中会用到当前的
+<B>type,</B>
+
+<B>form,</B>
+
+<B>mode,</B>
+
+和
+<B>structure</B>
+
+状态.
+<DT><B>glob</B>
+
+
+<DD>
+转换 glob 状态, 即在执行
+<B>mdelete,</B>
+
+<B>mget</B>
+
+和
+<B>mput</B>
+
+命令时, 是否进行文件名匹配. 如果 glob 状态为 off,
+则不进行文件名匹配.
+对
+<B>mput</B>
+
+而言, 文件名匹配规则和本地的
+<A HREF="/cgi-bin/man/man2html?1+csh">csh</A>(1)
+
+
+文件名匹配一样.
+对
+<B>mdelete</B>
+
+和
+<B>mget</B>
+
+而言, 每个远端机器文件名都分别在远端机器上进行匹配,
+匹配结果中的同名文件不会合并.
+目录名匹配规则和文件名匹配规则不尽相同,
+具体结果要取决于远端系统和 ftp 服务程序.
+你可以使用
+`mls'
+
+<DD>remote-files -
+预先看看匹配结果是否如你所愿.
+注意:
+<B>mget</B>
+
+和
+<B>mput</B>
+
+可能不会传送子目录. 想连着子目录一起传送, 你可以使用 binary
+方式传送这个子目录的
+<A HREF="/cgi-bin/man/man2html?1+tar">tar</A>(1)
+
+
+包.
+(译者注:
+1、
+文件匹配是说, *n 代表所有以 n 结尾的文件.
+例如, 在你本地 linux 机器当前目录下有三个文件 Xie Wen Min ,
+在 shell 下用 echo *n 这条命令, 结果为 Wen Min ,
+可见 *n 被 shell 匹配为 Wen Min.
+在 ftp 中, 如果 glob 为 on ,
+mput *n 这条指令会被匹配为 mput Wen Min ,
+本地的 Wen Min 两个文件被传送到远端.
+如果 glob 为 off ,
+mput *n 这条指令不会被匹配,
+于是 mput 会试图把文件名为 &quot;*n&quot; 的本地文件传到远端,
+如果本地没有这个名为 &quot;*n&quot; 的文件, ftp 就会报错.
+2、
+mput 是把本地文件送到远端机器, 故其匹配规则与本地 shell的文件名匹配一致.
+mget, mdelete 则是把远端机器上的文件送到本地,
+故其匹配规则和最终结果要取决于远端系统.
+3、
+考虑如下情况: 远端机器上有三个文件 Xie, Wen, Min
+如果执行 mget X* W* *n,
+显然, 匹配结果会是 Xie Wen Min Wen.
+虽然 Wen 这个文件出现了两次,
+但 ftp 不会把这两个文件名合为一个,
+所以 Wen 这个文件会被 mget 两次, 第二次覆盖第一次.
+如果 mdel X* W* *n, Wen 这个文件会被删两次, 第二次报错.)
+<DT><B>hash</B>
+
+
+<DD>
+转换 hash 状态, 即是否显示数据传输进度. 如果 hash 状态为 on,
+每传送完一个 1024 字节的数据块时显示一个 # 号.
+<DT><B>help </B>[<I>command</I>
+
+]
+
+
+
+
+<DD>
+显示指定命令
+<I>command</I>
+
+的简要说明. 如果不指定参数, 本命令列出所有已知的
+<B>ftp</B>
+
+命令.
+<DT><B>idle </B>[<I>seconds</I>
+
+]
+
+
+
+
+<DD>
+将远端服务器的最长空闲时间设为
+<I>seconds</I>
+
+秒.
+如果不指定参数
+<I>seconds,</I>
+
+则本命令显示当前的最长空闲时间值.
+（译者注：如果在最长空闲时间内没执行任何 ftp 命令,
+与远端机器的连接将自动终止. ）
+<DT><B>lcd </B>[<I>directory</I>
+
+]
+
+
+
+
+<DD>
+改变本地的当前工作目录. 如果不指定参数
+<I>directory,</I>
+
+则切换到用户的 home 目录.
+<DT><B>
+</B>
+
+<B>ls</B>
+
+[<I>remote-directory</I>
+
+]
+
+[<I>local-file</I>
+
+]
+
+<DD>
+
+显示远端机器目录下的文件名列表. 具体如何显示与远端系统有关;
+例如, 大多数
+UNIX
+系统显示 shell 命令 ls -l 的输出 (参阅 nlist ).
+如果不指定
+<I>remote-directory</I>
+
+则显示远端机器当前目录的内容.
+如果 prompt 状态为 on ,
+<B>ftp</B>
+
+会提示用户确认最后一个参数是用来存放
+<B>ls</B>
+
+显示结果的本地文件. 如果不指定
+<I>local-file</I>
+
+, 或者
+<I>local-file</I>
+
+指定为
+`-
+
+'
+
+ 
+则结果显示到用户终端上. 可以在本命令中用引号指定附加参数.
+例如, 如果远端系统为
+UNIX
+则 ls &quot;-rt /usr&quot; 这条命令会显示远端机器 /usr 这个目录下的文件,
+显示结果按创建时间由远到近排序.
+<DT><B>macdef </B><I>macro-name</I>
+
+
+
+
+<DD>
+定义一个宏. 执行本命令后, 接下来输入的内容会存放到宏
+<I>macro-name</I>
+
+里. 空行 (文件中的连续换行, 或终端的回车换行) 表示宏定义结束.
+最多只能定义 16 条宏, 而且所有的宏内容加起来不能超过 4096 字节.
+执行
+<B>close</B>
+
+命令后所有的宏定义会被清除.
+在宏中, $ 和 \ 这两个字符为特殊字符.
+$ 字符后跟数字, 将在这个宏在执行时将替换为命令行中的参数.
+$ 字符后跟字符 i , 表示循环执行当前宏.
+在循环的第一次, $i 被替换为命令行中的第一个参数;
+第二次, 替换为第二个参数, 以此类推.
+\ 后面跟一个字符, 表示这个字符本身.
+例如, \ 可以去掉 $ 的特殊意义, 表示 $ 这个字符本身.
+<DT><B>mdelete </B>[<I>remote-files</I>
+
+]
+
+
+
+
+<DD>
+删除远端机器文件
+<I>remote-files.</I>
+
+<DT><B>mdir </B><I>remote-files local-file</I>
+
+
+
+
+<DD>
+和
+<B>dir</B>
+
+命令相似, 但是允许你指定多个远端文件. 如果 prompt 状态为 on,
+<B>ftp</B>
+
+会提示用户确认最后一个参数是用来存放输出结果的本地文件.
+<DT><B>mget </B><I>remote-files</I>
+
+
+
+
+<DD>
+匹配参数
+<I>remote-files</I>
+
+中指定的远端文件名, 对匹配结果里的每个文件都执行一个
+<B>get</B>
+
+命令. 关于文件名匹配, 请参阅
+<B>glob</B>
+
+命令. 根据当前的
+<B>case,</B>
+
+<B>ntrans,</B>
+
+和
+<B>nmap</B>
+
+状态, 远端文件名在经过适当的转换后, 作为本地文件名使用.
+文件被传输到本地机器的当前目录. 你可以用
+`lcd'
+
+<DD>directory
+命令改变本地机器的当前目录, 也可以用
+`!'
+
+mkdir directory
+命令新建本地目录.
+<DT><B>mkdir </B><I>directory-name</I>
+
+
+
+
+<DD>
+在远端机器上创建目录.
+<DT><B>mls </B><I>remote-files local-file</I>
+
+
+
+
+<DD>
+和
+<B>nlist</B>
+
+命令相似, 但是允许你指定多个远端文件, 而且
+<I>local-file</I>
+
+这个参数必须指定. 如果 prompt 状态为 on,
+<B>ftp</B>
+
+会提示用户确认最后一个参数是用来存放输出结果的本地文件.
+<DT><B>mode </B>[<I>mode-name</I>
+
+]
+
+
+
+
+<DD>
+将文件传输模式设置为
+<I>mode-name</I>
+
+所指定的模式. 缺省模式为 &ldquo;stream&rdquo; 模式. ??
+<DT><B>modtime </B><I>file-name</I>
+
+
+
+
+<DD>
+显示远端机器上文件的最后修改时间.
+<DT><B>mput </B><I>local-files</I>
+
+
+
+
+<DD>
+匹配参数中指定的本地文件名, 对匹配结果里的每个文件都执行一个
+<B>put</B>
+
+命令. 关于文件名匹配, 请参阅
+<B>glob</B>
+
+命令. 根据当前的
+<B>ntrans</B>
+
+和
+<B>nmap</B>
+
+状态, 本地文件名在经过适当的转换后, 作为远端文件名使用.
+<DT><B>newer </B><I>file-name </I>[<I>local-file</I>
+
+]
+
+
+
+
+
+
+<DD>
+比较远端文件和本地文件的修改时间, 如果远端文件比本地文件新,
+或本地文件不存在, 则从远端机器上取此文件.
+<DT><B>
+</B>
+
+<B>nlist</B>
+
+[<I>remote-directory</I>
+
+]
+
+[<I>local-file</I>
+
+]
+
+<DD>
+
+显示远端机器上指定目录下的文件列表.
+如果不指定参数
+<I>remote-directory,</I>
+
+则显示远端机器当前目录的内容.
+如果 prompt 状态为 on,
+<B>ftp</B>
+
+会提示用户确认最后一个参数是用来存放显示结果的本地文件.
+如果不指定本地文件
+<I>local-file,</I>
+
+或者本地文件
+<I>local-file</I>
+
+指定为
+`Fl,'
+
+显示结果会在用户终端上显示出来.
+<DT><B>nmap </B>[<I>inpattern outpattern</I>
+
+]
+
+
+
+
+<DD>
+设置或取消文件名映射机制. 如果不指定参数, 则本命令取消文件名映射机制.
+如果指定了参数, 则在执行
+<B>mput</B>
+
+或
+<B>put</B>
+
+命令, 且不指定远端文件名时, 远端文件名会被映射;
+在执行
+<B>mget</B>
+
+或
+<B>get</B>
+
+命令, 且不指定本地文件名时, 本地文件名会被映射.
+非 unix 的远端系统常使用不同于 unix 的文件命名规则,
+当用 ftp 连接到这样的远端系统时, 本命令会很有用处.
+转换规则由参数
+<I>inpattern</I>
+
+和
+<I>outpattern</I>
+
+决定.
+一个文件名会先经过
+<B>ntrans</B>
+
+和
+<B>case</B>
+
+的转换, 再按照
+<I>inpattern</I>
+
+进行
+<B>nmap</B>
+
+映射. 参数
+<I>inpattern</I>
+
+指定转换前的文件命名规则. 参数
+<I>outpattern</I>
+
+指定转换后的文件命名规则. 在
+<I>inpattern</I>
+
+和
+<I>outpattern</I>
+
+这两个参数中, 用 $1, $2, ..., $9 来替代变量; 用 \$ 替代 $ 字符;
+其余的字符则没有特殊含义. 例如, 若
+<I>inpattern</I>
+
+为 $1.$2, 则对于文件名 mydata.data, $1 取值 mydata, $2取值 data.
+结果文件名由
+<I>outpattern</I>
+
+决定. 在
+<I>outpattern</I>
+
+中, $1, $2, ..., $9 被相应的取值代替, 作为最终结果.
+$0 被替换为整个原始文件名. 对方括号括起来的两个变量 [$x,$y] 而言,
+若 $x 非空, 则其相当于 $x; 否则相当于 $y (以上 x,y 为数字).
+举例如下:
+输入命令行 nmap $1.$2.$3 [$1,$2].[$2,file], 则
+原始文件名 myfile.data 会被映射为 myfile.data,
+原始文件名 myfile.data.old 会被映射为 myfile.data,
+原始文件名 myfile 会被映射为 myfile.file,
+原始文件名 .myfile 会被映射为 myfile.myfile,
+<DD>Spaces may be included in
+<I>outpattern,</I>
+
+as in the example: `nmap $1 sed &quot;s/  *$//&quot; &gt; $1' . ??
+(译者注: 这一段我没看懂, 也没试出来.)
+`$', '[', ']', `,' 这四个字符有特殊含义, 所以若要使用这四个字符,
+需在前面加上 \ 以去掉其特殊含义.
+<DT><B>ntrans </B>[<I>inchars </I>[<I>outchars</I>
+
+]
+
+
+
+]
+
+
+
+
+<DD>
+设置或取消文件名字符转换机制. 如果不指定参数,
+则本命令取消文件名字符转换机制. 如果指定了参数, 则在执行
+<B>mput</B>
+
+和
+<B>put</B>
+
+命令, 且不指定远端文件名时, 远端文件名中的字符会被转换;
+在执行
+<B>mget</B>
+
+和
+<B>get</B>
+
+命令, 且不指定本地文件名时, 本地文件名中的字符会被转换.
+非 unix 的远端系统常使用不同于 unix 的文件命名规则,
+用 ftp 连接到这样的远端系统时, 本命令会很有用处.
+原始文件名中的
+<I>inchars</I>
+
+会被替换为对应的
+<I>outchars.</I>
+
+如果 inchar 字符串比 outchar 长, 则多出的那一部分字符会从原始文件名中删掉.
+<DT><B>open </B><I>host </I>[<I>port</I>
+
+]
+
+
+
+
+
+
+<DD>
+连接到指定的远端主机
+<I>host</I>
+
+<B>FTP</B>
+
+服务器. 端口号
+<B>ftp</B>
+
+是可选的; 如果指定了端口号,
+<B>ftp</B>
+
+会尝试使用这个指定的端口号连接远端
+<B>FTP</B>
+
+主机. 如果自动登陆选项
+<B>auto-login</B>
+
+是打开的话 (缺省为打开),
+<B>ftp</B>
+
+还会尝试自动登陆.  (详见下述)
+<DT><B>prompt</B>
+
+
+<DD>
+转换 prompt 状态, 即是否进行交互提示. 如果 prompt 状态为 on ,
+在传送多个文件时, ftp 会提示用户选择要上传或下载的文件;
+如果 prompt 状态为 off (缺省为 on),
+<B>mget</B>
+
+和
+<B>mput</B>
+
+这两个命令会不加提示地传送所有指定的文件,
+<B>mdelete</B>
+
+会不加提示地删掉所有指定的文件.
+<DT><B>proxy </B><I>ftp-command</I>
+
+
+
+
+<DD>
+在副连接上执行 ftp 命令. 本命令允许同时连接到两个远端 ftp 服务器,
+并在这两个远端服务器之间传送文件.
+(译者注: 原始的 ftp 所建立的连接为 primary control connection, 主连接;
+使用 proxy open 所建立的连接为 secondary control connection, 副连接.
+在副连接上运行 ftp 命令, 即在 ftp 命令前加上 proxy 前缀, 如
+proxy open, proxy put 等. 以下将这种 ``proxy ftp command'' 译为 &quot;代理命令&quot;.)
+第一个执行的代理命令应该是
+<B>open</B>
+
+命令, 用来建立副连接.
+运行 &quot;proxy ?&quot; 命令, 可以看到所有能在副连接中运行的 ftp 命令.
+以下的 ftp 命令在副连接中运行时, 效果与在主连接中不同:
+在自动登录过程中,
+<B>open</B>
+
+不会定义新的宏;
+<B>close</B>
+
+不会清除已有的宏定义;
+<B>get</B>
+
+和
+<B>mget</B>
+
+将文件从主连接的远端主机传送到副连接的远端主机;
+<B>put </B>
+
+ 
+<B>mput</B>
+
+ 
+和
+<B>append</B>
+
+将文件从副连接的远端主机传至主连接的远端主机.
+第三方文件传输取决于副连接的远端主机是否支持 ftp 协议中的
+<B>PASV</B>
+
+命令.
+<DT><B>put </B><I>local-file </I>[<I>remote-file</I>
+
+]
+
+
+
+
+
+
+<DD>
+将本地文件传至远端主机. 如果不指定参数
+<I>remote-file,</I>
+
+则根据当前的
+<B>ntrans</B>
+
+和
+<B>nmap</B>
+
+状态, 本地文件名在经过适当的转换后, 作为远端文件名使用.
+在文件传输过程中会用到当前的
+<B>type,</B>
+
+<B>format,</B>
+
+<B>mode</B>
+
+和
+<B>structure</B>
+
+状态.
+<DT><B>pwd</B>
+
+
+<DD>
+显示远端机器的当前路径.
+<DT><B>quit</B>
+
+
+<DD>
+同
+<B>bye</B>
+
+命令.
+<DT><B>quote </B><I>arg1 arg2 ...</I>
+
+
+
+
+<DD>
+将你指定的参数原样送到远端
+<B>FTP</B>
+
+服务器.
+(译者注: 你输入的 ftp 命令, 经由本地 ftp 客户程序解释,
+转换成 ftp 协议命令, 再发送给远端 ftp 服务程序.
+这些转换后的 ftp 协议命令, 叫做 raw ftp command,
+也就是本命令所能使用的参数. 关于这些参数, 请参阅 remotehelp 命令.
+下文中出现的大写字母的命令都是 raw ftp command.)
+<DT><B>recv </B><I>remote-file </I>[<I>local-file</I>
+
+]
+
+
+
+
+
+
+<DD>
+同 get 命令.
+<DT><B>reget </B><I>remote-file </I>[<I>local-file</I>
+
+]
+
+
+
+
+
+
+<DD>
+和 get 命令相似, 略有差异如下: 如果本地文件
+<I>local-file</I>
+
+的长度比远端文件
+<I>remote-file</I>
+
+短, ftp 会认为这是由于上一次传送异常中断,
+导致本地文件只是远端文件的开头一部分,
+故 reget 会从本地文件的最后开始续传.
+在连接不稳、经常异常断掉的网络中传送大文件时, 本命令会很有用.
+<DT><B>remotehelp </B>[<I>command-name</I>
+
+]
+
+
+
+
+<DD>
+显示远端
+<B>FTP</B>
+
+服务程序的帮助信息. 如果指定了参数
+<I>command-name,</I>
+
+则此参数也会一并传给远端服务器.
+<DT><B>remotestatus </B>[<I>file-name</I>
+
+]
+
+
+
+
+<DD>
+如果不指定参数, 本命令显示远端机器的状态.
+如果指定了参数
+<I>file-name,</I>
+
+则显示远端文件
+<I>file-name</I>
+
+的状态.
+<DT><B>
+</B>
+
+<B>rename</B>
+
+[<I>from</I>
+
+]
+
+[<I>to</I>
+
+]
+
+<DD>
+
+将远端机器上的文件
+<I>from</I>
+
+重命名为
+<I>to.</I>
+
+<DT><B>reset</B>
+
+
+<DD>
+清除应答队列. 本命令使本地 ftp 客户和远端 ftp 服务程序
+重新同步命令/应答序列. 远端 ftp 服务程序可能出错,
+并导致 ftp 协议出现错误, 此时需要使用本命令.
+<DT><B>restart </B><I>marker</I>
+
+
+
+
+<DD>
+使用本命令后, 接下来应使用一个
+<B>get</B>
+
+或
+<B>put</B>
+
+命令; 此时的 get 或 put 命令会从参数
+<I>marker</I>
+
+指定的
+UNIX
+系统文件偏移处 (一般以字节计算) 重传文件.
+<DT><B>rmdir </B><I>directory-name</I>
+
+
+
+
+<DD>
+删除远端机器上的目录.
+<DT><B>runique</B>
+
+
+<DD>
+转换 runique 状态, 即本地同名文件是否自动覆盖.
+如果 runique 状态为 off, 则在使用
+<B>get</B>
+
+或
+<B>mget</B>
+
+命令取远端文件到本地时, 远端文件会自动覆盖本地的同名文件;
+如果 runique 状态为 on, 则在文件同名时, 会在取回的文件名后加一个 .1;
+如果加了一个 .1 还是与本地文件重名, 则在远端文件名后加 .2;
+若还是重名, 加 .3; 以此类推, 如果直到 .99 还重名, 则会报错.
+新文件名会显示给用户. 注意
+<B>runique</B>
+
+状态并不影响本地 shell 命令的文件覆盖.
+缺省的
+<B>runique</B>
+
+状态为 off.
+<DT><B>send </B><I>local-file </I>[<I>remote-file</I>
+
+]
+
+
+
+
+
+
+<DD>
+同 put 命令.
+<DT><B>sendport</B>
+
+
+<DD>
+转换 sendport 状态, 即是否使用
+<B>PORT</B>
+
+命令. 缺省状态下,
+<B>ftp</B>
+
+每建立一个连接进行数据传送时, 都会使用一个
+<B>PORT</B>
+
+命令. 使用
+<B>PORT</B>
+
+命令可以免掉多文件传输时的延迟时间.
+如果
+<B>PORT</B>
+
+命令失败,
+<B>ftp</B>
+
+会使用缺省的数据端口. 如果禁止使用
+<B>PORT</B>
+
+命令, 则在每次进行数据传送时不会使用
+<B>PORT</B>
+
+命令. 有些版本的
+<B>FTP</B>
+
+在具体实现中忽略了
+<B>PORT</B>
+
+命令, 但却错误地应答说已经接受了
+<B>PORT</B>
+
+指令, 此时就需要使用本命令.
+<DT><B>site </B><I>arg1 arg2 ...</I>
+
+
+
+
+<DD>
+本命令将参数作为
+<B>SITE</B>
+
+命令原样传给远端
+<B>FTP</B>
+
+服务器.
+<DT><B>size </B><I>file-name</I>
+
+
+
+
+<DD>
+显示远端机器上文件
+<I>file-name</I>
+
+的大小.
+<DT><B>status</B>
+
+
+<DD>
+显示
+<B>ftp</B>
+
+当前的各种状态.
+<DT><B>struct </B>[<I>struct-name</I>
+
+]
+
+
+
+
+<DD>
+将文件传输结构
+<I>structure</I>
+
+设置为参数
+<I>struct-name.</I>
+
+缺省取值为 stream. ??
+<DT><B>sunique</B>
+
+
+<DD>
+转换 sunique 状态, 即远端同名文件是否自动覆盖.
+要使用本命令, 远端的 ftp 服务程序必须支持 ftp 协议中的
+<B>STOU</B>
+
+命令. 新生成的不同的远端文件名会显示给用户.
+缺省的 sunique 状态为 off, 即自动覆盖远端同名文件.
+<DT><B>system</B>
+
+
+<DD>
+显示远端机器的操作系统类型.
+<DT><B>tenex</B>
+
+
+<DD>
+设置文件传输方式为与
+<B>TENEX</B>
+
+机器通讯所需要的方式. ??
+<DT><B>trace</B>
+
+
+<DD>
+转换 trace 状态, 即是否跟踪每个数据包.
+<DT><B>type </B>[<I>type-name</I>
+
+]
+
+
+
+
+<DD>
+将文件传送类型
+<B>type</B>
+
+设置为
+<I>type-name.</I>
+
+如果不指定参数, 则本命令显示当前文件传送类型.
+缺省的文件传送类型是网络
+<B>ASCII</B>
+
+类型.
+<DT><B>umask </B>[<I>newmask</I>
+
+]
+
+
+
+
+<DD>
+设置远端机器上的文件掩码为
+<I>newmask.</I>
+
+如果不指定参数
+<I>newmask,</I>
+
+则本命令显示当前的文件掩码.
+<DT><B>
+</B>
+
+<B>user </B><I>user-name</I>
+
+
+
+[<I>password</I>
+
+]
+
+[<I>account</I>
+
+]
+
+<DD>
+
+使用
+[<I>user-name</I>
+
+]
+
+作为用户名登录远端
+<B>FTP</B>
+
+服务器. 如果不指定参数
+<I>password,</I>
+
+而远端服务器需要提供密码, 则
+<B>ftp</B>
+
+会提示用户输入密码 (无回显); 如果不指定参数
+<I>account,</I>
+
+而远端
+<B>FTP</B>
+
+服务器需要提供账号,
+<B>ftp</B>
+
+会提示用户输入账号.
+如果指定了参数
+<I>account,</I>
+
+而在登录过程中远端 FTP 服务程序不需要账号,
+则在登录完成以后会使用一个 account 命令将账号发送给服务器.
+一般而言,
+<B>ftp</B>
+
+在启动时, 会与远端
+<B>FTP</B>
+
+服务器建立连接并自动完成以上的登录过程.
+也可以在启动
+<B>ftp</B>
+
+时使用 -n 选项禁止此自动登录功能.
+<DT><B>verbose</B>
+
+
+<DD>
+转换 verbose 状态, 即是否显示详细信息.
+如果 verbose 状态为 on , 则会显示远端
+<B>FTP</B>
+
+服务器的每一个响应,
+并在文件传送结束后显示关于传输效率的统计信息.
+缺省的 verbose 状态为 on .
+<DT><B>? </B>[<I>command</I>
+
+]
+
+
+
+
+<DD>
+同 help 命令.
+</DL>
+<P>
+
+<P>
+
+如果参数含有空格, 需用使用一对引号 &quot;&quot; 将其引起来.
+<A NAME="lbAE">&nbsp;</A>
+<H2>放弃当前文件传送 (ABORTING A FILE TRANSFER)</H2>
+
+按中断键 (一般为 Ctrl-C ) 可放弃当前文件传送.
+对发送文件而言, 此时当前发送过程会立刻终止;
+对文件接收, 此时会发送一个 ftp 协议中的
+<B>ABOR</B>
+
+命令到远端服务器, 而剩下未接受的数据会被丢弃.
+这个过程有快有慢, 具体取决于远端服务器如何实现
+<B>ABOR</B>
+
+命令. 如果远端服务器不支持
+<B>ABOR</B>
+
+命令, 则服务器会继续当前文件传送, 直到传送完成, 才再显示出提示符
+`ftp&gt;.'
+
+<P>
+
+如果所有的本地操作已经完成,
+<B>ftp</B>
+
+在等待远端服务器应答时,
+不会对中断键做出响应. 如果这时候 ftp 协议出了问题,
+或如上所述远端服务器不支持 ABOR 命令而坚持把当前文件发送完,
+用户就会等待很长时间得不到响应. 如果确实是 ftp 协议出了问题,
+用户必需手工杀掉这个
+<B>ftp</B>
+
+进程.
+<A NAME="lbAF">&nbsp;</A>
+<H2>文件名转换 (FILE NAMING CONVENTIONS)</H2>
+
+<B>ftp</B>
+
+命令中, 若指定文件名作为参数, 则此文件名会经过以下几步的处理:
+<OL><P>
+
+<LI>
+
+如果指定的文件名为
+`-
+
+'
+
+ 
+则在输出时使用标准输出
+<I>stdin,</I>
+
+在输入时使用标准输入
+<I>stdout.</I>
+
+<LI>
+
+如果指定的文件名首字母是
+`|,'
+
+则此参数余下的部分被当作是一个 shell 命令.
+<B>Ftp</B>
+
+会使用
+<A HREF="/cgi-bin/man/man2html?3+popen">popen</A>(3)
+
+
+和所提供的参数创建一个 shell 进程,
+并使用标准输入 stdin (标准输出 stdout) 来进行读 (写) 操作.
+如果 shell 命令中包含空格, 则必须用引号将其引起来; 例如: 
+&quot;ls -lt&quot;. 一个有用的例子是: &quot;dir | more&quot;.
+<LI>
+
+如果上述两步处理失败, 而 globbing 状态为 on , 本地文件名会进行匹配,
+匹配规则同
+<A HREF="/cgi-bin/man/man2html?1+csh">csh</A>(1)
+
+
+(参阅
+<B>glob</B>
+
+命令). 如果
+<B>ftp</B>
+
+命令只需要单个的本地文件作参数 (如
+<B>put),</B>
+
+则仅使用匹配结果里的第一个文件名.
+<LI>
+
+对
+<B>mget</B>
+
+和
+<B>get</B>
+
+命令而言, 如果不指定本地文件名, 则远端文件名在经过
+<B>case,</B>
+
+<B>ntrans,</B>
+
+或
+<B>nmap</B>
+
+转换后, 作为本地文件名使用. 如果
+<B>runique</B>
+
+状态为 on,
+本地文件名还可能加上一个后缀以免覆盖.
+<LI>
+
+对
+<B>mput</B>
+
+和
+<B>put</B>
+
+命令而言, 如果不指定远端文件名, 则本地文件名在经过
+<B>ntrans</B>
+
+或
+<B>nmap</B>
+
+转换后, 作为远端文件名使用. 如果
+<B>sunique</B>
+
+状态为 on,
+远端服务器可能还会给远端文件名加上一个后缀以免覆盖.
+</OL><P>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>文件转换参数 (FILE TRANSFER PARAMETERS)</H2>
+
+<DD>FTP 规格说明书中指定了许多可能影响文件传送的参数.
+<B>type</B>
+
+可设置为 ascii, image (binary), ebcdic, 或 local byte size (一般用于
+<B>PDP -10's</B>
+
+
+
+和
+<B>PDP -20's</B>
+
+
+
+机器).
+<B>Ftp</B>
+
+支持 ascii 和 image 类型的文件传输, 对于
+<B>tenex</B>
+
+机器, 还支持 local byte size 8 方式的文件传输.
+<P>
+
+其它可能影响文件传输的参数有
+<B>mode,</B>
+
+<B>form,</B>
+
+和
+<B>struct.</B>
+
+<B>Ftp</B>
+
+只支持这些参数的缺省值.
+<A NAME="lbAH">&nbsp;</A>
+<H2>环境 (ENVIRONMENT)</H2>
+
+<B>Ftp</B>
+
+使用了以下的环境变量:
+<DL COMPACT>
+<P>
+
+<DT><B>HOME</B>
+
+
+<DD>
+本环境变量指明了文件
+.netrc
+
+的缺省路径, 如果其存在的话.
+<DT><B>SHELL</B>
+
+
+<DD>
+本环境变量指明了缺省的 shell.
+</DL>
+<P>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>参阅 (SEE ALSO)</H2>
+
+<A HREF="/cgi-bin/man/man2html?8+ftpd">ftpd</A>(8),
+
+
+RFC 959
+<A NAME="lbAJ">&nbsp;</A>
+<H2>历史 (HISTORY)</H2>
+
+<B>ftp</B>
+
+命令最初见于
+BSD 4.2.
+<A NAME="lbAK">&nbsp;</A>
+<H2>错误 (BUGS)</H2>
+
+对许多 ftp 命令而言, 其能否正确执行, 取决于远端服务器如何响应.
+<P>
+
+使用
+BSD 4.2
+的 ascii 方式传送文件时, 对回车换行符的处理有错误.
+本版本中已经修正了此问题, 但同时带来了另一个问题:
+使用 ascii 方式, 与
+BSD 4.2
+服务器互传二进制文件时可能出错.
+要避免此问题, 请使用 binary image 类型来传送文件.
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">概述 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">说明 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">放弃当前文件传送 (ABORTING A FILE TRANSFER)</A><DD>
+<DT><A HREF="#lbAF">文件名转换 (FILE NAMING CONVENTIONS)</A><DD>
+<DT><A HREF="#lbAG">文件转换参数 (FILE TRANSFER PARAMETERS)</A><DD>
+<DT><A HREF="#lbAH">环境 (ENVIRONMENT)</A><DD>
+<DT><A HREF="#lbAI">参阅 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAJ">历史 (HISTORY)</A><DD>
+<DT><A HREF="#lbAK">错误 (BUGS)</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

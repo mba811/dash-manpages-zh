@@ -1,0 +1,352 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PERLSTYLE</TITLE>
+</HEAD><BODY>
+<H1>PERLSTYLE</H1>
+Section: Perl Programmers Reference Guide (7)<BR>Updated: 2003-11-25<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+perlstyle - Perl 风格指南
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<A NAME="ixAAC"></A>
+每个程序员当然都会有自己的编程风格，但是有一些一般性的原则可以使得我们的程序更易于阅读，理解，以及维护。
+<P>
+
+最重要的是使用 <B>-w</B> 选项. 如果必须关闭该选项，可以用 <TT>&quot;no warnings&quot;</TT> 或变量 <TT>$^W</TT> 来在一定的代码段中关闭它. 你还应该使用 <TT>&quot;use strict&quot;</TT> 除非你清楚不使用它的理由.  <TT>&quot;use sigtrap&quot;</TT> 和 <TT>&quot;use diagnostics&quot;</TT> 也是非常有用的.
+<P>
+
+关于代码美学,  Larry 大概只强烈的关心一件事情：多行块的结束花括号应该与开始的关键字对齐. 除了这个, 还有一些不是那么重要的事情:
+<DL COMPACT>
+<DT>&bull;<DD>
+4-列缩进.
+<DT>&bull;<DD>
+如果可能的话，开始的花括号与关键词最好放在同一行，否则对齐.
+<DT>&bull;<DD>
+多行的块的开始的花括号之前应当有空格
+<DT>&bull;<DD>
+单行的块放在一行，包括花括号.
+<DT>&bull;<DD>
+分号前不要空格.
+<DT>&bull;<DD>
+在短的单行块中省略分号.
+<DT>&bull;<DD>
+操作符周围打空格.
+<DT>&bull;<DD>
+在“复合”下标周围打空格 (在括号中).
+<DT>&bull;<DD>
+在不同功能的块之间打空行.
+<DT>&bull;<DD>
+else另起一行写
+<DT>&bull;<DD>
+函数与括号间不要空格
+<DT>&bull;<DD>
+每个逗号后打空格.
+<DT>&bull;<DD>
+长句子在操作符后截断 ( &quot;and&quot; 和 &quot;or&quot; 除外).
+<DT>&bull;<DD>
+关闭括号后打空格.
+<DT>&bull;<DD>
+相关项之间以列对齐.
+<DT>&bull;<DD>
+在不影响清晰的情况下尽量减少标点符号.
+</DL>
+<P>
+
+Larry 这样做当然有他的原因, 不过他没有要求别人都和他一样.
+<P>
+
+以下意见供您参考:
+<DL COMPACT>
+<DT>&bull;<DD>
+可以那样做并不意味着应该那样做. Perl 设计为作每件事都可以用好几种方法, 你应该选择最可读的一种. 例如
+
+
+<P>
+
+
+
+
+<PRE>
+    open(FOO,$foo) || die &quot;Can't open $foo: $!&quot;;
+
+</PRE>
+
+
+
+
+<P>
+
+
+好于
+
+
+<P>
+
+
+
+
+<PRE>
+    die &quot;Can't open $foo: $!&quot; unless open(FOO,$foo);
+
+</PRE>
+
+
+
+
+<P>
+
+
+因为第二种办法掩盖了句子中的主要内容。另一方面
+
+
+<P>
+
+
+
+
+<PRE>
+    print &quot;Starting analysis\n&quot; if $verbose;
+
+</PRE>
+
+
+
+
+<P>
+
+
+好于
+
+
+<P>
+
+
+
+
+<PRE>
+    $verbose &amp;&amp; print &quot;Starting analysis\n&quot;;
+
+</PRE>
+
+
+
+
+<P>
+
+
+因为主要关键不在于是否用户输入了 <B>-v</B>。
+
+
+<P>
+
+
+类似的，因为一个操作符允许使用默认参数，不意味着你必须使用默认值。默认值是为懒惰的系统程序员书写只运行一次的程序准备的。如果你需要你的程序尽量可读，考虑给出参数。
+
+
+<P>
+
+
+根据相同的原则，在很多地方即使你可以忽略括号也不意味着你应当这样做：
+
+
+<P>
+
+
+
+
+<PRE>
+    return print reverse sort num values %array;
+    return print(reverse(sort num (values(%array))));
+
+</PRE>
+
+
+
+
+<P>
+
+
+如果有疑义，使用括号。至少它使得可怜的笨蛋能在 <B>vi</B> 中使用 % 键来跳转
+
+
+<P>
+
+
+甚至你没有疑义的时候，为那个将来维护你的代码的家伙的精神健康考虑一下吧，并且他有可能把括号放错地方。
+<DT>&bull;<DD>
+在程序中使用 last 跳出，而不要在开始和结束时用奇怪的跳转退出循环。把它 &quot;缩出&quot; 几格以利于察看:
+
+
+<P>
+
+
+
+
+<PRE>
+    LINE:
+        for (;;) {
+            statements;
+          last LINE if $foo;
+            next LINE if /^#/;
+            statements;
+        }
+
+</PRE>
+
+
+<DT>&bull;<DD>
+别害怕使用循环标记--它们用来增强可读性并且允许多层循环中断. 参见前例.
+<DT>&bull;<DD>
+避免在空上下文中使用 grep() (或 map()) 或 `反引号` , 那样，你就丢弃了它们的返回值. 使用它们是为了得到返回值，否则，使用 foreach() 或是 system() 好了.
+<DT>&bull;<DD>
+考虑移植的时候，某些特性可能不是在所有的机器上都能够得到支持, 这时可以用 eval来测试. 如果你知道提供特定功能的版本或是补丁, 你可以察看 <TT>$]</TT> (也就是 <TT>&quot;English&quot;</TT> 中的 <TT>$PERL_VERSION</TT>) 来确定当前的版本.  <TT>&quot;Config&quot;</TT> 模块也会提供perl在安装时 <B>Configure</B> 程序测得的值.
+<DT>&bull;<DD>
+使用明确的标识符，你要是想不起来标识符的意思，那就麻烦了。
+<DT>&bull;<DD>
+短标识符如 <TT>$gotit</TT> 虽然没什么不好, 但是用下划线来分割单词可以增加可读性. 如 <TT>$var_names_like_this</TT> 好于 <TT>$VarNamesLikeThis</TT>,对不以英语为母语的人更是如此.同样，在使用 <FONT SIZE="-1">VAR_NAMES_LIKE_THIS</FONT> 时也要遵循这个规则。
+
+
+<P>
+
+
+包名称有时不遵守这个约定. Perl 为 ``pragma'' 保留小写的包名称，比如 integer 和 strict. 其他模块名称应该用大写字母开始，但是一般不用下划线来分隔，因为当使用模块名来作文件名时，这在某些系统会出现错误.
+<DT>&bull;<DD>
+使用大小写可以区分变量的作用域。例如:
+
+
+<P>
+
+
+
+
+<PRE>
+    $ALL_CAPS_HERE   常量 (小心！不要与 perl 变量冲突!)
+    $Some_Caps_Here  包作用域 global/static
+    $no_caps_here    函数作用域 my() 或 local() 变量
+
+</PRE>
+
+
+
+
+<P>
+
+
+函数和方法名多用小写. 如, <TT>$obj</TT>-&gt;<I>as_string()</I>.
+
+
+<P>
+
+
+用下划线开始的函数名或变量名，表示该函数或变量只能在定义它的包中使用.
+<DT>&bull;<DD>
+如果你的正则表达式较复杂，用 <TT>&quot;/x&quot;</TT> 来增加注释行或空行以利于阅读. 当其中有很多斜杠或反斜杠时，不要用反斜杠来作正则表达式的定界符.
+<DT>&bull;<DD>
+使用 &quot;and&quot; 和 &quot;or&quot; 操作符以减少使用括号, 尽量少用 &amp;&amp; 和 ||. 调用子程序时尽量少用&quot;&amp;&quot;和括号，可以把子程序当做函数或列表操作符来调用.
+<DT>&bull;<DD>
+使用 here documents 代替大量的 print() 语句.
+<DT>&bull;<DD>
+相关语句用列对齐方式来书写，特别是当一行放不下的时候.
+
+
+<P>
+
+
+
+
+<PRE>
+    $IDX = $ST_MTIME;
+    $IDX = $ST_ATIME       if $opt_u;
+    $IDX = $ST_CTIME       if $opt_c;
+    $IDX = $ST_SIZE        if $opt_s;
+
+</PRE>
+
+
+
+
+<P>
+
+
+
+
+<PRE>
+    mkdir $tmpdir, 0700 or die &quot;can't mkdir $tmpdir: $!&quot;;
+    chdir($tmpdir)      or die &quot;can't chdir $tmpdir: $!&quot;;
+    mkdir 'tmp',   0777 or die &quot;can't mkdir $tmpdir/tmp: $!&quot;;
+
+</PRE>
+
+
+<DT>&bull;<DD>
+总是检测返回值. 错误信息被送往 STDERR, 包括出错的程序、失败的系统调用及参数、并且（非常重要的）包括标准错误信息. 这里是一个简单而完整的例子:
+
+
+<P>
+
+
+
+
+<PRE>
+    opendir(D, $dir)     or die &quot;can't opendir $dir: $!&quot;;
+
+</PRE>
+
+
+<DT>&bull;<DD>
+把翻译列表以列对齐方式排列:
+
+
+<P>
+
+
+
+
+<PRE>
+    tr [abc]
+       [xyz];
+
+</PRE>
+
+
+<DT>&bull;<DD>
+考虑可重用性. 请考虑使用模块或对象. 考虑使用 use strict 和 use warnings (或 -w) 使代码清晰明确. 考虑改变世界观。
+<DT>&bull;<DD>
+要一致，要兼容。
+<DT>&bull;<DD>
+要漂亮，要美观。
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>译者</H2>
+
+<B>redcandle &lt;<A HREF="mailto:redcandle51@chinaren.com">redcandle51@chinaren.com</A>&gt;</B>
+
+<B>20010530</B>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>中文手册页翻译计划</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAD">译者</A><DD>
+<DT><A HREF="#lbAE">中文手册页翻译计划</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

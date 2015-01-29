@@ -1,0 +1,477 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of XMODMAP</TITLE>
+</HEAD><BODY>
+<H1>XMODMAP</H1>
+Section: User Commands  (1)<BR>Updated: Release 6.3<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+xmodmap - 在 X 环境中调节键盘映射和鼠标键映射
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>xmodmap</B>
+
+[-options ...] [filename]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<P>
+
+<I>xmodmap</I> 用来 编辑 或 显示 键盘的
+<I>修饰键映射(modifier map)</I> 和 <I>键盘映射表(keymap table)</I>,
+客户程序 用 它们 把 键码(keycode) 事件 转换为 keysym. 通常 在 用户会话 的 
+启动脚本 中 使用 <I>xmodmap</I>, 把 键盘 配置成 用户 喜爱的 风格.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+<P>
+
+<I>xmodmap</I> 可以 使用 下列 选项:
+<DL COMPACT>
+<DT><B>-display </B><I>display</I>
+
+<DD>
+这个选项 指定 主机 和 显示器.
+<P>
+<DT><B>-help</B>
+
+<DD>
+这个选项 在 标准错误设备 显示 命令行参数 的 说明. 如果 出现了 无法识别 的
+参数, 
+<I>xmodmap </I>
+
+也会 执行 这个 功能.
+<P>
+<DT><B>-grammar</B>
+
+<DD>
+这个选项 在 标准错误设备 显示 表达式 的 语法. 该语法 适用于 文件 或
+-e expression 选项.
+<P>
+<DT><B>-verbose</B>
+
+<DD>
+这个选项 要求
+<I>xmodmap</I>
+
+在 分析 输入数据 的 时候 显示 日志信息.
+<P>
+<DT><B>-quiet</B>
+
+<DD>
+这个选项 要求 关闭 verbose 日志信息. 这是 缺省选项.
+<P>
+<DT><B>-n</B>
+
+<DD>
+这个选项 不要求
+<I>xmodmap</I>
+
+真的改变 (键盘,鼠标) 映射, 而只是 显示出 它 可能 做什么, 如同
+<I><A HREF="/cgi-bin/man/man2html?1+make">make</A>(1)</I> 的 相同 选项 一样.
+<P>
+<DT><B>-e </B><I>expression</I><B></B>
+
+<DD>
+这个选项 执行 一个 给定的 表达式. 命令行上 可以 指定 任何 数量 的 表达式.
+<P>
+<DT><B>-pm</B>
+
+<DD>
+这个选项 要求 在 标准输出设备 显示 当前的 修饰键(modifier)映射.
+<P>
+<DT><B>-pk</B>
+
+<DD>
+这个选项 要求 在 标准输出设备 显示 当前的 键盘映射表(keymap).
+<P>
+<DT><B>-pke</B>
+
+<DD>
+这个选项 要求 在 标准输出设备 显示 当前的 键盘映射表(keymap). 输出格式
+能够 作为 <I>xmodmap</I> 的 输入.
+<P>
+<DT><B>-pp</B>
+
+<DD>
+这个选项 要求 在 标准输出设备 显示 当前的 鼠标(pointer)映射.
+<P>
+<DT><B>-</B>
+
+<DD>
+单独的 短横线(-) 说明 把 标准输入设备 作为 输入文件 使用.
+<P>
+</DL>
+<P>
+
+<I>filename</I> 指定 一个文件, 其中 包含 <I>xmodmap</I> 将要 执行的 表达式.
+这个文件 通常 命名为 <I>.xmodmaprc</I>, 存放在 用户的 根目录下.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>语法 (EXPRESSION GRAMMAR)</H2>
+
+<P>
+
+<I>xmodmap</I>
+
+读入 一连串的 表达式, 在 执行 它们 以前, 对 所有 表达式 进行 分析.
+这样 就可以 不用担心 重定义 的 keysym 出现 名字冲突.
+<P>
+<DL COMPACT>
+<DT><B>keycode </B><I>NUMBER</I> = <I>KEYSYMNAME ...</I>
+
+<DD>
+把 这一串 keysym 赋于 指定的 键码.
+(键码 可以是 十进制数, 十六进制数, 八进制数, 可以用 
+<I>xev </I>
+
+程序 测出.)
+<P>
+<DT><B>keycode any = </B><I>KEYSYMNAME ...</I>
+
+<DD>
+如果 不存在 分配了 上述 keysym 序列 的 键, <I>xmodmap</I> 就 选择 键盘上 的 
+空闲键, 把 这些 keysym 分配 给 它. keysym 可以是 十进制数, 十六进制数 或者
+八进制数.
+<P>
+<DT><B>keysym </B><I>KEYSYMNAME</I> = <I>KEYSYMNAME ...</I>
+
+<DD>
+左边的 <I>KEYSYMNAME</I> 翻译为 对应的 键码, 该键码 应用于 相应的 
+键码表达式集.
+你 可以 在 头文件 <I>&lt;<A HREF="file:///usr/include/X11/keysymdef.h">X11/keysymdef.h</A>&gt;</I> 中 找到 keysym 的 名称列表
+(去掉 <I>XK_</I> 前缀), 也可以 查 keysym 数据库 <I>&lt;XRoot&gt;/lib/X11/XKeysymDB</I>,
+这里的 &lt;XRoot&gt; 指 X11 的 安装树. 注意, 如果 多个 键码 编联(bind)了 相同的 
+keysym, 那么 每个 对应的 键码 都要 执行 这个 表达式.
+<P>
+<DT><B>clear </B><I>MODIFIERNAME</I>
+
+<DD>
+删除 给定 修饰键 在 修饰键映射表 中 的 所有 表项, 修饰键 的 名字 有:
+<B>Shift</B>,
+
+<B>Lock</B>,
+
+<B>Control</B>,
+
+<B>Mod1</B>,
+
+<B>Mod2</B>,
+
+<B>Mod3</B>,
+
+<B>Mod4</B>,
+
+和 <B>Mod5</B> (修饰键名字 不分 大小写, 但是 其他 名字 对 大小写 敏感).
+例如, ``clear Lock'' 将 删除 所有 编联为 shift lock 的 键.
+<P>
+<DT><B>add </B><I>MODIFIERNAME</I> = <I>KEYSYMNAME ...</I>
+
+<DD>
+这条语句 把 所有 包含 给定 keysym 的 键 加入到 指定的 修饰键映射表 中.
+读取完 全部 输入表达式 之后, xmodmap 才分析 这些 keysym, 这样 有利于 
+编写 一些 交换 键位 的 表达式. (见 EXAMPLES 节)
+<P>
+<DT><B>remove </B><I>MODIFIERNAME</I> = <I>KEYSYMNAME ...</I>
+
+<DD>
+这条语句 在 指定的 修饰键映射表 中 删除 所有 包含 指定 keysym 的 键. 和
+<B>add</B>
+
+不同, xmodmap 每 读取 一行 就 执行 一行. 这样 可以 避免 考虑 这些键
+是否 被 重分配过.
+<P>
+<DT><B>pointer = default</B>
+
+<DD>
+这条语句 把 鼠标映射 设置为 缺省值 (按键1 产生 代码1, 按键2 产生 代码2, 等等).
+<P>
+<DT><B>pointer = </B><I>NUMBER ...</I>
+
+<DD>
+这条语句 把 鼠标映射 设置为 指定的 按键代码. 这个 代码列表 总是 从 第一个
+按键 开始.
+<P>
+</DL>
+<P>
+
+注释行 以 感叹号(!) 开始.
+<P>
+<P>
+
+如果 你 打算 改变 某个 修饰键 的 编联, 你 必须 把它 从 相应的
+修饰键映射表 中 同时 删除.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>示例 (EXAMPLE)</H2>
+
+<P>
+
+大多数 鼠标 设计成 右手 食指 按 第一个键, 左撇子 却觉得 如果 把 按键
+代码 反过来, 使 左手 食指 按上 主键 会 更舒服些. 对于 三键鼠标 可以 这样:
+
+
+<P>
+
+
+<PRE>
+%  xmodmap -e &quot;pointer = 3 2 1&quot;
+
+</PRE>
+
+
+<P>
+
+
+
+<P>
+<P>
+
+很多 应用程序 支持 Meta 键,
+然而, 有些 服务器 的 键盘映射表 中 没有 提供 Meta keysym, 因此 需要 手工
+添加. 下面的 命令 将把 Meta 附加到 Multi-language 键上 (有时也 称为
+Compose Character).  另一个 有利方面 是, 需要 Meta 键 的 程序 只是要求 获得 
+键码, 不要求 keysym 位于 键盘映射表 的 第一列.
+这 意味着 需要 Multi_key 的 程序 不会 发觉 有 任何 变化.
+
+
+<P>
+
+
+<PRE>
+%  xmodmap -e &quot;keysym Multi_key = Multi_key Meta_L&quot;
+
+</PRE>
+
+
+<P>
+
+
+
+<P>
+<P>
+
+类似的, 有些 键盘 只有 Alt 键, 而没有 Meta 键. 这种情况下 可以 用:
+
+
+<P>
+
+
+<PRE>
+%  xmodmap -e &quot;keysym Alt_L = Meta_L Alt_L&quot;
+
+</PRE>
+
+
+<P>
+
+
+
+<P>
+<P>
+
+<I>xmodmap</I> 最简单, 也是 最合适的 用途 之一 是 设置 键盘的 &quot;rubout&quot; 键,
+产生 替换的 keysym.  它 经常 用于 交换 Backspace 和 Delete 键.
+如果 <I>xterm</I> 的 <I>ttyModes</I> 资源 也 做了 同样的 设置,
+所有的 终端模拟窗口 将 用 相同的键 删除 字符.
+
+
+<P>
+
+
+<PRE>
+%  xmodmap -e &quot;keysym BackSpace = Delete&quot;
+%  echo &quot;XTerm*ttyModes:  erase ^?&quot; | xrdb -merge
+
+</PRE>
+
+
+<P>
+
+
+
+<P>
+
+有些键盘 按下 shift 键 和 逗号, 句号键 时, 不能 产生 小于号 和 大于号.
+这个现象 可以 通过 重新编联 逗号键 和 句号键 矫正:
+
+
+<P>
+
+
+<PRE>
+!
+! make shift-, be &lt; and shift-. be &gt;
+!
+keysym comma = comma less
+keysym period = period greater
+
+</PRE>
+
+
+<P>
+
+
+
+<P>
+<P>
+
+键盘间 最烦人 的 区别 之一 就是 Control 和 Shift Lock 键 的 位置.  
+<I>xmodmap</I> 的 一个 常用功能 就是 交换 这两个 键, 象这样:
+
+
+<P>
+
+
+<PRE>
+!
+! Swap Caps_Lock and Control_L
+!
+remove Lock = Caps_Lock
+remove Control = Control_L
+keysym Control_L = Caps_Lock
+keysym Caps_Lock = Control_L
+add Lock = Caps_Lock
+add Control = Control_L
+
+</PRE>
+
+
+<P>
+
+
+
+<P>
+
+如果 要 对 多个 键码 分配 同一个 keysym, 可以 使用 <I>keycode</I> 命令.
+尽管 这个做法 不能 移植, 但是 你可以 用它 写一段 脚本, 把 键盘 复位为
+已知状态.
+下面的 脚本 把 backspace 设为 Delete (如上所示), 清除 cap lock 的 编联,
+把 CapsLock 设为 Control 键, F5 设为 Escape, Break/Reset 设为 shift lock.
+
+
+<P>
+
+
+<PRE>
+!
+! On the HP, the following keycodes have key caps as listed:
+!
+!     101  Backspace
+!      55  Caps
+!      14  Ctrl
+!      15  Break/Reset
+!      86  Stop
+!      89  F5
+!
+keycode 101 = Delete
+keycode 55 = Control_R
+clear Lock
+add Control = Control_R
+keycode 89 = Escape
+keycode 15 = Caps_Lock
+add Lock = Caps_Lock
+
+</PRE>
+
+
+<P>
+
+
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>环境变量 (ENVIRONMENT)</H2>
+
+<P>
+
+<DL COMPACT>
+<DT><B>DISPLAY</B>
+
+<DD>
+指示 缺省的 主机 和 显示器号.
+<P>
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+X">X</A>(1), <A HREF="/cgi-bin/man/man2html?1+xev">xev</A>(1), <I>Xlib</I> 关于 键盘 和 鼠标 事件 的 文档.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>BUGS</H2>
+
+<P>
+
+服务器 每执行 一个 <B>keycode</B> 表达式, 就要在 每一个 客户机 上 产生 一个
+<I>MappingNotify</I> 事件. 这可能 导致 某些 异常情况. 所有的 改变 都应该
+收集 在一起, 然后 一次 完成. 那些 接收了 键盘输入, 却 忽略了 
+<I>MappingNotify</I> 事件 的 客户机 将 无法 注意到 对 键盘映射 的 任何 改变.
+<P>
+<P>
+
+如果 编联了 某个 修饰键 的 键码 发生 变化, 
+<I>Xmodmap</I>
+
+将 自动 产生 &quot;add&quot; 和 &quot;remove&quot; 表达式.
+<P>
+<P>
+
+应该 有 某种办法, 当你 确实 搞乱了 键盘映射 的 时候, 使
+<I>remove</I>
+
+表达式 接受 键码 以及 keysym.
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>作者 (AUTHOR)</H2>
+
+Jim Fulton, MIT X 协会, 根据 David Rosenthal 在 Sun Microsystems 中 的 
+早期版本 改写.
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">语法 (EXPRESSION GRAMMAR)</A><DD>
+<DT><A HREF="#lbAG">示例 (EXAMPLE)</A><DD>
+<DT><A HREF="#lbAH">环境变量 (ENVIRONMENT)</A><DD>
+<DT><A HREF="#lbAI">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAJ">BUGS</A><DD>
+<DT><A HREF="#lbAK">作者 (AUTHOR)</A><DD>
+<DT><A HREF="#lbAL">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAM">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAN">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

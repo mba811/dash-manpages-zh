@@ -1,0 +1,126 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of return</TITLE>
+</HEAD><BODY>
+<H1>return</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+return - 从一个过程中返回
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>return </B>?<B>-code </B><I>code</I>? ?<B>-errorinfo </B><I>info</I>? ?<B>-errorcode</B><I> code</I>? ?<I>string</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+从当前过程(或顶层命令或 <B>source</B> 命令)中立即返回，用 <I>string</I> 作为返回值。如果未指定 <I>string</I>，则返回一个空串作为结果。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>异常返回 EXCEPTIONAL RETURNS</H2>
+
+<P>
+
+通常在未指定 <B>-code </B>选项的情况下，过程将正常返回(它的完成代码是 TCL_OK)。但是，可以使用 <B>-code</B> 选项来生成一个异常的过程返回。<I>Code</I> 可以是某个下列值:
+<DL COMPACT>
+<DT><B>ok</B><DD>
+正常返回: 如同这个选项被省略。
+<DT><B>error</B><DD>
+错误返回: 除了 <B>errorInfo</B> 和 <B>errorCode</B> 变量的处理之外，同于使用 <B>error</B> 命令终止过程(见后)。
+<DT><B>return</B><DD>
+返回当前过程并加上一个 TCL_RETURN  完成代码，这将导致调用它的那个过程也返回。
+<DT><B>break</B><DD>
+返回当前过程并加上一个 TCL_BREAK  完成代码，它将终止调用当前过程的代码中的最内层嵌套循环。
+<DT><B>continue</B><DD>
+返回当前过程并加上一个 TCL_CONTINUE 完成代码，它终止调用当前过程的代码中的最内层嵌套循环的当前重复操作。
+<DT><I>value</I><DD>
+<I>Value</I> 必须是一个整数；把它作为当前过程的完成代码返回。
+</DL>
+<P>
+
+很少使用 <B>-code</B> 选项。提供它目的让实现新控制结构的命令可以向它的调用者反映异常条件。
+<P>
+
+两个补充的选项，<B>-errorinfo</B> 和 <B>-errorcode</B>，可以被用来在错误返回期间提供补充信息。除非 <I>code</I> 是 <B>error</B>，否则忽略这些选项。
+<P>
+
+<B>-errorinfo</B> 选项为 <B>errorInfo </B>变量指定一个初始栈跟踪；如果未指定它，则留在 <B>errorInfo</B> 中的栈跟踪将包括对这个过程的调用和栈上的更高层次，但不包括有关过程中错误上下文的任何信息。典型的，在 <B>catch</B> 命令在这个过程中捕获到一个错误之后，把留在 <B>errorInfo</B> 中的值提供为 <I>info</I> 值。
+<P>
+
+如果指定了 <B>-errorcode</B> 选项，则 <I>code</I> 为 <B>errorCode</B> 变量提供一个值。如果未指定这个选项，则 <B>errorCode</B> 缺省为 <B>NONE</B>。
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+break">break</A>(n), <A HREF="/cgi-bin/man/man2html?n+continue">continue</A>(n), <A HREF="/cgi-bin/man/man2html?n+error">error</A>(n), <A HREF="/cgi-bin/man/man2html?n+proc">proc</A>(n)
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+break, continue, error, procedure, return
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/21</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">异常返回 EXCEPTIONAL RETURNS</A><DD>
+<DT><A HREF="#lbAF">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,132 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of KBD_MODE</TITLE>
+</HEAD><BODY>
+<H1>KBD_MODE</H1>
+Section: Linux User's Manual (1)<BR>Updated: 28 Oct 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+kbd_mode - 显示或者设置键盘模式
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>kbd_mode [ </B><I>-auks</I><B> ]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<P>
+
+如果 没有 参数
+<B>kbd_mode</B>
+
+会 显示 当前 键盘 的 模式， 如果 有 参数， 它会把 键盘 设置成 相应的 模式。
+<DL COMPACT><DT><DD>
+<I>-s</I>：
+
+键盘 扫描码 模式 （原始），
+<P>
+
+<I>-k</I>：
+
+键值 （keycode） 模式 （半原始），
+<P>
+
+<I>-a</I>:
+
+ASCII 模式 (XLATE)，
+<P>
+
+<I>-u</I>:
+
+UTF-8 模式 (UNICODE)。
+</DL>
+
+<P>
+<I>XLATE</I>
+
+模式 是 传统 模式， 所用的 代码 可以 是 任何
+<B>8-bit (8位)</B>
+
+的 字符集. 一般 这个 字符集 同 后面 用到 的 字符集 是 匹配 的, 在 它们 被
+传给 屏幕 后， 它们 会 根据
+<B>consolechars</B>
+
+<I>-m</I>
+
+选择的 字符集 在 内部 转换 为 Unicode， 
+<P>
+在
+<I>UNICODE</I>
+
+模式， 键盘 会 产生
+<B>16位</B>
+
+的 字符， 这些 字符 会 以1， 2 或者 3 字节 的 形式 （UTF-8 编码） 传给 内核。
+<B>UTF-8</B>
+
+在这 后两种 模式中 要 用到
+<B><A HREF="/cgi-bin/man/man2html?1+loadkeys">loadkeys</A></B>(1)
+
+定义的 键盘 映射 表。
+<B>警告：</B>
+
+如果 不是 把 键盘 模式 改为 ASCII 或者 Unicode， 很可能 会使 键盘 不可用。
+这个 命令 也 可以 在 有些 程序 使你的 键盘 处于 错误 状态时 用来 把 键盘 改回
+<I>XLATE</I>
+
+或者
+<I>UNICODE</I>
+
+模式 （比如 通过 远程 登录）。 在 有些 过时的 版本的 程序 中
+<I>-u</I>
+
+和
+<I>-s</I>
+
+是 一样的。
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+loadkeys">loadkeys</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?8+consolechars">consolechars</A></B>(8).
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/9/13</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

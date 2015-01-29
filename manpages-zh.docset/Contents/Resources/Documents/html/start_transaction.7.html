@@ -1,0 +1,72 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of START TRANSACTION</TITLE>
+</HEAD><BODY>
+<H1>START TRANSACTION</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+START TRANSACTION - 开始一个事务块
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+START TRANSACTION [ ISOLATION LEVEL { READ COMMITTED | SERIALIZABLE } ] [ READ WRITE | READ ONLY ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<BR>&nbsp;这条命令开始一个新的事务。如果声明了隔离级别或者读写模式，&nbsp;那么新事务就使用这个特性，如同执行了&nbsp;SET&nbsp;TRANSACTION&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+set_transaction">set_transaction</A></B>(7)]&nbsp;一样。在其它方面，这条命令的行为和&nbsp;BEGIN&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+begin">begin</A></B>(7)]&nbsp;命令一样。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<P>
+
+<BR>&nbsp;参阅&nbsp;SET&nbsp;TRANSACTION&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+set_transaction">set_transaction</A></B>(7)]&nbsp;获取有关参数含义的信息。
+<A NAME="lbAF">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;这条命令兼容&nbsp;SQL&nbsp;标准；但是又见&nbsp;SET&nbsp;TRANSACTION&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+set_transaction">set_transaction</A></B>(7)]&nbsp;的兼容性小节。
+<A NAME="lbAG">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+BEGIN [<B><A HREF="/cgi-bin/man/man2html?7+begin">begin</A></B>(7)], COMMIT [<B><A HREF="/cgi-bin/man/man2html?l+commit">commit</A></B>(l)], ROLLBACK [<B><A HREF="/cgi-bin/man/man2html?l+rollback">rollback</A></B>(l)], SET TRANSACTION [<B><A HREF="/cgi-bin/man/man2html?l+set_transaction">set_transaction</A></B>(l)]
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAG">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAH">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,305 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PERLTW</TITLE>
+</HEAD><BODY>
+<H1>PERLTW</H1>
+Section: Perl Programmers Reference Guide (7)<BR>Updated: 2003-09-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+perltw - 正體中文 Perl 指南
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+<A NAME="ixAAC"></A>
+歡迎來到 Perl 的天地!
+<P>
+
+從 5.8.0 版開始, Perl 具備了完善的 Unicode (萬國碼) 支援,
+也連帶支援了許e多拉丁語系以外的編碼方式; <FONT SIZE="-1">CJK</FONT> (中日韓) 便是其中的一部份.
+Unicode 是國際性的標準, 試圖涵蓋e世界上所有的字符: 西方世界, 東方世界,
+以及兩者間的一切 (希臘文, 敘利亞文, 阿拉伯文, 希伯來文, 印度文,
+印地安文, 等等). 它也容納了多種作業系統與平臺 (如 <FONT SIZE="-1">PC</FONT> 及麥金塔).
+<P>
+
+Perl 本身以 Unicode 進行操作. 這表示 Perl 內部的字串資料可用 Unicode
+表示; Perl 的函式與算符 (例如正規表示式比對) 也能對 Unicode 進行操作.
+在輸入及輸出時, 為了處理以 Unicode 之前的編碼方式儲存的資料, Perl
+提供了 Encode 這個模組, 可以讓你輕易地讀取及寫入舊有的編碼資料.
+<P>
+
+Encode 延伸模組支援下列正體中文的編碼方式 ('big5' 表示 'big5-eten'):
+<P>
+
+
+
+<PRE>
+    big5-eten   Big5 編碼 (含倚天延伸字形)
+    big5-hkscs  Big5 + 香港外字集, 2001 年版
+    cp950       字碼頁 950 (Big5 + 微軟添加的字符)
+
+</PRE>
+
+
+<P>
+
+舉例來說, 將 Big5 編碼的檔案轉成 Unicode, 祗需鍵入下列指令:
+<P>
+
+
+
+<PRE>
+    perl -Mencoding=big5,STDOUT,utf8 -pe1 &lt; file.big5 &gt; file.utf8
+
+</PRE>
+
+
+<P>
+
+Perl 也內附了 ``piconv'', 一支完全以 Perl 寫成的字符轉換工具程式, 用法如下:
+<P>
+
+
+
+<PRE>
+    piconv -f big5 -t utf8 &lt; file.big5 &gt; file.utf8
+    piconv -f utf8 -t big5 &lt; file.utf8 &gt; file.big5
+
+</PRE>
+
+
+<P>
+
+另外, 利用 encoding 模組, 你可以輕易寫出以字符為單位的程式碼, 如下所示:
+<P>
+
+
+
+<PRE>
+    #!/usr/bin/env perl
+    # 啟動 big5 字串解析; 標準輸出入及標準錯誤都設為 big5 編碼
+    use encoding 'big5', STDIN =&gt; 'big5', STDOUT =&gt; 'big5';
+    print length(&quot;駱駝&quot;);            #  2 (雙引號表示字符)
+    print length('駱駝');            #  4 (單引號表示位元組)
+    print index(&quot;諄諄教誨&quot;, &quot;彖帢&quot;); # -1 (不包含此子字串)
+    print index('諄諄教誨', '彖帢'); #  1 (從第二個位元組開始)
+
+</PRE>
+
+
+<P>
+
+在最後一列例子裡, ``諄'' 的第二個位元組與 ``諄'' 的第一個位元組結合成 Big5
+碼的 ``彖''; ``諄'' 的第二個位元組則與 ``教'' 的第一個位元組結合成 ``帢''.
+這解決了以前 Big5 碼比對處理上常見的問題.
+
+<BR>
+
+
+
+<P>
+
+<B>額外的中文編碼</B>
+<P>
+
+
+<A NAME="ixAAD"></A>
+如果需要更多的中文編碼, 可以從 <FONT SIZE="-1">CPAN</FONT> (&lt;<A HREF="http://www.cpan.org/">http://www.cpan.org/</A>&gt;) 下載
+Encode::HanExtra 模組. 它目前提供下列編碼方式:
+<P>
+
+
+
+<PRE>
+    cccii       1980 年文建會的中文資訊交換碼
+    euc-tw      Unix 延伸字符集, 包含 CNS11643 平面 1-7
+    big5plus    中文數位化技術推廣基金會的 Big5+
+    big5ext     中文數位化技術推廣基金會的 Big5e
+
+</PRE>
+
+
+<P>
+
+另外, Encode::HanConvert 模組則提供了簡繁轉換用的兩種編碼:
+<P>
+
+
+
+<PRE>
+    big5-simp   Big5 正體中文與 Unicode 簡體中文互轉
+    gbk-trad    GBK 簡體中文與 Unicode 正體中文互轉
+
+</PRE>
+
+
+<P>
+
+若想在 <FONT SIZE="-1">GBK</FONT> 與 Big5 之間互轉, 請參考該模組內附的 b2g.pl 與 g2b.pl 兩支程式,
+或在程式內使用下列寫法:
+<P>
+
+
+
+<PRE>
+    use Encode::HanConvert;
+    $euc_cn = big5_to_gb($big5); # 從 Big5 轉為 GBK
+    $big5 = gb_to_big5($euc_cn); # 從 GBK 轉為 Big5
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>進一步的資訊</B>
+<P>
+
+
+<A NAME="ixAAE"></A>
+請參考 Perl 內附的大量說明文件 (不幸全是用英文寫的), 來學習更多關於
+Perl 的知識, 以及 Unicode 的使用方式. 不過, 外部的資源相當豐富:
+
+<BR>
+
+
+
+<P>
+
+<B>提供 Perl 資源的網址</B>
+<P>
+
+
+<A NAME="ixAAF"></A>
+<DL COMPACT>
+<DT>&lt;<A HREF="http://www.perl.com/">http://www.perl.com/</A>&gt;<DD>
+<A NAME="ixAAG"></A>
+Perl 的首頁 (由歐萊禮公司維護)
+<DT>&lt;<A HREF="http://www.cpan.org/">http://www.cpan.org/</A>&gt;<DD>
+<A NAME="ixAAH"></A>
+Perl 綜合典藏網 (Comprehensive Perl Archive Network)
+<DT>&lt;<A HREF="http://lists.perl.org/">http://lists.perl.org/</A>&gt;<DD>
+<A NAME="ixAAI"></A>
+Perl 郵遞論壇一覽
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>學習 Perl 的網址</B>
+<P>
+
+
+<A NAME="ixAAJ"></A>
+<DL COMPACT>
+<DT>&lt;<A HREF="http://www.oreilly.com.tw/chinese/perl/index.html">http://www.oreilly.com.tw/chinese/perl/index.html</A>&gt;<DD>
+<A NAME="ixAAK"></A>
+正體中文版的歐萊禮 Perl 書藉
+<DT>&lt;<A HREF="http://groups.google.com/groups?q=tw.bbs.comp.lang.perl">http://groups.google.com/groups?q=tw.bbs.comp.lang.perl</A>&gt;<DD>
+<A NAME="ixAAL"></A>
+臺灣 Perl 連線討論區 (也就是各大 <FONT SIZE="-1">BBS</FONT> 的 Perl 連線版)
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>Perl 使用者集會</B>
+<P>
+
+
+<A NAME="ixAAM"></A>
+<DL COMPACT>
+<DT>&lt;<A HREF="http://www.pm.org/groups/asia.shtml#Taiwan">http://www.pm.org/groups/asia.shtml#Taiwan</A>&gt;<DD>
+<A NAME="ixAAN"></A>
+臺灣 Perl 推廣組一覽
+<DT>&lt;<A HREF="http://irc.elixus.org/">http://irc.elixus.org/</A>&gt;<DD>
+<A NAME="ixAAO"></A>
+藝立協線上聊天室
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>Unicode 相關網址</B>
+<P>
+
+
+<A NAME="ixAAP"></A>
+<DL COMPACT>
+<DT>&lt;<A HREF="http://www.unicode.org/">http://www.unicode.org/</A>&gt;<DD>
+<A NAME="ixAAQ"></A>
+Unicode 學術學會 (Unicode 標準的制定者)
+<DT>&lt;<A HREF="http://www.cl.cam.ac.uk/%7Emgk25/unicode.html">http://www.cl.cam.ac.uk/%7Emgk25/unicode.html</A>&gt;<DD>
+<A NAME="ixAAR"></A>
+Unix/Linux 上的 <FONT SIZE="-1">UTF-8</FONT> 及 Unicode 答客問
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>中文化資訊</B>
+<P>
+
+
+<A NAME="ixAAS"></A>
+<DL COMPACT>
+<DT>為什麼叫 &quot;正體中文&quot; 不叫 &quot;繁體中文&quot;?<DD>
+
+
+<A NAME="ixAAT"></A>
+&lt;<A HREF="http://www.csie.ntu.edu.tw/~b7506051/mozilla/faq.html#faqglossary">http://www.csie.ntu.edu.tw/~b7506051/mozilla/faq.html#faqglossary</A>&gt;
+<DT>中文化軟體聯盟<DD>
+<A NAME="ixAAU"></A>
+&lt;<A HREF="http://www.cpatch.org/">http://www.cpatch.org/</A>&gt;
+<DT>Linux 軟體中文化計劃<DD>
+<A NAME="ixAAV"></A>
+&lt;<A HREF="http://www.linux.org.tw/CLDP/">http://www.linux.org.tw/CLDP/</A>&gt;
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+<A NAME="ixAAW"></A>
+Encode, Encode::TW, encoding, perluniintro, perlunicode
+<A NAME="lbAE">&nbsp;</A>
+<H2>AUTHORS</H2>
+
+<A NAME="ixAAX"></A>
+Jarkko Hietaniemi &lt;<A HREF="mailto:jhi@iki.fi">jhi@iki.fi</A>&gt;
+<P>
+
+Autrijus Tang (唐宗漢) &lt;<A HREF="mailto:autrijus@autrijus.org">autrijus@autrijus.org</A>&gt;
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">SEE ALSO</A><DD>
+<DT><A HREF="#lbAE">AUTHORS</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,163 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ICONV_OPEN</TITLE>
+</HEAD><BODY>
+<H1>ICONV_OPEN</H1>
+Section: Linux Programmer's Manual (3)<BR>Updated: May 6, 2001<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+iconv_open - 分配一个字符集转换的描述符
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<PRE>
+<B>#include &lt;<A HREF="file:///usr/include/iconv.h">iconv.h</A>&gt;</B>
+
+<B>iconv_t iconv_open (const char* </B><I>tocode</I><B>, const char* </B><I>fromcode</I><B>);</B>
+</PRE>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>iconv_open</B> 函数 分配 一个 用于 把 <I>fromcode</I> 编码的 字符串
+转换成 <I>tocode</I> 编码 的 转换 描述符.
+<P>
+
+<I>fromcode</I> 和 <I>tocode</I> 所允许的值 以及 支持的 组合方式 都是 与
+系统 相关的. 对于 这个 libiconv 库, 它 支持 下面 的 编码, 也 支持 其
+所有 的 组合.
+<DL COMPACT>
+<DT>欧洲语言<DD>
+ASCII, ISO-8859-{1,2,3,4,5,7,9,10,13,14,15,16},
+KOI8-R, KOI8-U, KOI8-RU,
+CP{1250,1251,1252,1253,1254,1257}, CP{850,866},
+Mac{Roman,CentralEurope,Iceland,Croatian,Romania},
+Mac{Cyrillic,Ukraine,Greek,Turkish},
+Macintosh
+<DT>闪米特语言<DD>
+ISO-8859-{6,8}, CP{1255,1256}, CP862, Mac{Hebrew,Arabic}
+<DT>日文<DD>
+EUC-JP, SHIFT-JIS, CP932, ISO-2022-JP, ISO-2022-JP-2, ISO-2022-JP-1
+<DT>中文<DD>
+EUC-CN, HZ, GBK, GB18030, EUC-TW, BIG5, CP950, BIG5-HKSCS,
+ISO-2022-CN, ISO-2022-CN-EXT
+<DT>韩文<DD>
+EUC-KR, CP949, ISO-2022-KR, JOHAB
+<DT>Armenian<DD>
+ARMSCII-8
+<DT>Georgian<DD>
+Georgian-Academy, Georgian-PS
+<DT>泰语<DD>
+TIS-620, CP874, MacThai
+<DT>捞挝语<DD>
+MuleLao-1, CP1133
+<DT>越南语<DD>
+VISCII, TCVN, CP1258
+<DT>特定平台<DD>
+HP-ROMAN8, NEXTSTEP
+<DT>Full Unicode<DD>
+<PRE>
+UTF-8
+UCS-2, UCS-2BE, UCS-2LE
+UCS-4, UCS-4BE, UCS-4LE
+UTF-16, UTF-16BE, UTF-16LE
+UTF-32, UTF-32BE, UTF-32LE
+UTF-7
+JAVA
+</PRE>
+
+<DT>用 <B>uint16_t</B> 或 <B>uint32_t</B> 表示的 Unicode<DD>
+(其 字节顺序 和 对齐方式 与 具体 机器 有关)
+UCS-2-INTERNAL, UCS-4-INTERNAL
+<DT>用 <B>char</B> 或 <B>wchar_t</B> 表示的 与 区域设置 相关的 编码<DD>
+(其 字节顺序 和 对齐方式 与 具体 机器 有关, 其 语意 与
+操作系统 和 当前 区域设置 中的 LC_CTYPE 有关)
+char, wchar_t
+</DL>
+<P>
+
+在 <I>tocode</I> 后面 加上 &quot;//TRANSLIT&quot; 表示, 当 在目标 字符集
+中 不能 表示 一个 字符 时, 就用 同其 相似 的 一个 字符 来 代替.
+<P>
+
+其 返回的 转换 描述符 可以 被 <B>iconv</B> 多次 使用. 只要 没有 用
+<B>iconv_close</B> 将其 释放, 它 就是 有效的.
+<P>
+
+转换 描述符 包含了 转换的 状态. 在用 <B>iconv_open</B> 建立 一个 描述符
+时 状态为 初始态. <B>iconv</B> 会 改变 它的 状态. (这说明 一个 描述符
+不能在 多线程中 同时 使用.) 可以 把 NULL 作为 <I>inbuf</I> 传给
+<B>iconv</B> 来 使其 回到 初始态.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>返回值 (RETURN VALUE)</H2>
+
+<B>iconv_open</B> 函数 返回 一个 新的 转换 描述符. 如果 发生 错误 则
+设置 <B>errno</B> 变量 同时 返回 (iconv_t)(-1).
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>错误 (ERRORS)</H2>
+
+除了 一般的 错误, 还可能 有 下面的 错误:
+<DL COMPACT>
+<DT><B>EINVAL</B>
+
+<DD>
+此系统 不支持 从 <I>fromcode</I> 到 <I>tocode</I> 的 转换.
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>遵循 (CONFORMING TO)</H2>
+
+UNIX98
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?3+iconv">iconv</A></B>(3), <B><A HREF="/cgi-bin/man/man2html?3+iconv_close">iconv_close</A></B>(3)
+
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/3/21</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">返回值 (RETURN VALUE)</A><DD>
+<DT><A HREF="#lbAF">错误 (ERRORS)</A><DD>
+<DT><A HREF="#lbAG">遵循 (CONFORMING TO)</A><DD>
+<DT><A HREF="#lbAH">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

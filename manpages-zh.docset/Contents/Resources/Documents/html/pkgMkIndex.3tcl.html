@@ -1,0 +1,224 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of pkg_mkIndex</TITLE>
+</HEAD><BODY>
+<H1>pkg_mkIndex</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.3<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+pkg_mkIndex - 为包的自动装载建造一个索引
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<PRE>
+
+<B>pkg_mkIndex ?</B><I>-direct</I>?  ?<I>-lazy</I>?  ?<I>-load pkgPat</I>? ?<I>-verbose</I>? <I>dir</I> ?<I>pattern pattern ...</I>?
+
+</PRE>
+
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>Pkg_mkIndex</B> 是标准Tcl 库中的一个实用过程。它被用于建立索引文件，在执行 <B>package require</B> 的时候用它来允许自动装载包。使用 <B>pkg_mkIndex</B>要依从下面这些步骤:         
+<DL COMPACT>
+<DT>[1]<DD>
+建立包。
+每个包可以由一个或多个 Tcl   脚本文件或二进制文件组成。二进制文件必须适合使用有一个单一参数的 <B>load</B> 命令装载；例如，如果文件是 <B>test.so</B>  它必须可能用命令 <B>load test.so  </B>命令来装载这个文件。每个脚本文件必须包含一个 <B>package provide</B>  命令来声明包和版本号，而每个二进制文件必须包含一个对 <B>Tcl_PkgProvide</B>的调用。            
+<DT>[2]<DD>
+通过调用 <B>pkg_mkIndex </B>建立索引。
+用 <I>dir</I>              
+参数给出一个目录的名字并且每个<I>pattern</I>  参数都是在 <I>dir</I><I> </I>中选择脚本或二进制文件的一个通配符式样的模式。
+
+
+
+
+
+
+
+缺省的模式是 <B>*.tcl</B> 和 <B>*.[info sharedlibextension]</B>。
+
+
+
+
+
+
+<BR>
+
+<B>Pkg_mkIndex</B> 将在 <I>dir</I>   中建立一个文件 <B>pkgIndex.tcl</B>，其中有关于用 <I>pattern</I>  参数给出的所有文件的包信息。它通过把每个文件装载到一个从解释器中并查看出现了那些包和新命令来完成这项工作(这就是上面描述的在这些文件中必须有 <B>package provide</B>  命令或 <B>Tcl_PkgProvide</B> 调用的原因)。如果你有一个分开成多个脚本和二进制文件的包，或有文件间的依赖，你可能必须使用 <B>-load</B> 选项或调整 <B>pkg_mkIndex</B> 处理这些文件的次序。参见下面的 COMPLEX CASES 复杂情况。        
+<P>
+<DT>[3]<DD>
+把包安装为由 <B>tcl_pkgPath</B>   变量给出的某个目录的子目录。如果 <B>$tcl_pkgPath</B> 包含多于一个的目录，依赖于机器的包(例如，包含二进制共享库的包)通常应该被安装在第一个目录下面而不依赖于机器的包(例如，只包含 Tcl  脚本的包)应该被安装在第二个目录下面。子目录应该包含包的脚本和/或二进制文件还有 <B>pkgIndex.tcl</B>  文件。包被安装为在 <B>$tcl_pkgPath</B>   中的一个目录的一个子目录之后，在 <B>package require</B>  命令期间可自动找到它。
+<BR>
+
+如果你把包安装在其他地方，则你必须确保包含包的目录在 <B>auto_path</B> 全局变量中或在 <B>auto_path</B>  中的一个目录的最直接(immediate)子目录中。<B>Auto_path</B>包含由自动装载器和包装载器查找的目录的一个列表；缺省的它包括 <B>$tcl_pkgPath</B>。包装载器也检查在 <B>auto_path</B> 中的目录的所有子目录。你可以在你的应用中显式的向 <B>auto_path</B>增加一个目录，或向你的 <B>TCLLIBPATH</B>  环境变量添加这个目录:   如果这个环境变量存在，在应用启动期间Tcl 用它来初始化 <B>auto_path</B>。            
+<DT>[4]<DD>
+一旦进行了上述步骤，要使用一个包你需要做的就是调用 <B>package require</B>。例如，如果包 <B>Test</B>  的版本 2.1、2.3、和 3.1 已经用 <B>pkg_mkIndex </B>建立了索引，<B>package require Test</B> 将可获得版本 3.1 而命令 <B>package require -exact Test 2.1</B>将可获得版本 2.1。在 <B>auto_path</B> 中的不同的索引文件中可能有一个包的多个版本，实际上只有一个将被装载到给定的解释器中，具体决定于首先调用了哪个 <B>package require</B>。一个包的不同版本可以装载到不同的解释器中。
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+选项开关有:    
+<DL COMPACT>
+<DT><B>-direct</B><DD>
+The generated index will implement direct loading of the package
+upon <B>package require</B>.  This is the default.
+<DT><B>-lazy</B><DD>
+生成的索引将设法延迟装载包，一直等到使用了由这个包提供命令之一，而不是在 <B>package require </B>时立即装载。
+<DT><B>-load </B><I>pkgPat</I><DD>
+索引处理将预装载在当前解释器中现存的所有包和匹配 <I>pkgPat</I>  的包装载到到用于生成索引的从解释器中。模式匹配使用与字符串匹配相同的规则。参见下面的COMPLEX CASES复杂情况。  
+<DT><B>-verbose</B><DD>
+在索引处理期间生成输出。输出通过 <B>tclLog</B>    过程，这个过程缺省输出到 stderr。 
+<DT><B>--</B><DD>
+标志的终止，用于 <I>dir</I>  以连字号开始的情况。 
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>包和自动装载器 PACKAGES AND THE AUTO-LOADER</H2>
+
+<P>
+
+包管理设施与自动装载器在一些方面有所重叠，二者都安排文件在需要时(on-demand)装载。但是，包管理是一个高层机制，它在装载过程的最后一步使用自动装载器。一般的，使用<B>pkg_mkIndex</B>  给一个包加索引而不使用 <B>auto_mkindex</B> ，因为包机制提供了版本控制: 在索引文件中可获得一个包的多个版本，急于 <B>package require</B>  命令不同的应用可使用不同的版本。相反的，<B>auto_mkindex</B>  不理解版本，所以它只能处理每个包的一个单一版本。对一个给定的包使用   <B>pkg_mkIndex</B> 和 <B>auto_mkindex</B> 两者来建立索引可能不是个好主意。如果你使用 <B>pkg_mkIndex</B> 来为一个包建立索引，它的命令不能被调用，一直等到使用 <B>package require</B> 选择了一个版本；相反的，用 <B>auto_mkindex</B>  建立索引的包由于没有版本而可以立即使用。           
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>它是如何工作的 HOW IT WORKS</H2>
+
+<P>
+
+<B>Pkg_mkIndex</B> 依赖于 <B>package unknown</B>  命令、<B>package ifneeded</B> 命令、和自动装载器。在第一次调用一个 <B>package require</B>命令时，调用 <B>package unknown</B>   脚本。Tcl   初始化把它设置成求值在<B>auto_path </B>中的所有 <B>pkgIndex.tcl</B>  文件的一个脚本。<B>pkgIndex.tcl</B> 文件包含给每个可获得的包的 <B>package ifneeded</B> 命令；这些命令调用 <B>package provide</B> 命令来宣布这个包的可获得性，并且它们设置自动装载器的信息来装载这些包的文件。
+
+
+
+
+
+
+
+如果在生成<B>pkgIndex.tcl</B> 时提供了 <I>-lazy</I>  标志，
+
+
+
+
+
+
+在第一次调用它的命令之前不实际上装载一个给定包的给定版本的一个给定文件。所以在调用了 <B>package require</B>之后，你可能在这个解释器中不能看到这个包的命令，但你可以调用它的命令而它们将被自动装载。  
+<P>
+
+
+
+
+
+
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>直接装载 DIRECT LOADING</H2>
+
+<P>
+
+一些包，例如使用了名字空间和导出命令或要求特殊初始化的包，可以选择在 <B>package require</B> 的时候立即装载它们的包文件而不是延迟实际的装载到第一次使用这个包中的命令的时候。在生成包索引时这是缺省的模式。可以指定 <I>-lazy</I> 参数来屏弃(override)它。
+
+
+
+
+
+
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>复杂情况 COMPLEX CASES</H2>
+
+脚本和二进制文件之间存在依赖，和包被分开成脚本和二进制文件的可被正确处理。但是，你可能必须调整<B>pkg_mkIndex</B>  处理这些文件的次序。下面详细描述这些要点。
+<P>
+
+如果每个脚本或文件包含一个包，并且包只包含在一个文件中，则事情就很容易。你可以简单的用一些通配符模式指定以任意次序为所有文件建立索引。
+<P>
+
+一般的，脚本依赖于其他包是没有问题的。如果脚本包含 <B>package require</B> 命令，在用于处理这个脚本的解释器中把他们连根拔除(stubbed out)，所以不会导致问题。如果脚本调用了其他包的在全局代码中的过程，这些调用由一个存根(stub) <B>unknown</B>    命令处理。但是，如果脚本引用了其他包的在全局代码中的变量   ，这将导致错误。这也是糟糕的编码风格。
+<P>
+
+如果二进制文件依赖于其他的包，事情就变的棘手了，因为在装载一个二进制文件时不可能连根拔除C-层次 API 如 <B>Tcl_PkgRequire</B> API。例如，假设 BLT 包要求 Tk，并在它的 <B>Blt_Init </B>例程中用对 <B>Tcl_PkgRequire</B> 的一个调用表达了这种需求。要支持它，你必须在一个已经装载了Tk 的解释器中运行 <B>pkg_mkIndex</B>。你用 <B>-load </B><I>pkgPat</I>选项来完成这个任务。如果你指定了这个选项，<B>pkg_mkIndex</B>将装载在 <B>info loaded</B> 中列出的所有的包和那些匹配 <I>pkgPat</I> 的包到用于处理文件的解释器中。在多数情况下这将可以满足二进制文件中的 <B>Tcl_PkgRequire</B> 调用。
+<P>
+
+如果你为两个二进制文件建立索引，其中的一个依赖于另一个，你应该最后指定有依赖的那个包。这样没有依赖的那个包将被装载和建立索引，那么在处理第二个文件的时候这个文件所提供的包就是可获得的了。你还必须使用 <B>-load</B> 标志把第一个包装载到用于建立索引的一个临时解释器中；这将无损于指定仍未装载的包模式。
+<P>
+
+如果你有一个分开成一些脚本和一个二进制文件的包，则你必须避免 <B>-load</B>    标志。问题在于如果你在计算索引之前装载了一个包，它将屏蔽提供同一个包的其他部分的所有其他文件。如果你必须使用 <B>-load</B>，则你必须首先指定脚本；否则从二进制文件装载的包可能会屏蔽用脚本定义的包。    
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+package">package</A>(n)
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+auto-load, index, package, version
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/09/01 </B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">包和自动装载器 PACKAGES AND THE AUTO-LOADER</A><DD>
+<DT><A HREF="#lbAG">它是如何工作的 HOW IT WORKS</A><DD>
+<DT><A HREF="#lbAH">直接装载 DIRECT LOADING</A><DD>
+<DT><A HREF="#lbAI">复杂情况 COMPLEX CASES</A><DD>
+<DT><A HREF="#lbAJ">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAK">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAL">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAM">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAN">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

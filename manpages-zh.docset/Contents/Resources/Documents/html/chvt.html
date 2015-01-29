@@ -1,0 +1,77 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CHVT</TITLE>
+</HEAD><BODY>
+<H1>CHVT</H1>
+Section: Linux用户手册 (1)<BR>Updated: 1997年10月7日<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+chvt - 修改虚拟终端的前台环境
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>chvt</B><I>N</I>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<B>chvt</B>
+
+<I>N</I>
+
+命令用来生成
+/dev/tty<I>N</I>
+
+的前台终端.如果它本来不存在,即创建相应的屏幕.为了删除掉
+不用的VT(虚拟终端),可使用
+<B><A HREF="/cgi-bin/man/man2html?1+deallocvt">deallocvt</A></B>(1).
+
+键映射操作
+`Console_<I>N</I>'
+
+(通常绑定为键组合
+(Ctrl-)LeftAlt-F<I>N</I>,
+
+<I>N</I>
+
+在1-12的范围里取值,
+而
+RightAlt-F<I>N-12</I>
+
+中的
+<I>N </I>
+
+则在13-24的范围里取值)也允许切换到其它的VT,不过实际的切换
+只能在它已经分配的前提下进行.这防止了分配给新的VT一个错位
+的键值.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<P>
+<B><A HREF="/cgi-bin/man/man2html?1+deallocvt">deallocvt</A></B>(1).
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAE">SEE ALSO(另见)</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

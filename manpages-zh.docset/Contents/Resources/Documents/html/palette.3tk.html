@@ -1,0 +1,117 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of tk_setPalette</TITLE>
+</HEAD><BODY>
+<H1>tk_setPalette</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: 4.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tk_setPalette, tk_bisque - 修改 Tk 颜色调色板
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>tk_setPalette </B><I>background</I>
+<P>
+<B>tk_setPalette </B><I>name value </I>?<I>name value ...</I>?
+<P>
+<B>tk_bisque</B>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>tk_setPalette</B> 过程改变 Tk 的颜色方案。它通过修改现存组件的颜色和修改选项数据库来做这个工作，这样将来的组件将使用新颜色方案。如果用一个单一参数调用 <B>tk_setPalette</B>，则这个参数是用做普通背景色的一个颜色的名字；<B>tk_setPalette</B> 将从这个背景色计算出一个完整的颜色调色板。作为另一个选择，给 <B>tk_setPalette</B> 的参数可以由任意数目的名字-值对组成，对中的第一个参数是在 Tk 选项数据库中的一个选项的名字，而第二个参数是用于这个选项的新值。当前数据库支持下列名字:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+
+<B>activeBackgroundforegroundselectColor
+activeForegroundhighlightBackgroundselectBackground
+backgroundhighlightColorselectForeground
+disabledForegroundinsertBackgroundtroughColor</B>
+
+</PRE>
+
+</DL>
+
+<P>
+
+<B>tk_setPalette</B> 尝试为你没有指定的所有选项计算合理的缺省。你可以指定上述之外的选项而 Tk 同样在组件上的这些选项。这个特征对使用了额外的颜色选项的定制组件可能有用。
+<P>
+
+一旦为每个颜色选项计算了新值，<B>tk_setPalette</B> 检索组件层次来修改所有现存组件的选项。对于每个组件，它检查这个组件是否定义了上述选项。如果是这样，并且如果这个选项的当前值是缺省的，则改变这个值；如果这个选项有一个不是缺省的值，<B>tk_setPalette</B> 将不改变它。如果以前未运行 <B>tk_setPalette</B>，则缺省值由组件来选项提供(<B>[lindex [$w configure $option] 3]</B>)，否则它是在前面的 <B>tk_setPalette</B> 调用中指定的值。
+<P>
+
+在修改了在应用中的所有组件之后，<B>tk_setPalette</B> 向选项数据库增加选项来改变将来建立的组件的缺省值。增加的新选项在优先级 <B>widgetDefault</B> 上，所以将被来自 .Xdefaults 文件的选项或在建立一个组件的命令行上指定的选项所屏弃。
+<P>
+
+为向后兼容而提供了 <B>tk_bisque</B>: 它把应用的颜色恢复为 Tk 3.6 和以前版本中的浅黄(“bisque”)色方案。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+bisque, color, palette
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/05/16</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

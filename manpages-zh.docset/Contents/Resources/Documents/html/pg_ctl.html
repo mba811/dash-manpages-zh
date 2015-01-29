@@ -1,0 +1,241 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PG_CTL</TITLE>
+</HEAD><BODY>
+<H1>PG_CTL</H1>
+Section: PostgreSQL Server Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+pg_ctl - 启动，停止和重启 PostgreSQL 服务器
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>pg_ctl</B> <B>start</B> [ <B>-w </B>] [ <B>-s </B>] [ <B>-D </B><I>datadir</I><B> </B>] [ <B>-l </B><I>filename</I><B> </B>] [ <B>-o </B><I>options</I><B> </B>] [ <B>-p </B><I>path</I><B> </B>]
+<P>
+<B>pg_ctl</B> <B>stop</B> [ <B>-W </B>] [ <B>-s </B>] [ <B>-D </B><I>datadir</I><B> </B>] [ <B>-m </B><B> s[mart]</B> | <B>f[ast]</B> | <B>i[mmediate]</B><B> </B>]
+<P>
+<B>pg_ctl</B> <B>restart</B> [ <B>-w </B>] [ <B>-s </B>] [ <B>-D </B><I>datadir</I><B> </B>] [ <B>-m </B><B> s[mart]</B> | <B>f[ast]</B> | <B>i[mmediate]</B><B> </B>] [ <B>-o </B><I>options</I><B> </B>]
+<P>
+<B>pg_ctl</B> <B>reload</B> [ <B>-s </B>] [ <B>-D </B><I>datadir</I><B> </B>]
+<P>
+<B>pg_ctl</B> <B>status</B> [ <B>-D </B><I>datadir</I><B> </B>]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>pg_ctl</B> 是一个用于启动，停止， 或者重起 PostgreSQL 后端服务器（postmaster）， 或者显示一个运行着的服务器的状态的工具， 尽管我们可以手动启动服务器，但是 pg_ctl 封装了重新定向日志输出， 与终端和进程组合理分离，以及另外提供了一个选项用于有控制的关闭。
+<P>
+
+在 <B>start</B>  模式里会启动一个新的服务器。 服务器是在后台启动的，标准输入被附着到了 /dev/null  上。如果使用了 -l，那么标准输出和标准错误被定向到一个日志文件， 要么就是重新定向到 pg_ctl 的标准输出（而不是标准错误）。 如果没有选定日志文件，pg_ctl 的标准输出应该重新定向到一个文件或者用管道输出到另外一个进程， 比如那些日志旋转程序，否则，postmaster 将把它的输出写到控制终端（在后台）并且将不会脱离 shell 的进程组。
+<P>
+
+在 <B>stop</B> 模式下，那个正在特定数据目录运行的服务器被关闭。 你可以用 -m 选项选择三种不同的关闭模式：&quot;Smart&quot; 模式等待所有客户端中断联接。 这个是缺省。&quot;Fast&quot; 模式并不等待客户端中断联接。 所有活跃事务都被回卷并且客户端都强制断开。 &quot;Immediate&quot; 模式将在没有干净关闭的情况下退出。这么做将导致在重新启动的时候的恢复。
+<P>
+
+<B>restart</B> 实际上是先执行一个停止，然后紧跟一个启动。它允许变换 <B>postmaster</B> 命令行的选项。
+<P>
+
+<B>reload</B> 模式简单地给 <B>postmaster</B> 发送一个 SIGHUP 信号，导致它重新读取她的配置文件 （<I>postgresql.conf</I>,
+<I>pg_hba.conf</I> 等等） 这样就允许修改配置文件选项而不用完全重启系统来使之生效。
+<P>
+
+<B>status</B> 模式监查一个服务器是否在指定的数据目录运行， 如果是，那么显示其 PID 和调用它的命令行选项。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<DL COMPACT>
+<DT><B>-D </B><I>datadir</I><B></B><DD>
+<BR>&nbsp;声明该数据库文件的文件系统位置。&nbsp;如果忽略这个选项，使用环境变量&nbsp;PGDATA。
+<DT><B>-l </B><I>filename</I><B></B><DD>
+<BR>&nbsp;把服务器日志输出附加在&nbsp;filename&nbsp;文件上。&nbsp;如果该文件不存在，那么创建它。umask设置为&nbsp;077，&nbsp;因此缺省时是不允许从其它用户向日志文件访问的。
+<DT><B>-m </B><I>mode</I><B></B><DD>
+<BR>&nbsp;声明关闭模式。mode&nbsp;&nbsp;可以是smart,&nbsp;fast,&nbsp;或者&nbsp;immediate，或者是这三个之一的第一个字母。
+<DT><B>-o </B><I>options</I><B></B><DD>
+<BR>&nbsp;声明要直接传递给&nbsp;<B>postmaster</B>&nbsp;&nbsp;的选项。
+<P>
+<BR>&nbsp;参数通常都用单或者双引号包围以保证它们作为一个整体传递。
+<DT><B>-p </B><I>path</I><B></B><DD>
+<BR>&nbsp;声明&nbsp;postmaster&nbsp;可执行文件的位置。&nbsp;缺省时&nbsp;postmaster&nbsp;是从和&nbsp;pg_ctl&nbsp;相同的目录取出，如果不是，&nbsp;那么就是写死的安装目录。除非你想干点什么特别的事情，并且得到类似没有找到&nbsp;postmaster这样的错误，&nbsp;否则没有必要使用这个选项。
+<DT><B>-s</B><DD>
+<BR>&nbsp;只打印错误，而不打印提示性信息。
+<DT><B>-w</B><DD>
+<BR>&nbsp;等待启动或者关闭的完成。在&nbsp;60&nbsp;秒后超时。&nbsp;这个参数是关闭时的缺省值。&nbsp;成功的关闭是以删除&nbsp;PID&nbsp;文件为标志的。对于启动而言，&nbsp;一次成功的&nbsp;<B>psql&nbsp;-l</B>&nbsp;&nbsp;就标志着成功。&nbsp;pg_ctl&nbsp;将视图使用对&nbsp;psql&nbsp;合适的端口，如果存在环境变量&nbsp;PGPORT，那么用它。&nbsp;否则，它将查找看看在&nbsp;postgresql.conf&nbsp;文件里面是否设置了一个端口。&nbsp;如果都没有，它将使用&nbsp;PostgreSQL&nbsp;编译时的缺省端口（缺省是&nbsp;5432）。
+<DT><B>-W</B><DD>
+<BR>&nbsp;不等待启动或者停止的完成。这是启动和重起的缺省。
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>PGDATA</B><DD>
+<BR>&nbsp;缺省数据目录位置
+<DT><B>PGPORT</B><DD>
+<B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1) 的缺省端口（由 -w 选项使用）。
+</DL>
+<P>
+
+<BR>&nbsp;其它的环境变量，参阅&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+postmaster">postmaster</A></B>(1).
+<P>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>FILES 文件</H2>
+
+<DL COMPACT>
+<DT><B></B><I>postmaster.pid</I><B></B><DD>
+<BR>&nbsp;这个文件存在于数据目录中是为了帮助&nbsp;pg_ctl&nbsp;&nbsp;判断服务器当前是否在运行。
+<DT><B></B><I>postmaster.opts.default</I><B></B><DD>
+<BR>&nbsp;如果这个文件存在于数据目录，<B>pg_ctl</B>（在&nbsp;<B>start</B>&nbsp;模式下）将把文件地内容当作传递给&nbsp;<B>postmaster</B>&nbsp;命令的选项传递过去，除非被&nbsp;<B>-o</B>&nbsp;选项覆盖。
+<DT><B></B><I>postmaster.opts</I><B></B><DD>
+如果这个文件存在于数据目录，<B>pg_ctl</B>（在 <B>start</B> 模式下）将把文件地内容当作传递给 <B>postmaster</B> 命令的选项传递过去，除非被 <B>-o</B> 选项覆盖。这个文件的内容也会在 status  模式里显示出来。
+<DT><B></B><I>postgresql.conf</I><B></B><DD>
+<BR>&nbsp;这个文件在数据目录中，会分析它以查找和&nbsp;psql&nbsp;一起用的合适的端口（在&nbsp;start&nbsp;模式里给出&nbsp;-w&nbsp;&nbsp;的时候。）
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;等待完全启动还不是一个定义得很完整的操作，&nbsp;如果访问控制设置为本地客户端在没有手工交互的情况下不能访问的话还可能会失效。（比如，口令认证）。
+<A NAME="lbAI">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H3>STARTING THE SERVER 启动服务器</H3>
+
+<P>
+
+<BR>&nbsp;启动服务器：
+<P>
+<PRE>
+$ <B>pg_ctl start</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;启动服务器的一个例子，&nbsp;等到服务器&nbsp;启动了才退出：
+<P>
+<PRE>
+$ <B>pg_ctl -w start</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;用于一个&nbsp;postmaster&nbsp;使用端口&nbsp;5433，而且不带&nbsp;fsync&nbsp;运行，使用：
+<P>
+<PRE>
+$ <B>pg_ctl -o &quot;-F -p 5433&quot; start</B>
+
+</PRE>
+
+<A NAME="lbAK">&nbsp;</A>
+<H3>STOPPING THE SERVER 停止服务器</H3>
+
+<P>
+
+<P>
+<PRE>
+$ <B>pg_ctl stop</B>
+
+</PRE>
+
+<BR>&nbsp;停止服务器，使用&nbsp;-m&nbsp;开关允许我们控制如何把后端停下来。&nbsp;-w等待服务器停止。-m&nbsp;声明后端的停止模式。
+<A NAME="lbAL">&nbsp;</A>
+<H3>RESTARTING THE SERVER 重起服务器</H3>
+
+<P>
+
+<BR>&nbsp;这个命令几乎等于先停止&nbsp;postmaster&nbsp;&nbsp;然后再启动她，只不过&nbsp;<B>pg_ctl</B>&nbsp;保存并重新使用上一次运行&nbsp;postmaster&nbsp;的命令行参数。重起服务器的最简单的方法是：
+<P>
+<PRE>
+$ <B>pg_ctl restart</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;重起服务器，等待其停止和重起：
+<P>
+<PRE>
+$ <B>pg_ctl -w restart</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;使用&nbsp;5433&nbsp;重起并且重起后关闭&nbsp;fsync：
+<P>
+<PRE>
+$ <B>pg_ctl -o &quot;-F -p 5433&quot; restart</B>
+
+</PRE>
+
+<A NAME="lbAM">&nbsp;</A>
+<H3>SHOWING THE SERVER STATUS 显示服务器状态</H3>
+
+<P>
+
+<BR>&nbsp;下面是来自&nbsp;<B>pg_ctl</B>&nbsp;的状态输出的例子：
+<P>
+<PRE>
+$ <B>pg_ctl status</B>
+pg_ctl: postmaster is running (pid: 13718)
+Command line was:
+/usr/local/pgsql/bin/postmaster '-D' '/usr/local/pgsql/data' '-p' '5433' '-B' '128'
+
+</PRE>
+
+<BR>&nbsp;这是在重起模式里使用的命令行。
+<A NAME="lbAN">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?1+postmaster">postmaster</A></B>(1)
+<A NAME="lbAO">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAG">FILES 文件</A><DD>
+<DT><A HREF="#lbAH">NOTES 注意</A><DD>
+<DT><A HREF="#lbAI">EXAMPLES 例子</A><DD>
+<DL>
+<DT><A HREF="#lbAJ">STARTING THE SERVER 启动服务器</A><DD>
+<DT><A HREF="#lbAK">STOPPING THE SERVER 停止服务器</A><DD>
+<DT><A HREF="#lbAL">RESTARTING THE SERVER 重起服务器</A><DD>
+<DT><A HREF="#lbAM">SHOWING THE SERVER STATUS 显示服务器状态</A><DD>
+</DL>
+<DT><A HREF="#lbAN">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAO">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

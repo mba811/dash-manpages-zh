@@ -1,0 +1,244 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of clock</TITLE>
+</HEAD><BODY>
+<H1>clock</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.3<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+clock - 获取和操纵时间    
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>clock </B><I>option</I> ?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令进行多种操作中的某一个，可以获取或操纵表示一些时间概念(notion)的字符串或值。<I>option</I> 参数确定这个命令完成什么操作。合法的 <I>options</I>  (可以使用缩写) 有:           
+<DL COMPACT>
+<DT>
+
+
+
+
+
+
+<DD>
+<B>clock clicks</B> ?<B>-milliseconds</B>?
+返回一个高解析度(high-resolution)的时间值，是一个依赖于系统的整数。值的单位是依赖于系统的但应该是系统上可获得的最高解析度的时钟，比如一个 CPU 周期记数(counter)。如果指定了 <B>-milliseconds</B> ，则保证这个值是微秒的粒度。这个值只应用于流逝了的时间的相对测量。     
+
+
+
+
+
+
+<DT><B>clock format </B><I>clockValue</I> ?<B>-format </B><I>string</I>? ?<B>-gmt </B><I>boolean</I>?<DD>
+把一个整数时间值转换成人可阅读的形式，典型的，这个时间值是从 <B>clock seconds</B>、<B>clock scan</B>、或 <B>file</B> 命令的 <B>atime</B>、 <B>mtime</B>、或 <B>ctime</B>  选项返回的。如果 <B>-format</B>  参数存在，下一个参数是描述如何格式化日期和时间的一个字符串。字段描述符由一个 <B>%</B> 和随后的字段描述符字符组成。所有的其他字符都复制到结果中。有效的字段描述符有: 
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>%%</B><DD>
+插入一个 %。
+<DT><B>%a</B><DD>
+星期名的缩写 (Mon, Tue, etc.)。         
+<DT><B>%A</B><DD>
+完整的星期名 (Monday, Tuesday, etc.)。          
+<DT><B>%b</B><DD>
+月名的缩写 (Jan, Feb, etc.)。         
+<DT><B>%B</B><DD>
+完整的月名。     
+<DT><B>%c</B><DD>
+特定于本地的日期和时间。     
+<DT><B>%d</B><DD>
+月中的第几天 (01 - 31)。
+<DT><B>%H</B><DD>
+24小时格式的小时(00 - 23)。  
+<DT><B>%I</B><DD>
+12小时格式的小时 (00 - 12)。 
+<DT><B>%j</B><DD>
+年中的第几天 (001 - 366)。      
+<DT><B>%m</B><DD>
+第几月 (01 - 12)。      
+<DT><B>%M</B><DD>
+分 (00 - 59)。         
+<DT><B>%p</B><DD>
+AM/PM 指示符。        
+<DT><B>%S</B><DD>
+秒 (00 - 59)。   
+<DT><B>%U</B><DD>
+年中的第几星期 (00 - 52)，星期天是一个星期中的第一天。         
+<DT><B>%w</B><DD>
+星期几 (Sunday = 0)。      
+<DT><B>%W</B><DD>
+年中的第几星期 (00 - 52)，星期一是一个星期中的第一天。       
+<DT><B>%x</B><DD>
+特定于本地的日期格式。   
+<DT><B>%X</B><DD>
+特定于本地的时间格式。     
+<DT><B>%y</B><DD>
+世纪中的第几年 (00 - 99)。   
+<DT><B>%Y</B><DD>
+带世纪的年 (例如 1990)。   
+<DT><B>%Z</B><DD>
+时区名。    
+</DL>
+</DL>
+
+<P>
+<DL COMPACT><DT><DD>
+在一些系统上支持下列补充的字段描述符(例如在 Unix 上而不在 Windows):     
+<DL COMPACT>
+<DT><B>%D</B><DD>
+形如 %m/%d/%y 的日期。  
+<DT><B>%e</B><DD>
+月中的第几天 (1 - 31)，没有前导的零。     
+<DT><B>%h</B><DD>
+月名的缩写。
+<DT><B>%n</B><DD>
+插入一个换行。  
+<DT><B>%r</B><DD>
+形如 %I:%M:%S %p 的时间。       
+<DT><B>%R</B><DD>
+形如 %H:%M 的时间。
+<DT><B>%t</B><DD>
+插入一个 tab。
+<DT><B>%T</B><DD>
+形如 %H:%M:%S 的时间。 
+</DL>
+</DL>
+
+<P>
+<DL COMPACT><DT><DD>
+如果未指定 <B>-format</B>  参数，使用格式串 “<B>%a %b %d %H:%M:%S %Z %Y</B>”。如果 <B>-gmt</B> 参数存在，下一个参数必须是一个 boolean (值)。如果是真则指定时间作为 Greenwich 标准时来格式化，如果是假则使用操作环境定义的本地时区。        
+</DL>
+
+<DT><B>clock scan </B><I>dateString</I> ?<B>-base </B><I>clockVal</I>? ?<B>-gmt </B><I>boolean</I>?<DD>
+把 <I>dateString</I>  转换成一个整数时钟值(参见 <B>clock seconds</B>)。这个命令可分析并转换几乎所有的标准的日期和/或时间串，其中可以包含标准的时区助记码(mnemonic)。如果只指定了一个时间，假定为当前的日期。如果串中不包括一个时区助记码，除非 <B>-gmt </B>参数是真之外假定为本地时区，在 <B>-gmt </B> 参数是真的情况下，假定指定的时间是相对于 Greenwich 标准时来计算时钟值。如果指定了 <B>-gmt</B>，它只影响计算出的时间值，不影响对 <B>-base </B>的解释。
+<P>
+如果指定了 <B>-base</B>   标记，下一个参数将包括一个整数的时钟值。只使用这个值中的日期而不管时间。这对确定特定的某天的时间或做其他的相对于日期的转换有用。
+<P>
+<I>dateString</I> 包含零个或多个下列形式的指定(specification):     
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><I>time</I><DD>
+一天中的时间，样式是: <I>hh</I>?<I>:mm</I>?<I>:ss</I>?? 
+?<I>meridian</I>? ?<I>zone</I>? or <I>hhmm </I>?<I>meridian</I>? 
+?<I>zone</I>?. 如果为指定上下午(meridian), <I>hh</I> 被解释为一个24小时钟点。    
+<DT><I>date</I><DD>
+一个特定的月和日，年是可选的。可接受的格式是 <I>mm/dd</I>?<I>/yy</I>?, <I>monthname dd</I>
+?, <I>yy</I>?, <I>dd monthname </I>?<I>yy</I>?, <I>day, dd monthname
+yy</I>, <I>?CC?yymmdd</I>, <I>?CC?yy-mm-dd</I>, <I>dd-monthname-?CC?yy</I>. 缺省的年是当前年。如果年小于  
+
+
+
+
+
+
+
+100，我们把 00-68 年作为 2000-2068 年而 69-99 年作为 1969-1999  年。注意所有平台都可以表示 38-70 年,  所以如果使用这些年就可能出错。           
+
+
+
+
+
+
+<DT><I>ISO 8601 point-in-time</I><DD>
+一个 ISO 8601 point-in-time 指定，如 <I>CCyymmddThhmmss</I>, 这里 T 是字面的 T，<I>CCyymmdd hhmmss</I>, 或者 <I>CCyymmddThh:mm:ss</I>.
+<DT><I>relative time</I><DD>
+相对当前时间的一个指定。格式是 <I>number unit</I>，可接受的单位是 <B>year</B>、 <B>fortnight</B>、 <B>month</B>、 <B>week</B>、 <B>day</B>、<B>hour</B>、 <B>minute</B>  (或 <B>min</B>)、和 <B>second</B>  (或 <B>sec</B>)。单位可以被指定为单数或复数，比如 <B>3 weeks</B>。还可以指定这些修饰符: <B>tomorrow</B>、 <B>yesterday</B>、<B>today</B>、 <B>now</B>、<B>last</B>、<B>this</B>、 <B>next</B>、<B>ago</B>。        
+</DL>
+</DL>
+
+<P>
+<DL COMPACT><DT><DD>
+实际的日期计算依照下列的步骤。首先，处理和转换所有绝对日期和/或时间。使用这个时间作为基准(base),添加上星期几(day-of-week)指定。其次，使用相对指定。如果指定了一个日期或某天，并且没有给出绝对或相对的时间，则使用午夜。最后，进行一次校正，这样就在估计了夏令时不同之后产生正确的一天中的小时，并且在从一个大月结束到一个小月时给出正确的日期。       
+<P>
+只在用如下单位指定相对时间的时候进行夏令时校正，日或更多，例如  days、 weeks、 fortnights、months 或 years。这意味着跨越夏令时边界的时候，对 <B>clock scan “1 day”</B> 和 <B>clock scan “24 hours” </B>将给出不同的结果:    
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+
+<B>% clock scan &quot;1 day&quot; -base [clock scan 1999-10-31]
+941443200
+% clock scan &quot;24 hours&quot; -base [clock scan 1999-10-31]
+941439600</B>
+
+</PRE>
+
+</DL>
+
+
+</DL>
+
+<DT><B>clock seconds</B><DD>
+把当前的日期和时间作为依赖于系统的整数值返回。值的单位是秒，允许它被用于相对时间的计算。值通常被定义成从“epoch”开始(至今)总共流逝的时间。你不应该假定 epoch 的值。  
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+clock, date, time
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/21</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

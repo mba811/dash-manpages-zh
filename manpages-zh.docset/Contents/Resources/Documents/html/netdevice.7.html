@@ -1,0 +1,352 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of NETDEVICE</TITLE>
+</HEAD><BODY>
+<H1>NETDEVICE</H1>
+Section: Linux Programmer's Manual (7)<BR>Updated: 2 May 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+netdevice - 底层访问 Linux 网络设备.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/sys/ioctl.h">sys/ioctl.h</A>&gt;</B>
+
+<BR>
+
+<B>#include &lt;<A HREF="file:///usr/include/net/if.h">net/if.h</A>&gt;</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+本手册 描述 用于 配置 网络设备 的 套接字(socket) 接口.
+<P>
+Linux 支持 一些 配置 网络设备 的 标准 ioctl. 他们 用于 任意的 套接字 描述符,
+而 无须 了解 其 类型 或 系列. 他们 传递 一个
+<B>ifreq </B>
+
+结构:
+<P>
+<PRE>
+
+struct ifreq
+{
+    char            ifr_name[IFNAMSIZ];   /* Interface name */
+    union {
+                    struct sockaddr       ifr_addr;
+                    struct sockaddr       ifr_dstaddr;
+                    struct sockaddr       ifr_broadaddr;
+                    struct sockaddr       ifr_netmask;
+                    struct sockaddr       ifr_hwaddr;
+                    short                 ifr_flags;
+                    int                   ifr_ifindex;
+                    int                   ifr_metric;
+                    int                   ifr_mtu;
+                    struct ifmap          ifr_map;
+                    char                  ifr_slave[IFNAMSIZ];
+                    char                  ifr_newname[IFNAMSIZ];
+                    char *                ifr_data;
+    };
+}
+
+struct ifconf 
+{ 
+    int ifc_len;                          /* size of buffer */
+    union {            
+                    char *                ifc_buf; /* buffer address */ 
+                    struct ifreq *ifc_req; /* array of structures */
+    };  
+};     
+
+</PRE>
+
+<P>
+一般说来, ioctl 通过 把
+<B>ifr_name</B>
+
+设置为 接口 的 名字 来 指定 将要 操作 的 设备. 结构的 其他成员 可以 分享 内存.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>IOCTLS</H2>
+
+如果 某个 ioctl 标记为 特权操作, 那么 操作时 需要 有效uid 为 0, 或者 拥有
+<B>CAP_NET_ADMIN</B>
+
+能力. 否则 将 返回
+<B>EPERM .</B>
+
+<P>
+<DL COMPACT>
+<DT><B>SIOCGIFNAME</B>
+
+<DD>
+给定
+<B>ifr_ifindex,</B>
+
+返回
+<B>ifr_name</B>
+
+中 的 接口名字. 这是 唯一 返回 
+<B>ifr_name</B>
+
+内容 的 ioctl.
+<P>
+<DT><B>SIOCGIFINDEX</B>
+
+<DD>
+把 接口 的 索引 存入
+<B>ifr_ifindex</B>.
+
+<P>
+<DT><B>SIOCGIFFLAGS</B>, <B>SIOCSIFFLAGS</B>
+
+<DD>
+读取 或 设置 设备的 活动标志字.
+<B>ifr_flags</B>
+
+包含 下列值 的 屏蔽位:
+<P>
+<TABLE>
+<TR VALIGN=top><TD ALIGN=center COLSPAN=2>设备标志<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_UP</TD><TD> 接口正在运行.<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_BROADCAST</TD><TD> 有效的广播地址集.<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_DEBUG</TD><TD> 内部调试标志.<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_LOOPBACK</TD><TD> 这是自环接口.<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_POINTOPOINT</TD><TD> 这是点到点的链路接口.<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_RUNNING</TD><TD> 资源已分配.<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_NOARP</TD><TD> 无arp协议, 没有设置第二层目的地址.<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_PROMISC</TD><TD> 接口为杂凑(promiscuous)模式.<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_NOTRAILERS</TD><TD> 避免使用trailer .<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_ALLMULTI</TD><TD> 接收所有组播(multicast)报文.<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_MASTER</TD><TD> 主负载平衡群(bundle).<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_SLAVE</TD><TD> 从负载平衡群(bundle).<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_MULTICAST</TD><TD> 支持组播(multicast).<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_PORTSEL</TD><TD> 可以通过ifmap选择介质(media)类型.<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_AUTOMEDIA</TD><TD> 自动选择介质.<BR></TD></TR>
+<TR VALIGN=top><TD>IFF_DYNAMIC</TD><TD> 接口关闭时丢弃地址.<BR></TD></TR>
+</TABLE>
+
+<P>
+设置 活动标志字 是 特权操作, 但是 任何进程 都可以 读取 标志字.
+<P>
+<DT><B>SIOCGIFMETRIC</B>, <B>SIOCSIFMETRIC</B>
+
+<DD>
+使用
+<B>ifr_metric</B>
+
+读取 或 设置 设备的 metric 值. 该功能 目前 还没有 实现. 读取操作 使
+<B>ifr_metric</B>
+
+置 0, 而 设置操作 则 返回
+<B>EOPNOTSUPP.</B>
+
+<P>
+<DT><B>SIOCGIFMTU</B>, <B>SIOCSIFMTU</B>
+
+<DD>
+使用
+<B>ifr_mtu</B>
+
+读取 或 设置 设备的 MTU(最大传输单元).
+设置 MTU 是 特权操作. 过小的 MTU 可能 导致 内核 崩溃.
+<P>
+<DT><B>SIOCGIFHWADDR</B>, <B>SIOCSIFHWADDR</B>
+
+<DD>
+使用
+<B>ifr_hwaddr</B>
+
+读取 或 设置 设备的 硬件地址. 设置 硬件地址 是 特权操作.
+<P>
+<DT><B>SIOCSIFHWBROADCAST</B>
+
+<DD>
+使用
+<B>ifr_hwaddr</B>
+
+读取 或 设置 设备的 硬件广播地址. 这是个 特权操作.
+<P>
+<DT><B>SIOCGIFMAP</B>, <B>SIOCSIFMAP</B>
+
+<DD>
+使用
+<B>ifr_map</B>
+
+读取 或 设置 接口的 硬件参数. 设置 这个参数 是 特权操作.
+<P>
+<PRE>
+
+struct ifmap 
+{
+    unsigned long   mem_start;
+    unsigned long   mem_end;
+    unsigned short  base_addr; 
+    unsigned char   irq;                  
+    unsigned char   dma; 
+    unsigned char   port; 
+};
+
+</PRE>
+
+<P>
+对 ifmap 结构 的 解释 取决于 设备驱动程序 和 体系结构.
+<P>
+<DT><B>SIOCADDMULTI</B>, <B>SIOCDELMULTI</B>
+
+<DD>
+使用
+<B>ifr_hwaddr</B>
+
+在 设备的 链路层 组播过滤器 (multicase filter) 中 添加 或 删除 地址.
+这些是 特权操作. 参看
+<B><A HREF="/cgi-bin/man/man2html?7+packet">packet</A></B>(7)<B>.</B>
+
+<P>
+<DT><B>SIOCGIFTXQLEN</B>, <B>SIOCSIFTXQLEN</B>
+
+<DD>
+使用
+<B>ifr_qlen</B>
+
+读取 或 设置 设备的 传输队列长度.
+设置 传输队列长度 是 特权操作.
+<P>
+<DT><B>SIOCSIFNAME</B>
+
+<DD>
+把
+<B>ifr_ifindex</B>
+
+中 指定的 接口名字 改成
+<B>ifr_newname</B>.
+
+这是个 特权操作.
+<P>
+<DT><B>SIOCGIFCONF</B>
+
+<DD>
+返回 接口地址(传输层) 列表. 出于 兼容性, 目前 只代表 AF_INET 地址.
+用户 传送 一个
+<B>ifconf</B>
+
+结构 作为 ioctl 的 参数. 其中
+<B>ifc_req</B>
+
+包含 一个 指针 指向
+<I>ifreq</I>
+
+结构数组, 他的 长度 以字节 为单位 存放在
+<B>ifc_len </B>
+
+中. 内核 用 所有 当前的 L3(第三层?) 接口地址 填充 ifreqs,
+这些 接口 正在 运行:
+<I>ifr_name </I>
+
+存放 接口名字 (eth0:1等),
+<I>ifr_addr</I>
+
+存放 地址. 内核 在
+<I>ifc_len</I>
+
+中 返回 实际长度;
+如果 他 等于 初始长度, 表示 溢出了, 用户 应该 换一个 大些的 缓冲区 重试 一下.
+没有 发生 错误时 ioctl 返回 0, 否则 返回 -1, 溢出 不算 错误.
+<P>
+
+
+
+
+
+<P>
+</DL>
+<P>
+
+<P>
+
+<P>
+
+大多数 协议 使用 自己的 ioctl 配置 协议 特定的 接口 操作. 具体 情况
+参看 协议的 帮助手册. 要配置 IP 地址 可以 参看
+<B><A HREF="/cgi-bin/man/man2html?7+ip">ip</A></B>(7).
+
+<P>
+
+另外, 某些 设备 有 专用的 ioctl, 这里 不做 叙述.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>注意 (NOTE)</H2>
+
+严格说来
+<B>SIOCGIFCONF </B>
+
+是 专门 针对 IP 的, 它 属于
+<B><A HREF="/cgi-bin/man/man2html?7+ip">ip</A></B>(7).
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>注意 (NOTE)</H2>
+
+可以 通过
+<I>/proc/net/dev</I>
+
+看到 没有 地址 或 没有
+<B>IFF_RUNNING </B>
+
+标志 的 接口名字.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?7+ip">ip</A></B>(7), <B><A HREF="/cgi-bin/man/man2html?7+proc">proc</A></B>(7)
+
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@iname.com">xuming@iname.com</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/15</B>
+
+第一版
+<BR>
+
+<B>2001/11/24</B>
+
+第一次修订
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">IOCTLS</A><DD>
+<DT><A HREF="#lbAF">注意 (NOTE)</A><DD>
+<DT><A HREF="#lbAG">注意 (NOTE)</A><DD>
+<DT><A HREF="#lbAH">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

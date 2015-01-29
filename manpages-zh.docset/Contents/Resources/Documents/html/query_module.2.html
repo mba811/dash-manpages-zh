@@ -1,0 +1,126 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of query_module</TITLE>
+</HEAD><BODY>
+<H1>query_module</H1>
+Section: System Calls (2)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+query_module - 向内核查询和模块有关的各个位.   /* 查询有关的位?? */
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/linux/module.h">linux/module.h</A>&gt;</B>
+
+<P>
+int query_module(const char *name, int which,void *buf, size_t bufsize, size
+_t *ret);
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+query_module请求和可加载模块有关的来自内核的信息.信息的细致的特性和格式依赖于
+which参数,一些函数要求name参数来命名当前被加载的模块.一些允许参数name为null,
+指明内核是正确的.: 
+which的值
+0   Always returns success. Used to probe for the system call.
+0   总是返回成功,用来探测系统调用.   /* 参见 insmod -p 和前面文章 */
+QM_MODULES        Returns the names of all loaded modules. The output buffer
+<BR>&nbsp;format&nbsp;is&nbsp;adjacent&nbsp;null-terminated&nbsp;strings;&nbsp;ret&nbsp;is&nbsp;set&nbsp;to&nbsp;the&nbsp;number&nbsp;of&nbsp;mod
+ules.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;返回所有已加载的模块的名字.输出缓冲区的格式是邻近的以null终止的字符串;ret
+被
+设置为模块的数目.
+QM_DEPS        Returns the names of all modules used by the indicated
+module.
+The output buffer format is adjacent null-terminated strings; ret is set t
+o the number of modules.    返回所有被name参数指定的模块使用的模块的名字.输出
+缓
+冲区格式是邻近的以null终止的字符串;ret被设置为模块的数目.
+QM_REFS        Returns the names of all modules using the indicated module.
+This is the inverse of QM_DEPS. The output buffer format is adjacent null-te
+rminated strings; ret is set to the number of modules.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;返回所有正使用被name参数指定的模块的模块名字.这和QM_DEPS是相反的.输出缓冲
+区
+格式是以邻近的null终止的字符串;ret被设置为模块的数目.
+QM_SYMBOLS        Returns the symbols and values exported by the kernel or t
+he indicated module. The buffer format is an array of:               
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;struct&nbsp;module_symbol
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;long&nbsp;value;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;long&nbsp;name;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;followed&nbsp;by&nbsp;null-terminated&nbsp;strings.&nbsp;The&nbsp;value&nbsp;of&nbsp;name&nbsp;is&nbsp;the
+character offset of the string relative to the start of buf; ret is set to t
+he number of symbols.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;返回被内核或指定模块导出(开放)的符号和值对.缓冲区格式是一个以null终止的
+结构数组,name的值是相对缓冲区的开始的字符串的字符偏移;ret被设置为符号的数目.
+<P>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;struct&nbsp;module_symbol
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;{
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;long&nbsp;value;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;long&nbsp;value;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;}
+QM_INFO        Returns miscelaneous information about the indicated module.
+The output buffer format is:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;struct&nbsp;module_info
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;long&nbsp;address;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;long&nbsp;size;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;long&nbsp;flags;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;where&nbsp;address&nbsp;is&nbsp;the&nbsp;kernel&nbsp;address&nbsp;at&nbsp;which&nbsp;the&nbsp;module&nbsp;reside
+s, size is the size of the module in bytes, and flags is a mask of MOD_RUNNI
+NG, MOD_AUTOCLEAN, et al that indicates the current status of the module. re
+t is set to the size of the            module_info struct.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;返回各种和指定模块相关的各种信息,输出缓冲区的格式如下:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;struct&nbsp;module_info
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;{
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;long&nbsp;address;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;long&nbsp;size;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;unsigned&nbsp;long&nbsp;flags;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;}
+<BR>&nbsp;address是模块在内核空间中驻留的地址,size是模块以字节计数的大小,flags是MOD_R
+UNING,MOD_AUTOCLEAN等指示模块当前状态的标志的按位或组成的掩玛.ret被设置为mod
+ule_info结构的大小.
+<A NAME="lbAE">&nbsp;</A>
+<H2>返回值</H2>
+
+成功时总是返回0,错误是返回-1,全局变量errno被相应设置.
+<A NAME="lbAF">&nbsp;</A>
+<H2>错误</H2>
+
+<DL COMPACT>
+<DT>ENOENT <DD>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;被name指定的模块不存在.
+<DT>EINVAL<DD>
+<DT>ENOSPC<DD>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;提供的缓冲区太小,ret被设置为需要的最小大小.
+<DT>EFAULT<DD>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;name,buf或ret中至少一个越出了程序可访问的地址空间.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;雷勇&nbsp;&lt;<A HREF="mailto:nsinit@263.net">nsinit@263.net</A>&gt;</H2>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">返回值</A><DD>
+<DT><A HREF="#lbAF">错误</A><DD>
+<DT><A HREF="#lbAG"><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;雷勇&nbsp;&lt;nsinit@263.net&gt;</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

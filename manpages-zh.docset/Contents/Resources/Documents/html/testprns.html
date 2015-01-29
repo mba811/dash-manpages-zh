@@ -1,0 +1,151 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of TESTPRNS</TITLE>
+</HEAD><BODY>
+<H1>TESTPRNS</H1>
+Section: User Commands  (1)<BR>Updated: 11 Nov 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+
+NAME
+名字
+testprns - 为smbd测试合法的打印机名
+<P>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>总览</H2>
+
+<P>
+
+<B>testprns</B> printername [printcapname]
+<P>
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述</H2>
+
+<P>
+
+此程序是samba套件的一部分。 
+<P>
+
+testprns是个非常简单的测试程序，用于检查smbd作为服务提供的打印机名是否合法。
+<P>
+
+在这里"Valid"的意思就是"在printcap中可以找到该打印机"。实际上
+总是使用printcap文件来指定打印机是非常明智的。
+<P>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>选项 </H2>
+
+<P>
+
+<DL COMPACT>
+<DT><DD>
+<DT><B>printername</B><DD>
+要测试的打印机名。 
+<DT><DD>
+打印机可以从printcap文件的每个记录首字段中获得，字段中用"|" 号来识
+别单个的打印机名和别名。注意当测试请求的打印机名时并不确认或检查printcap
+文件的总览。打印假脱机系统会比testprns程序更多或更少地放宽printcap文件的
+总览。但是，如果testprns找到了打印机的话smbd会作这样的检查。
+<DT><DD>
+<DT><B>printcapname</B><DD>
+此参数指定想要对给出的打印机名进行查找的printcap文件名。 
+<DT><DD>
+如果此参数没有指定的话，testprns将尝试对编译时指定的printcap文件名。
+</DL>
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>相关文件</H2>
+
+<P>
+
+<B>/etc/printcap</B> 通常是被扫描的默认printcap文件。请参见
+<B>printcap (5)</B>.
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>诊断</H2>
+
+<P>
+
+如果发现检测的打印机合法，则显示"Printer name &lt;printername&gt; is
+valid"这样的信息。
+<P>
+
+如果发现检测的打印机不合法，则显示"Printer name &lt;printername&gt; is not
+valid"这样的信息。
+<P>
+
+所有测试结果信息通常情况下会被记录到当前目录下的test.log文件中。程序运行在调试级3上，所以
+会记录十分详细的信息。如果有出错或警告的话应该仔细检查这个文件。
+<P>
+
+其它信息是不需加以说明的。
+<P>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>另见</H2>
+
+<P>
+
+<B>printcap (5)</B>, <B>smbd (8)</B>, <B>smbclient
+(1)</B>
+<P>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者</H2>
+
+<P>
+
+samba软件和相关工具最初由Andrew Tridgell <A HREF="mailto:samba-bugs@samba.org">samba-bugs@samba.org</A>创建。samba现在由开发
+组作为类似Linux内核开发采用的开放源代码计划方式来发展。 
+<P>
+
+samba手册页最初由Karl Auer撰写。它的源码已被转换成YODL(一种极好的开放源代码软件，可以在
+<A HREF="ftp://ftp.icce.rug.nl/pub/unix/处获得)格式并已由Jeremy">ftp://ftp.icce.rug.nl/pub/unix/处获得)格式并已由Jeremy</A> Allison更新到samba2.0版本。 
+<P>
+
+请参见samba (7)查找如何获得一份完整的维护者列表以及如何提交错误报告及注解等等。
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">总览</A><DD>
+<DT><A HREF="#lbAC">描述</A><DD>
+<DT><A HREF="#lbAD">选项 </A><DD>
+<DT><A HREF="#lbAE">相关文件</A><DD>
+<DT><A HREF="#lbAF">诊断</A><DD>
+<DT><A HREF="#lbAG">另见</A><DD>
+<DT><A HREF="#lbAH">作者</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

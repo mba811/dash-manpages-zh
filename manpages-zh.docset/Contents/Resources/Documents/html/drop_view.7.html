@@ -1,0 +1,90 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DROP VIEW</TITLE>
+</HEAD><BODY>
+<H1>DROP VIEW</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+DROP VIEW - 删除一个视图
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+DROP VIEW <I>name</I> [, ...] [ CASCADE | RESTRICT ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>DROP VIEW</B> 从数据库中删除一个现存的视图。 执行这条命令必须是视图的所有者。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;要删除的视图名称（可以有模式修饰）。
+<DT><B>CASCADE</B><DD>
+<BR>&nbsp;自动删除依赖此视图的对象（比如其它视图）。
+<DT><B>RESTRICT</B><DD>
+<BR>&nbsp;如果有依赖对象存在，则拒绝删除此视图。这个是缺省。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;下面命令将删除视图&nbsp;kinds：
+<P>
+<PRE>
+DROP VIEW kinds;
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;这条命令遵循&nbsp;SQL&nbsp;标准。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+CREATE VIEW [<B><A HREF="/cgi-bin/man/man2html?7+create_view">create_view</A></B>(7)]
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

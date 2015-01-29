@@ -1,0 +1,110 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of bgerror</TITLE>
+</HEAD><BODY>
+<H1>bgerror</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.5<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+bgerror - 为处理后台错误而被调用的命令
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>bgerror </B><I>message</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>bgerror</B> 命令不作为 Tcl 内置部分而存在。如果单独的某个应用或用户希望处理后台错误，可以定义一个 bgerror 命令(例如，作为一个 Tcl 过程)。
+<P>
+
+后台错误发生在事件处理器(handler)或不是由应用发起(originate)的一些其他命令中。例如，如果在执行一个用 <B>after</B> 命令指定的一个命令时发生了一个错误，那么这就是一个后台错误。对于一个非后台错误，通过嵌套的 Tcl 命令求值(evaluation)， 错误可以被简单的向上返回，直到到达应用中的顶层代码；则应用可以用任何它希望的方式来报告错误。 当一个后台错误发生时，在 Tcl 库中终止命令解释(unwinding ends ? 松开末端)并且没有给 Tcl 用来报告错误明显的途径。
+<P>
+
+当 Tcl 检测到一个后台错误时，它保存关于错误的信息并作为一个空闲处理器而在以后调用 <B>bgerror</B> 命令。在调用 <B>bgerror</B> 之前，Tcl 把 fBerrorInfo 和 <B>errorCode</B> 变量的存储成它们在错误发生时的值，接着用错误消息作为唯一的参数来调用 <B>bgerror</B>。Tcl 假定应用已经实现了 <B>bgerror</B> 命令，命令以对应用有意义的方式来报告错误。 Tcl 在 <B>bgerror</B> 命令没有生成错误时忽略返回的任何结果。
+<P>
+
+如果在 <B>bgerror</B> 命令中发生了另一个 Tcl 错误(例如，没有定义 <B>bgerror</B> 命令)则 Tcl 通过向标准错误写消息来处理这个自身的错误。
+<P>
+
+在调用 <B>bgerror</B> 来处理错误之前如果积累了一些错误，将以发生的次序为每个错误调用一次 <B>bgerror</B>。但是，如果 <B>bgerror</B> 以一个 break 例外返回，则跳过所有的余下的错误而不调用 <B>bgerror</B>。
+<P>
+
+<BR>&nbsp;Tcl&nbsp;没有缺省的实现&nbsp;<B>bgerror</B>。但是，在使用&nbsp;&nbsp;Tk&nbsp;的应用中有一个缺省的&nbsp;<B>bgerror</B>&nbsp;过程，它贴出(post)一个对话框，包含了错误信息并向用户提供一个机会来查看显示在什么地方发生错误的栈跟踪。
+In addition to allowing the user to view the stack trace, the dialog provides an additional application configurable button which may be used, for example, to save the stack trace to a file.  By default,
+this is the behavior associated with that button.  This behavior can be redefined by setting the option database values <B>*ErrorDialog.function.text</B>, to specify the caption for the function button, and <B>*ErrorDialog.function.command</B>, to specify the command to be run.  The text of the stack trace is appended to the command when it is evaluated.  If either of these options is set to the empty string, then the additional button will not be displayed in the dialog.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+after">after</A>(n), <A HREF="/cgi-bin/man/man2html?n+tclvars">tclvars</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+background error, reporting
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/27</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

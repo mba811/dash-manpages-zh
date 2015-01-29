@@ -1,0 +1,219 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SETQUOTA</TITLE>
+</HEAD><BODY>
+<H1>SETQUOTA</H1>
+Section: Maintenance Commands (8)<BR>Updated: 1999年8月20日星期五<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+setquota - 设置磁盘配额或时间限制
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>setquota</B>
+
+[
+<B>-u</B>
+
+|
+<B>-g</B>
+
+]
+<I>filesystem-name</I>
+
+<I>block-soft</I>
+
+<I>block-hard</I>
+
+<I>inode-soft</I>
+
+<I>inode-hard</I>
+
+<I>name</I>...
+
+<P>
+
+<B>setquota</B>
+
+[
+<B>-u</B>
+
+|
+<B>-g</B>
+
+]
+<I>filesystem-name</I>
+
+<B>-p</B>
+
+<I>model-name</I>
+
+<I>name</I>...
+
+<P>
+
+<B>setquota</B>
+
+<B>-p</B>
+
+[
+<B>-u</B>
+
+|
+<B>-g</B>
+
+]
+<I>filesystem-name</I>
+
+<I>block-time-limit</I>
+
+<I>inode-time-limit</I>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<A NAME="ixAAB"></A>
+<A NAME="ixAAC"></A>
+<A NAME="ixAAD"></A>
+<A NAME="ixAAE"></A>
+<A NAME="ixAAF"></A>
+<A NAME="ixAAG"></A>
+<B>setquota</B>
+
+是一个命令行配额编辑器.它允许针对特定(通过名字或id标识的)用户/组的
+配额设置.
+配额可以直接指定,也可以从其它用户复制(参看选项
+<B>-p</B>).
+
+使用这个应用程序，同时可以设置超出软配额的可能的时间限制(参看选项
+<B>-t</B>).
+
+如果你想手工编辑配额,你也可以使用
+<B><A HREF="/cgi-bin/man/man2html?8+edquota">edquota</A></B>(8)
+
+应用程序,倘若你觉得它更方便的话.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS(选项)</H2>
+
+<DL COMPACT>
+<DT><B>-u</B>
+
+<DD>
+为指定的用户设置用户配额.这是默认的选项
+<DT><B>-g</B>
+
+<DD>
+为指定的组设置组配额.
+<DT><B>-p model-name</B>
+
+<DD>
+设置指定的用户/组的配额与
+<I>model-name</I>
+
+的用户/组相同.
+<DT><B>-t</B>
+
+<DD>
+在指定的文件系统上针对特定的配额类型设置时间限制.
+限制以秒计.
+</DL>
+<P>
+
+要禁止使用配额,可以设置相应的参数为0.
+要对几个文件系统修改配额,可以对每个文件系统调用一次.
+<P>
+
+只有超级用户可以编辑配额.(为了在一个文件系统上建立配额,文件系统的
+root目录下必须包含一个由root所有,叫做
+<B>aquota.user</B>
+
+或
+<B>aquota.group</B>
+
+的文件.
+参看
+<B><A HREF="/cgi-bin/man/man2html?8+quotaon">quotaon</A></B>(8)
+
+以了解详情.)
+<A NAME="lbAF">&nbsp;</A>
+<H2>FILES(相关文件)</H2>
+
+
+<DL COMPACT>
+<DT><B>aquota.user或aquota.group</B>
+
+<DD>
+位于文件系统root下的配额文件
+<DT><B>/etc/mtab</B>
+
+<DD>
+已挂载的文件系统表
+
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+quota">quota</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?2+quotactl">quotactl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?8+quotacheck">quotacheck</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+quotaon">quotaon</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+repquota">repquota</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+convertquota">convertquota</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+edquota">edquota</A></B>(8)
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>AUTHOR(作者)</H2>
+
+Jan Kara &lt;<A HREF="mailto:jack@atrey.karlin.mff.cuni.cz">jack@atrey.karlin.mff.cuni.cz</A>&gt;
+<P>
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新] </H2>
+
+<B>2001.07.10</B>
+
+<BR>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAE">OPTIONS(选项)</A><DD>
+<DT><A HREF="#lbAF">FILES(相关文件)</A><DD>
+<DT><A HREF="#lbAG">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAH">AUTHOR(作者)</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新] </A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,93 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of raise</TITLE>
+</HEAD><BODY>
+<H1>raise</H1>
+Section: Tk Built-In Commands (3tcl)<BR>Updated: 3.3<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+raise - 改变一个窗口在堆栈次序中的位置
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>raise </B><I>window </I>?<I>aboveThis</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+如果省略了 <I>aboveThis</I> 参数则这个命令升高 <I>window</I>，这样它将在堆栈次序上高于它的所有兄弟窗口(它将不被任何兄弟窗口所遮挡(obscure)并将遮挡与它交叠的任何兄弟窗口)。如果指定了 <I>aboveThis</I> 则它必须是一个窗口的路径名字，它要么是 <I>window</I> 的一个兄弟窗口要么是 <I>window</I>.的兄弟窗口的一个后代。在这种情况下，<B>raise</B> 命令将在堆栈次序上把 <I>window</I> 插入到 <I>aboveThis</I> (或 <I>aboveThis</I> 的祖先窗口中是 <I>window </I>的兄弟窗口的那个窗口)的紧上面；这最终将要么升高要么降低 <I>window</I>。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+lower
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+obscure, raise, stacking order
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/12/26</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

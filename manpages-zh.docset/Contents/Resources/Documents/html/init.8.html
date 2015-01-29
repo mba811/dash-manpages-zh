@@ -1,0 +1,421 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of INIT</TITLE>
+</HEAD><BODY>
+<H1>INIT</H1>
+Section: Linux 系统管理员手册 (8)<BR>Updated: 11 February 2000<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+init, telinit - 进程处理初始化
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>/sbin/init</B>
+
+[<B> -a </B>]
+
+[<B> -s </B>]
+
+[<B> -b </B>]
+
+[<B> -z xxx </B>]
+
+[<B> 0123456Ss </B>]
+
+<BR>
+
+<B>/sbin/telinit</B>
+
+[<B> -t 秒 </B>]
+
+[<B> 0123456sSQqabcUu </B>]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<A NAME="lbAE">&nbsp;</A>
+<H3>Init</H3>
+
+<B>Init</B>
+
+是所有进程的父进程。它的首要任务是从一个存储在文件
+<B>/etc/inittab</B> （参阅 <I><A HREF="/cgi-bin/man/man2html?5+inittab">inittab</A></I>(5)）
+里面的脚本里创建进程。
+这个文件通常有一些令 <B>init</B> 在每条用户可登录的线上派生 <B>getty</B> 的记录．
+它同时也控制着各独特系统所要求的独立进程。
+<A NAME="lbAF">&nbsp;</A>
+<H2>运行级别</H2>
+
+所谓 <I>运行级别</I> 是一种系统软件环境配置，
+在此特定的环境中只允许某一组选定的进程存在。
+<B>init</B> 给不同的运行级别派生的进程在 <B>/etc/inittab</B> 
+文件中定义。
+<B>Init</B> 可以启动到8个不同的运行级别上：
+<B>0-6</B> 和 <B>S</B> 或 <B>s</B>。运行级别可以由超级用户通过
+<B>telinit</B> 命令来转换，此命令可以将转换信号传递给 <B>init</B>，
+告诉它切换到哪个运行级别。
+<P>
+
+运行级别 <B>0</B>，<B>1</B>，和 <B>6</B> 为系统保留的专用运行级别。
+运行级别 0 用来关机，运行级别 6 用来重启计算机，
+运行级别 1 用来使计算机进入单用户模式。
+运行级别 <B>S</B> 不是给我们直接使用的，
+更多是为进入运行级别 1 时运行某些可执行脚本时被调用。
+如果想得到更多相关的信息，请参阅手册页 <B><A HREF="/cgi-bin/man/man2html?8+shutdown">shutdown</A></B>(8) 和 <B><A HREF="/cgi-bin/man/man2html?5+inittab">inittab</A></B>(5)。
+<P>
+
+运行级别 7-9 虽然在文档中说明，但也可以使用。
+不使用它们的原因只是因为&quot;传统&quot; Unix 变种不使用这些运行级别。
+另外，运行级别 <I>S</I> 和运行级别 <I>s</I> 实际上是相同的，
+它们只是系统内同一运行级别的两个不同的别名而己。
+<A NAME="lbAG">&nbsp;</A>
+<H2>系统引导</H2>
+
+<P>
+
+当系统内核引导到最后一步时， <B>init</B> 进程被启动，
+它会自动查找 <B>/etc/inittab</B> 文件，看看是否有类型为
+<B>initdefault</B> （参阅 <I><A HREF="/cgi-bin/man/man2html?5+inittab">inittab</A></I>(5)）的记录．
+<B>initdefault</B> 记录决定系统初始运行级别。
+如果没有这条记录（或者根本就没有 <B>/etc/inittab</B> ），
+那么，你必须在系统控制台输入想要进入的运行级别。
+<P>
+
+运行级别 <B>S</B> 或 <B>s</B> 把系统带入单用户模式，
+此模式不需要 <B>/etc/initttab</B> 文件。单用户模式中，
+<B>/sbin/sulogin</B> 会在  <B>/dev/console</B> 这个设备上打开。
+<P>
+
+当进入单用户模式后， <B>init</B> 会从文件 <B>/etc/ioctl.save</B>
+中读取控制台的 <I><A HREF="/cgi-bin/man/man2html?2+ioctl">ioctl</A></I>(2) 状态。如果该文件不存在，
+<B>init</B> 则把线路设定为 <B>9600 baud</B> 并且带有 <B>CLOCAL</B>。
+当 <B>init</B> 退出单用户模式时，
+它会自当前的控制台的 <I>ioctl</I> 设置存储到这个文件供下次使用。
+<P>
+
+当第一次进入多用户模式时，<B>init</B> 会执行<B>boot</B> 和 <B>bootwait</B> 
+记录以便在用户可以登录之前挂载文件系统。
+然后再执行相应运指定的各进程。
+<P>
+
+当启动一个新的进程时， <B>init</B> 会检查是否存在
+<I>/etc/initscript</I> 文件。
+如果存在该文件，则使用该脚本来启动该进程。
+<P>
+
+如果系统中存在文件 <B>/var/run/utmp</B> 和 <B>/var/log/wtmp</B>，
+那么当每个子进程终止时，<B>init</B> 会将终止信息和原因记录进这两个文件中。
+<A NAME="lbAH">&nbsp;</A>
+<H2>改变运行级别</H2>
+
+<P>
+
+当 <B>init</B> 启动了所有指定的子进程后，
+它会不断地侦测系统进程情况，如：它的某个子进程被终止、电源失效、或由
+<B>telinit</B> 发出的改变运行级别的信号。当它接受到以上的这些信号之一时，
+它会自动重新扫描 <B>/etc/inittab</B> 文件，并执行相应操作。
+所以，新的记录可以随时加入到此文件中。
+并且， <B>init</B> 仍然等待系统发出了上述信号。
+在更新了各种系统文件后，如果你希望得到即时的更新，
+你可以使用<B>telinit Q</B> 或 <B>q</B> 命令来唤醒 <B>init</B> 
+让它即刻重新检测<B>/etc/inittab</B>  文件。
+<P>
+
+如果 <B>init</B> 不是在单用户模式并且接收到了一个电源失效信号（SIGPWR），
+它会读取文件 <B>/etc/powerstatus</B>，并执行该文件中指定的各种操作：
+<DL COMPACT>
+<DT>F(AIL)<DD>
+电源失效，由 UPS 提供电力。执行 <B>powerwait</B> 和  <B>powerfail</B> 记录。
+<DT>O(K)<DD>
+电源恢复，执行 <B>powerokwait</B> 记录。
+<DT>L(OW)<DD>
+电源失效并且 UPS 电压也太低。执行 <B>powerfailnow</B> 记录。
+</DL>
+<P>
+
+如果文件 /etc/powrestatus 不存在或其中的内容并不包含有以上所示的字母
+<B>F</B>，<B>O</B> 或 <B>L</B> ，则 init 会当做读到了字母 <B>F</B>。
+<P>
+
+我们不赞成使用 <B>SIGPWR</B> 和 <B>/etc/powerstatus</B> 。
+有些用户希望与 <B>init</B> 进行交互，那么可以使用 <B>/dev/initctl</B>
+控制通道。关于此点的描述请参阅 <B>sysvinit</B> 包的源代码。
+<P>
+
+当 <B>init</B> 得到更新运行级别的请求，
+init会向所有没有在新运行级别中定义的进程发送一个警告信号 <FONT SIZE="-1"><B>SIGTERM</B></FONT> 。
+在等待 5 秒钟之后，它会发出强制中断所有进程的运行的信号 <FONT SIZE="-1"><B>SIGKILL</B></FONT> 。
+注意， <B>init</B> 假设所有的这些进程（包括它们的后代）都仍然在
+<B>init</B> 最初创建它们的同一进程组里。
+如果有任何进程改变了它们的进程组，那么它就收不到这些信号。
+这样的进程，你需要分别进行手工的终止。
+<A NAME="lbAI">&nbsp;</A>
+<H2>TELINIT</H2>
+
+<B>/sbin/telinit</B> 
+是一个到
+<B>/sbin/init</B>
+
+的软链接。
+它用一个单字符参数来通知 <B>init</B> 执行相应的操作。
+下面是相关的参数：
+<DL COMPACT>
+<DT><B>0</B>,<B>1</B>,<B>2</B>,<B>3</B>,<B>4</B>,<B>5</B> 或 <B>6</B><DD>
+通知 <B>init</B> 将运行级别切换到指定的运行级别
+<DT><B>a</B>,<B>b</B>,<B>c</B><DD>
+告诉 <B>init</B> 只运行那些 <B>/etc/inittab</B> 文件中
+运行级别是 <B>a</B>，<B>b</B> 或 <B>c</B> 的记录
+<DT><B>Q</B> 或 <B>q</B><DD>
+通知 <B>init</B> 重新检测 <B>/etc/inittab</B> 文件
+<DT><B>S</B> 或 <B>s</B><DD>
+通知 <B>init</B> 将运行级别切换到单用户模式下
+<DT><B>U</B> 或 <B>u</B><DD>
+通知 <B>init</B> 自动重启（保留状态），
+此操作不会对文件<B>/etc/inittab</B> 进行重新检测。
+执行此操作时，运行级别必须处在 <B>Ss12345</B> 之一，否则，该请求将被忽略
+</DL>
+<P>
+
+<B>telinit</B> 还可以告诉 <B>init</B> 
+两次发送 SIGTERM 和 SIGKILL 信号的时间间隔。
+默认值是 5 秒，你可以通过使用 <B>-t sec</B> 的选项来修改。
+<P>
+
+<B>telinit</B> 只能由具有恰当权限的用户执行。
+<P>
+
+<B>init</B> 通过检查自己的 <I> 进程号</I> 来判断自己是
+<B>init</B> 还是 <B>telinit</B> ；真的 <B>init</B> 的进程号永远都是 <B>1</B>。
+从这一点来看，我们在调用 <B>telinit</B> 时也可以只使用 <B>init</B> 
+来少敲几个键．
+<A NAME="lbAJ">&nbsp;</A>
+<H2>环境变量</H2>
+
+<P>
+
+<B>Init</B> 为所有的子进程设定下列环境变量
+<DL COMPACT>
+<DT><B>PATH</B><DD>
+<I>/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin</I>
+<DT><B>INIT_VERSION</B><DD>
+如名字表示的那样．在决定一个脚本是否直接来自 <B>init</B> 时很有用
+<DT><B>RUNLEVEL</B><DD>
+当前系统的运行级别
+<DT><B>PREVLEVEL</B><DD>
+前次运行的运行级别（仅当改变运行级别时有用）
+<DT><B>CONSOLE</B><DD>
+系统控制台。此变量是由内核继承而来，如果没有此环境变量的定义，
+<B>init</B> 会使用 <B>/dev/console</B> 做为默认的控制台
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H2>启动标志</H2>
+
+在启动系统时可以通过引导管理器（比如，LILO）传递一些启动标志给 <B>init</B> ，
+<B>Init</B> 接受下面几个：
+<DL COMPACT>
+<DT><B>-s， S， single</B>
+
+<DD>
+以单用户模式启动系统。按这种模式启动时， <I>/etc/inittab</I> 需要被检查，
+并在单用户模式 shell 启动之前会执行引导 rc 脚本。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>1-5</B>
+
+<DD>
+定义需要启动的运行级别
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-b, emergency</B>
+
+<DD>
+不运行任何启动脚本而直接进入单用户模式 shell
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-a, auto</B>
+
+<DD>
+如果用缺省命令行从内核引导（没有用户干预），
+LILO 引导管理器向命令行增加了单词 如果是这样的话， <B>init</B> 把环境变量 请注意你不能将这个东西用于任何安全评测 - 用户当然可以在命令行上
+手工输入 </DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-z xxx</B>
+
+<DD>
+-z 参数被忽略．你可以用这个选项略微扩展命令行，
+这样它可以在堆栈里获得更多空间．然后 <B>Init</B> 就可以操作命令行，
+好让 <B><A HREF="/cgi-bin/man/man2html?1+ps">ps</A></B>(1) 显示当前运行级别．
+</DL>
+<A NAME="lbAL">&nbsp;</A>
+<H2>接口</H2>
+
+init监听 /dev 里的一个 <I>fifo</I> ，<I>/dev/initctl</I>，从中获取信息。
+<B>Telinit</B> 也使用这些和 init 进行通信。
+该界面没有完整的文档。
+如果对 init 有兴趣，则可以学习 <I>src/</I> 目录中
+<B>init</B> 源文件包中的 <I>initreq.h</I> 文件。
+<A NAME="lbAM">&nbsp;</A>
+<H2>信号</H2>
+
+init 对以下信号产生响应
+<DL COMPACT>
+<DT><B>SIGHUP</B>
+
+<DD>
+当接收到该信号后，init会对
+<I>/etc/initrunlvl</I>
+
+和
+<I>/var/log/inirunlvl</I>
+
+文件进行检查。如果这两个文件之一存在而且文件中有 ASCII 字符的运行级别，
+init 会转换到相应的新的运行级别。
+<I> 此特性只用于向后兼容! </I> ．
+通常的情况是该文件并不存在，所以 init 执行类似于
+<B> telinit q</B>
+这样的操作。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>SIGUSR1</B>
+
+<DD>
+当接收到这个信号量，init 会关闭并重新打开它的控制 fifo，<B>/dev/initctl</B>。
+此操作对 /dev 被重新挂载后的启动脚本有用。
+<DT><B>SIGINT</B>
+
+<DD>
+通常，当用户按了 CTRL-ALT-DEL 键后，内核会向 init 传递此信号。
+它所执行的操作与 <I>ctrlaltdel</I> 相同。
+<DT><B>SIGWINCH</B>
+
+<DD>
+当键盘有 <I>KeyboardSignal</I> 按键按下时，内核向 init 传递此信号，
+它激活 <I>kbrequest</I> 动作．
+</DL>
+<A NAME="lbAN">&nbsp;</A>
+<H2>遵循</H2>
+
+<B>Init</B> 与 System V 的 init 相兼容。
+它与<I>/etc/init.d</I> 和 <I>/etc/rc{runlevel}.d</I>
+目录下的脚本紧密地工作在一起。
+如果你的系统使用这种惯例，在 <I>/etc/init.d</I> 目录下应该有一个
+<I>README</I> 文件，它可以很好地解释了这些脚本是如何工作的。
+<A NAME="lbAO">&nbsp;</A>
+<H2>相关文件</H2>
+
+<PRE>
+/etc/inittab
+/etc/initscript
+/dev/console
+/etc/ioctl.save
+/var/run/utmp
+/var/log/wtmp
+/dev/initctl
+</PRE>
+
+<A NAME="lbAP">&nbsp;</A>
+<H2>警告</H2>
+
+<B>Init</B> 假设进程和进程的后代同属于最初创建它们的进程组．
+如果进程改变了它们的进程组，
+<B>init</B> 就无法中止它们，因此，你可能会有两个进程读取一条终端线．
+<A NAME="lbAQ">&nbsp;</A>
+<H2>诊断</H2>
+
+如果 <B>init</B> 发现它的重启次数在最近 2 分钟里超过了 10 次，
+它就会认为程序命令串出错了。在系统控制台输出出错信息，并拒绝重新启动，
+只有等到 5 分钟以后或用户给 init 一个特定的信号，
+它才会重新响应。
+这可以防止由于用户在编辑 <B>/etc/inittab</B> 文件时可能出现的输入错误
+或由于相关程序被无意删除后导致的大量占用系统资源。
+<A NAME="lbAR">&nbsp;</A>
+<H2>作者</H2>
+
+Miquel  van Smoorenburg (<A HREF="mailto:miquels@cistron.nl">miquels@cistron.nl</A>)
+原始帮助手册页作者：Michael Haardt  (<A HREF="mailto:u31b3hs@pool.informatik.rwthaachen.de">u31b3hs@pool.informatik.rwthaachen.de</A>).
+<A NAME="lbAS">&nbsp;</A>
+<H2>另见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+getty">getty</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+login">login</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+sh">sh</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+who">who</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?8+shutdown">shutdown</A>(8),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?1+kill">kill</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?5+inittab">inittab</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?5+initscript">initscript</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?5+utmp">utmp</A></B>(5)
+
+<P>
+
+<A NAME="lbAT">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>所罗门 &lt;<A HREF="mailto:solomen@email.com.cn">solomen@email.com.cn</A>&gt;</B>
+
+<A NAME="lbAU">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2000/11/26
+<A NAME="lbAV">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DL>
+<DT><A HREF="#lbAE">Init</A><DD>
+</DL>
+<DT><A HREF="#lbAF">运行级别</A><DD>
+<DT><A HREF="#lbAG">系统引导</A><DD>
+<DT><A HREF="#lbAH">改变运行级别</A><DD>
+<DT><A HREF="#lbAI">TELINIT</A><DD>
+<DT><A HREF="#lbAJ">环境变量</A><DD>
+<DT><A HREF="#lbAK">启动标志</A><DD>
+<DT><A HREF="#lbAL">接口</A><DD>
+<DT><A HREF="#lbAM">信号</A><DD>
+<DT><A HREF="#lbAN">遵循</A><DD>
+<DT><A HREF="#lbAO">相关文件</A><DD>
+<DT><A HREF="#lbAP">警告</A><DD>
+<DT><A HREF="#lbAQ">诊断</A><DD>
+<DT><A HREF="#lbAR">作者</A><DD>
+<DT><A HREF="#lbAS">另见</A><DD>
+<DT><A HREF="#lbAT">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAU">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAV">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

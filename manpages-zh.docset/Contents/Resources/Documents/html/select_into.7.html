@@ -1,0 +1,93 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SELECT INTO</TITLE>
+</HEAD><BODY>
+<H1>SELECT INTO</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+SELECT INTO - 从一个查询的结果中创建一个新表
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+SELECT [ ALL | DISTINCT [ ON ( <I>expression</I> [, ...] ) ] ]
+    * | <I>expression</I> [ AS <I>output_name</I> ] [, ...]
+    INTO [ TEMPORARY | TEMP ] [ TABLE ] <I>new_table</I>
+    [ FROM <I>from_item</I> [, ...] ]
+    [ WHERE <I>condition</I> ]
+    [ GROUP BY <I>expression</I> [, ...] ]
+    [ HAVING <I>condition</I> [, ...] ]
+    [ { UNION | INTERSECT | EXCEPT } [ ALL ] <I>select</I> ]
+    [ ORDER BY <I>expression</I> [ ASC | DESC | USING <I>operator</I> ] [, ...] ]
+    [ LIMIT { <I>count</I> | ALL } ]
+    [ OFFSET <I>start</I> ]
+    [ FOR UPDATE [ OF <I>tablename</I> [, ...] ] ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>SELECT INTO</B> 从一个查询的计算结果中创建一个新表。 数据并不返回给客户端，这一点和普通的 SELECT 不同。 新表的字段具有和 SELECT 的输出字段相关联（相同）的名字和数据类型。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B>TEMPORARY 或 TEMP</B><DD>
+<BR>&nbsp;如果声明了这个关键字，那么该表是作为一个临时表创建的。&nbsp;请参考&nbsp;CREATE&nbsp;TABLE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+create_table">create_table</A></B>(7)]&nbsp;获取细节。
+<DT><B></B><I>new_table</I><B></B><DD>
+<BR>&nbsp;要创建的表的表名（可以有模式修饰）。
+</DL>
+<P>
+
+<BR>&nbsp;所有其它输入的域都在&nbsp;SELECT&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)]&nbsp;中有详细描述。
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+CREATE TABLE AS [<B><A HREF="/cgi-bin/man/man2html?7+create_table_as">create_table_as</A></B>(7)]
+的作用和 SELECT INTO 相同。 我们建议使用 CREATE TABLE AS 语法， 因为 SELECT INTO 不是标准语法。 实际上，这种类型的 SELECT INTO 是不能在 ECPG 或者 PL/pgSQL 中使用的， 因为它们对 INTO 子句的解释是不同的。
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;SQL&nbsp;标准用&nbsp;SELECT&nbsp;...&nbsp;INTO&nbsp;表示选取数值到一个宿主程序的标量变量中，&nbsp;而不是创建一个新表。这种用法实际上就是在&nbsp;ECPG&nbsp;&nbsp;（参阅&nbsp;Chapter&nbsp;29）和PL/pgSQL&nbsp;&nbsp;（Chapter&nbsp;35）里的用途。&nbsp;PostgreSQL&nbsp;用&nbsp;SELECT&nbsp;INTO&nbsp;代表创建表的意思是历史原因。&nbsp;在新代码里我们最好使用&nbsp;CREATE&nbsp;TABLE&nbsp;AS&nbsp;实现这个目地。&nbsp;(CREATE&nbsp;TABLE&nbsp;AS&nbsp;也不是标准，但至少它出现混淆的机会少一些。)
+<A NAME="lbAH">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

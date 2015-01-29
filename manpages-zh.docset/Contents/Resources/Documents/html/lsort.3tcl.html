@@ -1,0 +1,330 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of lsort</TITLE>
+</HEAD><BODY>
+<H1>lsort</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.3<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+lsort - 给一个列表的元素排序  
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>lsort </B>?<I>options</I>? <I>list</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令给 <I>list </I>的元素排序，返回按整理后的次序(排列)的一个新列表。<B>lsort</B>    命令的实现使用了归并排序算法，这个算法有 O(n log   n) 性能特征的一个稳定的排序算法。
+<P>
+
+缺省的使用 ASCII   排序，并按升序返回结果。但是，可以在 <I>list</I>    的前面指定任何下列参数来控制排序处理(接受唯一性的缩写):  
+<DL COMPACT>
+<DT><B>-ascii</B><DD>
+字符串比较使用 ASCII (作为)整理(collation)次序。这是缺省的。 
+<DT><B>-dictionary</B><DD>
+使用字典式样的比较。除了下列两点之外它同于 <B>-ascii</B>。(a)   除了作为一个 tie-breaker 之外忽略大写，(b)   如果字符串包含嵌入的数字，数字作为整数来比较而不是字符。例如，在 <B>-dictionary</B>    模式下，<B>bigBoy</B>   排序在 <B>bigbang</B> 和 <B>bigboy </B>之间，而 <B>x10y</B>    排序在 <B>x9y</B> 和 <B>x11y </B>之间。  
+<DT><B>-integer</B><DD>
+把列表元素转换成整数并使用整数比较。 
+<DT><B>-real</B><DD>
+把列表元素转换成浮点值并使用浮点比较。  
+<DT><B>-command&nbsp;</B><I>command</I><DD>
+使用 <I>command</I>    作为一个比较命令。想比较两个元素，要求由 <I>command</I>   构成的一个 Tcl 脚本的值，并加上两个元素作为(向这个过程)附加的参数。如果第一个参数被认定为小于、等于、或大于第二个参数，这个脚本应该分别返回小于、等于、或大于零的一个整数。  
+<DT><B>-increasing</B><DD>
+按升序整理这个列表(“最小” 的项目在最先)。这是缺省的。 
+<DT><B>-decreasing</B><DD>
+按降序整理这个列表(“最大” 的项目在最先)。  
+<DT><B>-index&nbsp;</B><I>index</I><DD>
+如果指定了这个选项，<I>list</I>   的每个元素自身必须是一个正确的 Tcl 子列表。不是基于整个子列表来排序，<B>lsort</B>   将从每个子列表中提取第 <I>index </I>个元素并基于这个给定的元素来排序。<I>index</I>   允许使用关键字 <B>end</B>   来在子列表的最后的元素上排序,
+
+
+
+
+
+
+
+而 <B>end-</B><I>index</I> sorts on a sublist element offset from the end
+
+
+
+
+
+
+。例如，  
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+lsort -integer -index 1 {{First 24} {Second 18} {Third 30}}
+
+</PRE>
+
+</DL>
+
+
+返回 <B>{Second 18} {First 24} {Third 30}</B>, 并且
+
+
+
+
+
+
+
+
+
+
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+lsort -index end-1 {{a 1 e i} {b 2 3 f g} {c 4 5 6 d h}}
+
+</PRE>
+
+</DL>
+
+
+返回 <B>{c 4 5 6 d h} {a 1 e i} {b 2 3 f g}</B>.
+
+
+
+
+
+
+这个选项比使用 <B>-command</B>    来完成同样的功能要更加高效。  
+</DL>
+
+<DT><B>-unique</B><DD>
+如果指定了这个选项，则保留在这个列表中找到的重复的(duplicate)元素的最后一组。注意重复是相对于在排序中使用的比较来决定的。所以如果使用了    <I>-index 0</I> ，<B>{1 a}</B> 和 <B>{1 b}</B>   将被认为是重复的并只保留第二个元素 <B>{1 b}</B>。  
+<P>
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>注意 NOTES</H2>
+
+<P>
+
+The options to <B>lsort</B> only control what sort of comparison is
+used, and do not necessarily constrain what the values themselves
+actually are.  This distinction is only noticeable when the list to be
+sorted has fewer than two elements.
+<P>
+
+The <B>lsort</B> command is reentrant, meaning it is safe to use as
+part of the implementation of a command used in the <B>-command</B>
+option.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>范例 EXAMPLES</H2>
+
+<P>
+<P>
+
+Sorting a list using ASCII sorting:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+% lsort {a10 B2 b1 a1 a2}
+B2 a1 a10 a2 b1
+
+</PRE>
+
+</DL>
+
+
+<P>
+<P>
+
+Sorting a list using Dictionary sorting:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+% lsort -dictionary {a10 B2 b1 a1 a2}
+a1 a2 a10 b1 B2
+
+</PRE>
+
+</DL>
+
+
+<P>
+<P>
+
+Sorting lists of integers:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+% lsort -integer {5 3 1 2 11 4}
+1 2 3 4 5 11
+% lsort -integer {1 2 0x5 7 0 4 -1}
+-1 0 1 2 4 0x5 7
+
+</PRE>
+
+</DL>
+
+
+<P>
+<P>
+
+Sorting lists of floating-point numbers:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+% lsort -real {5 3 1 2 11 4}
+1 2 3 4 5 11
+% lsort -real {.5 0.07e1 0.4 6e-1}
+0.4 .5 6e-1 0.07e1
+
+</PRE>
+
+</DL>
+
+
+<P>
+<P>
+
+Sorting using indices:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+% # Note the space character before the c
+% lsort {{a 5} { c 3} {b 4} {e 1} {d 2}}
+{ c 3} {a 5} {b 4} {d 2} {e 1}
+% lsort -index 0 {{a 5} { c 3} {b 4} {e 1} {d 2}}
+{a 5} {b 4} { c 3} {d 2} {e 1}
+% lsort -index 1 {{a 5} { c 3} {b 4} {e 1} {d 2}}
+{e 1} {d 2} { c 3} {b 4} {a 5}
+
+</PRE>
+
+</DL>
+
+
+<P>
+<P>
+
+Stripping duplicate values using sorting:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+% lsort -unique {a b c a b c a b c}
+a b c
+
+</PRE>
+
+</DL>
+
+
+<P>
+<P>
+
+More complex sorting using a comparison function:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+% proc compare {a b} {
+    set a0 [lindex $a 0]
+    set b0 [lindex $b 0]
+    if {$a0 &lt; $b0} {
+        return -1
+    } elseif {$a0 &gt; $b0} {
+        return 1
+    }
+    return [string compare [lindex $a 1] [lindex $b 1]]
+}
+% lsort -command compare \
+        {{3 apple} {0x2 carrot} {1 dingo} {2 banana}}
+{1 dingo} {2 banana} {0x2 carrot} {3 apple}
+
+</PRE>
+
+</DL>
+
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+lappend">lappend</A>(n), <A HREF="/cgi-bin/man/man2html?n+lindex">lindex</A>(n), <A HREF="/cgi-bin/man/man2html?n+linsert">linsert</A>(n), <A HREF="/cgi-bin/man/man2html?n+list">list</A>(n), <A HREF="/cgi-bin/man/man2html?n+llength">llength</A>(n), <A HREF="/cgi-bin/man/man2html?n+lrange">lrange</A>(n),
+<A HREF="/cgi-bin/man/man2html?n+lreplace">lreplace</A>(n), <A HREF="/cgi-bin/man/man2html?n+lsearch">lsearch</A>(n)
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+element, list, order, sort
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/09/06  </B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">注意 NOTES</A><DD>
+<DT><A HREF="#lbAF">范例 EXAMPLES</A><DD>
+<DT><A HREF="#lbAG">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

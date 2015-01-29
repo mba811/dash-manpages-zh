@@ -1,0 +1,132 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of catch</TITLE>
+</HEAD><BODY>
+<H1>catch</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+catch - 对脚本求值并追踪异常返回 
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>catch</B><I> script </I>?<I>varName</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>catch</B> 命令被用于防止出错导致的终止命令解释。<B>Catch</B>   递归的调用 Tcl 解释器来执行 <I>script</I>，并且不顾在执行 <I>script </I>期间可能发生的任何错误，它总是返回而不引发(raise)任何错误。
+<P>
+
+如果 <I>script</I>  引发一个错误，<B>catch</B>  将返回一个非零的整数值，相应于异常返回代码中的一个(参见 tcl.h 来找到代码值的定义)。如果给出了 <I>varName</I>  参数，则它所指名的变量被设置成从解释 <I>script </I>得到的错误消息。
+<P>
+
+如果 <I>script</I>  不引发任何错误，<B>catch</B>  将返回 0(TCL_OK)并设置这个变量为脚本返回的值。
+<P>
+
+注意 <B>catch</B>  捕获所有的例外，如同错误一样，包括了由 <B> break </B> 和 <B> continue </B>  生成的例外。唯一不捕获的错误是在编译脚本时发现的语法错误。这是因为 catch 命令只捕捉运行时的错误。当 catch 语句被编译后，脚本同样要被编译，并且任何错误都将生成一个 Tcl 错误。  
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>EXAMPLES</H2>
+
+<P>
+<B>catch</B>  命令可在一个 <B> if </B>  中使用，基于一个脚本的(是否)成功而(进行)分支(branch)。 
+<P>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+if { [catch {open $someFile w} fid] } {
+    puts stderr &quot;Could not open $someFile for writing\n$fid&quot;
+    exit 1
+}
+
+</PRE>
+
+</DL>
+
+
+<B>catch</B>  命令不捕捉编译后的语法错误。第一次调用 proc <B>foo</B>  时，(过程)体将被编译并且生成一个  Tcl 错误。  
+<P>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+proc foo {} {
+    catch {expr {1 +- }}
+}
+
+</PRE>
+
+</DL>
+
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+catch, error
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/21</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">EXAMPLES</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

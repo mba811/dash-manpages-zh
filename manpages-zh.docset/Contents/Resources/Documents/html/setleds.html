@@ -1,0 +1,154 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SETLEDS</TITLE>
+</HEAD><BODY>
+<H1>SETLEDS</H1>
+Section: Linux User's Manual (1)<BR>Updated: 09 Oct 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+setleds - 设置键盘 led 标志
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>setleds</B>
+
+<B>[</B><I>-v</I><B>] [</B><I>-L</I><B>] [</B><I>-D</I><B>] [</B><I>-F</I><B>]</B>
+
+<B>[</B><I>{+|-}num</I><B>] [</B><I>{+|-}caps</I><B>] [</B><I>{+|-}scroll</I><B>]</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<P>
+
+<B>setleds</B>
+
+显示 改变 当前 虚拟终端 的 led 标志 （就是 NumLock， CapsLock 和
+ScrollLock）。 如果 没有 参数
+<B>setleds</B>
+
+显示 当前设置。 如果 有参数， 它 设置 或 清除 相应的 标志 （不改变
+其它的 标志）。 如果有
+<B>-v</B>
+
+选项， 显示 修改前后 的 状态。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+<DL COMPACT>
+<DT><I>-F</I>
+
+<DD>
+这是 默认 选项。 它 只改变 虚拟 终端 的 标志 （它的 状态 可能 同 键盘的
+led 一样）。
+<DT><I>-D</I>
+
+<DD>
+同时 改变 虚拟 终端 的 标志 和 默认 设置 （这样 之后 恢复 默认 设置 时
+不会 影响 现在的 更改）。 这对 那些 想 让 NumLock 总是 开着 的人 很有用。
+<DT><I>-L</I>
+
+<DD>
+不改变 虚拟终端 的 状态， 只改变 键盘的 led。 这样 led 就和 虚拟终端的
+标志 不一样了 （它 只显示 它自己 的 状态）。
+<B>setleds -L</B>
+
+命令（没有 更多的 参数了） 会 再次 改变 led 使它 能 反映 虚拟终端的 状态。
+<DT><I>-num +num</I>
+
+<DD>
+清除 或者 设置 NumLock。 （现在， NumLock 的 状态 只影响 小键盘，
+NumLock 设置 相当于 NumLock 键）
+<DT><I>-caps +caps</I>
+
+<DD>
+清除 或者 设置 CapsLock。
+(现在, 当 用于 字符 时 CapsLock 设置 相当于 Shift 键。
+CapsLock 设置 相当于 CapsLock 键）
+<DT><I>-scroll +scroll</I>
+
+<DD>
+清除 或者 设置 ScrollLock。
+(现在， 按 ScrollLock 键 (或者 ^S/^Q) 会停止/开始终端输出。)
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>例子 (EXAMPLE)</H2>
+
+<P>
+
+可以 在 /etc/rc 中用
+<B>setleds</B>
+
+来 设置 NumLock 的 初始 和 缺省 状态， 比如
+<P>
+
+<DL COMPACT><DT><DD>
+INITTY=/dev/tty[1-8]
+<BR>
+
+for tty in $INITTY; do
+<DL COMPACT><DT><DD>
+setleds -D +num &lt; $tty
+</DL>
+
+done
+</DL>
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>错误 (BUGS)</H2>
+
+在 键盘 应用 模式 NumLock 键 并不反映 NumLock 标志的 状态。
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+loadkeys">loadkeys</A></B>(1).
+
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/9/13</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">例子 (EXAMPLE)</A><DD>
+<DT><A HREF="#lbAG">错误 (BUGS)</A><DD>
+<DT><A HREF="#lbAH">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

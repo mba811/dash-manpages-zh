@@ -1,0 +1,162 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of upvar</TITLE>
+</HEAD><BODY>
+<H1>upvar</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+upvar - 建立到在不同栈桢上的变量的连接
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>upvar </B>?<I>level</I>? <I>otherVar myVar </I>?<I>otherVar myVar </I>...?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令安排在当前过程中的一个或多个局部变量去引用位于包围它的过程调用中的变量或引用全局变量。 <I>Level</I> 可以用 <B>uplevel</B> 命令允许的任何形式，并且如果第一个 <I>otherVar</I> 的第一个字母不是 <B>#</B> 或一个数字，则可以被省略(它缺省为<B>1</B>)。对于每个 <I>otherVar</I> 参数，<B>upvar</B> 使由 <I>level</I> 给出的过程桢中(如果 <I>level</I> 是 <B>#0 </B>则在全局层次)的叫这个名字的变量在当前过程中可以用由相应的 <I>myVar</I> 参数给出名字来访问。在调用它的时候叫做 <I>otherVar</I> 的变量不需要存在；可以在第一次引用 <I>myVar</I> 时象普通变量那样建立它。在调用 <B>upvar</B> 的时候一定不能存在一个叫 <I>myVar</I> 的变量。<I>MyVar</I> 总是被作为一个变量的名字来对待，而不是一个数组的元素。即使这个名字看起来象一个数组元素，比如 <B>a(b)</B>，仍建立一个正规的变量。<I>OtherVar</I> 可以引用一个标量变量，或一个数组元素。<B>Upvar</B> 返回一个空串。
+<P>
+
+<B>upvar</B> 命令简化了传名调用(call-by-name)过程的实现并使它易于建立如同 Tcl 过程的新控制结构。例如，考虑下列过程:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>proc add2 name {
+   upvar $name x
+   set x [expr $x+2]
+}</B>
+
+</PRE>
+
+</DL>
+
+
+调用<B> Add2</B> 时加上给出一个变量名字的一个参数，它向这个变量的值加二。尽管 <B>add2</B> 可以使用 <B>uplevel</B> 替代 <B>upvar </B>来实现，<B>upvar</B> 简便了 <B>add2</B> 访问在调用者过程桢中的变量。
+<P>
+
+<B>namespace eval</B> 是改变 Tcl 命令上下文的另一种方式(除了过程调用之外)。它向栈增加一个调用桢来表示名字空间上下文。这意味着每个 <B>namespace eval</B> 命令被视为给 <B>uplevel</B> 和 <B>upvar</B> 命令的另一个调用层次。例如，<B>info level 1</B> 将返回描述一个命令的列表，它要么是最外的过程要么是最外的 <B>namespace eval</B> 命令。还有，<B>uplevel #0</B> 在最外面的名字空间(全局名字空间)中的顶层求值一个脚本。
+<P>
+
+
+
+
+
+
+
+
+如果删除(unset)一个 upvar 变量(比如，上面的 <B>add2</B> 中的 <B>x</B> )，则 <B>unset</B> 操作影响它所连接到的变量，而不是 upvar 变量。除了退出在其中定义它的那个过程之外，没有方法删除一个 upvar 变量。但是，可以通过执行另一个 <B>upvar</B> 命令来为一个 upvar 变量重定目标(retarget)。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>Traces 和 upvar</H2>
+
+<P>
+
+upvar 以一种直接但可能不是预期的方式与 trace 交互。如果在 <I>otherVar </I>上定义了一个变量跟踪，涉及 <I>myVar </I>的动作将触发这个追踪。但是，传递给跟踪过程将是 <I>myVar </I>的名字，而不是 <I>otherVar</I> 的名字。 所以，下列代码的输出将是 <B>localVar</B> 而不是 <B>originalVar</B>:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>proc traceproc { name index op } {
+   puts $name
+}
+proc setByUpvar { name value } {
+   upvar $name localVar
+   set localVar $value
+}
+set originalVar 1
+trace variable originalVar w traceproc
+setByUpvar originalVar 2
+}</B>
+
+</PRE>
+
+</DL>
+
+
+<P>
+如果 <I>otherVar</I> 引用一个数组的元素，则为整个数组设置的变量跟踪在 <I>myVar</I> 被访问的时候将不被调用(但在特定元素上的跟踪仍将被调用)。特别的，如果这个数组是 <B>env</B>，则对 <I>myVar</I> 的变动将不被正确的传递给子进程。
+<P>
+
+
+
+
+
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+global">global</A>(n), <A HREF="/cgi-bin/man/man2html?n+namespace">namespace</A>(n), <A HREF="/cgi-bin/man/man2html?n+uplevel">uplevel</A>(n), <A HREF="/cgi-bin/man/man2html?n+variable">variable</A>(n)
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+context, frame, global, level, namespace, procedure, variable
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/11/21</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">Traces 和 upvar</A><DD>
+<DT><A HREF="#lbAF">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

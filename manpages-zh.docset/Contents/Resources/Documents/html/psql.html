@@ -1,0 +1,987 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PSQL</TITLE>
+</HEAD><BODY>
+<H1>PSQL</H1>
+Section: PostgreSQL Client Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+psql - PostgreSQL 交互终端
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>psql</B> [<B></B><I>option</I><B></B>...<B></B>] [<B></B><I>dbname</I><B></B> [<B></B><I>username</I><B></B>]<B></B>]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>psql</B> 是一个以终端为基础的 PostgreSQL  前端。它允许你交互地键入查询，把它们发出给 PostgreSQL， 然后看看查询的结果。另外，输入可以来自一个文件。还有， 它提供了一些元命令和多种类 shell 地特性来实现书写脚本以及对大量任务的自动化。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<DL COMPACT>
+<DT><B>-a</B><DD>
+<DT><B>--echo-all</B><DD>
+<BR>&nbsp;在读取行时向屏幕打印所有内容。&nbsp;这个选项在脚本处理时比交互模式时更有用。这个选项等效于设置变量&nbsp;ECHO&nbsp;为&nbsp;all。
+<DT><B>-A</B><DD>
+<DT><B>--no-align</B><DD>
+<BR>&nbsp;切换为非对齐输出模式。（缺省输出模式是对齐的。）
+<DT><B>-c</B><I>command</I><B></B><DD>
+<DT><B>--command</B><I>command</I><B></B><DD>
+声明 psql 将执行一条查询字串， command，然后退出。这一点在 shell 脚本里很有用。
+<I>command</I> 必须是一条完全可以被服务器分析的查询字串（也就是说，它不包含
+psql特有的特性）， 或者是一个反斜杠命令。这样你就不会混合 SQL 和 psql 
+元命令。要想混合使用，你可以把字串定向到<B>psql</B> 里，象这样：
+echo &quot;\x\ select * from foo;&quot; | psql。
+<P>
+<BR>&nbsp;如果命令字串包含多个&nbsp;SQL&nbsp;命令，那么他们在一个事务里处理，&nbsp;除非在字串里包含了明确的&nbsp;BEGIN/COMMIT&nbsp;命令把他们分成多个事务。&nbsp;这个和从&nbsp;psql&nbsp;的标准输入里给它填充相同字串不同。
+<DT><B>-d</B><I>dbname</I><B></B><DD>
+<DT><B>--dbname</B><I>dbname</I><B></B><DD>
+<BR>&nbsp;声明想要联接的数据库名称。等效于在命令行行上把&nbsp;dbname&nbsp;&nbsp;声明为第一个非选项参数。
+<DT><B>-e</B><DD>
+<DT><B>--echo-queries</B><DD>
+<BR>&nbsp;显示所由发送给服务器的查询。&nbsp;等效于把变量&nbsp;ECHO&nbsp;设置为&nbsp;queries。
+<DT><B>-E</B><DD>
+<DT><B>--echo-hidden</B><DD>
+<BR>&nbsp;回显由<B>\d</B>&nbsp;和其他反斜杠命令生成的实际查询。&nbsp;如果你希望在你自己的程序里包含类似的功能，&nbsp;你就可以使用这个选项。这等效于在psql里设置变量ECHO_HIDDEN。
+<DT><B>-f</B><I>filename</I><B></B><DD>
+<DT><B>--file</B><I>filename</I><B></B><DD>
+<BR>&nbsp;使用&nbsp;filename作为命令的语句源而不是交互式读入查询。&nbsp;在处理完文件后，psql&nbsp;结束。这个选项在很多方面等效于内部命令<B>\i</B>。
+<P>
+如果<I>filename</I> 是-
+（连字符），则从标准输入读取。
+<P>
+<BR>&nbsp;使用这个选项与用&nbsp;psql&nbsp;&lt;&nbsp;filename&nbsp;&nbsp;有微小的区别。通常，两者都回按照你预期那样运行，但是使用&nbsp;-f打开了一些很好的特性，&nbsp;比如带行号的错误信息。而且，使用这个选项还有可能有减小启动负荷的机会。&nbsp;另一方面，如果你把所有内容手工输入，&nbsp;使用&nbsp;shell&nbsp;输入定向的方式（理论上）能保证生成和你已经得到的完全一样的输出（译注：重复运行命令）。
+<DT><B>-F</B><I>separator</I><B></B><DD>
+<DT><B>--field-separator</B><I>separator</I><B></B><DD>
+<BR>&nbsp;使用&nbsp;separator&nbsp;作为域分隔符。等效于
+<B>\pset
+fieldsep</B> 或<B>\f</B>。
+<DT><B>-h</B><I>hostname</I><B></B><DD>
+<DT><B>--host</B><I>hostname</I><B></B><DD>
+<BR>&nbsp;声明正在运行服务器的主机名。&nbsp;如果主机名以斜扛开头，则它被用做到&nbsp;Unix&nbsp;域套接字的路径。
+<DT><B>-H</B><DD>
+<DT><B>--html</B><DD>
+<BR>&nbsp;打开HTML格式输出。等效于\pset&nbsp;format&nbsp;html&nbsp;或<B>\H</B>&nbsp;命令。
+<DT><B>-l</B><DD>
+<DT><B>--list</B><DD>
+<BR>&nbsp;列出所有可用的数据库，然后退出。其他非联接选项将被忽略。类似于内部命令
+<B>\list</B>。
+<DT><B>-o</B><I>filename</I><B></B><DD>
+<DT><B>--output</B><I>filename</I><B></B><DD>
+<BR>&nbsp;将所有查询输出定向到文件&nbsp;filename。这个选项等效于命令<B>\o</B>。
+<DT><B>-p</B><I>port</I><B></B><DD>
+<DT><B>--port</B><I>port</I><B></B><DD>
+<BR>&nbsp;声明被服务器侦听的&nbsp;TCP&nbsp;端口或使用的缺省本地&nbsp;Unix&nbsp;主控套接字文件句柄。&nbsp;缺省的是环境变量PGPORT的值，如果没有设置的话是编译是声明的端口，通常是&nbsp;5432。
+<DT><B>-P</B><I>assignment</I><B></B><DD>
+<DT><B>--pset</B><I>assignment</I><B></B><DD>
+<BR>&nbsp;允许你在命令行上以<B>\pset</B>&nbsp;的风格设置打印选项。&nbsp;要注意的是你在这里用等号分割名称和值，而不能用空格。&nbsp;因此要把输出格式设置为&nbsp;LaTeX，你可以敲入&nbsp;-P&nbsp;format=latex。
+<DT><B>-q</B><DD>
+<DT><B>--quiet</B><DD>
+<BR>&nbsp;声明&nbsp;psql&nbsp;将安静地执行处理任务。&nbsp;缺省时psql将打印欢迎和许多其他输出信息。&nbsp;如果使用了此选项，这些都不出现。这在和&nbsp;-c&nbsp;选项一起使用时很有效。在&nbsp;psql&nbsp;里，你可以通过设置&nbsp;QUIET&nbsp;变量实现同样效果。
+<DT><B>-R</B><I>separator</I><B></B><DD>
+<DT><B>--record-separator</B><I>separator</I><B></B><DD>
+<BR>&nbsp;使用&nbsp;separator&nbsp;做为记录分隔符。&nbsp;等效于<B>\pset&nbsp;recordsep</B>&nbsp;命令。
+<DT><B>-s</B><DD>
+<DT><B>--single-step</B><DD>
+<BR>&nbsp;进入单步模式运行。意味着每个查询在发往服务器之前都要提示用户，&nbsp;用这个选项也可以取消执行。此选项主要用于调试脚本。
+<DT><B>-S</B><DD>
+<DT><B>--single-line</B><DD>
+<BR>&nbsp;进入单行运行模式，这时每个命令都将由换行符结束，象分号那样。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  注意这个模式是给那些坚持要这个特性的人的，我们不鼓励你这么用。 实际上，如果你在一行里混合使用 SQL 和元命令，执行的顺序对不熟练的用户而言不总是清晰的。
+</DL>
+
+<P>
+<DT><B>-t</B><DD>
+<DT><B>--tuples-only</B><DD>
+<BR>&nbsp;关闭打印列名称和结果行计数脚注等信息。完全等效于元命令<B>\t</B>。
+<DT><B>-T</B><I>table_options</I><B></B><DD>
+<DT><B>--table-attr</B><I>table_options</I><B></B><DD>
+<BR>&nbsp;允许你声明放在&nbsp;HTML&nbsp;table&nbsp;标记里的选项。&nbsp;参阅<B>\pset</B>&nbsp;获取细节。
+<DT><B>-u</B><DD>
+<BR>&nbsp;让&nbsp;psql&nbsp;在和数据库联接之提示输入用户的用户名和口令。
+<P>
+<BR>&nbsp;这个选项已经废弃了，因为它在概念上有漏洞。&nbsp;（提示输入非缺省用户名和提示输入服务器要求的口令是完全两码事。）我们鼓励你用&nbsp;-U&nbsp;和&nbsp;-W&nbsp;选项取代。
+<DT><B>-U</B><I>username</I><B></B><DD>
+<DT><B>--username</B><I>username</I><B></B><DD>
+<BR>&nbsp;以用户&nbsp;username&nbsp;&nbsp;代替缺省用户与数据库联接。（当然，你必须有这么做的权限。）
+<DT><B>-v</B><I>assignment</I><B></B><DD>
+<DT><B>--set</B><I>assignment</I><B></B><DD>
+<DT><B>--variable</B><I>assignment</I><B></B><DD>
+<BR>&nbsp;进行一次变量分配，象内部命令<B>\set</B>&nbsp;那样。&nbsp;注意，如果有变量名和值的话，你必须在命令行上用等号分隔它们。要重置一个变量，&nbsp;去掉等号。这个分配是在启动的很早的阶段进行的，所以为内部使用保留的变量可能被再次覆盖。
+<DT><B>-V</B><DD>
+<DT><B>--version</B><DD>
+<BR>&nbsp;显示psql版本。
+<DT><B>-W</B><DD>
+<DT><B>--password</B><DD>
+<BR>&nbsp;要求&nbsp;psql&nbsp;在与一个数据库联接前提示输入口令。&nbsp;这个选项将在整个会话过程中有效，即使你用元命令&nbsp;<B>\connect</B>&nbsp;改变了所联接的数据库。
+<P>
+在当前版本里，如果服务器要求口令认证，psql 自动提出一个口令提示符。因为目
+前这个特性是以一个"hack"为基础， 自动识别有可能奇怪地失效，因此用这个选项
+强制一个提示符。 如果没有声明口令提示符而服务器要求口令认证，那么联接企图
+将失败。
+<DT><B>-x</B><DD>
+<DT><B>--expanded</B><DD>
+<BR>&nbsp;打开扩展表格式模式。等效于<B>\x</B>。&nbsp;
+<DT><B>-X,</B><DD>
+<DT><B>--no-psqlrc</B><DD>
+<BR>&nbsp;不读取启动文件&nbsp;<I>~/.psqlrc</I>。
+<DT><B>-?</B><DD>
+<DT><B>--help</B><DD>
+<BR>&nbsp;显示关于psql命令行参数的帮助。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXIT STATUS 退出状态</H2>
+
+<P>
+
+如果正常结束，那么<B>psql</B>  向 shell 返回 0，如果自身发生致命错误，则返回 1（内存用尽，未找到文件等）， 如果和数据库的连接失效而且会话不再活跃则返回 2，如果脚本中发生错误并且设置了 ON_ERROR_STOP 则返回 3。
+<A NAME="lbAG">&nbsp;</A>
+<H2>USAGE 用法</H2>
+
+<A NAME="lbAH">&nbsp;</A>
+<H3>CONNECTING TO A DATABASE 与一个数据库联接</H3>
+
+<P>
+
+<B>psql</B> 是一个普通的 PostgreSQL  客户端应用。为了与一个数据库联接，你需要知道你的目标数据库， 服务器的主机名和端口号以及你希望以哪个用户的身份进行联接等信息。 我们可以通过命令行参数告诉 psql 这些信息，分别是 -d， -h，-p，和 -U。 如果有个参数不属于任何选项开关，那么它会被解释成数据库名（或者是用户名－如果数据库名称也给出了。）。 不是所有这些选项都是必须的，缺省的也可以。如果你省略主机名， psql 将通过 Unix 域套接字与本地主机的服务器相联。 缺省的端口号是编译时确定的。因为数据库服务器使用同样的缺省值， 所以在大多数设置下，你可能不需要声明端口号。缺省的用户名是你的 Unix 用户名，与数据库同名。 要注意的是你不能用任意用户名与任何数据库相联。你的数据库管理员应该告诉你你的访问权限。 你可以通过设置几个环境变量 PGDATABASE， PGHOST，PGPORT 和 PGUSER  为对应的值的方法节约几次敲击。
+<P>
+
+<BR>&nbsp;如果因为任何原因而无法与数据库相联（例如，权限不够，服务器没有运行等），&nbsp;psql&nbsp;将返回一个错误并退出。
+<A NAME="lbAI">&nbsp;</A>
+<H3>ENTERING SQL COMMANDS 输入 SQL 命令</H3>
+
+<P>
+
+<BR>&nbsp;通常状况下，psql&nbsp;提供一个带有&nbsp;psql&nbsp;正在与之联接的接数据库名的，后缀&nbsp;=&gt;的提示符。例如，
+<P>
+<PRE>
+$<B>psql testdb</B>
+Welcome to psql 7.4beta5, the PostgreSQL interactive terminal.
+
+Type: \copyright for distribution terms
+      \h for help with SQL commands
+      \? for help on internal slash commands
+      \g or terminate with semicolon to execute query
+      \q to quit
+
+testdb=&gt;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;用户可以在这个提示符下键入SQL&nbsp;查询。&nbsp;通常，输入的行将在命令终止分号出现时送到服务器。&nbsp;一行的终止并不结束命令！因此命令可以因清晰起见跨越好几行。如果命令发送出去而且没有错误，&nbsp;命令结果会显示在屏幕上。
+<P>
+
+<BR>&nbsp;当命令正在进行时，psql&nbsp;同样还轮询由&nbsp;LISTEN&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+listen">listen</A></B>(7)]&nbsp;和&nbsp;NOTIFY&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+notify">notify</A></B>(7)]&nbsp;生成的异步通知信号。
+<A NAME="lbAJ">&nbsp;</A>
+<H3>META-COMMANDS 元命令</H3>
+
+<P>
+
+<BR>&nbsp;你在&nbsp;psql&nbsp;里输入的任何以不带引号的反斜杠（'\'）开头的东西都是&nbsp;psql&nbsp;元命令，这些命令是由&nbsp;psql&nbsp;自己处理的。这些命令也是令&nbsp;psql&nbsp;可用于管理或书写脚本的原因。&nbsp;元命令更常见的叫法是斜杠或反斜杠命令。
+<P>
+
+<BR>&nbsp;一个&nbsp;psql&nbsp;命令的格式是反斜杠后面紧跟一个命令动词，然后是任意参数。&nbsp;参数与命令动词和其他参数以任意个空白字符间隔。
+<P>
+
+<BR>&nbsp;要在参数里面包含空白，你必须用单引号把它包围起来。&nbsp;要在这样的参数里包含单引号，前面加一个反斜杠。&nbsp;任何包含在单引号里的东西会被进一步进行类&nbsp;C&nbsp;的替换，把
+\n (new line),\t (tab),
+\<I>digits</I>,
+\0<I>digits</I>, 和
+\0x<I>digits</I> 
+（给出的十进制，八进制，或十六进制码的字符）替换掉。
+<P>
+
+<BR>&nbsp;如果一个不带引号的参数以冒号（:）开头，&nbsp;它会被当作一个psql&nbsp;变量，并且该变量的值会最终成为真正的参数值。&nbsp;（译注：类似&nbsp;ecpg&nbsp;和&nbsp;pl/pgsql&nbsp;的变量用法。）
+<P>
+
+<BR>&nbsp;用反引号&nbsp;（&quot;backticks&quot;&nbsp;`）&nbsp;包围的内容被当作一个命令行传入&nbsp;shell。&nbsp;该命令的输出（删除了结尾的新行）被当作参数值。上面描述的逃逸（字符）序列在反引号里也生效。
+<P>
+
+<BR>&nbsp;有些命令以一个&nbsp;SQL&nbsp;标识的名称（如，一个表名）为参数。&nbsp;这些参数遵循&nbsp;SQL&nbsp;语法关于双引号的规则：&nbsp;不带双引号的标识强制成小写，&nbsp;而双引号保护字母不受大小写转换，并且允许在标识符中使用空白。&nbsp;在双引号中，成对的双引号在结果名字中分析成一个双引号。比如，&nbsp;FOO&quot;BAR&quot;BAZ&nbsp;解析成&nbsp;fooBARbaz，而&nbsp;&quot;A&nbsp;weird&quot;&quot;&nbsp;name&quot;&nbsp;变成&nbsp;A&nbsp;weird&quot;&nbsp;name。
+name.
+<P>
+
+<BR>&nbsp;对参数的分析在碰到另一个不带引号的反斜杠时停止。&nbsp;这里会认为是一个新的元命令的开始。特殊序列&nbsp;\\&nbsp;（双反斜杠）标识参数的结尾并将继续分析后面的&nbsp;SQL&nbsp;命令（如果存在的话）。这样&nbsp;SQL&nbsp;和&nbsp;psql命令可以自由的在一行里面混合。&nbsp;但是在任何情况下，一条元命令的参数不能延续超过行尾。
+<P>
+
+<BR>&nbsp;下列元命令是已定义的：
+<DL COMPACT>
+<DT><B>\a</B><DD>
+<BR>&nbsp;如果目前的表输出格式是不对齐的，切换成对齐的。&nbsp;如果是对齐的，切换成不对齐。这条命令是为了向后兼容。参阅<B>\pset</B>&nbsp;获取一个通用的解决方法。
+<DT><B>\cd [</B><I>directory</I><B>]</B><DD>
+<BR>&nbsp;把当前工作目录改变到&nbsp;directory。&nbsp;没有参数是则改变到当前用户的家目录。
+<P>
+<DL COMPACT><DT><DD>
+<B>Tip:</B>
+
+提示:  要打印出你的当前工作目录，使用\!pwd.
+</DL>
+
+<P>
+<DT><B>\C [</B><I>title</I><B> ]</B><DD>
+<BR>&nbsp;把正在打印的表的标题设置为一个查询的结果或者取消这样的设置。&nbsp;这条命令等效于
+\pset title<I>title</I>. （这条命令的名称源于 &quot;caption&quot;，因为以前只是用于在一个 HTML 表里面设置标题。）
+<DT><B>\connect (or\c) [</B><I>dbname</I><B> [</B><I>username</I><B> ] ]</B><DD>
+<BR>&nbsp;与一个新的数据库建立一个联接，使用/不用一个用户名。&nbsp;前面的联接将关闭。如果&nbsp;dbname&nbsp;是&nbsp;-，那么就假设是当前数据库名称。
+<P>
+<BR>&nbsp;如果省略&nbsp;username，则假设是当前用户名。
+<P>
+<BR>&nbsp;作为一条特殊规则，不带任何参数运行<B>\connect</B>&nbsp;&nbsp;将以缺省用户身份与缺省数据库连接（正如你不带任何参数运行&nbsp;psql&nbsp;一样。）
+<P>
+<BR>&nbsp;如果联接失败（用户名错，访问拒绝等），那么将保留前面的联接--当且仅当在&nbsp;psql&nbsp;处于交互模式下如此。&nbsp;如果运行的是非交互的脚本，处理会马上停止，并返回一个错误。&nbsp;选择这样的区别是一方面为用户使用方便考虑，另一方面为保证脚本不会碰巧操作了错误的数据库的安全机制考虑的。
+<DT><B>\copy</B><I>table</I><B></B><DD>
+<BR>&nbsp;执行前端（客户端）拷贝。这是一个运行&nbsp;SQL&nbsp;&nbsp;COPY&nbsp;命令的操作，&nbsp;不同的是&nbsp;SQL&nbsp;COPY&nbsp;是服务器在读写指明的文件，而&nbsp;psql&nbsp;读写文件并作为本地的文件系统和服务器之间的路由取出或写入数据。&nbsp;这意味着文件访问性和权限都是本地用户的，而不是服务器的，因此不需要&nbsp;SQL&nbsp;超级用户权限。
+<P>
+<BR>&nbsp;这条命令的语法是模拟&nbsp;SQL&nbsp;COPY&nbsp;命令的。（参考它的描述获取细节。）&nbsp;要注意的是由此而来，有一些特殊的分析规则应用于<B>\copy</B>&nbsp;命令。&nbsp;尤其是变量替换规则和反斜杠代换规则不起作用。
+<P>
+<DL COMPACT><DT><DD>
+<B>Tip:</B>
+
+提示:  此操作不象 SQL COPY 命令这样高效， 因为所有数据必须通过客户端/服务器联接。对于大数据量的操作，另一种方法更可行。
+</DL>
+
+<P>
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  注意在客户端和服务器拷贝时对 stdin 和 stdout  的解释的区别：在前端拷贝时，这些总是指 psql的输入和输出流。在服务器拷贝时 stdin 来自 COPY 本身的标准输入（比如，一个带有 -f 选项的脚本）， 而 stdout 指的是查询输出流（参阅下面的<B>\o</B> 元命令）。
+</DL>
+
+<P>
+<DT><B>\copyright</B><DD>
+<BR>&nbsp;显示&nbsp;PostgreSQL&nbsp;的版权和版本信息。
+<DT><B>\d [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;对于每个匹配pattern的关系（表，视图，索引或者序列），&nbsp;显示所有列，它们的类型，和任何特殊属性，象NOT&nbsp;NULL或缺省等－－只要存在。&nbsp;如果实际上这个关系是一个表，任何已定义的索引，主键，唯一约束相关的索引，规则，约束，和触发器也同样显示出来，&nbsp;如果关系是一个视图，还显示视图的定义。&nbsp;（&quot;匹配模式&quot;在下面定义。）
+<P>
+从\d+ 来的命令也是一样的，只不过还显示与表的列关联的注解。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  如果如果不带任何pattern调用<B>\d</B> ， 等效于<B>\dtvs</B>，将显示一个所有表，视图和序列的列表。 这完全是出于方便的考虑。
+</DL>
+
+<P>
+<DT><B>\da [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;列出所有可用聚集函数，以及它们操作的数据类型。如果声明了&nbsp;pattern，那么只显示匹配（正则表达式）的聚集函数。
+<DT><B>\dc [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;列出所有字符集之间的可用转换。如果声明了&nbsp;pattern，&nbsp;则只列出那些匹配模式的转换。
+<DT><B>\dC</B><DD>
+<BR>&nbsp;列出所有类型转换。
+<DT><B>\dd [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;显示所有匹配&nbsp;pattern&nbsp;&nbsp;的描述，如果没有给出参数，显示所有可视对象。&nbsp;但是不管怎样，只有那些有描述内容的对象才显示出来。&nbsp;（&quot;对象&quot;包括聚集，函数，操作符，类型，&nbsp;关系（表，视图，索引，序列，大对象），规则和触发器。）例如：
+<P>
+<PRE>
+=&gt;<B>\dd version</B>
+                     Object descriptions
+   Schema   |  Name   |  Object  |        Description
+------------+---------+----------+---------------------------
+ pg_catalog | version | function | PostgreSQL version string
+(1 row)
+
+</PRE>
+
+<P>
+<BR>&nbsp;可以用<B>COMMENT&nbsp;&nbsp;SQL</B>&nbsp;命令生成对对象的描述。
+<DT><B>\dD [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;列出所有可用域。如果声明了&nbsp;pattern，那么只显示匹配的域。
+<DT><B>\df [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;列出所有可用函数，以及它们的参数和返回的数据类型。如果声明了&nbsp;pattern，那么只显示匹配（正则表达式）的函数。如果使用了\df+&nbsp;的形式，每个函数的附加信息，包括语言和描述也会显示出来。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  为了减少混乱，\df 并不显示数据类型的 I/O 函数。 这样是通过忽略那些接受或者返回类型 cstring 的函数实现的。
+</DL>
+
+<P>
+<DT><B>\distvS [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;这不是一个实际上的命令名称：字母&nbsp;i，s，t，v，S&nbsp;分别代表索引（index），&nbsp;序列（sequence），表（table），视图（view）和系统表（system&nbsp;table）。&nbsp;你可以以任意顺序声明任意或者所有这些字母获得这些对象的一个列表。&nbsp;字幕&nbsp;S&nbsp;把列表限制于系统对象；如果没有&nbsp;S，则只显示非系统对象。&nbsp;如果在命令名上附加了&nbsp;+，那么还会列出和每个对象相关联的描述，如果有的话。
+<P>
+<BR>&nbsp;如果声明了&nbsp;pattern，那么只列出匹配模式的对象。
+<DT><B>\dl</B><DD>
+这是<B>\lo_list</B> 的别名，显示一个大对象的列表。
+<DT><B>\dn [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;列出所有可用模式（名字空间）。如果声明了&nbsp;pattern&nbsp;&nbsp;（一个正则表达式），那么只列出匹配模式的模式名。
+<DT><B>\do [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;列出所有可用操作符，以及它们的操作数和返回的数据类型。&nbsp;如果声明了&nbsp;pattern，那么只显示匹配模式的操作符。
+<DT><B>\dp [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;生成一列可用的表和它们相关的权限。&nbsp;如果声明了&nbsp;pattern，&nbsp;那么只列出名字可以匹配模式的表。
+<P>
+<BR>&nbsp;命令<B><A HREF="/cgi-bin/man/man2html?7+grant">grant</A></B>(7)&nbsp;和<B><A HREF="/cgi-bin/man/man2html?7+revoke">revoke</A></B>(7)&nbsp;用于设置访问权限。参阅<B><A HREF="/cgi-bin/man/man2html?7+grant">grant</A></B>(7)&nbsp;获取更多信息。
+<DT><B>\dT [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;列出所有数据类型或只显示那些匹配&nbsp;pattern的。这条命令的\dT+&nbsp;形式显示更多信息。
+<DT><B>\du [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;列出所有已配置用户或者只列出那些匹配&nbsp;pattern&nbsp;的用户。
+<DT><B>\edit (or\e) [</B><I>filename</I><B> ]</B><DD>
+如果声明了 filename， 则编辑此文件并且在编辑器退出后将其内容拷贝回查询缓
+冲区。 如果没有给出参数，则把当前查询缓冲区内容拷贝到一个临时文件然后以相
+同方式编辑。
+<P>
+然后根据一般的psql规则重新分析查询缓冲区， 这时整个缓冲区当作一个单行。
+（因此你无法用这个方法制作"脚本"，用<B>\i</B> 做脚本。） 这还意味着
+如果该查询以分号结尾（或者包含分号），它就会马上被执行。否则它只是在查询
+缓冲区里等待。
+<P>
+<DL COMPACT><DT><DD>
+<B>Tip:</B>
+
+提示:  psql 搜索环境变量 PSQL_EDITOR，EDITOR  和 VISUAL（以此顺序）查找要用到哪个编辑器。如果上面的都没有设置，使用<I>/bin/vi</I>。
+</DL>
+
+<P>
+<DT><B>\echo</B><I>text</I><B> [ ... ]</B><DD>
+<BR>&nbsp;向标准输出打印参数，用一个空格分隔并且最后跟着一个新行。&nbsp;这个特性在显示脚本的输出时会有用。例如：
+<P>
+<PRE>
+=&gt;<B>\echo `date`</B>
+Tue Oct 26 21:40:57 CEST 1999
+
+</PRE>
+
+<BR>&nbsp;果第一个参数是一个无引号的&nbsp;-n，那么不会写出结尾的新行。
+<P>
+<DL COMPACT><DT><DD>
+<B>Tip:</B>
+
+提示:  如果你使用<B>\o</B> 命令重定向你的查询的输出，你可能会用<B>\qecho</B> 取代这条命令。
+</DL>
+
+<P>
+<DT><B>\encoding [</B><I>encoding</I><B> ]</B><DD>
+<BR>&nbsp;设置客户端字符编码方式。不带参数时，这条命令显示当前的编码方式。
+<DT><B>\f [</B><I>string</I><B> ]</B><DD>
+<BR>&nbsp;为不对齐的查询输出设置域分隔符。缺省时是竖条（|）。&nbsp;参阅<B>\pset</B>&nbsp;获取设置输出选项的通用方法。
+<DT><B>\g [ {</B><I>filename</I><B> | |</B><I>command</I><B> } ]</B><DD>
+<BR>&nbsp;把当前的查询输入缓冲区的内容发送给服务器并且把输出输出到可选的&nbsp;filename&nbsp;&nbsp;或者把输出定向到一个独立的&nbsp;Unix&nbsp;shell&nbsp;执行&nbsp;command。&nbsp;单独一个\g&nbsp;实际上等效于一个分号。一个带有参数的\g&nbsp;是&quot;一次性&quot;的\o&nbsp;命令的代用品。
+<DT><B>\help (or\h) [</B><I>command</I><B> ]</B><DD>
+<BR>&nbsp;给出指定&nbsp;SQL&nbsp;命令的语法帮助。如果没有给出&nbsp;command&nbsp;，那么&nbsp;psql&nbsp;将列出可获得语法帮助的所有命令。如果&nbsp;command&nbsp;&nbsp;是一个星号（&quot;*&quot;），则显示所有&nbsp;SQL&nbsp;命令的语法帮助。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  为简化敲击，包含多个单字的命令不需要引用。因此键入<I>\help alter table</I> 是正确的。
+</DL>
+
+<P>
+<DT><B>\H</B><DD>
+<BR>&nbsp;打开&nbsp;HTML&nbsp;查询输出格式。如果&nbsp;HTML&nbsp;&nbsp;格式已经打开，则切换回缺省的对齐的文本格式。&nbsp;这个命令是为了兼容和方便，参阅<B>\pset</B>&nbsp;获取设置其他输出选项的内容。
+<DT><B>\i</B><I>filename</I><B></B><DD>
+<BR>&nbsp;从文件filename中读取并把其内容当作从键盘输入的那样执行查询。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  如果你想在屏幕上看到读入的行，你必须对所有行设置变量 ECHO 为 all。
+</DL>
+
+<P>
+<DT><B>\l (or\list)</B><DD>
+<BR>&nbsp;列出服务器上所有数据库的名字和它们的所有者以及字符集编码。在命令名称后面加一个&nbsp;&quot;+&quot;&nbsp;还可以看到对数据库的描述。
+<DT><B>\lo_export</B><I>loid</I><B></B><I>filename</I><B></B><DD>
+<BR>&nbsp;从数据库里读取&nbsp;OID&nbsp;为&nbsp;loid&nbsp;&nbsp;的大对象并把她写到&nbsp;filename里。&nbsp;注意这个功能与服务器函数&nbsp;lo_export&nbsp;有些微小的区别，&nbsp;lo_export&nbsp;运行时带着运行数据库服务器的用户权限，&nbsp;而且是在服务器的文件系统上。
+<P>
+<DL COMPACT><DT><DD>
+<B>Tip:</B>
+
+提示:  使用<B>\lo_list</B> 查看大对象的 OID。
+OID.
+</DL>
+
+<P>
+<DT><B>\lo_import</B><I>filename</I><B> [</B><I>comment</I><B> ]</B><DD>
+<BR>&nbsp;把文件存储为一个&nbsp;PostgreSQL&nbsp;大对象。可以带着一个该对象的注解选项。例如：
+<P>
+<PRE>
+foo=&gt;<B>\lo_import '/home/peter/pictures/photo.xcf' 'a picture of me'</B>
+lo_import 152801
+
+</PRE>
+
+<BR>&nbsp;响应表明此大对象得到一个对象标识&nbsp;152801，如果你还想访问该对象，就应该把这个对象标识记住。&nbsp;因此，我们建议总是给每个对象关联一个人类可读的注解。那样就可以用<B>\lo_list</B>&nbsp;命令看到这些注解。
+<P>
+<BR>&nbsp;注意这条命令与服务器端的&nbsp;lo_import&nbsp;有一些区别，因为这条命令是本地用户在本地文件系统上操作，&nbsp;而不是以服务器用户在服务器文件系统上操作。
+<DT><B>\lo_list</B><DD>
+<BR>&nbsp;显示一个目前存储在该数据库里的所有&nbsp;PostgreSQL&nbsp;大对象和它们的所有者的列表。
+<DT><B>\lo_unlink</B><I>loid</I><B></B><DD>
+<BR>&nbsp;从数据库里删除OID为<I>loid</I>&nbsp;的大对象。
+<P>
+<DL COMPACT><DT><DD>
+<B>Tip:</B>
+
+提示:  使用<B>\lo_list</B>  查找大对象的 OID。
+OID.
+</DL>
+
+<P>
+<DT><B>\o [ {</B><I>filename</I><B> | |</B><I>command</I><B>} ]</B><DD>
+<BR>&nbsp;把后面的查询结果保存到文件&nbsp;filename&nbsp;&nbsp;里或者把后面的查询结果定向到一个独立的&nbsp;Unix&nbsp;shell&nbsp;执行&nbsp;command。&nbsp;如果没有声明参数，查询输出重置为标准输出。
+<P>
+&quot;查询结果&quot;包括所有表，命令响应和从数据库服务器来的提示， 同样还有各种各样查询数据库的反斜杠命令的输出（如<B>\d</B>），但是没有错误信息。
+<P>
+<DL COMPACT><DT><DD>
+<B>Tip:</B>
+
+提示:  要用文本分散查询结果之间的输出，用<B>\qecho</B>。
+</DL>
+
+<P>
+<DT><B>\p</B><DD>
+<BR>&nbsp;打印当前查询缓冲区到标准输出。
+<DT><B>\pset</B><I>parameter</I><B> [</B><I>value</I><B> ]</B><DD>
+<BR>&nbsp;这条命令设置影响查询结果表输出的选项。parameter&nbsp;&nbsp;描述要设置的选项是哪一个。value&nbsp;的语意也取决于它。
+<P>
+<BR>&nbsp;可调节的打印选项有：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>format</B><DD>
+<BR>&nbsp;设置输出格式为&nbsp;unaligned，aligned，html，&nbsp;或&nbsp;latex之一。允许使用唯一的缩写。（这也意味着一个字母就够了。）
+<P>
+&quot;Unaligned&quot; （不对齐）把一条记录的所有字段都输出到一行， 用当前有效的域分隔符分隔。这主要用于生成那些要被其他程序读取的输出（tab分隔，逗号分隔）。 &quot;Aligned&quot; （对齐）模式是标准的，人类可读的，格式化好了的文本输出，也是缺省。 &quot;HTML&quot; 和 &quot;LaTeX&quot;  模式把表输出为可用于文档里的对应标记语言。它们还不是完整的文档！ （可能对于 HTML 变化还不是太大，但是在 LaTeX 里，你必须有一个完整的文档包装器。）
+<DT><B>border</B><DD>
+<BR>&nbsp;第二个参数必须是一个数字。通常，数字越大，表就有越宽的边界和越多的线，&nbsp;但是这个参数取决于实际的格式。在HTML模式里，&nbsp;这个参数会直接翻译成border=...属性，在其他的模式里，&nbsp;只有值&nbsp;0&nbsp;（无边界），1&nbsp;（内部分隔线）和&nbsp;2&nbsp;（表框架）有意义。
+<DT><B>expanded (or x)</B><DD>
+<BR>&nbsp;在正常和扩展格式之间切换。当打开扩展格式时，所有的输出都是两列，&nbsp;字段名称在左，数据在右。&nbsp;这个模式在数据无法放进通常的&quot;水平&quot;模式的屏幕时很有用。
+<P>
+<BR>&nbsp;所有四种输出模式都支持扩展格式。
+<DT><B>null</B><DD>
+<BR>&nbsp;第二个参数是一个字串，用以代表字段的值为&nbsp;null&nbsp;时的打印输出。&nbsp;缺省是什么都不打，这样很容易和类似一个空字串混淆。&nbsp;因此，我们可能选择\pset&nbsp;null&nbsp;'(null)'。
+<DT><B>fieldsep</B><DD>
+<BR>&nbsp;声明在非对齐模式时的域分隔符。&nbsp;这样我们就可以创建其他程序希望的tab或逗号分隔的输出。要设置&nbsp;tab&nbsp;域分隔符，&nbsp;键入\pset&nbsp;fieldsep&nbsp;'	'。缺省域分隔符是&nbsp;'|'&nbsp;（一个竖条符号）。
+<DT><B>footer</B><DD>
+<BR>&nbsp;切换默认足标的显示&nbsp;(x&nbsp;rows)。
+<DT><B>recordsep</B><DD>
+<BR>&nbsp;声明在非对齐模式时的记录分隔符。缺省是换行符。
+<DT><B>tuples_only (或 t)</B><DD>
+<BR>&nbsp;在完全显示和只显示记录之间切换。&nbsp;完全显示将显示象列头，标题和各种脚注等信息。&nbsp;只显示记录模式将只显示实际的表数据。
+<DT><B>title [</B><I>text</I><B> ]</B><DD>
+<BR>&nbsp;为任何随后打印的表设置标题。&nbsp;这个参数可以用于给你的输出一个描述性标记。&nbsp;如果不带参数，重置标题。
+<DT><B>tableattr (or T) [</B><I>text</I><B> ]</B><DD>
+<BR>&nbsp;允许你声明放在&nbsp;HTML&nbsp;table&nbsp;标记里的任何属性。例如，可以是&nbsp;cellpadding&nbsp;或&nbsp;bgcolor。注意你可能不需要在这里声明&nbsp;border&nbsp;，因为已经在\pset&nbsp;border&nbsp;里用过了。
+<DT><B>pager</B><DD>
+<BR>&nbsp;控制查询和psql帮助输出的分页器。如果设置了环境变量&nbsp;PAGER，&nbsp;输出被定向到指定程序，否则使用系统缺省（比如&nbsp;more）。
+<P>
+<BR>&nbsp;如果关闭了分页器，则不使用它，如果打开了，程序只在需要的时候使用分页器，也就是说，&nbsp;输出是到终端，而且那个表很可能无法与屏幕匹配。&nbsp;（psql&nbsp;在决定何时分页时不是很完美。）\pset&nbsp;pager&nbsp;开关分页器。我们也可以把分页器设置为&nbsp;always，导致我们在任何情况下都使用分页器。
+</DL>
+</DL>
+
+</DL>
+<P>
+
+<P>
+<BR>&nbsp;可以在&nbsp;&quot;Examples&nbsp;例子&quot;&nbsp;节看到这些不同格式输出的示例。
+<P>
+<DL COMPACT><DT><DD>
+<B>Tip:</B>
+
+提示:  有很多用于<B>\pset</B> 的快速命令。参阅
+<B>\a</B>,<B>\C</B>,<B>\H</B>,
+<B>\t</B>,<B>\T</B>, 和<B>\x</B>。
+</DL>
+
+<P>
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  无参数运行<B>\pset</B> 是错误的。 以后这样调用将显示当前打印选项状态。
+</DL>
+
+<P>
+<DL COMPACT>
+<DT><B>\q</B><DD>
+<BR>&nbsp;退出&nbsp;psql&nbsp;程序。
+<DT><B>\qecho</B><I>text</I><B> [ ... ]</B><DD>
+<BR>&nbsp;这条命令等效于<B>\echo</B>&nbsp;，区别是所有输出将写入由<B>\o</B>&nbsp;设置的输出通道。
+<DT><B>\r</B><DD>
+<BR>&nbsp;重置（清空）查询缓冲区。
+<DT><B>\s [</B><I>filename</I><B> ]</B><DD>
+<BR>&nbsp;将命令行历史打印出或是存放到&nbsp;filename。&nbsp;如果省略&nbsp;filename，&nbsp;历史将输出到标准输出。这个选项只有在&nbsp;psql&nbsp;配置成使用&nbsp;GNU&nbsp;历史库后才生效。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  在当前版本里，这个（ GNU 历史库）不再是必须的了， 实际上，在程序结束时自动保存命令行历史。每次 psql 启动都会装载命令行历史。
+</DL>
+
+<P>
+<DT><B>\set [</B><I>name</I><B> [</B><I>value</I><B> [ ... ]]]</B><DD>
+<BR>&nbsp;设置内部变量&nbsp;name&nbsp;&nbsp;为&nbsp;value&nbsp;或着如果给出了多于一个值，&nbsp;设置为所有这些值的联接结果。如果没有给出第二个参数，只设变量不设值。要重置一个变量，使用<B>\unset</B>&nbsp;命令。
+<P>
+<BR>&nbsp;有效的变量名可以包含字符，数字和下划线。&nbsp;参阅下面的&nbsp;&quot;Variables&nbsp;变量&quot;&nbsp;获取细节。
+<P>
+<BR>&nbsp;尽管你可以设置任何变量为任意值，&nbsp;psql对一些变量特殊对待。它们在关于变量的节里面有文档。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  这条命令是完全和 SQL 命令 SET [<B><A HREF="/cgi-bin/man/man2html?7+set">set</A></B>(7)] 不一样的。
+</DL>
+
+<P>
+<DT><B>\t</B><DD>
+<BR>&nbsp;切换输出的列/字段名的信息头和行记数脚注。&nbsp;这条命令等效于\pset&nbsp;tuples_only，提供主要为了方便。
+<DT><B>\T</B><I>table_options</I><B></B><DD>
+<BR>&nbsp;允许你在使用HTML输出模式时声明放在&nbsp;table&nbsp;标记里的属性。&nbsp;这条命令等效于\pset&nbsp;tableattr&nbsp;table_options。
+<DT><B>\timing</B><DD>
+切换每个 SQL 语句使用的时间，单位是毫秒。
+<DT><B>\w {</B><I>filename</I><B> |</B><I>|command</I><B>}</B><DD>
+<BR>&nbsp;将当前查询缓冲区输出到文件&nbsp;filename&nbsp;&nbsp;或者定向到&nbsp;Unix&nbsp;命令&nbsp;command。
+<DT><B>\x</B><DD>
+<BR>&nbsp;切换扩展行格式。等效于\pset&nbsp;expanded。
+<DT><B>\z [</B><I>pattern</I><B> ]</B><DD>
+<BR>&nbsp;生成一个带有访问权限列表的数据库中所有表的列表。&nbsp;如果给出任何pattern，则被当成一个规则表达式，&nbsp;只显示匹配的表。
+<P>
+<BR>&nbsp;命令<B><A HREF="/cgi-bin/man/man2html?7+grant">grant</A></B>(7)&nbsp;和<B><A HREF="/cgi-bin/man/man2html?7+revoke">revoke</A></B>(7)&nbsp;用于设置访问权限。&nbsp;参阅<B><A HREF="/cgi-bin/man/man2html?7+grant">grant</A></B>(7)&nbsp;获取更多信息。
+<P>
+<BR>&nbsp;这是<B>\dp</B>（&quot;显示权限&quot;）的别名。
+<DT><B>\! [</B><I>command</I><B> ]</B><DD>
+<BR>&nbsp;返回到一个独立的&nbsp;Unix&nbsp;shell&nbsp;或者执行&nbsp;Unix&nbsp;命令&nbsp;command。&nbsp;参数不会被进一步解释，shell&nbsp;将看到全部参数。
+<DT><B>\?</B><DD>
+<BR>&nbsp;获得关于反斜杠命令的帮助信息。
+</DL>
+<P>
+
+<P>
+
+<BR>&nbsp;各种\d&nbsp;命令都接受一个&nbsp;pattern&nbsp;&nbsp;参数，声明要显示的对象名字。*&nbsp;表示&quot;任何字符序列&quot;，&nbsp;而&nbsp;?&nbsp;表示&quot;任何单个字符&quot;。（这个表示法和&nbsp;Unix&nbsp;的&nbsp;shell&nbsp;文件名模式兼容。）&nbsp;高级用户也可以使用正则表达式表示法，比如字符表，[0-9]&nbsp;这样的东西来匹配&quot;任意数字&quot;。&nbsp;要让任何这些模式匹配字符可以安字面方式解析，那就应该用双引号包围它们。
+<P>
+
+<BR>&nbsp;一个包含（无引号的）句点的模式会被解析承一个模式名的模式后面跟着一个对象名的模式。&nbsp;比如，\dt&nbsp;foo*.bar*&nbsp;显示所有以foo&nbsp;开头的模式里的以&nbsp;bar&nbsp;开头的表名字。&nbsp;如果没有出现句点，那么这个模式只匹配在当前模式搜索路径中可见的对象。
+<P>
+
+<BR>&nbsp;如果完全省略&nbsp;pattern&nbsp;参数，&nbsp;那么\d&nbsp;命令显示所有在当前模式搜索路径中可见的对象。&nbsp;要查阅在数据库中的所有对象，使用模式&nbsp;*.*。
+<A NAME="lbAK">&nbsp;</A>
+<H3>ADVANCED FEATURES 高级特性</H3>
+
+<A NAME="lbAL">&nbsp;</A>
+<H3>VARIABLES 变量</H3>
+
+<P>
+
+<B>psql</B> 提供类似通常 Unix 命令 shell 那样的变量替换特性。 变量只是简单的名称/数值对， 这里的值可以是任何长度的任何值。要设置一个变量，使用 psql 元命令
+<B>\set</B>：
+<P>
+<PRE>
+testdb=&gt;<B>\set foo bar</B>
+
+</PRE>
+
+<BR>&nbsp;把变量&quot;foo&quot;&nbsp;设置为值&nbsp;&quot;bar&quot;。&nbsp;要检索变量的内容，在变量名前面放上冒号然后把它用在任意斜杠命令里：
+<P>
+<PRE>
+testdb=&gt;<B>\echo :foo</B>
+bar
+
+</PRE>
+
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意: <B>\set</B> 的参数服从和其他命令一样的替换规则。 因此你可以构造有趣的引用，象\set :foo 'something' 这样， 获得分别象Perl或 PHP那样有名的&quot;软连接（soft links）&quot;或&quot;变量 变量&quot;。 不幸的是（或者 万幸的？），用这些构造不能做任何有用的事情。另一方面，\set bar :foo 是一个非常有效的拷贝变量的方法。
+</DL>
+
+<P>
+<P>
+
+<BR>&nbsp;如果你不带第二个参数调用<B>\set</B>，&nbsp;那么只是设置这个变量而没有值。&nbsp;要重置（或删除）一个变量，使用命令<B>\unset</B>。
+<P>
+
+<B>psql</B> 的内部变量可以包括任意顺序， 任意数量的字母，数字和下划线。 有一些常用变量被 psql 另眼相待。它们是一些选项设置， 这些选项在运行时可以通过改变变量的值或者改变一些应用的表现状态而改变。 尽管你可以把这些变量用于其他用途，但是我们不鼓励这么做，因为程序的特性可能会很快变得非常奇怪。 通常，所有特殊对待的变量都是由大写字母组成（可能还有数字和下划线）。 为了保证和未来的最大限度的兼容性，请避免使用这样的变量。 下面是一个所有特殊对待的变量列表。
+<DL COMPACT>
+<DT><B>AUTOCOMMIT</B><DD>
+<BR>&nbsp;如果是&nbsp;on（缺省），那么每个&nbsp;SQL&nbsp;命令都在成功完成后自动提交。&nbsp;要推迟这种模式下的提交，你必须输入一个&nbsp;BEGIN&nbsp;或者&nbsp;START&nbsp;TRANSACTION&nbsp;SQL&nbsp;命令。&nbsp;如果是&nbsp;off&nbsp;或者未设置，SQL&nbsp;命令不会提交，知道你明确地发出&nbsp;COMMIT&nbsp;或者&nbsp;END。&nbsp;关闭自动提交的模式是通过为你明确发出一个&nbsp;BEGIN&nbsp;实现的，&nbsp;它是放在任何尚未在一个事务块中并且自己不是&nbsp;BEGIN&nbsp;或者其它事务控制命令的前面。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  在关闭自动提交的模式下，你必须明确放弃任何失败的事务，方法是执行 ABORT 或者 ROLLBACK。 还要注意如果你不提交就退出会话，你的工作会丢失。
+</DL>
+
+<P>
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  自动提交打开方式是 PostgreSQL 传统的行为， 但是关闭自动提交更接近 SQL 规范。如果你喜欢关闭自动提交，你应该在你的<I>.psqlrc</I> 文件里设置它。
+</DL>
+
+<P>
+<DT><B>DBNAME</B><DD>
+<BR>&nbsp;你正在联接着的数据库名称。&nbsp;每次你与一个数据库联结都会设置这个值（包括程序启动），但是可以删除。
+<DT><B>ECHO</B><DD>
+<BR>&nbsp;如果置为&nbsp;all，&nbsp;输入的或者来自一个脚本的所有行在分析或执行前都写到标准输出。&nbsp;要在程序启动时声明这些，使用&nbsp;-a如果设置为&nbsp;queries，&nbsp;psql&nbsp;只是在查询发送给服务器之前打印出来。&nbsp;实现这个功能的命令行选项是&nbsp;-e。
+<DT><B>ECHO_HIDDEN</B><DD>
+<BR>&nbsp;当设置了这个变量并且一个反斜杠命令查询数据库时，首先显示查询。&nbsp;这样你可以学习&nbsp;PostgreSQL&nbsp;&nbsp;内部的东西并且在你自己的程序里提供类似功能。如果你设置该变量的值为&nbsp;&quot;noexec&quot;，查询只是显示出来但是实际上不发送到服务器和执行。
+<DT><B>ENCODING</B><DD>
+<BR>&nbsp;当前的客户端字符集编码。
+<DT><B>HISTCONTROL</B><DD>
+<BR>&nbsp;如果这个变量设置为&nbsp;ignorespace，&nbsp;以空格开始的行将不会进入历史列表。&nbsp;如果设置为变量&nbsp;ignoredups，&nbsp;与以前历史记录里匹配的行也不会进入历史记录。值&nbsp;ignoreboth是上面两个的结合。&nbsp;如果删除此变量或者其值为任何与上面的值不同的东西，&nbsp;所有交互模式读入的行都被保存入历史列表。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  这个特性是无耻地从<B>bash</B> 里剽窃来的。
+</DL>
+
+<P>
+<DT><B>HISTSIZE</B><DD>
+<BR>&nbsp;存在命令历史里的命令的个数。缺省值是&nbsp;500。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  这个特性是无耻地从<B>bash</B> 里剽窃来的。
+</DL>
+
+<P>
+<DT><B>HOST</B><DD>
+<BR>&nbsp;当前你正联接的数据库服务器主机。&nbsp;这是在每次你与数据库联接时（包括程序启动）设置的，但是可以删除。
+<DT><B>IGNOREEOF</B><DD>
+<BR>&nbsp;如果删除此变量，向一个交互的&nbsp;psql会话发送一个&nbsp;EOF&nbsp;（通常是<B>Control</B>+<B>D</B>）将终止应用。如果设置为一个数字值，那么在应用终止前该数值的&nbsp;EOF&nbsp;字符将被忽略。&nbsp;如果设置了此变量但是没有数字值，缺省是&nbsp;10。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  这个特性是无耻地从<B>bash</B> 里剽窃来的。
+</DL>
+
+<P>
+<DT><B>LASTOID</B><DD>
+<BR>&nbsp;最后影响的oid值，即为从一条&nbsp;INSERT&nbsp;或&nbsp;lo_insert&nbsp;命令返回的值。&nbsp;此变量只保证在下一条&nbsp;SQL&nbsp;命令的结果显示之前有效。
+<DT><B>ON_ERROR_STOP</B><DD>
+<BR>&nbsp;缺省时，如果非交互的脚本碰到一个错误，象一条错误的&nbsp;SQL&nbsp;命令或者内部元命令，处理会继续进行。&nbsp;这是&nbsp;psql&nbsp;的传统特性，&nbsp;但是有时候我们不太希望这样。如果设置了这个变量，脚本处理将马上停止。&nbsp;如果该脚本是从另外一个脚本调用的，那个脚本也会按同样的方式停止。&nbsp;如果最外层的脚本不是从一次交互的&nbsp;psql&nbsp;&nbsp;会话中调用的而是用&nbsp;-f&nbsp;选项调用的，psql&nbsp;&nbsp;将返回错误代码&nbsp;3，以示这个情况与致命错误条件的区别（错误代码&nbsp;1）。
+<DT><B>PORT</B><DD>
+<BR>&nbsp;当前你正在联接的数据库服务器的端口。&nbsp;这是在每次你与数据库联接时（包括程序启动）设置的，但是可以删除。
+<DT><B>PROMPT1</B><DD>
+<DT><B>PROMPT2</B><DD>
+<DT><B>PROMPT3</B><DD>
+<BR>&nbsp;这些指明psql&nbsp;显示的提示符看上去象什么。&nbsp;参阅下面的&nbsp;&quot;Prompting&nbsp;提示符&quot;。
+<DT><B>QUIET</B><DD>
+<BR>&nbsp;这个变量等效于命令行选项&nbsp;-q。&nbsp;可能在交互模式下没有什么用。
+<DT><B>SINGLELINE</B><DD>
+<BR>&nbsp;这个变量等效于设置命令行选项&nbsp;-S。你可以在运行时删除或设置它。
+<DT><B>SINGLESTEP</B><DD>
+<BR>&nbsp;这个变量等效于命令行选项<B>-s</B>。
+<DT><B>USER</B><DD>
+<BR>&nbsp;当前你正用于联接的数据库用户。&nbsp;这是在每次你与数据库联接时（包括程序启动）设置的，但是可以删除/重置。
+<DT><B>VERBOSITY</B><DD>
+<BR>&nbsp;这个选项可以设置为值&nbsp;default，verbose，或者&nbsp;terse&nbsp;&nbsp;以控制错误报告的冗余行。
+</DL>
+<A NAME="lbAM">&nbsp;</A>
+<H3>SQL INTERPOLATION 代换</H3>
+
+<P>
+
+<BR>&nbsp;一个附加的&nbsp;psql&nbsp;变量的有用特性是你可以把它们替换（&quot;代换&quot;）成正规的&nbsp;SQL&nbsp;语句。这样做的语法同样还是变量名前面加一个冒号（:）。
+<P>
+<PRE>
+testdb=&gt;<B>\set foo 'my_table'</B>
+testdb=&gt;<B>SELECT * FROM :foo;</B>
+
+</PRE>
+
+<BR>&nbsp;将会查询表my_table。变量的值是逐字拷贝的，&nbsp;所以它甚至可以包含不对称的引号或反斜杠命令。你必须保证你输入的东西是有意义的。&nbsp;变量替换将不会在引号引起来的&nbsp;SQL&nbsp;语句里面发生。
+<P>
+
+<BR>&nbsp;利用这个功能的一个时髦的应用是通过使用一个随后的语句中最后插入的&nbsp;OID&nbsp;建立一个外键仿真场景。&nbsp;另一个可能用到这个机制的地方是把一个文件的内容拷贝到一个字段里面去。&nbsp;首先把文件装载到一个变量然后象上面那样处理。
+<P>
+<PRE>
+testdb=&gt;<B>\set content '\'' `cat my_file.txt` '\''</B>
+testdb=&gt;<B>INSERT INTO my_table VALUES (:content);</B>
+
+</PRE>
+
+<BR>&nbsp;这样处理的一个可能问题是&nbsp;my_file.txt&nbsp;&nbsp;可能包含单引号。这些需要被逃逸以免在处理第三行时不会导致语法错误。&nbsp;可以使用程序&nbsp;sed&nbsp;来做这个处理：
+<P>
+<PRE>
+testdb=&gt;<B>\set content '\'' `sed -e &quot;s/'/\\\\\\'/g&quot; &lt; my_file.txt` '\''</B>
+
+</PRE>
+
+<BR>&nbsp;观察正确数量的反斜杠（6）！你可以这样解释它：在&nbsp;psql&nbsp;分析完这行后，它把&nbsp;sed&nbsp;-e&nbsp;&quot;s/'/\\\'/g&quot;&nbsp;&lt;&nbsp;my_file.txt&nbsp;传递给shell。&nbsp;shell&nbsp;将对双引号里的东西做其处理然后用参数&nbsp;-e&nbsp;和
+<BR>&nbsp;s/'/\\'/g&nbsp;执行&nbsp;sed。当&nbsp;sed分析这些时，&nbsp;它将把双反斜杠替换为单个反斜杠然后进行替换。&nbsp;可能有时候你认为所有&nbsp;Unix&nbsp;命令使用同一个逃逸字符是个好事。&nbsp;但具有讽刺意味的事实是你可能不得不逃逸所有反斜杠，因为&nbsp;SQL&nbsp;文本常量同样也惨遭这种解释。&nbsp;这种情况下你可能最好在外部准备文件。
+<P>
+
+<BR>&nbsp;因为冒号也可以合法的出现在&nbsp;SQL&nbsp;命令里，便有下面规则的应用：&nbsp;如果没有设置变量，字符序列&nbsp;&quot;冒号+名称&quot;&nbsp;不会被改变。&nbsp;在任何情况下你都可以用反斜杠逃逸冒号以保护它免于被解释。&nbsp;（变量的冒号语法是&nbsp;SQL&nbsp;用于嵌入查询语言的标准，如&nbsp;ECPG。用于数组片段和类型转换的冒号语法是&nbsp;PostgreSQL&nbsp;扩展，因此有冲突。）
+<A NAME="lbAN">&nbsp;</A>
+<H3>PROMPTING 提示符</H3>
+
+<P>
+
+<B>psql</B> 使用的提示符可以根据你的喜好客户化。三个变量 PROMPT1，PROMPT2，和 PROMPT3  包含描述提示符的外观的字串和特殊逃逸序列。Prompt 1 是 psql 请求一个新命令时的使用的正常提示符。 Prompt 2 是在一个命令输入期待更多输入时（因为查询没有用一个分号结束或者引号没有关闭）显示的提示符。 Prompt 3 在你运行一个 SQL COPY 命令和等待你在终端上键入记录时使用。
+<P>
+
+<BR>&nbsp;相应的提示符变量的值是按字面打印的，除非碰到一个百分号（%）。这时某些其他的文本被替换，&nbsp;替换为何物取决于下一个字符。已定义的替换是：
+<DL COMPACT>
+<DT><B>%M</B><DD>
+<BR>&nbsp;数据库服务器主机名全名（带着域名），如果联接是通过&nbsp;Unix&nbsp;域套接字进行的就是&nbsp;[local]，&nbsp;或者如果&nbsp;Unix&nbsp;域套接字不是编译的缺省位置，就是&nbsp;[local:<I>/dir/name</I>]。
+<DT><B>%m</B><DD>
+<BR>&nbsp;数据库服务器的主机名删去第一个点后面的部分剩下的东西。&nbsp;或者如果联接是通过&nbsp;Unix&nbsp;域套接字，就是&nbsp;[local]。
+<DT><B>%&gt;</B><DD>
+<BR>&nbsp;数据库服务器正在侦听的端口号。
+<DT><B>%n</B><DD>
+<BR>&nbsp;数据库会话的用户名。&nbsp;（这个值的扩展可能在一个数据库会话过程中因为<B>SET&nbsp;SESSION&nbsp;AUTHORIZATION</B>&nbsp;命令而改变。）
+<DT><B>%/</B><DD>
+当前数据库名称。
+<DT><B>%~</B><DD>
+类似 %/， 但如果数据库是你的缺省数据库输出是&quot;~&quot;  （波浪线（tilde））。
+<DT><B>%#</B><DD>
+<BR>&nbsp;如果会话用户是数据库超级用户，使用&nbsp;&quot;#&quot;，否则用&quot;&gt;&quot;。&nbsp;（这个值的扩展可能在一个数据库会话过程中因为<B>SET&nbsp;SESSION&nbsp;AUTHORIZATION</B>&nbsp;命令而改变。）
+<DT><B>%R</B><DD>
+<BR>&nbsp;对于&nbsp;prompt&nbsp;1&nbsp;通常是&nbsp;=，但是如果是单行模式则是&nbsp;^，而如果会话与数据库断开（如果onnect&nbsp;失败可能发生）是&nbsp;!。对于&nbsp;prompt&nbsp;2&nbsp;该序列被&nbsp;-，*，一个单引号或者一个双引号代替，&nbsp;这取决于&nbsp;psql是否等待更多的输入（因为查询没有终止，或着正在一个&nbsp;/*&nbsp;...&nbsp;*/注释里面，或者因为你在引号里面）。对于&nbsp;prompt&nbsp;3&nbsp;该序列不解释成任何东西。<DT><B>%x</B><DD>
+<BR>&nbsp;事务状态：如果不在事务块里，是一个空字串，如果在事务块里，是&nbsp;*，&nbsp;如果在一个失败的事务块里是&nbsp;!，或者无法判断事务状态时为&nbsp;?&nbsp;&nbsp;（比如，因为没有连接）。
+<DT><B>%</B><I>digits</I><B></B><DD>
+<BR>&nbsp;如果&nbsp;digits&nbsp;以&nbsp;0x&nbsp;开头，&nbsp;那么其余字符被解释成一个十六进制数字并且替换为对应（十六进制码）的字符。&nbsp;如果第一个数字是&nbsp;0，该字符被解释成一个八进制数字并且替换为对应的（八进制码）的字符。&nbsp;否则认为是一个十进制数字。
+<DT><B>%:</B><I>name</I><B>:</B><DD>
+psql变量name的值。参阅 &quot;Variables 变量&quot; 节获取细节。
+<DT><B>%`</B><I>command</I><B>`</B><DD>
+command的输出， 类似于通常的反引号（back-tick）替换。
+</DL>
+<P>
+
+<BR>&nbsp;要在提示符里插入百分号，键入%%。缺省提示符等效于&nbsp;'%/%R%#&nbsp;'&nbsp;用于&nbsp;prompts&nbsp;1&nbsp;和&nbsp;2，以及'&gt;&gt;&nbsp;'&nbsp;用于&nbsp;prompt&nbsp;3。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  这个特性是无耻地从tcsh 里剽窃来的。
+</DL>
+
+<P>
+<A NAME="lbAO">&nbsp;</A>
+<H3>COMMAND-LINE EDITING 命令行编辑</H3>
+
+<P>
+
+<B>psql</B> 为了编辑和检索命令行的方便支持 readline 和历史库。 命令历史存放在你的家目录的一个叫 .psql_history 的文件里， 并且当 psql 启动的时候会装载进来。 还支持 Tab 补齐，尽管该补齐逻辑并不是一个 SQL 分析器必备的。 如果因某些原因你不喜欢 tab 补齐，你可以把下面几行放在你的家目录的一个叫<I>.inputrc</I> 的文件里关闭这个特性：
+<P>
+<PRE>
+$if psql
+set disable-completion on
+$endif
+
+</PRE>
+
+（这不是 psql 的特性， 是<B>Readline</B> 的。参考它的文档获取更多细节。）
+<A NAME="lbAP">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>HOME</B><DD>
+<BR>&nbsp;初始化文件（.psqlrc）和命令历史文件（<I>.psql_history</I>）的目录。
+<DT><B>PAGER</B><DD>
+<BR>&nbsp;如果查询结果在一页里放不下，那么它们被定向到这个命令。&nbsp;典型的值是&nbsp;more&nbsp;或者&nbsp;less。&nbsp;缺省的是平台相关的。我们可以用<B>\pset</B>&nbsp;命令关闭分页器。
+<DT><B>PGDATABASE</B><DD>
+<BR>&nbsp;缺省连接的数据库
+<DT><B>PGHOST</B><DD>
+<DT><B>PGPORT</B><DD>
+<DT><B>PGUSER</B><DD>
+<BR>&nbsp;缺省连接参数
+<DT><B>PSQL_EDITOR</B><DD>
+<DT><B>EDITOR</B><DD>
+<DT><B>VISUAL</B><DD>
+<B>\e</B> 命令使用的编辑器。这些变量是按照上面的顺序检查的；设置最早的最先使用。
+<DT><B>SHELL</B><DD>
+<B>\!</B> 命令执行的命令。
+<DT><B>TMPDIR</B><DD>
+<BR>&nbsp;存储临时文件的目录。缺省是<I>/tmp</I>。
+</DL>
+<A NAME="lbAQ">&nbsp;</A>
+<H2>FILES</H2>
+
+<DL COMPACT>
+<DT>&bull;<DD>
+<BR>&nbsp;在启动之前，psql&nbsp;视图读取并&nbsp;执行来自文件<I>$HOME/.psqlrc</I>&nbsp;的命令。&nbsp;它将用于设置客户端或者服务器的风格（使用<B>\set</B>&nbsp;和<B>SET</B>&nbsp;命令）。
+<DT>&bull;<DD>
+<BR>&nbsp;命令行历史存储在<I>$HOME/.psql_history</I>。
+</DL>
+<A NAME="lbAR">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<DL COMPACT>
+<DT>&bull;<DD>
+<BR>&nbsp;一些&nbsp;psql的早期版本允许一个单字母的反斜杠命令（元命令）的第一个参数直接跟在命令后面，&nbsp;而不用空白间隔。出于兼容性原因，这个特性仍然在某些程度上被支持，但是我不准备在这里详细解释，因为我不鼓励这样使用。&nbsp;不过如果你收到莫名其妙的信息，想想这个用法。例如
+<P>
+<PRE>
+testdb=&gt;<B>\foo</B>
+Field separator is &quot;oo&quot;.
+
+</PRE>
+
+<BR>&nbsp;可能不是你想要的东西。
+<DT>&bull;<DD>
+<B>psql</B> 只能与同版本的服务器平稳地工作。 这不意味着其他组合会完全失败，但是可能有微小的或者不那么微小的问题。 如果服务器的版本不同，反斜杠命令是特别容易失效的。
+</DL>
+<A NAME="lbAS">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;第一个例子演示了如何把一个查询分成多个行进行输入。注意提示符的变化：
+<P>
+<PRE>
+testdb=&gt;<B>CREATE TABLE my_table (</B>
+testdb(&gt;<B> first integer not null default 0,</B>
+testdb(&gt;<B> second text</B>
+testdb-&gt;<B>);</B>
+CREATE TABLE
+
+</PRE>
+
+<BR>&nbsp;现在再看看表定义：
+<P>
+<PRE>
+testdb=&gt;<B>\d my_table</B>
+             Table &quot;my_table&quot;
+ Attribute |  Type   |      Modifier
+-----------+---------+--------------------
+ first     | integer | not null default 0
+ second    | text    |
+
+</PRE>
+
+<BR>&nbsp;把提示符变成更有趣的东西：
+<P>
+<PRE>
+testdb=&gt;<B>\set PROMPT1 '%n@%m %~%R%# '</B>
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt;
+
+</PRE>
+
+<BR>&nbsp;假设你用数据填充了表并且想看一眼：
+<P>
+<PRE>
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt; SELECT * FROM my_table;
+ first | second
+-------+--------
+     1 | one
+     2 | two
+     3 | three
+     4 | four
+(4 rows)
+
+</PRE>
+
+<BR>&nbsp;你可以用<B>\pset</B>&nbsp;命令让这个查询看起来不一样：
+<P>
+<PRE>
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt;<B>\pset border 2</B>
+Border style is 2.
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt;<B>SELECT * FROM my_table;</B>
++-------+--------+
+| first | second |
++-------+--------+
+|     1 | one    |
+|     2 | two    |
+|     3 | three  |
+|     4 | four   |
++-------+--------+
+(4 rows)
+
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt;<B>\pset border 0</B>
+Border style is 0.
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt;<B>SELECT * FROM my_table;</B>
+first second
+----- ------
+    1 one
+    2 two
+    3 three
+    4 four
+(4 rows)
+
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt;<B>\pset border 1</B>
+Border style is 1.
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt;<B>\pset format unaligned</B>
+Output format is unaligned.
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt;<B>\pset fieldsep &quot;,&quot;</B>
+Field separator is &quot;,&quot;.
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt;<B>\pset tuples_only</B>
+Showing only tuples.
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt;<B>SELECT second, first FROM my_table;</B>
+one,1
+two,2
+three,3
+four,4
+
+</PRE>
+
+<BR>&nbsp;还可以用短（缩写）命令：
+<P>
+<PRE>
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt;<B>\a\t\x</B>
+Output format is aligned.
+Tuples only is off.
+Expanded display is on.
+<A HREF="mailto:peter@localhost">peter@localhost</A> testdb=&gt;<B>SELECT * FROM my_table;</B>
+-[ RECORD 1 ]-
+first  | 1
+second | one
+-[ RECORD 2 ]-
+first  | 2
+second | two
+-[ RECORD 3 ]-
+first  | 3
+second | three
+-[ RECORD 4 ]-
+first  | 4
+second | four
+
+</PRE>
+
+<A NAME="lbAT">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">EXIT STATUS 退出状态</A><DD>
+<DT><A HREF="#lbAG">USAGE 用法</A><DD>
+<DL>
+<DT><A HREF="#lbAH">CONNECTING TO A DATABASE 与一个数据库联接</A><DD>
+<DT><A HREF="#lbAI">ENTERING SQL COMMANDS 输入 SQL 命令</A><DD>
+<DT><A HREF="#lbAJ">META-COMMANDS 元命令</A><DD>
+<DT><A HREF="#lbAK">ADVANCED FEATURES 高级特性</A><DD>
+<DT><A HREF="#lbAL">VARIABLES 变量</A><DD>
+<DT><A HREF="#lbAM">SQL INTERPOLATION 代换</A><DD>
+<DT><A HREF="#lbAN">PROMPTING 提示符</A><DD>
+<DT><A HREF="#lbAO">COMMAND-LINE EDITING 命令行编辑</A><DD>
+</DL>
+<DT><A HREF="#lbAP">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAQ">FILES</A><DD>
+<DT><A HREF="#lbAR">NOTES 注意</A><DD>
+<DT><A HREF="#lbAS">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAT">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

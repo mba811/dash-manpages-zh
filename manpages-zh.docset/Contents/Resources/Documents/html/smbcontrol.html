@@ -1,0 +1,138 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SMBCONTROL</TITLE>
+</HEAD><BODY>
+<H1>SMBCONTROL</H1>
+Section: User Commands  (1)<BR>Updated: 17 Apr 2001<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+smbcontrol - 向smbd或nmbd进程发送消息
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<P>
+<B>smbcontrol</B> [ <B>-i</B> ] 
+<P>
+<B>smbcontrol</B> [ <B>目标</B> ]  [ <B>消息类型</B> ]  [ <B>参数</B> ] 
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<P>
+
+这个工具是是Samba组件的一部分。
+<P>
+
+<B>smbcontrol</B>是个很小的程序，用它可以向系统上运行的<A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A>(8)
+或<A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A>(8)进程发送消息。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-i</B><DD>
+以交互方式运行。在标准输入上可以输入单独的``目标 消息类型 参
+数''形式的命令，输入空行或``q''字符退出程序。
+<DT><B>目标</B><DD>
+<I>nmbd</I>或<I>smbd</I>或进程ID。
+<P>
+如果使用<I>smbd</I>目标，则向所有smbd进程广播消息。
+<P>
+如果使用<I>nmbd</I>目标，则向<I>nmbd.pid</I>指定的nmbd进程发送
+消息。
+<P>
+如果使用一个进程ID，则只向该进程发送消息。
+<DT><B>消息类型</B><DD>
+有这几种类型：debug、force-election、ping、profile、debuglevel、
+profilelevel、printer-notify。
+<P>
+debug消息：可以把调试等级设为参数所指定的值。可以向所有目标发送
+这种类型的消息。
+<P>
+force-election消息：只能向nmbd发送。这种消息使<B>nmbd</B>进程强
+制进行一次新的主浏览器选举。
+<P>
+ping消息：发送指定数量的"ping"并等待相同数量的回复。可以向所
+有目标发送这种类型的消息。
+<P>
+profile消息：使用参数通知smbd来修改profile的配置。参数为"on" 则获取
+profile状态，"off"则反之，"count"为只获取计数状态(禁止时间状
+态)，"flush"把当前profile的状态清零。
+<P>
+debuglevel消息：发送"请求调试等级"消息，再由一个这种类型的消
+息返回当前设置的调试等级。可以向所有目标发送这种类型的消息。
+<P>
+profilelevel消息：发送"请求profile等级"消息，再由一个这种类
+型的消息返回当前设置的profile等级可以向所有目标发送这种类型的
+消息。
+<P>
+printer-notify消息：通知smbd进程向连接到打印机的NT客户机轮流
+发送打印机通告消息。使用这种消息要把打印机名作为参数。
+<DT><B>参数</B><DD>
+使用消息类型所需的任何参数。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>版本</H2>
+
+<P>
+
+此手册页是针对samba2.2所写的。
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见</H2>
+
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A>(8)</B>和<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A>(8)</B>。
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者</H2>
+
+<P>
+
+Samba软件和相关工具最初由Andrew Tridgell编写。现在，它是按开
+源软件的形式进行开发的。
+<P>
+
+<P>
+Samba手册页的原作者是Karl Auer。这些文档已被转换成YODL(一种
+极好的开放源代码软件，可以在<A HREF="ftp://ftp.icce.rug.nl/pub/unix/">ftp://ftp.icce.rug.nl/pub/unix/</A>
+处获得)格式，并已由Jeremy Allison更新到samba2.0版本。Gerald
+Carter完成了Samba 2.2的DocBook转化工作。
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2001/05/24
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">版本</A><DD>
+<DT><A HREF="#lbAG">参见</A><DD>
+<DT><A HREF="#lbAH">作者</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,95 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of GROUPMOD</TITLE>
+</HEAD><BODY>
+<H1>GROUPMOD</H1>
+Section: Maintenance Commands (8)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+groupmod - 修 改 群 组
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>groupmod</B> [<B>-g</B><I> gid </I>[<B>-o</B>]] [<B>-n</B><I> group_name </I>]
+<I>group</I>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+groupmod 命 令 会 参 照 你 命 令 列 上 指 定 的 部 份 修 改 系 统 帐 号 档 。 下 列 为 groupmod 可 选 用 的 参 数 。
+<DL COMPACT>
+<DT><B>-g </B><I>gid</I><DD>
+群 组 I D 值 。 必 须 为 唯 一 的 ID 值 ， 除 非 用 <B>-o</B> 选 项 。 数 字 不 可 为 负 值。预 设 为 最 小 不 得 小 于 99 而 逐 次 增 加 。 0~99 传 统 上 是 保 留 给 系 统 帐 号 使 用 。 如 果 有 档 案 使 用 旧 的 群 组 ID ， 而 这 时 候 你 新 增 的 群 组 ID 恰 好 与 旧 的 相 同 ， 这 样 的 话 你 要 手 动 改 一 下 这 些 档 案 的 群 组 ID 。
+<DT><B>-n </B><I>group_name</I><DD>
+更 改 群 组 名 。
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+/etc/group - group information
+<BR>
+
+/etc/gshadow - secure group information
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+chfn">chfn</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+chsh">chsh</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+passwd">passwd</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?8+groupadd">groupadd</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+groupdel">groupdel</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+useradd">useradd</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+userdel">userdel</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+usermod">usermod</A></B>(8)
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+Julianne Frances Haugh (<A HREF="mailto:jockgrrl@ix.netcom.com">jockgrrl@ix.netcom.com</A>)
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Best Linux</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>1999-11-29</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">文件 FILES</A><DD>
+<DT><A HREF="#lbAF">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

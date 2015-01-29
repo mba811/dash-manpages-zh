@@ -1,0 +1,893 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ld</TITLE>
+</HEAD><BODY>
+<H1>ld</H1>
+Section: GNU Development Tools (1)<BR>Updated: 17 August 1992<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ld - GNU linker (连接器)
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+
+
+<DL COMPACT>
+<DT><B>ld </B>
+
+<DD>
+[<B>-o</B>
+
+<I>output</I>] <I>objfile</I>...
+<BR>
+
+[<B>-A</B><I>architecture</I>] 
+[<B>-b&nbsp;</B><I>input-format</I>] 
+[<B>-Bstatic</B>]
+
+[<B>-Bdynamic</B>]
+
+[<B>-Bsymbolic</B>]
+
+[<B>-c&nbsp;</B><I>commandfile</I>] 
+[<B>--cref</B>]
+
+[<B>-d</B>|<B>-dc</B>|<B>-dp</B>]
+<BR>
+
+[<B>-defsym&nbsp;</B><I>symbol</I> = <I>expression</I>]
+[<B>--demangle</B>]
+
+[<B>--no-demangle</B>]
+
+[<B>-e&nbsp;</B><I>entry</I>] 
+[<B>-embedded-relocs</B>]
+
+[<B>-E</B>]
+
+[<B>-export-dynamic</B>]
+
+[<B>-f&nbsp;</B><I>name</I>]
+[<B>--auxiliary&nbsp;</B><I>name</I>]
+[<B>-F&nbsp;</B><I>name</I>]
+[<B>--filter&nbsp;</B><I>name</I>]
+[<B>-format&nbsp;</B><I>input-format</I>] 
+[<B>-g</B>]
+
+[<B>-G</B>
+
+<I>size</I>]
+[<B>-h&nbsp;</B><I>name</I>]
+[<B>-soname&nbsp;</B><I>name</I>]
+[<B>--help</B>]
+
+[<B>-i</B>]
+
+[<B>-l</B><I>ar</I>] 
+[<B>-L</B><I>searchdir</I>] 
+[<B>-M</B>]
+
+[<B>-Map</B>
+
+<I>mapfile</I>] 
+[<B>-m</B>
+
+<I>emulation</I>] 
+[<B>-n</B>|<B>-N</B>]
+
+[<B>-noinhibit-exec</B>]
+
+[<B>-no-keep-memory</B>]
+
+[<B>-no-warn-mismatch</B>]
+
+[<B>-O</B><I>level</I>]
+[<B>-oformat&nbsp;</B><I>output-format</I>] 
+[<B>-R&nbsp;</B><I>filename</I>]
+[<B>-relax</B>]
+
+[<B>-r</B>|<B>-Ur</B>]
+
+[<B>-rpath&nbsp;</B><I>directory</I>]
+[<B>-rpath-link&nbsp;</B><I>directory</I>]
+[<B>-S</B>]
+
+[<B>-s</B>]
+
+[<B>-shared</B>]
+
+[<B>-sort-common</B>]
+
+[<B>-split-by-reloc&nbsp;</B><I>count</I>]
+[<B>-split-by-file</B>]
+
+[<B>-T&nbsp;</B><I>commandfile</I>]  
+[<B>-Ttext&nbsp;</B><I>textorg</I>] 
+[<B>-Tdata&nbsp;</B><I>dataorg</I>] 
+[<B>-Tbss&nbsp;</B><I>bssorg</I>]
+[<B>-t</B>]
+
+[<B>-u&nbsp;</B><I>sym</I>]
+[<B>-V</B>]
+
+[<B>-v</B>]
+
+[<B>--verbose</B>]
+
+[<B>--version</B>]
+
+[<B>-warn-common</B>]
+
+[<B>-warn-constructors</B>]
+
+[<B>-warn-multiple-gp</B>]
+
+[<B>-warn-once</B>]
+
+[<B>-warn-section-align</B>]
+
+[<B>--whole-archive</B>]
+
+[<B>--no-whole-archive</B>]
+
+[<B>--wrap&nbsp;</B><I>symbol</I>]
+[<B>-X</B>]
+
+[<B>-x</B>]
+
+
+
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>ld</B> 合并 一组 目标文件(object) 和 库文件(archive), 重定位 数据部分,
+构建 符号引用(symbol reference). 一般说来, 编译 生成 可执行文件 的 
+最后步骤 就是 调用 <B>ld</B>.
+<P>
+<B>ld</B> 可以读取 用 连接器命令语言(Linker Command Language) 编写的 脚本文件, 
+它 能够 对 连接过程 提供 精确 和 全面 的 控制.
+本 手册页 不讨论 命令语言; 可参看 `<B>info</B>' 的 `<B>ld</B>' 项, 或者 手册
+<I>ld: the GNU linker</I>
+
+, 里面有 命令语言 的 细节 和 其他 GNU linker 的 内容.
+<P>
+这个版本 的 <B>ld</B> 使用 通用BFD库 操作 目标文件, <B>ld</B> 能够 以 多种格式 读入, 连接 和 输出 目标文件 ---例如 COFF 或 <B>a.out</B>, 能够 把 不同的格式 连接 在一起, 产生 各种 有效 的 目标文件.
+用 `<B>objdump -i</B>' 可以 列出 各种 体系结构 支持 的 格式 列表; 另见
+<B>objdump</B>(<B>1</B>).
+
+<P>
+GNU linker 不仅 灵活 强大, 还能够 比 其他 linker 提供 更多 的 诊断信息.
+很多 linker 只要 碰上 一个错误 就 立刻停止 执行; 而
+<B>ld</B> 一有可能 仍然 继续执行, 这样 容易 定位出 其他错误
+(某些情况下, 尽管出了错, 仍然 生成 输出文件).
+<P>
+GNU linker <B>ld</B> 期望 实现 更广泛 的 适用范围, 尽可能 兼容 其他 linker.
+通过 命令行 和 环境变量, 用户 可以 用 ld 执行 多种 操作.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+过于丰富的 命令行选项 使人 感到 压抑, 好在 实际使用 中, 多数情况下
+只需要 掌握 其中 一小部分. 例如, 在 一个 标准的, 提供 相应支持 的 Unix 
+系统 中, 常常 用 <B>ld</B> 连接 标准的 Unix 目标文件. 如果要 连接 <B>hello.o</B>:
+<P>
+<BR>
+
+$&nbsp;ld&nbsp;-o&nbsp;output&nbsp;/lib/crt0.o&nbsp;hello.o&nbsp;-lc
+<BR>
+
+<P>
+它 告诉 <B>ld</B> 生成 一个 叫做 <B>output</B> 的 文件 , 其中 连接了 文件 <B>/lib/crt0.o</B> 和 <B>hello.o</B> 以及
+库文件 <B>libc.a</B> (在 标准搜索目录下).
+<P>
+<B>ld</B> 的 命令行选项 可以 任意顺序 出现, 甚至 重复出现. 多数 情况 下, 
+如果 用 不同的 参数 重复 同一种 选项, ld 不会 出现 更多的变化, 也不会 
+覆盖 以前的 参数. (指 命令行 中 左边的参数)
+<P>
+例外情况 --- 某些选项 有 反复使用 的 需要 --- 如
+<B>-A</B>, <B>-b</B> (或等同的 <B>-format</B>), <B>-defsym</B>,
+<B>-L</B>, <B>-l</B>, <B>-R</B>, 和 <B>-u</B>.
+<P>
+待连接的 目标文件 列表, 即 总览中的 <I>objfile</I>,
+可以 放在 命令行选项 的 前面, 后面, 或者 混杂其中; 但是 不能 把 <I>objfile</I> 放置于 某个 选项开关 和 它的参数 中间.
+<P>
+一般说来 linker 要求 至少 输入 一个 目标文件, 但是 可以 用 <B>-l</B>,
+<B>-R</B> 输入 其他格式 的 二进制文件, 或者 用 命令语言 编写的 脚本文件. 如果 <I>没有</I> 指定 二进制格式 的 输入文件, linker 就不能 产生 输出文件, 而是 显示
+`<B>No input files</B>'.
+<P>
+选项的参数 必须 出现在 代表 选项 的 字母 后面, 可以有 空白符, 也可以 没有.
+<P>
+<DL COMPACT>
+<DT><B>-A</B><I>architecture</I>
+
+<DD>
+在 目前版本 的 <B>ld</B> 中, 这个 选项 仅适用于 Intel 960 体系系列. 在 <B>ld</B> 的 设置 中, <I>architecture</I> 参数 是 960 系列 的 成员 识别名称 之一, 由 两个字母 组成;
+这个选项 指出 期望的 输出目标, 对 输入文件 的 不兼容指令 作出 警告.
+它 能够 改变 linker 对 库文件 的 搜索策略, 以便于 支持 体系相关库, 方法是
+把 体系识别名称 添加在 待搜索 的 文件名 尾部.
+<P>
+例如, 如果 <B>ld</B> 命令行 有 `<B>-ACA</B>' 和 `<B>-ltry</B>', linker 将 搜索 (根据 内置的路径 和 <B>-L</B> 指定的路径) 以下 名称 的 库文件
+<P>
+<BR>
+
+try
+<BR>
+
+libtry.a
+<BR>
+
+tryca
+<BR>
+
+libtryca.a
+<BR>
+
+<P>
+<P>
+前两项 是 常规做法; 后两项 源于 `<B>-ACA</B>'.
+<P>
+将来发布的 <B>ld</B> 可能 对 其他 体系结构 提供 类似功能.
+<P>
+可以 在 命令行上 使用 多个 <B>-A</B> 选项, 只要 该 体系 允许 和 目标体系 相连, 其选项 使 ld 在 搜索 <B>-l</B>
+
+指定的库 中, 增加 和 体系结构名称 对应的库.
+<P>
+<DT><B>-b </B><I>input-format</I>
+
+<DD>
+指定 输入目标文件 的 二进制格式, 目标文件 在 命令行 上 给出, 放在
+这个选项 的 后面. 一般 不需要 指定 这个选项, <B>ld</B> 的 缺省输入格式 配置为 各个机器 上 最常用 的 格式. <I>input-format</I> 是 字符串, BFD 库 支持的 格式 名称. 选项 <B>-format </B><I>input-format</I> 起 相同的 作用, 脚本命令
+<B>TARGET</B>
+
+也是 一样.
+<P>
+连接 某些 不寻常的 二进制文件 时 需要 这个选项. 或者 使用 <B>-b</B> 选项 强调 格式切换 (连接 不同格式 的 目标文件),
+比如说, 在 每组 特定格式 的 目标文件 前面 使用 <B>-b </B><I>input-format</I> 选项.
+<P>
+环境变量
+<B>GNUTARGET</B> 用于 指定 缺省格式. 也可以 在 脚本文件 中 用 <B>TARGET</B> 命令 定义 输入格式.
+<P>
+<DT><B>-Bstatic </B>
+
+<DD>
+禁止 连接 共享库. 这个选项 只在 支持 共享库 的 平台 上 有意义.
+<P>
+<DT><B>-Bdynamic</B>
+
+<DD>
+连接 动态库. 这个选项 只在 支持 共享库 的 平台 上 有意义, 一般说来 它
+是 缺省选项.
+<P>
+<DT><B>-Bsymbolic</B>
+
+<DD>
+当 创建 共享库 的 时候, 只要 有可能, 在 共享库 内 编联(bind reference) 
+全局符号 和 定义(definition). 一般说来, 允许 连接了 某个 共享库 的 程序
+覆盖 共享库内 的 定义. 这个选项 只在 支持 共享库 的 ELF 平台 上 有意义.
+<P>
+<DT><B>-c </B><I>commandfile</I>
+
+<DD>
+告诉 <B>ld</B> 从 文件
+<I>commandfile</I> 中 读取 连接 命令. 这些 命令 彻底的 覆盖 <B>ld</B> 的 缺省 连接 格式 (而不是 添加); <I>commandfile</I> 必须 详尽的 描述 目标格式 的 所有细节.
+<P>
+你 也可以 在 命令行 上 直接嵌入 连接命令, 把 脚本 嵌在 大括弧 `<B>{</B>' 和 `<B>}</B>' 中间.
+<P>
+<DT><B>--cref</B>
+
+<DD>
+输出 交叉引用表(cross reference).  如果 创建了 连接映像(linker map) 文件,
+交叉引用表 就 输出到 映像文件 中, 否则 送往 标准输出.
+<P>
+<DT><B>-d </B>
+
+<DD>
+<DT><B>-dc</B>
+
+<DD>
+<DT><B>-dp</B>
+
+<DD>
+这 三个选项 是 一回事, 为了 兼容 其他 linker 而 同时提供. 
+即使 已经 指定 <B>ld</B>
+
+生成 可重定位文件 (<B>-r</B>), 它们 能为 公共符号(common symbol) 分配 空间.  脚本命令
+<B>FORCE_COMMON_ALLOCATION</B> 起 同样作用.
+<P>
+<DT><B>-defsym </B><I>symbol</I><B></B> = <I>expression</I>
+
+<DD>
+在 输出文件 中 创建 一个 全局符号, 它 含有 <I>expression</I> 给出的 绝对地址. 可以 在 命令行 使用 多个 这样的 选项. 这个 <I>expression</I> 只能 使用 有限的 数学形式: 十六进制常数, 已经存在 的 符号名字.
+或者 使用 <B>+</B> 和 <B>-</B> 加减 十六进制常数 或 符号. 如果 需要 更复杂的 表达式, 考虑 使用
+命令语言脚本.
+<P>
+<DT><B>--demangle</B>
+
+<DD>
+<DT><B>--no-demangle</B>
+
+<DD>
+这些选项 控制 是否在 出错信息 和 其他信息 中, 输出 可读的(demangle) 
+符号名称. 如果 使用了 demangle 选项, linker 尽量使 符号名称 容易理解: 
+去掉 领头的 下划线 (如果 被 目标文件格式 采用); 把 C++ 难懂的 符号名称
+(symbol name) 转换成 可读的 名称. 缺省情况下 linker 输出 可读的 符号名称, 
+除非 设置了 环境变量
+<B>COLLECT_NO_DEMANGLE .</B>
+
+这些选项 能够 覆盖 缺省行为.
+<P>
+<DT><B>-e </B><I>entry</I>
+
+<DD>
+使用 <I>entry (入口)</I> 标识符 作为 程序 执行 的 开始端, 而不是 缺省入口. 关于 缺省入口 和 其他
+设置 入口 的 方法 参见 `<B>info</B>' 的
+<B>ld</B>' 项.
+<P>
+<DT><B>-embedded-relocs</B>
+
+<DD>
+这个选项 仅用于 连接 MIPS上 嵌入的 PIC 代码, GNU 的 编译器 和 汇编器 用
+<B>-membedded-pic</B>
+
+选项 能够 生成 这种代码. 它使 linker 创建 一张 表格, 用于 在 运行的时候,
+重定位 任何 被 静态初始化 为 指针值 的 数据. 详见 testsuite/ld-empic 的 代码.
+<P>
+<DT><B>-E</B>
+
+<DD>
+<DT><B>-export-dynamic</B>
+
+<DD>
+当 创建 ELF 文件 时, 把 所有 符号 加入 动态符号表.
+一般说来, 动态符号表 只包含 动态目标库(dynamic object) 需要的 符号. 用
+<I>dlopen</I>
+
+的 时候 需要 这个 选项.
+<P>
+<DT><B>-f </B><I>name</I>
+
+<DD>
+<DT><B>--auxiliary </B><I>name</I>
+
+<DD>
+创建 ELF 共享目标库 时, 把 内部的 DT_AUXILIARY 字段 设置为 
+<I>name.</I>
+
+它 告诉 动态linker, 把 该 共享目标库 的 符号表 用做 共享目标 
+<I>name </I>
+
+的 符号表 的 辅助过滤器.
+<P>
+<DT><B>-F </B><I>name</I>
+
+<DD>
+<DT><B>--filter </B><I>name</I>
+
+<DD>
+创建 ELF 共享目标库 时, 把 内部的 DT_FILTER 字段 设置为 
+<I>name.</I>
+
+它 告诉 动态linker, 把 该 共享目标库 的 符号表 用做 共享目标 
+<I>name </I>
+
+的 符号表 的 辅助过滤器.
+<P>
+<DT><B>-format </B><I>input-format</I>
+
+<DD>
+等同于 <B>-b</B> <I>input-format</I>.
+<P>
+<DT><B>-g</B>
+
+<DD>
+虚设项; 用于 兼容 其他 工具.
+<P>
+<DT><B>-G </B><I>size</I><DD>
+把 使用 GP 寄存器 优化的 目标(文件) 大小 限制为
+<I>size .</I>
+
+用于 MIPS ECOFF, 对 其他 目标文件格式 无效.
+<P>
+<DT><B>-h </B><I>name</I>
+
+<DD>
+<DT><B>-soname </B><I>name</I>
+
+<DD>
+创建 ELF 共享目标库 时, 把 内部的 DT_SONAME 字段 设置为 name. 
+如果 某个 可执行文件 连接了 含有 DT_SONAME 字段 的 共享目标库, 
+当 该程序 运行 时, 动态 linker 试图 根据 DT_SONAME 字段 调入 共享的 
+目标库, 而 不使用 提供给 linker 的 文件名.
+<P>
+<DT><B>--help</B>
+
+<DD>
+在 标准输出 显示 命令行选项 的 摘要, 然后 结束. 这个选项 和
+<B>--version</B>
+
+选项 使用了 两个 短横线, 不是 一个, 目的是 兼容 其他 GNU 程序.
+只用 一个 短横线 的 选项 是为了 兼容 其他 linker.
+<P>
+<DT><B>-i</B>
+
+<DD>
+执行 增量连接(incremental link), 等同于 <B>-r</B> 选项.
+<P>
+<DT><B>-l</B><I>ar</I>
+
+<DD>
+在 连接文件 列表 中 增加 归档库文件 <I>ar</I>.  可以 多次 使用 这个选项. 凡指定 一项 <I>ar</I>
+
+, <B>ld</B> 就会 在 路径列表 中 增加 一项 对 <B>lib</B><I>ar</I>.a 的 搜索.
+<P>
+<DT><B>-L</B><I>searchdir</I>
+
+<DD>
+这个选项 将 路径 <I>searchdir</I> 添加 到 路径列表 中去, <B>ld</B> 在 这个 列表 中 搜索 归档库. 可以 多次 使用 这个选项.
+<P>
+缺省的 搜索路径集 (不使用 <B>-L</B> 时) 取决于 <B>ld</B> 使用的 模拟模式(emulation) 及其 配置.
+在 连接脚本 中, 可以 用 <B>SEARCH_DIR</B>
+
+命令 指定 路径.
+<P>
+<DT><B>-M </B>
+
+<DD>
+在 标准输出 显示  连接映像 --- 有关 <B>ld</B> 把 符号 映射到 何处 的 诊断信息, 以及 全局公共存储器 的 分配 信息.
+<P>
+<DT><B>-Map </B><I>mapfile</I><DD>
+把 连接映像 输出到 
+<I>mapfile</I>
+
+文件 中 --- 有关 <B>ld</B> 把 符号 映射到 何处 的 诊断信息, 以及 全局公共存储器 的 分配 信息.
+<P>
+<DT><B>-m </B><I>emulation</I><DD>
+模仿
+<I>emulation</I>
+
+连接器.  可以 用
+<I>--verbose</I>
+
+或
+<I>-V</I>
+
+选项 列出 有效的 模拟项.  这个选项 覆盖 编译 进去 的 缺省项.
+<P>
+<DT><B>-N </B>
+
+<DD>
+指定 可读写 的 <B>正文</B> 和 <B>数据</B> 节(section). 如果 输出格式 支持 Unix 风格的 幻数(magic number), 
+则 输出文件 标记为 <B>OMAGIC</B>.
+<P>
+当 使用 `<B>-N</B>' 选项 时, linker 不做 数据段 的 页对齐(page-align).
+<P>
+<DT><B>-n </B>
+
+<DD>
+设置 正文段 为 只读, 如果 有可能, <B>NMAGIC</B> 为 可写.
+<P>
+<DT><B>-noinhibit-exec</B>
+
+<DD>
+一般说来, 如果 连接的 时候 发生 错误, linker 不会 产生 输出文件.
+使用了 这个 标志选项, 只要 不出 致命差错, 仍能够 产生 输出文件.
+<P>
+<DT><B>-no-keep-memory</B>
+
+<DD>
+linker 通常 牺牲 内存, 优化 速度, 它 把 输入文件 的 符号表 缓冲在 内存中.
+这个选项 使 linker 必要时 重复读取 符号表, 以便 优化 内存使用. 连接 大型 
+可执行文件 的 时候, linker 有可能 内存 不够, 此时 可以 试试 这个选项.
+<P>
+<DT><B>-no-warn-mismatch</B>
+
+<DD>
+一般情况下, 如果 试图 连接 某些 不匹配 的 输入文件, 比如说, 按 不同
+处理器 编译 的, 或者 具有 不同的 字节顺序(endianness), linker 就会 报错.
+这个选项 告诉 linker 默许 这种 错误. 要 小心使用 这个选项, 除非 你
+正在做 某些 特殊 操作, 而且 能够 确定 不需要 linker 报错.
+<P>
+<DT><B>-o </B><I>output</I>
+
+<DD>
+<I>output</I> 用来 指定 <B>ld</B> 生成的 程序名; 如果 没有 使用 这个选项, 缺省名字 是 `<B>a.out</B>'.  脚本命令 <B>OUTPUT</B> 起 同样 作用.
+<P>
+<DT><B>-O</B><I>level</I>
+
+<DD>
+生成 优化的 输出文件. 这个选项 占用 比较多 的 时间, 因此 仅 常用于
+最终文件 的 生成.
+<I>level</I> 是 数值参数. 任何 大于零 的 参数 意味着 要求 优化.
+<P>
+<DT><B>-oformat </B><I>output-format</I>
+
+<DD>
+指定 输出目标文件 的 二进制格式. 一般 不需要 指定 这个选项, <B>ld</B> 的 缺省 输出格式 配置为 各个机器 上 最常用 的 格式. <I>output-format</I> 是 一个 字符串, BFD 库 支持的 格式 名称. 脚本命令
+<B>OUTPUT_FORMAT</B>
+
+也可以 指定 输出格式, 但是 这个选项 能够 覆盖 掉 它.
+<P>
+<DT><B>-R </B><I>filename</I>
+
+<DD>
+从 文件 <I>filename</I> 中 读取 符号名称 及其 地址, 但是 不做 重定位, 不传送到 输出端.
+它 可以 使 输出文件 符号引用 其他程序中 定义的 绝对地址.
+<P>
+<DT><B>-relax</B>
+
+<DD>
+这个选项 的 效果 取决于 机器, 目前 只支持 H8/300.
+<P>
+在 某些 平台 上 可以 使用 这个选项 做 全局优化, 它 让 linker 解决 程序中
+的 地址处理, 例如 在 输出目标文件 中 缓和(relax) 地址模式 以及 合成
+(synthesize) 新指令.
+<P>
+其他平台 也接受 `<B>-relax</B>' 选项, 但是 不起作用.
+<P>
+<DT><B>-r </B>
+
+<DD>
+生成 可重定位 输出 --- 就是说, 生成的 输出文件 能够 依次 成为 <B>ld</B> 的 输入, 一般 称之为 <I>不完全(partial)</I>
+
+连接. 它 有 一个 副效应, 在 支持 标准 Unix 幻数(magic number) 的 环境 中,
+这个选项 把 输出文件 的 幻数 设置成 <B>OMAGIC</B>. 如果 没有 指定 这个选项, linker 生成 绝对定位 的 文件.
+连接 C++ 程序时, 这个选项 <I>不会 </I> 解析 出 对 构造子(constructor) 的 引用(reference); 不妨 改用 <B>-Ur</B> 选项. 
+<P>
+这个选项 的 效果 和 <B>-i</B> 一样.
+<P>
+<DT><B>-rpath&nbsp;</B><I>directory</I>
+
+<DD>
+增加 一条 对 运行时(runtime)库 的 搜索路径. 这个选项 用于 连接 ELF 可执行
+文件 和 共享目标库. 所有
+<B>-rpath</B>
+
+选项 的 参数 被 合并, 然后 一起 传递 给 运行时 linker, 运行时 linker 在
+运行 的 时候 使用 这些 路径 寻找 共享目标库.
+<B>-rpath</B>
+
+也可以 用来 定位 共享目标库 引用的 共享目标库; 参见 对
+<B>-rpath-link</B>
+
+选项 的 叙述.  如果 连接 ELF 可执行文件 时 没有 指定
+<B>-rpath</B>
+
+选项, linker 就使用 环境变量
+<B>LD_RUN_PATH</B>
+
+的 内容 --- 只要 这个 环境变量 存在.
+<P>
+<B>-rpath</B>
+
+选项 能够 用在 SunOS 上, 缺省状况下, linker 可以 根据 给出的
+<B>-L</B>
+
+选项 形成 运行时 搜索路径.  如果 使用了
+<B>-rpath</B>
+
+选项, 运行时 搜索路径 从
+<B>-rpath</B>
+
+中 产生, 而 忽略
+<B>-L</B>
+
+选项.  这一点 有利于 使用 gcc, 在 NFS 文件系统 上, gcc 可能 产生 许多
+<B>-L</B>
+
+选项.
+<P>
+<DT><B>-rpath-link&nbsp;</B><I>directory</I>
+
+<DD>
+使用 ELF 或 SunOS 的 时候, 某些 共享库 可能 需要 其他 共享库. 
+这种情况 一般 发生在 某个
+<B>ld&nbsp;-shared</B>
+
+连接 中, 输入文件 包含了 共享库.
+<P>
+如果 linker 遇到 这样的 依赖情况, 当 它 执行 非共享, 不可重定位 的 连接
+时, linker 将 自动 寻找 所需的 共享库, 如果 它们 没有 被 显明 包含, 就
+把 它们 包含到 连接 中. 在 这种情况下,
+<B>-rpath-link</B>
+
+选项 指定了 最先 搜索 的 目录集.
+<B>-rpath-link</B>
+
+能够 指定 一批 目录, 目录 用 冒号 隔开. 也可以 用 这些 目录名 作为 参数,
+重复 使用 这个 选项.
+<P>
+如果 没有 找到 需要的 共享库, linker 产生 一个 警告, 但是 继续 连接.
+<P>
+<DT><B>-S </B>
+
+<DD>
+去掉 输出文件 中的 调试符号信息 (但不是 所有符号).
+<P>
+<DT><B>-s </B>
+
+<DD>
+去掉 输出文件 中的 全部 符号信息.
+<P>
+<DT><B>-shared</B>
+
+<DD>
+创建 一个 共享库. 目前 只支持 ELF 和 SunOS 平台 (在 SunOS 上, 这个选项 不是
+必须的, 如果 没有 使用
+<B>-e</B>
+
+选项, 而且 存在 不确定 的 符号, linker 将 自动 创建 共享库).
+<P>
+<DT><B>-sort-common</B>
+
+<DD>
+<B>ld</B>
+
+通常 把 全局公共符号 放到 适当的 输出节, 按照 大小 排序.
+首先是 单字节符号, 然后是 双字节, 接下来是 四字节, 随后是 其他的.
+它的 目的是 防止 符号间 因为 排布限制 出现 间隙. 
+使用 这个选项 可以 禁止 排序.
+<P>
+<DT><B>-split-by-reloc&nbsp;</B><I>count</I>
+
+<DD>
+在 输出文件 中 创建 附加节(extra section), 使得 输出文件 中, 
+没有 某一个 输出节 包含 大于
+<I>count</I>
+
+个 重定位项. 它 用于 产生 大型 可重定位 COFF 目标文件, 可以 插入到
+某些 实时内核 中; 因为 COFF 不能 在 单一节内 存放 65535 以上的 重定位项.
+注意, 有些 目标文件格式 不支持 任意 分节, 此时 这个选项 将会 操作 失败.
+此外, linker 不能够 分割 输入节, 然后 重新分配, 因此 如果 某个 输入节 包含
+<I>count</I>
+
+以上的 重定位项, 相应的 输出节 将 包含 同样多的 重定位项.
+<P>
+<DT><B>-split-by-file</B>
+
+<DD>
+类似于
+<B>-split-by-reloc ,</B>
+
+但是 它为 每个 输入文件 建立一个 新的 输出节.
+<P>
+<DT><B>-Tbss </B><I>org</I><DD>
+<DT><B>-Tdata </B><I>org</I><DD>
+<DT><B>-Ttext </B><I>org</I><DD>
+把 <I>org</I> 作为 输出文件 的 段 起始地址 --- 特别是 --- <B>bss</B>, <B>data</B>, 或 <B>text</B> 段.
+<I>org</I> 必须是 十六进制整数.
+<P>
+<DT><B>-T </B><I>commandfile</I>
+
+<DD>
+等同于 <B>-c </B><I>commandfile</I>; 用于 兼容 其他工具.  
+<P>
+<DT><B>-t </B>
+
+<DD>
+在 <B>ld</B> 处理 输入文件 的 时候 显示 文件名.
+<P>
+<DT><B>-u </B><I>sym</I>
+
+<DD>
+把 <I>sym</I> 作为 未定义(undefined) 的 符号 送入 输出文件.
+这样做 可以, 例如, 促使 linker 从 标准库 连接 某个 附加的模块. 
+允许 使用 多个 <B>-u</B> 选项 输入 多个 未定义 符号.
+<P>
+<DT><B>-Ur </B>
+
+<DD>
+对于 除 C++ 以外的 任何 程序, 这个选项 等同于
+<B>-r</B>: 生成 可重定位 的 输出 --- 就是说, 能够 依次 输入 <B>ld</B> 的 输出文件. 连接 C++ 程序 的 时候, <B>-Ur</B>
+
+<I>将</I> 解析 对 构造子(constructor) 的 引用(reference), 这一点 和 <B>-r</B> 不同.
+<P>
+<DT><B>--verbose</B>
+
+<DD>
+显示 <B>ld</B>
+
+的 版本号, 列出 支持的 模拟项(emulation). 显示 哪些 输入文件 能够 打开, 
+哪些 不能,
+<P>
+<DT><B>-v, -V</B>
+
+<DD>
+显示 <B>ld</B> 的 版本号.
+此外
+<B>-V</B>
+
+选项 能够 列出 支持的 模拟项.
+<P>
+<DT><B>--version</B>
+
+<DD>
+显示 <B>ld</B>
+
+的 版本号 然后 结束.
+<P>
+<DT><B>-warn-common</B>
+
+<DD>
+当 公共符号 和 其他 公共符号 合并 时, 或者 和 某个 符号定义 合并 时,
+linker 就发出 警告. Unix 系统的 linker 允许 这种 有些 草率 的 做法, 其他
+操作系统 则 不行. 这个选项 帮助你 在 合并 全局符号 的 时候 发现 潜在问题.
+<P>
+<DT><B>-warn-constructors</B>
+
+<DD>
+如果 使用了 全局构造子(global constructor), linker 就发出 警告.
+它 只对 某些 目标文件结构 有用, 对于 如 COFF 或 ELF, 此 linker 不能够
+检测 全局构造子 的 使用情况.
+<P>
+<DT><B>-warn-multiple-gp</B>
+
+<DD>
+如果 输出文件 需要 多个 全局指针值, linker 就发出 警告. 这个选项 只能
+用于 某些 处理器, 如 Alpha.
+<P>
+<DT><B>-warn-once</B>
+
+<DD>
+对 每个 未定义符号 只 警告 一次, 而不是 每次 引用 这个符号 都 警告.
+<P>
+<DT><B>-warn-section-align</B>
+
+<DD>
+如果 某个 输出节(section) 的 地址 因为 边界对齐 而 发生 改变,
+linker 就发出 警告. 典型情况下 由 输入节 设置 边界, 只有 不做 明确指定
+的 时候 地址 才会 改变; 就是说, SECTIONS 命令 没有 指出 该节 的 开始地址.
+<P>
+<DT><B>--whole-archive</B>
+
+<DD>
+对于 命令行 上
+<B>--whole-archive</B>
+
+选项 提到的 每个 归档库, 连接时 连入 归档库 的 全部 目标文件, 而不是
+在 归档库 中 搜索 所需的 目标文件. 一般用于 把 归档库文件 转变成 共享库文件,
+迫使 全部 目标文件 进入 共享库.
+<P>
+<DT><B>--no-whole-archive</B>
+
+<DD>
+关闭
+<B>--whole-archive</B>
+
+选项 对 归档库 的 影响.
+<P>
+<DT><B>--wrap </B><I>symbol</I>
+
+<DD>
+对
+<I>symbol</I>
+
+使用 包装函数(wrapper function). 任何 对
+<I>symbol</I>
+
+未定义 的 引用 (undefined reference) 将 解析为
+<B>__wrap_</B><I>symbol.</I>
+
+任何 对
+<B>__real_</B><I>symbol</I>
+
+未定义 的 引用 将 解析为
+<I>symbol.</I>
+
+<P>
+<DT><B>-X </B>
+
+<DD>
+删除 全部 临时的 局部符号. 大多数 目的文件 中, 这些 局部符号 的 名字 用 `<B>L</B>' 做 开头.
+<P>
+<DT><B>-x</B>
+
+<DD>
+删除 全部 局部符号.
+<P>
+</DL>
+<P>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>环境 (ENVIRONMENT)</H2>
+
+通过 环境变量 <B>GNUTARGET</B> 可以 改变 
+<B>ld</B> 的 行为.
+<P>
+如果 没有 使用 <B>-b</B> 选项 (或 相同的 <B>-format</B>),
+<B>GNUTARGET</B> 决定了 输入文件 的 目标格式, 其值 应为 BFD的 名称之一.  如果 没有 <B>GNUTARGET </B> 环境变量, <B>ld</B> 就使用 主机的 本地格式. 如果 <B>GNUTARGET</B> 设置为 <B>default</B>, BFD 通过 检查 输入文件 的 二进制格式 判断 输入格式;
+这个方法 通常 有效, 但 隐含 歧义, 这是因为 没有 办法 保证 标志 目标文件格式
+的 幻数 是 唯一的.
+不过, 各个系统 配置 BFD 的 时候, 会把 系统 约定的格式 放在 搜索列表 的
+前面, 因此 能够 按照 约定 消除 歧义.
+<P>
+<P>
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<P>
+<B>objdump</B>(<B>1</B>)
+
+<BR>
+
+`<B>ld</B>' 和 `<B>binutils</B>'
+
+项 (
+<B>info</B>)
+<BR>
+
+<I>ld: the GNU linker</I>, Steve Chamberlain and Roland Pesch;
+<I>The GNU Binary Utilities</I>, Roland H. Pesch.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>COPYING</H2>
+
+Copyright (c) 1991, 92, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.
+<P>
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+<P>
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the
+entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+<P>
+
+Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that this permission notice may be included in
+translations approved by the Free Software Foundation instead of in
+the original English.
+<P>
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+第一版
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">环境 (ENVIRONMENT)</A><DD>
+<DT><A HREF="#lbAG">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAH">COPYING</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

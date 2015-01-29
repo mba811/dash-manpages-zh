@@ -1,0 +1,287 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ALTER TABLE</TITLE>
+</HEAD><BODY>
+<H1>ALTER TABLE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ALTER TABLE - 修改表的定义
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+ALTER TABLE [ ONLY ] <I>name</I> [ * ]
+    ADD [ COLUMN ] <I>column</I> <I>type</I> [ <I>column_constraint</I> [ ... ] ]
+ALTER TABLE [ ONLY ] <I>name</I> [ * ]
+    DROP [ COLUMN ] <I>column</I> [ RESTRICT | CASCADE ]
+ALTER TABLE [ ONLY ] <I>name</I> [ * ]
+    ALTER [ COLUMN ] <I>column</I> { SET DEFAULT <I>expression</I> | DROP DEFAULT }
+ALTER TABLE [ ONLY ] <I>name</I> [ * ]
+    ALTER [ COLUMN ] <I>column</I> { SET | DROP } NOT NULL
+ALTER TABLE [ ONLY ] <I>name</I> [ * ]
+    ALTER [ COLUMN ] <I>column</I> SET STATISTICS <I>integer</I>
+ALTER TABLE [ ONLY ] <I>name</I> [ * ]
+    ALTER [ COLUMN ] <I>column</I> SET STORAGE { PLAIN | EXTERNAL | EXTENDED | MAIN }
+ALTER TABLE [ ONLY ] <I>name</I> [ * ]
+    SET WITHOUT OIDS
+ALTER TABLE [ ONLY ] <I>name</I> [ * ]
+    RENAME [ COLUMN ] <I>column</I> TO <I>new_column</I>
+ALTER TABLE <I>name</I>
+    RENAME TO <I>new_name</I>
+ALTER TABLE [ ONLY ] <I>name</I> [ * ]
+    ADD <I>table_constraint</I>
+ALTER TABLE [ ONLY ] <I>name</I> [ * ]
+    DROP CONSTRAINT <I>constraint_name</I> [ RESTRICT | CASCADE ]
+ALTER TABLE <I>name</I>
+    OWNER TO <I>new_owner</I>
+ALTER TABLE <I>name</I>
+    CLUSTER ON <I>index_name</I>
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>ALTER TABLE</B> 变更一个现存表的定义。它有好几种子形式：
+<DL COMPACT>
+<DT><B>ADD COLUMN</B><DD>
+<BR>&nbsp;这种形式用和&nbsp;CREATE&nbsp;TABLE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+create_table">create_table</A></B>(7)]&nbsp;&nbsp;里一样的语法向表中增加一个新的字段。
+<DT><B>DROP COLUMN</B><DD>
+<BR>&nbsp;这种形式从表中删除一个字段。请注意，和这个字段相关的索引和表约束也会被自动删除。&nbsp;如果任何表之外的对象依赖于这个字段，&nbsp;你必须说&nbsp;CASCADE，比如，外键参考，视图等等。
+<DT><B>SET/DROP DEFAULT</B><DD>
+<BR>&nbsp;这种形式为一个字段设置或者删除缺省值。请注意缺省值只应用于随后的&nbsp;INSERT&nbsp;命令；&nbsp;它们不会导致已经在表中的行的数值的修改。我们也可以为视图创建缺省，&nbsp;这个时候它们是在视图的&nbsp;ON&nbsp;INSERT&nbsp;规则应用之前插入&nbsp;INSERT&nbsp;语句中去的。
+<DT><B>SET/DROP NOT NULL</B><DD>
+<BR>&nbsp;这些形式修改一个字段是否标记为允许&nbsp;NULL&nbsp;值或者是拒绝&nbsp;NULL&nbsp;值。&nbsp;如果表在字段中包含非空值，那么你只可以&nbsp;SET&nbsp;NOT&nbsp;NULL。
+<DT><B>SET STATISTICS</B><DD>
+This form
+<BR>&nbsp;这个形式为随后的
+ANALYZE [<B><A HREF="/cgi-bin/man/man2html?7+analyze">analyze</A></B>(7)] 操作设置每字段的统计收集目标。 目标的范围可以在 0 到 1000 之内设置；另外，把他设置为 -1 则表示重新恢复到使用系统缺省的统计目标。
+<DT><B>SET STORAGE</B><DD>
+<BR>&nbsp;这种形式为一个字段设置存储模式。这个设置控制这个字段是内联保存还是保存在一个附属的表里，以及数据是否要压缩。&nbsp;PLAIN&nbsp;必需用于定长的数值，比如&nbsp;integer，并且是内联的，不压缩的。&nbsp;MAIN&nbsp;用于内联，可压缩的数据。&nbsp;EXTERNAL&nbsp;用于外部保存，不压缩的数据，&nbsp;而&nbsp;EXTENDED&nbsp;用于外部的压缩数据。&nbsp;EXTENDED&nbsp;是所有支持它的数据的缺省。&nbsp;使用&nbsp;EXTERNAL&nbsp;将令在&nbsp;text&nbsp;字段上的子字串操作更快，&nbsp;付出的代价是增加了存储空间。
+<DT><B>SET WITHOUT OIDS</B><DD>
+<BR>&nbsp;从表中删除&nbsp;oid&nbsp;字段。从表中删除（设置为没有）oid&nbsp;同样不会立即发生。&nbsp;OID&nbsp;使用的空间将在元组被更新的时候回收。不更新元组的时候，&nbsp;OID&nbsp;的空间和数值的维护都是不确定的。这个过程语义上类似&nbsp;DROP&nbsp;COLUMN&nbsp;&nbsp;过程。
+<DT><B>RENAME</B><DD>
+RENAME 形式改变一个表的名字（或者是一个索引，一个序列，或者一个视图）或者是表中一个独立字段的名字。 它对存储的数据没有任何影响。
+<DT><B>ADD </B><I>table_constraint</I><B></B><DD>
+<BR>&nbsp;这个形式给表增加一个新的约束，用的语法和
+CREATE TABLE [<B><A HREF="/cgi-bin/man/man2html?7+create_table">create_table</A></B>(7)] 一样。
+<DT><B>DROP CONSTRAINT</B><DD>
+<BR>&nbsp;这个形式删除一个表上的约束。&nbsp;目前，在表上的约束不要求有唯一的名字，因此可能有多个约束匹配声明的名字。&nbsp;所有这样的约束都将被删除。
+<DT><B>OWNER</B><DD>
+<BR>&nbsp;这个形式改变表，索引，序列或者视图的所有者为指定所有者。
+<DT><B>CLUSTER</B><DD>
+<BR>&nbsp;这种形式为将来对表进行的&nbsp;CLUSTER&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+cluster">cluster</A></B>(7)]
+操作做标记。
+</DL>
+<P>
+
+<P>
+
+<BR>&nbsp;要使用&nbsp;ALTER&nbsp;TABLE，你必需拥有该表；&nbsp;除了&nbsp;ALTER&nbsp;TABLE&nbsp;OWNER&nbsp;之外，它只能由超级用户执行。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;试图更改的现存表（可能有模式修饰）的名称。&nbsp;如果声明了&nbsp;ONLY，则只更改该表。&nbsp;如果没有声明&nbsp;ONLY，则该表及其所有后代表（如果有）都被更新。&nbsp;我们可以在表名字后面附加一个&nbsp;*&nbsp;表示后代表都被扫描，但是在目前的版本里，这是缺省行为。&nbsp;（在7.1之前的版本，ONLY&nbsp;是缺省的行为。）缺省可以通过改变配置选项&nbsp;SQL_INHERITANCE&nbsp;来改变。
+<DT><B></B><I>column</I><B></B><DD>
+<BR>&nbsp;现存或新的字段名称。
+<DT><B></B><I>type</I><B></B><DD>
+<BR>&nbsp;新字段的类型。
+<DT><B></B><I>new_column</I><B></B><DD>
+<BR>&nbsp;新字段的类型。
+<DT><B></B><I>new_name</I><B></B><DD>
+<BR>&nbsp;表的新名称。
+<DT><B></B><I>table_constraint</I><B></B><DD>
+<BR>&nbsp;表的新的约束定义。
+<DT><B></B><I>constraint_name</I><B></B><DD>
+<BR>&nbsp;要删除的现有约束的名字。
+<DT><B></B><I>new_owner</I><B></B><DD>
+<BR>&nbsp;该表的新所有者的用户名。
+<DT><B></B><I>index_name</I><B></B><DD>
+<BR>&nbsp;要标记为建簇的表上面的索引名字。
+<DT><B>CASCADE</B><DD>
+<BR>&nbsp;自动删除依赖于被依赖字段或者约束的对象（比如，引用该字段的视图）。
+<DT><B>RESTRICT</B><DD>
+<BR>&nbsp;如果字段或者约束还有任何依赖的对象，则拒绝删除该字段。&nbsp;这是缺省行为。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;COLUMN&nbsp;关键字是多余的，可以省略。
+<P>
+
+<BR>&nbsp;在目前的&nbsp;ADD&nbsp;COLUMN实现里还不支持新列/字段的缺省（值）和&nbsp;NOT&nbsp;NULL&nbsp;子句。&nbsp;新字段开始存在时所有值都是&nbsp;NULL。&nbsp;不过你可以随后用&nbsp;ALTER&nbsp;TABLE&nbsp;的&nbsp;SET&nbsp;DEFAULT&nbsp;&nbsp;形式设置缺省（值）。（你可能还想用
+UPDATE [<B><A HREF="/cgi-bin/man/man2html?7+update">update</A></B>(7)] 把已存在行更新为缺省值。） 如果你想标记该字段为非 null，在你为该字段的所有行输入非 null 值之后用 SET NOT NULL。
+<P>
+
+DROP COLUMN 命令并不是物理上把字段删除， 而只是简单地把它标记为 SQL 操作中不可见的。随后对该表的插入和更新将在该字段存储一个 NULL。 因此，删除一个字段是很快的，但是它不会立即缩减你的表在磁盘上的大小，因为被删除了的字段占据的空间还没有回收。 这些空间将随着现有的行的更新而得到回收。要立即回收空间， 我们可以做一个UPDATE所有行的假动作，然后立即 vacuum， 象这样：
+<P>
+<PRE>
+UPDATE table SET col = col;
+VACUUM FULL table;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;如果表有任何后代表，那么如果不在后代表上做同样的修改的话，&nbsp;就不允许在父表上增加或者重命名一个字段，也就是说，&nbsp;ALTER&nbsp;TABLE&nbsp;ONLY将被拒绝。这样就保证了后代表总是有和父表匹配的字段。
+<P>
+
+<BR>&nbsp;一个递归DROP&nbsp;COLUMN&nbsp;&nbsp;操作将只有在后代表并不从任何其它父表中继承该字段并且从来没有独立定义该字段的时候才能删除一个后代表的字段。&nbsp;一个非递归的DROP&nbsp;COLUMN（也就是，<B>ALTER&nbsp;TABLE&nbsp;ONLY&nbsp;...&nbsp;DROP&nbsp;COLUMN</B>）从来不会删除任何后代字段，&nbsp;而是把他们标记为独立定义的，而不是继承的。
+<P>
+
+<BR>&nbsp;不允许更改系统表结构的任何部分。
+<P>
+
+<BR>&nbsp;请参考CREATE&nbsp;TABLE&nbsp;部分获取更多有效参数的描述。&nbsp;Chapter&nbsp;5&nbsp;``Data&nbsp;Definition''&nbsp;里有更多有关继承的信息。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;向表中增加一个&nbsp;varchar&nbsp;列：
+<P>
+<PRE>
+ALTER TABLE distributors ADD COLUMN address varchar(30);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;从表中删除一个字段：
+<P>
+<PRE>
+ALTER TABLE distributors DROP COLUMN address RESTRICT;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;对现存列改名：
+<P>
+<PRE>
+ALTER TABLE distributors RENAME COLUMN address TO city;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;更改现存表的名字∶
+<P>
+<PRE>
+ALTER TABLE distributors RENAME TO suppliers;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;给一个字段增加一个非空约束：
+<P>
+<PRE>
+ALTER TABLE distributors ALTER COLUMN street SET NOT NULL;
+
+</PRE>
+
+<BR>&nbsp;从一个字段里删除一个非空约束：
+<P>
+<PRE>
+ALTER TABLE distributors ALTER COLUMN street DROP NOT NULL;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;给一个表增加一个检查约束：
+<P>
+<PRE>
+ALTER TABLE distributors ADD CONSTRAINT zipchk CHECK (char_length(zipcode) = 5);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;删除一个表和它的所有子表的监查约束：
+<P>
+<PRE>
+ALTER TABLE distributors DROP CONSTRAINT zipchk;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;向表中增加一个外键约束：
+<P>
+<PRE>
+ALTER TABLE distributors ADD CONSTRAINT distfk FOREIGN KEY (address) REFERENCES addresses (address) MATCH FULL;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;给表增加一个（多字段）唯一约束：
+<P>
+<PRE>
+ALTER TABLE distributors ADD CONSTRAINT dist_id_zipcode_key UNIQUE (dist_id, zipcode);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;给一个表增加一个自动命名的主键约束，要注意的是一个表只能有一个主键：
+<P>
+<PRE>
+ALTER TABLE distributors ADD PRIMARY KEY (dist_id);
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+ADD COLUMN 形式是兼容 SQL 标准的， 除了上面说的缺省（值）和 NOT NULL 约束外。 ALTER COLUMN 形式是完全兼容的。
+<P>
+
+<BR>&nbsp;重命名表，列/字段，索引，和序列的名字是&nbsp;PostgreSQL&nbsp;&nbsp;对&nbsp;SQL&nbsp;的扩展。
+<P>
+
+<B>ALTER TABLE DROP COLUMN</B> 可以用于删除表中的唯一的一个字段， 留下一个零字段的表。这是对 SQL 的扩展，它不允许零字段表。
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

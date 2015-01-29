@@ -1,0 +1,197 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of size</TITLE>
+</HEAD><BODY>
+<H1>size</H1>
+Section: GNU Development Tools (1)<BR>Updated: 5 November 1991<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+size - 列出段节大小和总共大小
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+
+
+<DL COMPACT>
+<DT><B>size</B>
+
+<DD>
+[<B>-A</B>|<B>-B</B>|<B></B><B>--format=</B><I>compatibility</I>]
+[<B>--help</B>]
+
+[<B>-d</B>|<B>-o</B>|<B>-x</B>|<B>--radix=</B><I>number</I>]
+[<B></B><B>--target=</B><I>bfdname</I>]
+[<B>-V</B>|<B>--version</B>]
+
+<I>objfile</I>...
+
+
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+GNU 的 <B>size</B> 程序 列出 参数列表
+<I>objfile</I>
+
+中, 各 目标文件(object) 或 存档库文件(archive)
+的 段节(section)大小 --- 以及 总共大小.
+默认情况下, 对 每个 目标文件 或 存档库中的 每个模块 产生 一行 输出.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+<DL COMPACT>
+<DT><B>-A</B>
+
+<DD>
+<DT><B>-B</B>
+
+<DD>
+<DT><B>--format </B><I>compatibility</I>
+
+<DD>
+使用 这几个 选项, 你 可以 让 GNU
+<B>size</B>
+
+的 输出效果 类似于
+ System V
+<B>size</B>
+
+ (使用 `<B>-A</B>',
+或 `<B>--format=sysv</B>'), 或 Berkeley 
+<B>size</B> (使用 `<B>-B</B>', 或 `<B>--format=berkeley</B>'). 默认情况下 是 类似于 Berkeley 的 单行格式.  
+<P>
+<DT><B>--help</B>
+
+<DD>
+简述 参数和选项.
+<P>
+<DT><B>-d</B>
+
+<DD>
+<DT><B>-o</B>
+
+<DD>
+<DT><B>-x</B>
+
+<DD>
+<DT><B>--radix </B><I>number</I>
+
+<DD>
+使用 这几个 选项, 你 可以 让 各个 段节 的 大小 以 十进制 (`<B>-d</B>', 或 `<B>--radix 10</B>'); 八进制
+(`<B>-o</B>', 或 `<B>--radix 8</B>'); 或 十六进制 (`<B>-x</B>', 或
+`<B>--radix 16</B>') 数字 的 格式 显示. `<B>--radix </B><I>number</I>' 只支持 三个数值参数 (8, 10, 16). 总共大小 以 两种进制 给出; `<B>-d</B>' 或 `<B>-x</B>' 的 十进制 和 十六进制 输出, 或 `<B>-o</B>' 的 八进制 和 十六进制 输出.
+<P>
+<DT><B>--target </B><I>bfdname</I>
+
+<DD>
+你 可以 通过 参数
+<I>bfdname</I>
+
+指定
+<I>objfile</I>
+
+的 目标格式. 这个选项 可能 不那么 必要; 因为
+<I>size</I>
+
+能够 自动 识别 许多 格式. 参见 
+<B><A HREF="/cgi-bin/man/man2html?1+objdump">objdump</A>(1)</B>
+
+列出 的 有效格式.
+<P>
+<DT><B>-V</B>
+
+<DD>
+<DT><B>--version</B>
+
+<DD>
+显示 <B>size</B> 的 版本信息.
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B>info</B>
+
+的
+`<B>binutils</B>'
+
+项; 
+<I>The GNU Binary Utilities</I>,
+
+<BR>&nbsp;Roland&nbsp;H.&nbsp;Pesch&nbsp;(October&nbsp;1991);&nbsp;
+<B>ar</B>(<B>1</B>),
+
+<B>objdump</B>(<B>1</B>).
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>版权 (COPYING)</H2>
+
+Copyright (c) 1991 Free Software Foundation, Inc.
+<P>
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+<P>
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the
+entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+<P>
+
+Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that this permission notice may be included in
+translations approved by the Free Software Foundation instead of in
+the original English.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2004/02/22</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+<P>
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAG">版权 (COPYING)</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,327 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of INSTALL</TITLE>
+</HEAD><BODY>
+<H1>INSTALL</H1>
+Section: User Commands  (1)<BR>Updated: 1998年11月<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME[名称]</H2>
+
+install - 复制文件并设置属性
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS[总览]</H2>
+
+<B>install</B>
+
+<B>[</B><I>options</I><B>]</B>
+
+<B>[-s] [--strip]</B>
+
+<I>source dest</I>
+
+<BR>
+
+<B>install</B>
+
+<B>[</B><I>options</I><B>]</B>
+
+<B>[-s] [--strip]</B>
+
+<I>source... directory</I>
+
+<BR>
+
+<B>install</B>
+
+<B>[</B><I>options</I><B>]</B>
+
+<B>[-d,--directory]</B>
+
+<I>directory...</I>
+
+<P>
+选项(最短格式):
+<BR>
+
+<B>[-b]</B>
+
+<B>[-c]</B>
+
+<B>[-D]</B>
+
+<B>[-g </B><I>group</I><B>]</B>
+
+<B>[-m </B><I>mode</I><B>]</B>
+
+<B>[-o </B><I>owner</I><B>]</B>
+
+<B>[-S </B><I>SUFFIX</I><B>]</B>
+
+<B>[-V {numbered,existing,simple}]</B>
+
+<B>[--help] [--version] [--]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<B>install</B>
+
+复制文件并设置它们的权限模式,如果可能,还将设置其所有者和组别.
+<P>
+
+在第一种调用格式中,
+<I>source</I>
+
+文件被复制为
+<I>dest</I>
+
+目标文件. 在第二种格式中,每个
+<I>source</I>
+
+文件都被复制到目的端
+<I>directory</I>
+
+中. 在最后一种格式中,将创建每个
+<I>directory</I>
+
+(以及任何缺失的父目录).
+<P>
+
+<B>install</B>
+
+类似于
+<B>cp,</B>
+
+不过它允许你控制目的文件的属性.
+它的典型应用是 Makefile 文件中复制程序到它们的目标目录中.
+它拒绝复制文件为其自身.
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS(选项)</H2>
+
+<DL COMPACT>
+<DT><B>-c</B>
+
+<DD>
+可忽略;这是为了与老Unix版本的
+<B>install</B>
+
+相兼容.
+<DT><B>-d, --directory</B>
+
+<DD>
+创建每个给定的目录以及任何缺失的父目录,
+按照命令行要求来设置所有者,组别和模式,或者设为默认值.
+它也授予任何它创建的父目录以这些属性. (这有别于SunOS 4.x的
+<B>install</B>,
+
+该
+<B>install</B>
+
+授予其创建目录以默认的属性.)
+<DT><B>-D</B>
+
+<DD>
+创建
+<I>dest</I>
+
+的所有前面部分,只有最后一个除外,然后复制
+<I>source</I>
+
+到
+<I>dest</I>.
+
+该选项在如上总览中列出的第一种格式中有用.
+(fileutils-4.0中的新功能.)
+<DT><B>-g </B><I>group</I><B>, --group=</B><I>group</I>
+
+<DD>
+设置安装的文件或目录的组所有权为
+<I>group</I>
+
+这可能是组名,或者是数字化组标识.
+<DT><B>-m </B><I>mode</I><B>, --mode=</B><I>mode</I>
+
+<DD>
+设置安装的文件或目录的权限为
+<I>mode</I>,
+
+这可以为八进制数,也可以为
+<B>chmod</B>
+
+中的符号化的模式,且都以0开头.默认的模式是0755 - 
+对所有者可读,可写并且可执行,对于组用户和其它用户可读和可执行.
+<DT><B>-o </B><I>owner</I><B>, --owner=</B><I>owner</I>
+
+<DD>
+如果
+<B>install</B>
+
+有合适的特权(运行为root),则设置安装的文件或目录的所有权为
+<I>owner</I>.
+
+默认为'root'.
+<I>owner</I>
+
+可以为用户名,也可以为数字化用户标识.
+<DT><B>-s, --strip</B>
+
+<DD>
+从安装的二进制可执行程序剥离符号表.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>GNU BACKUP OPTIONS(GNU备份选项)</H2>
+
+GNU版本的程序如
+<B>cp</B>,
+
+<B>mv</B>,
+
+<B>ln</B>,
+
+<B>install</B>
+
+和
+<B>patch</B>
+
+会按需求对将要被覆盖,修改或者毁坏的文件进行备份.
+所需要的备份文件由-b选项指定.
+它们怎样命名则由-V选项确定.
+在备份文件名通过后缀扩展方式给定的情况下,该后缀由-S选项确定.
+<DL COMPACT>
+<DT><B>-b, --backup</B>
+
+<DD>
+备份那些将要被覆盖或者移除的文件.
+<DT><B>-S </B><I>SUFFIX</I><B>, --suffix=</B><I>SUFFIX</I>
+
+<DD>
+添加
+<I>SUFFIX</I>
+
+到每个生成的备份文件后.
+如果该选项未被确定,那么将使用
+<B>SIMPLE_BACKUP_SUFFIX</B>
+
+环境变量.又如果
+<B>SIMPLE_BACKUP_SUFFIX</B>
+
+未设置,那么默认为'~'.
+<DT><B>-V </B><I>METHOD</I><B>, --version-control=</B><I>METHOD</I>
+
+<DD>
+<DL COMPACT><DT><DD>
+确定备份文件怎样命名.
+<I>METHOD</I>
+
+参数可以为'numbered'(或者't'),'existing'(或者'nil'),或'never'(或者'simple').
+如果未指定该选项,将使用
+<B>VERSION_CONTROL</B>
+
+环境变量.又如果
+<B>VERSION_CONTROL</B>
+
+未设置,那么默认的备份类型为'existing'.
+<P>
+
+该选项相当于Emacs变量'version-control'.有效的
+<I>METHOD</I>s
+
+有(只接受唯一的缩写方式):
+<DL COMPACT>
+<DT><B>t</B>, <B>numbered</B>
+
+<DD>
+总作数码标识的备份.
+<DT><B>nil</B>, <B>existing</B>
+
+<DD>
+对已有文件作数码标识的备份,而对其它文件作简单备份.
+<DT><B>never</B>, <B>simple</B>
+
+<DD>
+总作简单备份.
+</DL>
+</DL>
+
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>GNU STANDARD OPTIONS(GNU标准选项)</H2>
+
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+在标准输出上打印一条用法信息,并以成功状态退出.
+<DT><B>--version</B>
+
+<DD>
+在标准输出上打印版本信息,然后以成功状态退出.
+<DT><B>--</B>
+
+<DD>
+终止选项列表.
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>ENVIRONMENT(环境变量)</H2>
+
+变量LANG, LC_ALL, LC_CTYPE和LC_MESSAGES取其常用义.对于GNU的版本,如上所述,变量
+SIMPLE_BACKUP_SUFFIX和VERSION_CONTROL控制着备份文件的命名.
+<A NAME="lbAI">&nbsp;</A>
+<H2>CONFORMING TO(遵循规则)</H2>
+
+BSD 4.2 (它带有-c, -m, -o, -g 和 -s 选项).
+<A NAME="lbAJ">&nbsp;</A>
+<H2>NOTES(备注)</H2>
+
+本页介绍了包含在fileutils-4.0包中的
+<B>install ;</B>
+
+其他版本可能会有细微差别.
+请把您的修正和增补建议发邮件到<A HREF="mailto:aeb@cwi.nl">aeb@cwi.nl</A>.
+报告程序中的bug请发到
+<A HREF="mailto:fileutils-bugs@gnu.ai.mit.edu">fileutils-bugs@gnu.ai.mit.edu</A>.
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/19</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME[名称]</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS[总览]</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAE">OPTIONS(选项)</A><DD>
+<DT><A HREF="#lbAF">GNU BACKUP OPTIONS(GNU备份选项)</A><DD>
+<DT><A HREF="#lbAG">GNU STANDARD OPTIONS(GNU标准选项)</A><DD>
+<DT><A HREF="#lbAH">ENVIRONMENT(环境变量)</A><DD>
+<DT><A HREF="#lbAI">CONFORMING TO(遵循规则)</A><DD>
+<DT><A HREF="#lbAJ">NOTES(备注)</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

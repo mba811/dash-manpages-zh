@@ -1,0 +1,185 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of X25</TITLE>
+</HEAD><BODY>
+<H1>X25</H1>
+Section: Linux Programmer's Manual (7)<BR>Updated: 1 Dec 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+x25, PF_X25 - ITU-T X.25 / ISO-8208 协议接口。
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/sys/socket.h">sys/socket.h</A>&gt;</B>
+
+<BR>
+
+<B>#include &lt;<A HREF="file:///usr/include/linux/x25.h">linux/x25.h</A>&gt; </B>
+
+<BR>
+
+x25_socket = socket(PF_X25, SOCK_SEQPACKET, 0); 
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+X25 sockets 为 X.25 数据包层协议（packet layer protocol）提供接口。
+这令应用程序可以使用标准的 ITU X.25 建议
+（X.25 DTE-DCE 模式）在公共 X.25 数据网中进行通讯。
+X25 socket 也可以在没有在 ISO-8208中描述的那样的 
+X.25 中介（X.25 DTE-DCE 模式）的网络进行通讯．
+<P>
+
+信息分界的保持 - 对 socket 进行
+<B><A HREF="/cgi-bin/man/man2html?2+read">read</A>(2)</B>
+
+得到的数据块与对端 socket 对应
+<B><A HREF="/cgi-bin/man/man2html?2+write">write</A>(2)</B>
+
+动作输出的数据块是完全一样的．
+如果必要，内核负责处理信息片段和重组长信息，
+用的是 X.25 M-bit 方法（校注：请懂 x.25 的同志指正）。
+对信息大小没有硬编码的上限。 
+但是重组长信息有时会失败
+（比如系统资源暂时匮乏，或是出现其他的诸如此类的限制时）。
+如果出现这种情况，X.25 连接将被重置。
+<A NAME="lbAE">&nbsp;</A>
+<H2>套接口地址 SOCKET ADDRESS</H2>
+
+AF_X25 socket 地址族用 struct sockaddr_x25 代表 
+ITU-T X.121 规范中定义的网络地址。 
+<P>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+struct sockaddr_x25 {
+sa_family_t   sx25_family;  /* 必须是 AF_X25 */
+x25_address   sx25_addr;    /* X.121 地址 */
+};
+
+</PRE>
+
+</DL>
+
+<P>
+
+<I>sx25_addr</I>
+
+包含一个空零结尾的字符串
+<I>x25_addr[]</I>
+
+。 
+<I>sx25_addr.x25_addr[]</I>
+
+由最多 15 个 ASCII 字符（不包括结束的 0）构成 X.121 地址。
+只能使用数字 `0' 到 `9' 。
+<A NAME="lbAF">&nbsp;</A>
+<H2>套接字选项 SOCKET OPTIONS</H2>
+
+以下 X.25 相关的套接字选项
+可以在级别参数设置为
+<B>SOL_X25</B>
+
+时用
+<B><A HREF="/cgi-bin/man/man2html?2+setsockopt">setsockopt</A>(2)</B>
+
+设定并可用 
+<B><A HREF="/cgi-bin/man/man2html?2+getsockopt">getsockopt</A>(2)</B>
+
+读取。 
+<DL COMPACT>
+<DT><B>X25_QBITINCL </B>
+
+<DD>
+控制用户是否能够访问 X.25 Q-bit
+(（资格数据位）Qualified Data Bit)。
+接受整型参数。 如果设为 0 (缺省),
+那么传出的数据包不设置 Q-bit 传入的数据包中的 Q-bit 被忽略。
+如果设为 1, 就会在通过该套接字传入传出的信息中附加一个前置的首字节。
+对于从套接字中数据， 首位字节的 0 
+表示对应的读入包未设置 Q-bit；而如果是 1 则相反。 
+如果通过套接字写入（传出）的数据中首位字节为 1 则传出包设置 Q-bit ，
+如果是 0 则不设置 Q-bit。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>缺憾</H2>
+
+有很多, 比如 X.25 PLP 实现
+<B>CONFIG_EXPERIMENTAL.</B>（译注：内核编译选项，尚处于试验阶段）。
+
+<P>
+
+本手册页也不完善。
+<P>
+
+还没有给程序员用的头文件；您需要包含内核头文件
+<B>linux/x25.h</B>
+
+<B>CONFIG_EXPERIMENTAL</B>
+
+也暗示着未来的接口版本可能在二进制级别不兼容。
+<P>
+
+X.25 N-重置事件（Reset events）还不会传播给用户进程。
+因此，如果重置，可能会发生数据丢失而得不到任何提示。 
+<A NAME="lbAH">&nbsp;</A>
+<H2>另见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?7+socket">socket</A>(7),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?2+socket">socket</A>(2).</B>
+
+<P>
+
+Jonathan Simon Naylor:
+"The Re-Analysis and Re-Implementation of X.25."
+The URL is
+<I><A HREF="ftp://ftp.pspt.fi/pub/ham/linux/ax25/x25doc.tgz">ftp://ftp.pspt.fi/pub/ham/linux/ax25/x25doc.tgz</A> </I>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>版本</H2>
+
+PF_X25 协议族是 Linux 2.2 的新特性. 
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>RedCandle &lt;<A HREF="mailto:redcandle51@chinaren.com">redcandle51@chinaren.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/26</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">套接口地址 SOCKET ADDRESS</A><DD>
+<DT><A HREF="#lbAF">套接字选项 SOCKET OPTIONS</A><DD>
+<DT><A HREF="#lbAG">缺憾</A><DD>
+<DT><A HREF="#lbAH">另见</A><DD>
+<DT><A HREF="#lbAI">版本</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

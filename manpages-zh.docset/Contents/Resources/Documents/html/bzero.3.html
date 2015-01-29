@@ -1,0 +1,85 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of BZERO</TITLE>
+</HEAD><BODY>
+<H1>BZERO</H1>
+Section: Linux Programmer's Manual (3)<BR>Updated: 1993-04-09<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+bzero - 向字符串写入零
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<PRE>
+<B>#include &lt;<A HREF="file:///usr/include/string.h">string.h</A>&gt;</B>
+
+<B>void bzero(void *</B><I>s</I><B>, size_t </B><I>n</I><B>);</B>
+</PRE>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>bzero()</B> 函数 把 字符串 <I>s</I> 的 前 <I>n</I> 个 字节 置成 零.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>返回值 (RETURN VALUE)</H2>
+
+<B>bzero()</B> 函数 无 返回值.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>遵循 (CONFORMING TO)</H2>
+
+4.3BSD.  建议 不要 用 这个 函数 -- 请 在 新的 程序中 用
+<B>memset</B>
+
+函数.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?3+memset">memset</A></B>(3), <B><A HREF="/cgi-bin/man/man2html?3+swab">swab</A></B>(3)
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/1/28</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">返回值 (RETURN VALUE)</A><DD>
+<DT><A HREF="#lbAF">遵循 (CONFORMING TO)</A><DD>
+<DT><A HREF="#lbAG">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

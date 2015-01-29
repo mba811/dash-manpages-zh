@@ -1,0 +1,156 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DECLARE</TITLE>
+</HEAD><BODY>
+<H1>DECLARE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+DECLARE - 定义一个游标
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+DECLARE <I>name</I> [ BINARY ] [ INSENSITIVE ] [ [ NO ] SCROLL ]
+    CURSOR [ { WITH | WITHOUT } HOLD ] FOR <I>query</I>
+    [ FOR { READ ONLY | UPDATE [ OF <I>column</I> [, ...] ] } ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>DECLARE</B> 允许用户创建游标， 用于在一个大的查询里面检索少数几行数据。 使用
+FETCH [<B><A HREF="/cgi-bin/man/man2html?7+fetch">fetch</A></B>(7)]，游标可以既可以返回文本也可以返回二进制格式。
+<P>
+
+<BR>&nbsp;通常游标返回文本格式，和&nbsp;SELECT&nbsp;生成的是一样的。&nbsp;因为数据在系统内部是用二进制格式存储的，&nbsp;系统必须对数据做一定转换以生成文本格式。&nbsp;一旦数据是以文本形式返回，那么客户端应用需要把它们转换成二进制进行操作。&nbsp;另外，文本格式一般都比对应的二进制格式占的存储空间大。&nbsp;二进制游标给你返回内部二进制形态的数据。当然，如果你想以文本方式显示数据，那么以文本方式检索会为你节约很多客户端的工作。
+<P>
+
+<BR>&nbsp;比如，如果查询从一个整数列返回一个一，&nbsp;在缺省的游标里你将获得一个字符串&nbsp;1，而如果是一个二进制游标，&nbsp;你将得到一个&nbsp;4-字节的包含该数值内部形式的数值（大端序）。
+<P>
+
+<BR>&nbsp;游标应该小心使用二进制游标。一些用户应用如&nbsp;psql&nbsp;是不识别二进制游标的，&nbsp;而且期望返回的数据是文本格式。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  如果客户端应用使用&quot;扩展查询&quot;协议发出 FETCH 命令， 那么 Bind 协议声明数据是用文本还是用二进制格式检索。 这个选择覆盖游标的定义。因此，在使用扩展查询协议的时候，二进制游标的概念已经过时了 － 任何游标都可以当作文本或者二进制的格式发出。
+</DL>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;将在随后FETCH操作中使用的游标名。
+<DT><B>BINARY</B><DD>
+<BR>&nbsp;令游标以二进制而不是文本格式获取数据。
+<DT><B>INSENSITIVE</B><DD>
+<BR>&nbsp;表明从游标检索出来的数据不应该被其他进程或游标的更新动作影响。&nbsp;在&nbsp;PostgreSQL&nbsp;里，所有游标都是不敏感的，这个关键字没有什么作用，提供它只是为了和&nbsp;SQL&nbsp;标准兼容。
+<DT><B>SCROLL</B><DD>
+<DT><B>NO SCROLL</B><DD>
+SCROLL 声明该游标可以用于以非顺序的方式检索数据行（也就是向后检索）。 根据查询的执行计划的不同，声明 SCROLL 可能会对查询的执行时间附加一定的影响。 NO SCROLL 声明该游标不能用于以非顺序的方式检索数据行（也就是向后检索）。
+<DT><B>WITH HOLD</B><DD>
+<DT><B>WITHOUT HOLD</B><DD>
+WITH HOLD 声明该游标可以在创建它的事务成功提交后继续使用。 WITHOUT HOLD 声明该游标不能在创建它的的事务提交后使用。如果既没有声明 WITHOUT HOLD，也没有声明 WITH HOLD， 那么缺省是 WITH HOLD。
+<DT><B></B><I>query</I><B></B><DD>
+<BR>&nbsp;一个SELECT查询，它提供由游标返回的行。&nbsp;请参考&nbsp;SELECT&nbsp;语句获取有关有效查询的详细信息。
+<DT><B>FOR READ ONLY</B><DD>
+<DT><B>FOR UPDATE</B><DD>
+FOR READ ONLY 表明游标将用于只读模式。 FOR UPDATE 表明游标将被用于更新表。 因为目前 PostgreSQL 不支持游标更新， 所以声明 FOR UPDATE 将产生一个错误信息。而声明 FOR READ ONLY 没有作用。
+<DT><B></B><I>column</I><B></B><DD>
+<BR>&nbsp;将被更新的列。因为游标更新目前不被&nbsp;PostgreSQL&nbsp;支持，&nbsp;所以&nbsp;FOR&nbsp;UPDATE&nbsp;子句将产生一个错误信息。
+</DL>
+<P>
+
+BINARY，INSENSITIVE，SCROLL 关键字可以以任何顺序出现。
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;如果没有声明&nbsp;WITH&nbsp;HOLD，那么这个命令创建的游标只能在当前事务中使用。
+Thus, <B>DECLARE</B> without WITH
+HOLD is useless outside a transaction block: the cursor would
+survive only to the completion of the statement. Therefore
+PostgreSQL reports an error if this
+command is used outside a transaction block.
+使用
+BEGIN [<B><A HREF="/cgi-bin/man/man2html?7+begin">begin</A></B>(7)],
+COMMIT [<B><A HREF="/cgi-bin/man/man2html?7+commit">commit</A></B>(7)]
+和
+ROLLBACK [<B><A HREF="/cgi-bin/man/man2html?7+rollback">rollback</A></B>(7)]
+定义一个事务块。
+<P>
+
+<BR>&nbsp;如果声明了&nbsp;WITH&nbsp;HOLD，并且创建该游标的事务成功提交，&nbsp;那么游标还可以在同一会话随后的事务里访问。（但如果创建它的事务回滚，那么游标被删除。）&nbsp;带着&nbsp;WITH&nbsp;HOLD&nbsp;创建的游标是用一个明确的&nbsp;CLOSE&nbsp;命令，或者是会话终止来关闭的。&nbsp;在目前的实现里，由一个游标代表的行是被拷贝到一个临时文件或者内存区里的，这样他们就仍然可以在随后的事务中被访问。
+<P>
+
+<BR>&nbsp;在定义一个要用来向后抓取的游标的时候，我们应该声明&nbsp;SCROLL&nbsp;选项。&nbsp;这个是&nbsp;SQL&nbsp;标准要求的。不过，为了和早期的版本兼容，&nbsp;PostgreSQL&nbsp;在没有&nbsp;SCROLL&nbsp;的时候也允许向后抓取，&nbsp;只要游标的查询计划简单得不需要额外的开销就可以支持它。&nbsp;不过，我们建议应用开发人员不要依赖于使用没有带着&nbsp;SCROLL&nbsp;&nbsp;定义的游标的后向查找功能。如果声明了&nbsp;NO&nbsp;SCROLL，那么不管怎样都会禁止向后抓取的功能。
+<P>
+
+<BR>&nbsp;在&nbsp;SQL&nbsp;标准中游标只能在嵌入&nbsp;SQL&nbsp;（ESQL）&nbsp;的应用中使用。&nbsp;PostgreSQL&nbsp;服务器没有一个明确的&nbsp;OPEN&nbsp;&nbsp;语句；一个游标被认为在定义时就已经打开了。&nbsp;不过，PostgreSQL嵌入的&nbsp;SQL&nbsp;预编译器，&nbsp;ecpg，&nbsp;支持&nbsp;SQL92&nbsp;习惯，包括那些和DECLARE和OPEN相关的语句。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;定义一个游标：
+<P>
+<PRE>
+DECLARE liahona CURSOR FOR SELECT * FROM films;
+
+</PRE>
+
+<BR>&nbsp;参阅&nbsp;FETCH&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+fetch">fetch</A></B>(7)]&nbsp;获取有关&nbsp;游标使用的更多例子。
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+SQL 标准只允许在嵌入的 SQL 中和模块中使用游标。 PostgreSQL 允许交互地使用游标。
+<P>
+
+SQL 标准允许游标更新表数据。 所有 PostgreSQL 的游标都是只读的。
+<P>
+
+<BR>&nbsp;二进制游标是&nbsp;PostgreSQL&nbsp;扩展。
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

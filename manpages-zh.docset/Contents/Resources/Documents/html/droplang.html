@@ -1,0 +1,137 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DROPLANG</TITLE>
+</HEAD><BODY>
+<H1>DROPLANG</H1>
+Section: PostgreSQL Client Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+droplang - 删除一种 PostgreSQL 过程语言
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>droplang</B> [ <B></B><I>connection-option</I><B></B>...<B> </B>] <B></B><I>langname</I><B></B> [ <B></B><I>dbname</I><B> </B>]
+<P>
+<B>droplang</B> [ <B></B><I>connection-option</I><B></B>...<B> </B>]  <B>--list</B> | <B>-l</B> <B></B><I>dbname</I><B></B>
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION  描述</H2>
+
+<P>
+
+<B>droplang</B> 是一个从 PostgreSQL 数据库中删除一种现有编程语言的工具。 droplang 可以删除任何过程语言， 甚至是那些 PostgreSQL 版本没有自带的。
+<P>
+
+<BR>&nbsp;尽管可以用&nbsp;SQL&nbsp;命令直接删除后端编程语言，我们还是推荐使用&nbsp;droplang，&nbsp;因为它进行了一些检查而且更容易使用。参阅&nbsp;DROP&nbsp;LANGUAGE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+drop_language">drop_language</A></B>(7)]&nbsp;&nbsp;获取更多信息。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<B>droplang</B> 接受下面命令行参数：
+<DL COMPACT>
+<DT><B></B><I>langname</I><B></B><DD>
+<BR>&nbsp;声明将被删除的后端编程语言的名称。
+<DT><B>[-d] </B><I>dbname</I><B></B><DD>
+<DT><B>[--dbname] </B><I>dbname</I><B></B><DD>
+<BR>&nbsp;声明从哪个数据库删除该语言。&nbsp;缺省使用和当前系统用户同名的数据库。
+<DT><B>-e</B><DD>
+<DT><B>--echo</B><DD>
+<BR>&nbsp;运行的时候显示执行的&nbsp;SQL&nbsp;命令。
+<DT><B>-l</B><DD>
+<DT><B>--list</B><DD>
+<BR>&nbsp;显示一个在目标数据库里已经安装的语言的列表。
+</DL>
+<P>
+
+<P>
+
+<B>createuser</B> 还接受下列命令行参数用作连接参数：
+<DL COMPACT>
+<DT><B>-h </B><I>host</I><B></B><DD>
+<DT><B>--host </B><I>host</I><B></B><DD>
+<BR>&nbsp;声明运行服务器的机器的主机名。&nbsp;如果数值以斜扛开头，则它被用做到&nbsp;Unix&nbsp;域套接字的路径。
+<DT><B>-p </B><I>port</I><B></B><DD>
+<DT><B>--port </B><I>port</I><B></B><DD>
+<BR>&nbsp;声明服务器&nbsp;正在侦听的互联网&nbsp;TCP&nbsp;端口号或本地Unix域套接字的文件扩展（描述符）。
+<DT><B>-U </B><I>username</I><B></B><DD>
+<DT><B>--username </B><I>username</I><B></B><DD>
+<BR>&nbsp;连接的用户名（不是要创建的用户名）。
+<DT><B>-W</B><DD>
+<DT><B>--password</B><DD>
+<BR>&nbsp;强制口令提示（与服务器连接的口令，不是新用户的口令。）
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>PGHOST</B><DD>
+<DT><B>PGPORT</B><DD>
+<DT><B>PGUSER</B><DD>
+<BR>&nbsp;缺省连接参数。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>DIAGNOSTICS 诊断</H2>
+
+<P>
+
+<BR>&nbsp;大多数错误信息是自解释的。如果没有，带着--echo&nbsp;&nbsp;参数运行&nbsp;droplang&nbsp;&nbsp;然后在相应的&nbsp;SQL&nbsp;命令下面检查细节。
+<A NAME="lbAH">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;使用&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+createlang">createlang</A></B>(1)&nbsp;增加一种语言。
+<A NAME="lbAI">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;删除语言&nbsp;pltcl：
+<P>
+<PRE>
+$ <B>droplang pltcl dbname</B>
+
+</PRE>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+createlang">createlang</A></B>(1), DROP LANGUAGE [<B><A HREF="/cgi-bin/man/man2html?7+drop_language">drop_language</A></B>(7)]
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION  描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAG">DIAGNOSTICS 诊断</A><DD>
+<DT><A HREF="#lbAH">NOTES 注意</A><DD>
+<DT><A HREF="#lbAI">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAJ">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAK">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

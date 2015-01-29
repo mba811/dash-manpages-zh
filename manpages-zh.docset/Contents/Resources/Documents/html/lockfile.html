@@ -1,0 +1,339 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LOCKFILE</TITLE>
+</HEAD><BODY>
+<H1>LOCKFILE</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+lockfile - 条件标志文件创建命令
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>lockfile</B>
+
+<I></I><B>-</B>sleeptime
+
+|
+<I></I><B>-r </B>retries
+
+|
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<I></I><B>-l </B>locktimeout
+
+|
+<I></I><B>-s </B>suspend
+
+|
+<B>-!</B>
+
+|
+<B>-ml</B>
+
+|
+<B>-mu</B>
+
+|
+<I>filename</I>
+
+...
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<P>
+<B>lockfile可以用来创建一个或多个</B>
+
+<I>信号量(semaphore)</I>
+
+<I>文件.如果lockfile不能创建所有指定的文件(按照指定的顺序),那么它会等待一段</I>
+
+<I>休眠期(sleeptime) </I>
+
+(默认为8秒)并从不成功的最后一个文件开始重试.你可以指定失败返回之前
+<I>重试(retries)</I>
+
+的次数.
+如果
+<I>retries</I>
+
+的次数设为-1(默认地,也即
+<B>-r-1</B>)
+
+lockfile会永远重试下去.
+<P>
+
+如果在所有文件创建之前
+<I>retries</I>
+
+的次数已经满了,lockfile会返回失败的信息并删除所有已经创建的文件.
+<P>
+
+在shell脚本中使用lockfile作为循环的条件可以很容易地通过使用
+<B>-!</B>
+
+标识反向退出的状态来实现.为了防止无限循环,除了lockfile已经存在以外的任何原因的失败都不会反向为成功状态,而是仍然以失败状态返回.
+<P>
+
+所有标识可以在命令行中的任何地方指定,碰到它们就进行处理.命令行简单地由左至右进行解析.
+<P>
+
+所有通过lockfile创建的文件都是只读的,因此必须使用
+<B>rm</B>
+
+<B>-f</B>
+
+来删除.
+<P>
+
+如果你指定了一个
+<I>locktimeout</I>
+
+那么lockfile会在lockfile最后一次修改/创建之后locktimeout秒过后强制性地删除(很可能是一些其它程序意外死掉很长一段时间后造成不能清除残余的lockfiles).Lockfile不受时钟偏差的影响.在lockfile强制被清除之后,延迟的
+<I>suspend</I>
+
+秒(默认为16)开始计数,这是为了防止无意的直接删除了任何由另一程序新创建的lockfile(与
+<B><A HREF="/cgi-bin/man/man2html?1+procmail">procmail</A></B>(1))
+
+中的
+<B>SUSPEND</B>
+
+比较).
+<A NAME="lbAE">&nbsp;</A>
+<H3>Mailbox locks(邮箱锁定)</H3>
+
+如果系统邮件spool目录有权限允许它,或者如果lockfile正好被setgid了,那么它可以通过
+使用相应的选项
+<B>-ml</B>
+
+和
+<B>-mu</B>
+
+lock和unlock你的系统邮箱.
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES(示例)</H2>
+
+假设你想确定访问文件&quot;important&quot;是串行的,也即,没有其它程序或shell脚本允许访问它.为了简省起见,让我们假定它是一个shell脚本.在这个例子中,你应该像这样解决:
+<DL COMPACT><DT><DD>
+...
+lockfile important.lock
+...
+access_&quot;important&quot;_to_your_hearts_content
+...
+rm -f important.lock
+...
+</DL>
+
+现在如果所有访问&quot;important&quot;的脚本按照这条规则,你就可以确保在`lockfile'和`rm'命令之间至多只有一个脚本在执行.
+<A NAME="lbAG">&nbsp;</A>
+<H2>ENVIRONMENT(环境变量)</H2>
+
+<DL COMPACT>
+<DT><B>LOGNAME</B>
+
+<DD>
+用作隐含变量以确定调用者的登录名
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>FILES(相关文件)</H2>
+
+<DL COMPACT>
+<DT><B>/etc/passwd</B>
+
+<DD>
+为了验证和/或纠正调用者的登录名(如果需要的话,同时也是为了找出HOME目录)
+<DT><B>/var/spool/mail/$LOGNAME.lock</B>
+
+<DD>
+系统邮箱的lockfile,出现在其中的环境变量不由系统的环境变量决定,而是会通过在/etc/passwd中查找确定.
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+
+
+<B><A HREF="/cgi-bin/man/man2html?1+rm">rm</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+mail">mail</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+binmail">binmail</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?8+sendmail">sendmail</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?1+procmail">procmail</A></B>(1)
+
+
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>DIAGNOSTICS(诊断)</H2>
+
+<DL COMPACT>
+<DT>Filename too long,...<DD>
+使用更短的文件名.
+<DT>Forced unlock denied on &quot;x&quot;<DD>
+没有对lockfile &quot;x&quot;所存放的目录的写的权限,或者超过一个lockfile几乎同时正在试图强制lock.
+<DT>Forcing lock on &quot;x&quot;<DD>
+lockfile &quot;x&quot;因为超时的缘故将要强制删除
+(与
+<B><A HREF="/cgi-bin/man/man2html?1+procmail">procmail</A></B>(1))
+
+中的
+<B>LOCKTIMEOUT</B>
+
+作比较).
+<DT>Out of memory,...<DD>
+系统交换空间溢出.
+<DT>Signal received,...<DD>
+Lockfile将删除到此为止创建的所有文件并终止.
+<DT>Sorry,...<DD>
+<I>retries</I>
+
+限制已经到达.
+<DT>Truncating &quot;x&quot; and retrying lock<DD>
+&quot;x&quot;看上去不是有效的文件名.
+<DT>Try praying,...<DD>
+缺失子目录或者权限不够.
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H2>BUGS</H2>
+
+确实少于一个.
+<A NAME="lbAL">&nbsp;</A>
+<H2>WARNINGS(警告)</H2>
+
+<B>-!</B>
+
+标识的操作行为,尽管有用,但是并不很直接或一致.当测试lockfile的返回值时,shell脚本编写者应该仔细考虑是使用
+<B>-!</B>
+
+标识简单地作反向测试,还是对原来的退出代码执行一次转换.
+通常,
+<B>-!</B>
+
+标识应该只用在lockfile是循环的条件之时.
+<A NAME="lbAM">&nbsp;</A>
+<H2>MISCELLANEOUS(杂项)</H2>
+
+Lockfile不兼容NFS,而且八位还原.
+<A NAME="lbAN">&nbsp;</A>
+<H2>NOTES(备注)</H2>
+
+使用-h或-?选项调用lockfile会使得它显示命令行方式的帮助页.使用-v选项调用会使得它显示版本信息.
+<P>
+
+多个
+<B>-!</B>
+
+标识会切换返回状态.
+<P>
+
+因为标识可以出现在命令行的任何位置,所以任何一个以'-'开头的文件名必须加'./&quot;在前面.
+<P>
+
+当任何接在后面的文件正在创建(也即,它们正在使用)时,
+<I>retries</I>
+
+的次数不能重新设置.不过,它可以通过在命令行上指定
+-r<I>newretries</I>
+
+于每个文件之后来重新设置.
+<P>
+
+尽管任何名字的文件都可用作lockfiles,通常习惯还是使用扩展名为'.lock'的文件来lock邮件文件夹(它添加于邮件夹名之后).如果不想担心文件名太长了,也不必遵从任何其它的lockfilename的习惯,那么一个最好的方法就是通过添加前缀`lock.'来生成一个与已经存在的文件相应的lockfilename,并且在其后添加锁定文件的i-node数.
+<A NAME="lbAO">&nbsp;</A>
+<H2>SOURCE(源自)</H2>
+
+该程序为 <A HREF="http://www.procmail.org/或者">http://www.procmail.org/或者</A>
+<A HREF="ftp://ftp.procmail.org">ftp.procmail.org</A>的
+<B>pub/procmail/</B>
+
+中
+<I>procmail mail-processing-package</I>
+
+(v3.14)的一部分.
+<A NAME="lbAP">&nbsp;</A>
+<H2>MAILINGLIST(邮件列表)</H2>
+
+有一个针对procmail包中任何程序相关问题的邮件列表:
+<DL COMPACT><DT><DD>
+&lt;<A HREF="mailto:procmail-users@procmail.org">procmail-users@procmail.org</A>&gt;
+<DL COMPACT><DT><DD>
+用来提交问题/答案.
+</DL>
+
+&lt;<A HREF="mailto:procmail-users-request@procmail.org">procmail-users-request@procmail.org</A>&gt;
+<DL COMPACT><DT><DD>
+用来请求订阅.
+</DL>
+
+<P>
+
+</DL>
+
+如果你想即时获得新版本和公开补丁的通告,请发订阅请求到
+<DL COMPACT><DT><DD>
+<A HREF="mailto:procmail-announce-request@procmail.org">procmail-announce-request@procmail.org</A>
+</DL>
+
+(这是一个只读列表).
+<A NAME="lbAQ">&nbsp;</A>
+<H2>AUTHOR</H2>
+
+Stephen R. van den Berg
+<DL COMPACT><DT><DD>
+&lt;<A HREF="mailto:srb@cuci.nl">srb@cuci.nl</A>&gt;
+<P>
+</DL>
+<A NAME="lbAR">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAS">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/08/08</B>
+
+<A NAME="lbAT">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DL>
+<DT><A HREF="#lbAE">Mailbox locks(邮箱锁定)</A><DD>
+</DL>
+<DT><A HREF="#lbAF">EXAMPLES(示例)</A><DD>
+<DT><A HREF="#lbAG">ENVIRONMENT(环境变量)</A><DD>
+<DT><A HREF="#lbAH">FILES(相关文件)</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAJ">DIAGNOSTICS(诊断)</A><DD>
+<DT><A HREF="#lbAK">BUGS</A><DD>
+<DT><A HREF="#lbAL">WARNINGS(警告)</A><DD>
+<DT><A HREF="#lbAM">MISCELLANEOUS(杂项)</A><DD>
+<DT><A HREF="#lbAN">NOTES(备注)</A><DD>
+<DT><A HREF="#lbAO">SOURCE(源自)</A><DD>
+<DT><A HREF="#lbAP">MAILINGLIST(邮件列表)</A><DD>
+<DT><A HREF="#lbAQ">AUTHOR</A><DD>
+<DT><A HREF="#lbAR">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAS">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAT">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

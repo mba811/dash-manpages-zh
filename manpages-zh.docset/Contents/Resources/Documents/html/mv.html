@@ -1,0 +1,152 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MV</TITLE>
+</HEAD><BODY>
+<H1>MV</H1>
+Section: 自由软件基金会 (1)<BR>Updated: March 2002<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+mv - 移动 (改名) 文件
+<A NAME="lbAC">&nbsp;</A>
+<H2>摘要</H2>
+
+<B>mv</B>
+
+[<I>选项</I>]... <I>源文件 目标文件</I>
+<BR>
+
+<B>mv</B>
+
+[<I>选项</I>]... <I>源文件</I>... <I>目录</I>
+<BR>
+
+<B>mv</B>
+
+[<I>选项</I>]... <I>--target-directory=DIRECTORY SOURCE</I>...
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+
+<P>
+
+改"源文件"名到"目标文件"名, 或移动"源文件"(可以不只一
+个)到一个"目录"。
+<DL COMPACT>
+<DT><B>--backup</B>[=<I>CONTROL</I>]<DD>
+为现有的每一个目标文件作一个备份
+<DT><B>-b</B><DD>
+和<B>--backup</B>一样但是不接受参数
+<DT><B>-f</B>, <B>--force</B><DD>
+覆盖前永不提示
+<DT><B>-i</B>, <B>--interactive</B><DD>
+覆盖前提示
+<DT><B>--strip-trailing-slashes</B><DD>
+删除任何"源文件"参数后面跟随的斜杠
+<DT><B>-S</B>, <B>--suffix</B>=<I>SUFFIX</I><DD>
+省略一般的备份后缀
+<DT><B>--target-directory</B>=<I>DIRECTORY</I><DD>
+移动全部"源文件"参数到"目录"中
+<DT><B>-u</B>, <B>--update</B><DD>
+只移动更老的或者标记新的非目录
+<DT><B>-v</B>, <B>--verbose</B><DD>
+说明完成了什么
+<DT><B>--help</B><DD>
+显示帮助且退出程序
+<DT><B>--version</B><DD>
+输出版本信息且退出程序
+</DL>
+<P>
+
+这是备份后缀 `~', 除非设定 <B>--suffix</B> 或 SIMPLE_BACKUP_SUFFIX。
+这个版本管理方法可以选择通过 <B>--backup</B> 选项或通过
+<BR>&nbsp;VERSION_CONTROL&nbsp;环境变量。这些值是：
+<DL COMPACT>
+<DT>none, off<DD>
+永不做备份 (即使用 <B>--backup</B>)
+<DT>numbered, t<DD>
+做备份编号
+<DT>existing, nil<DD>
+编号，如果编号备份存在，用其它的简单方法
+<DT>simple, never<DD>
+总是做简单备份
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>作者</H2>
+
+写作 by Mike Parker，David MacKenzie和Jim Meyering.
+<A NAME="lbAF">&nbsp;</A>
+<H2>报告错误</H2>
+
+回复错误到&lt;<A HREF="mailto:bug-fileutils@gnu.org">bug-fileutils@gnu.org</A>&gt;。
+<A NAME="lbAG">&nbsp;</A>
+<H2>版权</H2>
+
+版权 &#169; 2001 自由软件基金会
+<BR>
+
+这是自由软件； 可以复制原代码。 这没有保证；
+甚至不能适应一个特别的任务。
+<A NAME="lbAH">&nbsp;</A>
+<H2>相关</H2>
+
+关于
+<B>mv</B>
+
+的全部文档维护是 Texinfo 指南。如果
+<B>info</B>
+
+和
+<B>mv</B>
+
+程序都已经装在你的机器上，可以用命令
+<DL COMPACT>
+<DT><DD>
+<B>info mv</B>
+
+</DL>
+<P>
+
+启动并读这个指南。
+<P>
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>wide288 &lt;email&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/11/22</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">摘要</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">作者</A><DD>
+<DT><A HREF="#lbAF">报告错误</A><DD>
+<DT><A HREF="#lbAG">版权</A><DD>
+<DT><A HREF="#lbAH">相关</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

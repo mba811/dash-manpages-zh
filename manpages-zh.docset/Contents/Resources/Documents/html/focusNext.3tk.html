@@ -1,0 +1,100 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of tk_focusNext</TITLE>
+</HEAD><BODY>
+<H1>tk_focusNext</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: 4.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tk_focusNext, tk_focusPrev, tk_focusFollowsMouse - 管理输入聚焦的实用过程
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>tk_focusNext </B><I>window</I>
+<P>
+<B>tk_focusPrev </B><I>window</I>
+<P>
+<B>tk_focusFollowsMouse</B>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>tk_focusNext</B>是用于键盘遍历的一个实用过程。它返回在聚焦次序上在 <I>window</I>后面的“下一个”窗口。聚焦次序由窗口的堆栈次序和窗口的层次结构来决定。在兄弟窗口之间，聚焦次序同于堆栈次序，最低的窗口是第一个。如果一个窗口有子窗口，则首先访问这个窗口，随后(递归的)是它的子窗口，随后是它的下一个兄弟窗口。跳过除了 <I>window</I> 之外的顶层窗口，所以 <B>tk_focusNext</B> 从不返回与 <I>window </I>在不同的顶层窗口中的窗口。
+<P>
+
+在计算下一个窗口之后，<B>tk_focusNext</B> 检查这个窗口的 <B>-takefocus</B>选项来查看是否跳过它。如果它不接受聚焦，<B>tk_focusNext</B> 继续到在聚焦次序上的下一个窗口上，直到最终找到接受聚焦的一个窗口或回到 <I>window</I>。
+<P>
+
+<B>tk_focusPrev</B> 类似于 <B>tk_focusNext</B>，但返回在聚焦次序上在<I>window</I> 紧前面的窗口。
+<P>
+
+<B>tk_focusFollowsMouse</B> 把这个应用的聚焦模式改变成隐含模式，此时在鼠标下的窗口得到聚焦。在调用这个过程之后，在鼠标进入一个窗口的时候，Tk 将自动给予它输入聚焦。可以使用 <B>focus</B> 命令来移动光标到不在鼠标下的一个窗口上，但是一旦鼠标移动到一个新窗口上聚焦就会跳到那个窗口上。注意: 现在没有内置的对使应用返回显式的聚焦模式的支持；要这样做你必须写一个删除 <B>tk_focusFollowsMouse</B> 所建立的绑定的脚本。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+focus, keyboard traversal, top-level
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/12/28</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

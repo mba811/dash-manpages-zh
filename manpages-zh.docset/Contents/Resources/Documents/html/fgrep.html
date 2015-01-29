@@ -1,0 +1,1034 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of GREP</TITLE>
+</HEAD><BODY>
+<H1>GREP</H1>
+Section: User Commands  (1)<BR>Updated: GNU Project<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+grep, egrep, fgrep - 打印匹配给定模式的行
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>grep</B>
+
+[<I>options</I>]
+
+<I>PATTERN</I>
+
+[<I>FILE</I>...]
+
+<BR>
+
+<B>grep</B>
+
+[<I>options</I>]
+
+[<B>-e</B>
+
+<I>PATTERN</I>
+
+|
+<B>-f</B>
+
+<I>FILE</I>]
+
+[<I>FILE</I>...]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>Grep</B>
+
+搜索以
+<I>FILE</I>
+
+命名的文件输入 (或者是标准输入，如果没有指定文件名，或者给出的文件名是
+<B>-</B>
+
+的话)，寻找含有与给定的模式
+<I>PATTERN</I>
+
+相匹配的内容的行。
+默认情况下，
+<B>grep</B>
+
+将把含有匹配内容的行打印出来。
+<P>
+
+另外，也可以使用两个变种程序
+<B>egrep</B>
+
+和
+<B>fgrep</B>
+
+。
+<B>Egrep</B>
+
+与
+<B>grep&nbsp;-E</B>
+
+相同。
+<B>Fgrep</B>
+
+与
+<B>grep&nbsp;-F</B>
+
+相同。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>-A</B><I> NUM</I><B></B>, --after-context=<I>NUM</I>
+
+<DD>
+打印出紧随匹配的行之后的下文
+<I>NUM</I>
+
+行。在相邻的匹配组之间将会打印内容是
+<B>--</B>
+
+的一行。
+<DT><B>-a</B>, <B>--text</B>
+
+<DD>
+将一个二进制文件视为一个文本文件来处理；它与
+<B>--binary-files=text</B>
+
+选项等价。
+<DT><B>-B</B><I> NUM</I><B></B>, --before-context=<I>NUM</I>
+
+<DD>
+打印出匹配的行之前的上文
+<I>NUM</I>
+
+行。在相邻的匹配组之间将会打印内容是
+<B>--</B>
+
+的一行。
+<DT><B>-C</B><I> NUM</I><B></B>, --context=<I>NUM</I>
+
+<DD>
+打印出匹配的行的上下文前后各
+<I>NUM</I>
+
+行。在相邻的匹配组之间将会打印内容是
+<B>--</B>
+
+的一行。
+<DT><B>-b</B>, <B>--byte-offset</B>
+
+<DD>
+在输出的每行前面同时打印出当前行在输入文件中的字节偏移量。
+<DT><B>--binary-files=</B><I>TYPE</I>
+
+<DD>
+如果一个文件的起始几个字节表明文件包含二进制数据，那么假定文件是
+<I>TYPE</I>
+
+类型的。默认情况下，
+<I>TYPE</I>
+
+是
+<B>binary</B>
+
+，并且
+<B>grep</B>
+
+一般会输出一个一行的消息说一个二进制文件匹配，或者如果没有匹配的话就没有消息输出。如果类型
+<I>TYPE</I>
+
+是
+<B>without-match</B>
+
+，那么
+<B>grep</B>
+
+假定二进制文件不会匹配；这样做与
+<B>-I</B>
+
+选项等价。如果类型
+<I>TYPE</I>
+
+是
+<B>text</B>
+
+，那么
+<B>grep</B>
+
+将一个二进制文件视为文本文件来处理；它与
+<B>-a</B>
+
+选项等价。
+<I>警告：</I>
+
+<B>grep --binary-files=text</B>
+
+可能会输出二进制的无用内容。如果输出设备是一个终端，并且终端的驱动将这些输出中的一些当作命令，可能会带来恶劣的副作用。
+<DT><B>--colour[=</B><I>WHEN</I>]<I>, </I><B>--color[=</B><I>WHEN</I>]
+
+<DD>
+在匹配的行周围以
+<B>GREP_COLOR</B>
+
+环境变量中指定的记号来标记。WHEN 可以是 `never', `always', 或是 `auto'。
+<DT><B>-c</B>, <B>--count</B>
+
+<DD>
+禁止通常的输出；作为替代，为每一个输入文件打印一个匹配的行的总数。如果使用
+<B>-v</B>, <B>--invert-match</B>
+
+选项 (参见下面)，将是不匹配的行的总数。
+<DT><B>-D</B><I> ACTION</I><B></B>, --devices=<I>ACTION</I>
+
+<DD>
+如果输入文件是一个设备，FIFO 或是套接字 (socket) ，使用动作
+<I>ACTION</I>
+
+来处理它。默认情况下，动作
+<I>ACTION</I>
+
+是
+<B>read</B>
+
+，意味着设备将视为普通文件那样来读。如果动作
+<I>ACTION</I>
+
+是
+<B>skip</B>
+
+，将不处理而直接跳过设备。
+<DT><B>-d</B><I> ACTION</I><B></B>, --directories=<I>ACTION</I>
+
+<DD>
+如果输入文件是一个目录，使用动作
+<I>ACTION</I>
+
+来处理它。默认情况下，动作
+<I>ACTION</I>
+
+是
+<B>read</B>
+
+，意味着目录将视为普通文件那样来读。如果动作
+<I>ACTION</I>
+
+是
+<B>skip</B>
+
+，将不处理而直接跳过目录。如果动作
+<I>ACTION</I>
+
+是
+<B>recurse</B>
+
+，
+<B>grep</B>
+
+将递归地读每一目录下的所有文件。这样做和
+<B>-r</B>
+
+选项等价。
+<DT><B>-E</B>, <B>--extended-regexp</B>
+
+<DD>
+将模式
+<I>PATTERN</I>
+
+作为一个扩展的正则表达式来解释 (参见下面)。
+<DT><B>-e</B><I> PATTERN</I><B></B>, --regexp=<I>PATTERN</I>
+
+<DD>
+使用模式
+<I>PATTERN</I>
+
+作为模式；在保护以
+<B>-</B>
+
+为起始的模式时有用。
+<DT><B>-F</B>, <B>--fixed-strings</B>
+
+<DD>
+将模式
+<I>PATTERN</I>
+
+视为一个固定的字符串的列表，用新行 (newlines) 分隔，只要匹配其中之一即可。
+<DT><B>-P</B>, <B>--perl-regexp</B>
+
+<DD>
+将模式
+<I>PATTERN</I>
+
+作为一个 Perl 正则表达式来解释。
+<DT><B>-f</B><I> FILE</I><B></B>, --file=<I>FILE</I>
+
+<DD>
+从文件
+<I>FILE</I>
+
+中获取模式，每行一个。空文件含有0个模式，因此不匹配任何东西。
+<DT><B>-G</B>, <B>--basic-regexp</B>
+
+<DD>
+将模式
+<I>PATTERN</I>
+
+作为一个基本的正则表达式 (参见下面) 来解释。这是默认值。
+<DT><B>-H</B>, <B>--with-filename</B>
+
+<DD>
+为每个匹配打印文件名。
+<DT><B>-h</B>, <B>--no-filename</B>
+
+<DD>
+当搜索多个文件时，禁止在输出的前面加上文件名前缀。
+<DT><B>--help</B>
+
+<DD>
+输出一个简短的帮助信息。
+<DT><B>-I</B>
+
+<DD>
+处理一个二进制文件，但是认为它不包含匹配的内容。这和
+<B>--binary-files=without-match</B>
+
+选项等价。
+<DT><B>-i</B>, <B>--ignore-case</B>
+
+<DD>
+忽略模式
+<I>PATTERN</I>
+
+和输入文件中的大小写的分别。
+<DT><B>-L</B>, <B>--files-without-match</B>
+
+<DD>
+禁止通常的输出；作为替代，打印出每个在通常情况下不会产生输出的输入文件的名字。对每个文件的扫描在遇到第一个匹配的时候就会停止。
+<DT><B>-l</B>, <B>--files-with-matches</B>
+
+<DD>
+禁止通常的输出；作为替代，打印出每个在通常情况下会产生输出的输入文件的名字。对每个文件的扫描在遇到第一个匹配的时候就会停止。
+<DT><B>-m</B><I> NUM</I><B></B>, --max-count=<I>NUM</I>
+
+<DD>
+在找到
+<I>NUM</I>
+
+个匹配的行之后，不再读这个文件。如果输入是来自一个普通文件的标准输入，并且已经输出了
+<I>NUM</I>
+
+个匹配的行，
+<B>grep</B>
+
+保证标准输入被定位于退出时的最后一次匹配的行之后，不管是否指定了要输出紧随的下文的行。这样可以使一个调用程序恢复搜索。当
+<B>grep</B>
+
+在
+<I>NUM</I>
+
+个匹配的行之后停止，它会输出任何紧随的下文的行。当使用了
+<B>-c</B>
+
+或
+<B>--count</B>
+
+选项的时候，
+<B>grep</B>
+
+不会输出比
+<I>NUM</I>
+
+更多的行。当指定了
+<B>-v</B>
+
+或
+<B>--invert-match</B>
+
+选项的时候，
+<B>grep</B>
+
+会在输出
+<I>NUM</I>
+
+个不匹配的行之后停止。
+<DT><B>--mmap</B>
+
+<DD>
+如果可能的话，使用
+<B><A HREF="/cgi-bin/man/man2html?2+mmap">mmap</A></B>(2)
+
+系统调用来读取输入，而不是默认的
+<B><A HREF="/cgi-bin/man/man2html?2+read">read</A></B>(2)
+
+系统调用。在一些情况下，
+<B>--mmap</B>
+
+提供较好的性能。但是，如果一个输入文件在
+<B>grep</B>
+
+正在操作时大小发生变化，或者如果发生了一个 I/O 错误，
+<B>--mmap</B>
+
+可能导致不可知的行为 (包括core dumps)。
+<DT><B>-n</B>, <B>--line-number</B>
+
+<DD>
+在输出的每行前面加上它所在的文件中它的行号。
+<DT><B>-o</B>, <B>--only-matching</B>
+
+<DD>
+只显示匹配的行中与
+<I>PATTERN</I>
+
+相匹配的部分。
+<DT><B>--label=</B><I>LABEL</I>
+
+<DD>
+将实际上来自标准输入的输入视为来自输入文件
+<I>LABEL</I>
+
+。这对于 zgrep 这样的工具非常有用，例如：
+<B>gzip -cd foo.gz |grep --label=foo something</B>
+
+<DT><B>--line-buffering</B>
+
+<DD>
+使用行缓冲，it can be a performance penality.
+<DT><B>-q</B>, <B>--quiet</B>, <B>--silent</B>
+
+<DD>
+安静。不向标准输出写任何东西。如果找到任何匹配的内容就立即以状态值 0 退出，即使检测到了错误。
+参见
+<B>-s</B>
+
+或
+<B>--no-messages</B>
+
+选项。
+<DT><B>-R</B>, <B>-r</B>, <B>--recursive</B>
+
+<DD>
+递归地读每一目录下的所有文件。这样做和
+<B>-d recurse</B>
+
+选项等价。
+<DT><B></B>  --include=PATTERN
+
+<DD>
+仅仅在搜索匹配
+<I>PATTERN</I>
+
+的文件时在目录中递归搜索。
+<DT><B></B>  --exclude=PATTERN
+
+<DD>
+在目录中递归搜索，但是跳过匹配
+<I>PATTERN</I>
+
+的文件。
+<DT><B>-s</B>, <B>--no-messages</B>
+
+<DD>
+禁止输出关于文件不存在或不可读的错误信息。
+对于可移植性需要注意：与 <FONT SIZE="-1">GNU</FONT>
+<B>grep</B>
+
+不同，传统的
+<B>grep</B>
+
+不遵守 <FONT SIZE="-1">POSIX.2</FONT> 规范，因为传统的
+<B>grep</B>
+
+缺少一个
+<B>-q</B>
+
+选项，而它的
+<B>-s</B>
+
+选项与 <FONT SIZE="-1">GNU</FONT>
+<B>grep</B>
+
+的
+<B>-q</B>
+
+选项行为相似。需要可移植到传统
+<B>grep</B>
+
+的 shell 脚本应当避免使用
+<B>-q</B>
+
+和
+<B>-s</B>
+
+选项，而应当将输出重定向到 /dev/null 。
+<DT><B>-U</B>, <B>--binary</B>
+
+<DD>
+将文件视为二进制。默认情况下，在 MS-DOS 和 MS-Windows 系统中，
+<B>grep</B>
+
+通过从文件中读取头部的 32kB 内容来判断它的文件类型。如果
+<B>grep</B>
+
+判断文件是一个文本文件，它将原始文件内容中的 CR 字符去除 (使得含有
+<B>^</B>
+
+和
+<B>$</B>
+
+的正则表达式可以正常工作)。指定
+<B>-U</B>
+
+将不进行这些工作，而使所有文件保持不变地读取并传递给匹配机制。如果文件是一个以 CR/LF 换行的文本文件，这样作将导致一些正则表达式失败。这个选项在 MS-DOS 和 MS-Windows 之外的系统中无效。
+<DT><B>-u</B>, <B>--unix-byte-offsets</B>
+
+<DD>
+报告 Unix 风格的字节偏移量。这个开关使得
+<B>grep</B>
+
+报告字节偏移量时，将文件作为 Unix 风格的文本文件看待，也就是说将 CR 字符去掉。这将产生与在一台 Unix 主机上运行
+<B>grep</B>
+
+完全相同的结果。除非同时使用
+<B>-b</B>
+
+选项，否则这个选项无效。这个选项在 MS-DOS 和 MS-Windows 之外的系统中无效。
+<DT><B>-V</B>, <B>--version</B>
+
+<DD>
+向标准错误输出打印
+<B>grep</B>
+
+的版本号。版本号应当包含在所有的 bug 报告中 (参见下面)。
+<DT><B>-v</B>, <B>--invert-match</B>
+
+<DD>
+改变匹配的意义，只选择不匹配的行。
+<DT><B>-w</B>, <B>--word-regexp</B>
+
+<DD>
+只选择含有能组成完整的词的匹配的行。判断方法是匹配的子字符串必须是一行的开始，或者是在一个不可能是词的组成的字符之后。与此相似，它必须是一行的结束，或者是在一个不可能是词的组成的字符之前。词的组成字符是字母，数字，还有下划线。
+<DT><B>-x</B>, <B>--line-regexp</B>
+
+<DD>
+只选择能匹配完整一行的匹配。
+<DT><B>-y</B>
+
+<DD>
+<B>-i</B>
+
+的同义词，废弃不用。
+<DT><B>-Z</B>, <B>--null</B>
+
+<DD>
+输出一个全零字节 (<FONT SIZE="-1">ASCII</FONT> 码中的
+<B>NUL</B>
+
+字符) 而不是一般情况下输出在文件名之后的字符。例如，
+<B>grep -lZ</B>
+
+在每个文件名之后输出一个全零字节而不是普通的新行符。这个选项使得输出清楚明白，即使文件名的表示中包含特殊字符比如新行符。这个选项可以与命令
+<B>find -print0</B>,
+
+<B>perl -0</B>,
+
+<B>sort -z</B>,
+
+和
+<B>xargs -0</B>
+
+一起使用，来处理任意的文件名，即使是那些含有新行符的文件名。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>正则表达式 REGULAR EXPRESSIONS</H2>
+
+<P>
+
+一个正则表达式是一个描述了一个字符串集合的模式。正则表达式的构造类似于算术表达式，使用各种各样的操作符来将更小的表达式连在一起。
+<P>
+
+<B>Grep</B>
+
+能理解两种不同版本的正则表达式语法：``basic'' 和 ``extended''。在
+<FONT SIZE="-1">GNU</FONT>&nbsp;<B>grep</B>
+
+中，两种语法可以实现的功能是没有区别的。在其他实现中，基本 (basic) 正则表达式表达能力要弱一点。下面的描述适用于扩展的 (extended) 正则表达式，它与基本正则表达式的区别会在最后做一个总结。
+<P>
+
+基本的构造块是匹配单个字符的正则表达式。大部分字符，包括所有字母和数字，是匹配它们自身的正则表达式。任何具有特殊含义的元字符可以通过前置一个反斜杠来引用。(may be quoted by preceding it with a backslash.)
+<P>
+
+<I>方括号表达式 (bracket)</I>
+
+是一个字符序列，放在
+<B>[</B>
+
+和
+<B>]</B>
+
+当中。它匹配序列中的任何一个字符；如果序列中的第一个字符是脱字符 (caret)
+<B>^</B>
+
+那么它匹配
+<I>不在</I>
+
+序列中的任何一个字符。例如，正则表达式
+<B>[0123456789]</B>
+
+匹配任何一个数字。
+<P>
+
+在方括号表达式之中，一个
+<I>范围表达式 (range)</I>
+
+由两个字符组成，中间用一个连字符 (hyphen) 分隔。它匹配在这两个字符之间的任何一个字符，使用本地化的序列顺序和字符集。(that sorts between the two characters,inclusive, using the locale's collating sequence and character set.) 例如，在默认的 C locale中，
+<B>[a-d]</B>
+
+与
+<B>[abcd]</B>
+
+等价。典型的，许多 locale 将字符以字典顺序排序，在这些 locale 中，
+<B>[a-d]</B>
+
+不与
+<B>[abcd]</B>
+
+等价；例如它可能与
+<B>[aBbCcDd]</B>
+
+等价。要获得传统的对方括号表达式的解释，可以设定环境变量
+<B>LC_ALL</B>
+
+值为
+<B>C</B>
+
+来使用 locale C 。
+<P>
+
+最后，在方括号表达式中有一些预定义的字符类，如下所示。它们的名字是自说明的，它们是
+<B>[:alnum:]</B>(字母和数字),
+
+<B>[:alpha:]</B>(字母),
+
+<B>[:cntrl:]</B>(),
+
+<B>[:digit:]</B>(数字),
+
+<B>[:graph:]</B>(),
+
+<B>[:lower:]</B>(小写字母),
+
+<B>[:print:]</B>(可打印字符),
+
+<B>[:punct:]</B>(),
+
+<B>[:space:]</B>(空格),
+
+<B>[:upper:]</B>(大写字母),
+
+和
+<B>[:xdigit:]</B>
+
+。例如，
+<B>[[:alnum:]]</B>
+
+意思是
+<B>[0-9A-Za-z]</B>
+
+，但是后一种表示方法依赖于 locale C 和<FONT SIZE="-1">ASCII</FONT> 字符编码，而前一种是与 locale 和字符集无关的。(注意这些字符类名中的方括号也是符号名称的一部分，必须包含在用来为序列定界的方括号之中。)
+<P>
+
+大多数元字符处于序列中时会失去它们的特殊意义。为了包含一个字面意义 (literal) 的
+<B>]</B>
+
+，需要将它放在序列的最前。与此相似，为了包含一个字面意义 (literal) 的
+<B>^</B>
+
+，需要将它放在除了序列最前之外的其他位置。最后，为了包含一个字面意义 (literal) 的
+<B>-</B>
+
+，需要将它放在序列最后。
+<P>
+
+句点符 (period)
+<B>.</B>
+
+匹配任何一个字符。符号
+<B>\w</B>
+
+是
+<B>[[:alnum:]]</B>
+
+的同义词，
+<B>\W</B>
+
+是
+<B>[^[:alnum]]</B>
+
+的同义词。
+<P>
+
+脱字符 (caret)
+<B>^</B>
+
+和美元标记 (dollar)
+<B>$</B>
+
+分别是匹配一行的首部和尾部的空字串的元字符。符号
+<B>\&lt;</B>
+
+和
+<B>\&gt;</B>
+
+分别是匹配一个词的首部和尾部的空字串的元字符。符号
+<B>\b</B>
+
+匹配一个词边缘 (edge) 的空字串，符号
+<B>\B</B>
+
+匹配
+<I>不</I>
+
+处于一个词的边缘的空字串。
+<P>
+
+一个正则表达式后面可以跟随多种重复操作符之一。
+
+<DL COMPACT>
+<DT><B>?</B>
+
+<DD>
+先前的项是可选的，最多匹配一次。
+<DT><B>*</B>
+
+<DD>
+先前的项可以匹配零次或多次。
+<DT><B>+</B>
+
+<DD>
+先前的项可以匹配一次或多次。
+<DT><B>{</B><I>n</I><B>}</B>
+
+<DD>
+先前的项将匹配恰好
+<I>n</I>
+
+次。
+<DT><B>{</B><I>n</I><B>,}</B>
+
+<DD>
+先前的项可以匹配
+<I>n</I>
+
+或更多次。
+<DT><B>{</B><I>n</I><B>,</B><I>m</I><B>}</B>
+
+<DD>
+先前的项将匹配至少
+<I>n</I>
+
+词，但是不会超过
+<I>m</I>
+
+次。
+
+</DL>
+<P>
+
+两个正则表达式可以连接到一起；得出的正则表达式可以匹配任何由两个分别匹配连接前的子表达式的子字符串连接而成的字符串。
+<P>
+
+两个正则表达式可以用中缀操作符
+<B>|</B>
+
+联合到一起，得出的正则表达式可以匹配任何匹配联合前的任何一个子表达式的字符串。
+<P>
+
+重复操作符的优先级比连接高，接下来又比选择的优先级高。一个完整的子表达式可以用圆括号 (parentheses) 括住来超越这些优先级规则。(to override these precedence rules.)
+<P>
+
+反向引用
+<B>\</B><I>n</I> 中，
+<I>n</I>
+
+是一个数字，匹配正则表达式中，以第
+<I>n</I>
+
+个圆括号括住的子表达式已匹配的子字符串。
+<P>
+
+在基本正则表达式中，元字符
+<B>?</B>,
+
+<B>+</B>,
+
+<B>{</B>,
+
+<B>|</B>,
+
+<B>(</B>,
+
+和
+<B>)</B>
+
+丧失了它们的特殊意义；作为替代，使用加反斜杠的 (backslash) 版本
+<B>\?</B>,
+
+<B>\+</B>,
+
+<B>\{</B>,
+
+<B>\|</B>,
+
+<B>\(</B>,
+
+和
+<B>\)</B>
+
+。
+<P>
+
+传统的
+<B>egrep</B>
+
+不支持元字符
+<B>{</B>
+
+，并且一些
+<B>egrep</B>
+
+的实现通过支持
+<B>\{</B>
+
+来代替它，因此可移植的脚本应当避免
+在
+<B>egrep</B>
+
+中使用
+<B>{</B>
+
+模式，应当使用
+<B>[{]</B>
+
+来匹配一个字面意义 (literal) 的
+<B>{</B>
+
+。
+<P>
+
+<FONT SIZE="-1">GNU</FONT>
+<B>egrep</B>
+
+通过假设如果
+<B>{</B>
+
+处于 an invalid interval specification 的起始，就不是一个特殊字符，来支持传统的用法。例如，shell 命令
+<B>egrep '{1'</B>
+
+将会搜索这个两字符的字符串
+<B>{1</B>
+
+而不是报告在正则表达式中发生了语法错误。<FONT SIZE="-1">POSIX.2</FONT> 允许这个行为，将其视为一个扩展，但是可移植的脚本应当避免使用它。
+<A NAME="lbAG">&nbsp;</A>
+<H2>环境变量 ENVIRONMENT VARIABLES</H2>
+
+<B>Grep</B>
+
+的行为受下列环境变量影响。
+<P>
+
+一个 locale
+<B>LC_</B><I>foo</I>
+
+是通过按下面的顺序，
+<B>LC_ALL</B>,
+
+<B>LC_</B><I>foo</I>,
+
+<B>LANG</B>,
+
+检查这三个环境变量的取值而确定的。设置了的第一个变量指定了 locale。例如，如果
+<B>LC_ALL</B>
+
+没有设置，但是
+<B>LC_MESSAGES</B>
+
+设置为
+<B>pt_BR</B>
+
+，那么巴西的葡萄牙语 (Brazilian Portuguese) 将用作
+<B>LC_MESSAGES</B>
+
+locale 的值。如果没有设置这其中任何一个环境变量，或者没有安装所设置的 locale 目录，或者如果
+<B>grep</B>
+
+没有将国家和语言支持 (national language support (<FONT SIZE="-1">NLS</FONT>)) 编译在内，将默认使用 locale C。
+<DL COMPACT>
+<DT><B>GREP_OPTIONS</B>
+
+<DD>
+这个变量指定了将放在所有显式指定的选项之前的默认选项。例如，如果
+<B>GREP_OPTIONS</B>
+
+是
+<B>'--binary-files=without-match --directories=skip'</B>
+
+的话，
+<B>grep</B>
+
+将像已经在任何显式指定的选项之前指定了
+<B>--binary-files=without-match</B>
+
+和
+<B>--directories=skip</B>
+
+选项那样来运作。选项以空白 (whitespace) 分隔。一个反斜杠 (backslash) 使得下一个字符转义 (escape)，因此可以用来指定一个含有空白或者反斜杠的选项。
+<DT><B>GREP_COLOR</B>
+
+<DD>
+指定用来高亮显示的标记。
+<DT><B>LC_ALL</B>, <B>LC_COLLATE</B>, <B>LANG</B><DD>
+这些变量指定了 locale
+<B>LC_COLLATE</B>
+
+，决定了解释类似
+<B>[a-z]</B>
+
+的范围表达式时的序列顺序 (collating sequence) 。
+<DT><B>LC_ALL</B>, <B>LC_CTYPE</B>, <B>LANG</B><DD>
+这些选项指定了 locale
+<B>LC_CTYPE</B>
+
+，决定了字符的类型，例如，哪些字符是空白 (whitespace) 。
+<DT><B>LC_ALL</B>, <B>LC_MESSAGES</B>, <B>LANG</B><DD>
+这些选项指定了 locale
+<B>LC_MESSAGES</B>
+
+，决定了
+<B>grep</B>
+
+的消息使用的语言。默认的 locale C 使用美国英语的消息。
+<DT><B>POSIXLY_CORRECT</B>
+
+<DD>
+如果设置了的话，
+<B>grep</B>
+
+将像 <FONT SIZE="-1">POSIX.2</FONT> 要求的那样来运作；否则，
+<B>grep</B>
+
+将像其他 <FONT SIZE="-1">GNU</FONT> 程序一样来运作。<FONT SIZE="-1">POSIX.2</FONT> 要求文件名之后的选项必须视为文件名；默认情况下，这些选项被交换到操作数列表的前面，被当作选项来处理。同时， <FONT SIZE="-1">POSIX.2</FONT> 要求不可识别的选项在诊断消息中表示为 ``illegal''，但是既然它们没有真正触犯法律，因此默认情况下它们在诊断 (diagnose) 消息中表示为 ``invalid''。
+<B>POSIXLY_CORRECT</B>
+
+同时禁止了下面描述的 <B>_</B><I>N</I><B>_GNU_nonoption_argv_flags_</B>。
+<DT><B>_</B><I>N</I><B>_GNU_nonoption_argv_flags_</B><DD>
+(这里
+<I>N</I>
+
+是
+<B>grep</B>'s
+
+数字形式的进程ID。) 如果这个环境变量的值的第
+<I>i</I>
+
+个字符是
+<B>1</B>
+
+，那么不将
+<B>grep</B>
+
+的第
+<I>i</I>
+
+个操作数视为一个选项，即使它看上去像。shell 可以将这个变量设置在它运行的每个命令的环境中，指定哪个操作数是文件名通配符扩展的结果，因此不应当被视为选项。这个行为只有在使用 <FONT SIZE="-1">GNU</FONT> C 库时有效，并且只有在
+<B>POSIXLY_CORRECT</B>
+
+没有设置的时候。
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>诊断 DIAGNOSTICS</H2>
+
+<P>
+
+一般地，如果找到了选择的行，退出时状态值为0，否则为1。但是如果发生错误，退出时状态值是2，除非指定了
+<B>-q</B>
+
+或
+<B>--quiet</B>
+
+或
+<B>--silent</B>
+
+选项，并且找到了选择的行。
+<A NAME="lbAI">&nbsp;</A>
+<H2>BUGS</H2>
+
+<P>
+
+bug 报告的电子邮件地址是
+<B><A HREF="mailto:bug-gnu-utils@gnu.org">bug-gnu-utils@gnu.org</A></B>。
+
+一定要在``Subject:''中带有 ``grep'' 这个词。
+<P>
+
+在
+<B>{</B><I>n</I><B>,</B><I>m</I><B>}</B>
+
+结构中重复次数过多会导致
+<B>grep</B>
+
+使用大量内存。另外，一些过分晦涩的正则表达式需要指数级的时间和空间，可能会导致
+<B>grep</B>
+
+耗尽所有内存。
+<P>
+
+向后引用 (backreferences) 非常慢，可能需要指数级的时间。
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>袁乙钧 &lt;<A HREF="mailto:bbbush@163.com">bbbush@163.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003.11.03</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+
+<BR>
+
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">正则表达式 REGULAR EXPRESSIONS</A><DD>
+<DT><A HREF="#lbAG">环境变量 ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAH">诊断 DIAGNOSTICS</A><DD>
+<DT><A HREF="#lbAI">BUGS</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

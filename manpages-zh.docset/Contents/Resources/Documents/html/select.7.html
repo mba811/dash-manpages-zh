@@ -1,0 +1,653 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SELECT</TITLE>
+</HEAD><BODY>
+<H1>SELECT</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+SELECT - 从表或视图中取出若干行
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+SELECT [ ALL | DISTINCT [ ON ( <I>expression</I> [, ...] ) ] ]
+    * | <I>expression</I> [ AS <I>output_name</I> ] [, ...]
+    [ FROM <I>from_item</I> [, ...] ]
+    [ WHERE <I>condition</I> ]
+    [ GROUP BY <I>expression</I> [, ...] ]
+    [ HAVING <I>condition</I> [, ...] ]
+    [ { UNION | INTERSECT | EXCEPT } [ ALL ] <I>select</I> ]
+    [ ORDER BY <I>expression</I> [ ASC | DESC | USING <I>operator</I> ] [, ...] ]
+    [ LIMIT { <I>count</I> | ALL } ]
+    [ OFFSET <I>start</I> ]
+    [ FOR UPDATE [ OF <I>table_name</I> [, ...] ] ]
+
+where <I>from_item</I> can be one of:
+
+    [ ONLY ] <I>table_name</I> [ * ] [ [ AS ] <I>alias</I> [ ( <I>column_alias</I> [, ...] ) ] ]
+    ( <I>select</I> ) [ AS ] <I>alias</I> [ ( <I>column_alias</I> [, ...] ) ]
+    <I>function_name</I> ( [ <I>argument</I> [, ...] ] ) [ AS ] <I>alias</I> [ ( <I>column_alias</I> [, ...] | <I>column_definition</I> [, ...] ) ]
+    <I>function_name</I> ( [ <I>argument</I> [, ...] ] ) AS ( <I>column_definition</I> [, ...] )
+    <I>from_item</I> [ NATURAL ] <I>join_type</I> <I>from_item</I> [ ON <I>join_condition</I> | USING ( <I>join_column</I> [, ...] ) ]
+
+</PRE>
+
+[Comment: FIXME: This last syntax is incorrect if the join type is an
+INNER or OUTER join (in which case one of NATURAL, ON ..., or USING
+... is mandatory, not optional). What's the best way to fix
+this?]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>SELECT</B> 将从一个或更多表中返回记录行。 SELECT 通常的处理如下：
+<DL COMPACT>
+<DT>1.<DD>
+<BR>&nbsp;计算列出在&nbsp;FROM&nbsp;中的所有元素。（FROM&nbsp;中的每个元素都是一个真正的或者虚拟的表。）如果在&nbsp;FROM&nbsp;列表里声明了多过一个元素，那么他们就交叉连接在一起。（参阅下面的&nbsp;FROM&nbsp;Clause&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)]&nbsp;）。
+<DT>2.<DD>
+<BR>&nbsp;如果声明了&nbsp;WHERE&nbsp;子句，那么在输出中消除所有&nbsp;不满足条件的行。（参阅下面的&nbsp;WHERE&nbsp;Clause&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)]&nbsp;）。
+<DT>3.<DD>
+<BR>&nbsp;如果声明了&nbsp;GROUP&nbsp;BY&nbsp;子句，输出就分成匹配一个或多个数值的不同组里。&nbsp;如果出现了&nbsp;HAVING&nbsp;子句，那么它消除那些不满足给出条件的组。（参阅下面的
+GROUP BY Clause [<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)] 和
+HAVING Clause [<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)] ）。
+<DT>4.<DD>
+<BR>&nbsp;使用&nbsp;UNION，INTERSECT，&nbsp;和&nbsp;EXCEPT，我们可以把多个&nbsp;SELECT&nbsp;&nbsp;语句的输出合并成一个结果集。UNION&nbsp;操作符返回在两个结果集或者其中一个中的行，&nbsp;INTERSECT&nbsp;操作符返回严格地在两个结果集中都有的行。&nbsp;EXCEPT&nbsp;操作符返回在第一个结果集中，但是不在第二个结果集中的行。不管哪种情况，&nbsp;重复的行都被删除，除非声明了&nbsp;ALL。（参阅下面的
+UNION Clause [<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)], INTERSECT Clause [<B><A HREF="/cgi-bin/man/man2html?l+select">select</A></B>(l)], 和
+EXCEPT Clause [<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)] ）。
+<DT>5.<DD>
+<BR>&nbsp;实际输出行的时候，SELECT&nbsp;先为每个选出的行计算输出表达式&nbsp;（参阅下面的
+SELECT List [<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)] ）。
+<DT>6.<DD>
+<BR>&nbsp;如果声明了&nbsp;ORDER&nbsp;BY&nbsp;子句，那么返回的行是按照指定的顺序排序的。&nbsp;如果没有给出&nbsp;ORDER&nbsp;BY，那么数据行是按照系统认为可以最快生成的方法给出的。&nbsp;（参阅下面的&nbsp;
+ORDER BY Clause [<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)] ）。
+<DT>7.<DD>
+<BR>&nbsp;如果给出了&nbsp;LIMIT&nbsp;或者&nbsp;OFFSET&nbsp;&nbsp;子句，那么&nbsp;SELECT&nbsp;语句只返回结果行的一个子集。（参阅下面的&nbsp;LIMIT&nbsp;Clause&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)]&nbsp;）。
+<DT>8.<DD>
+DISTINCT 从结果中删除那些重复的行。 DISTINCT ON 删除那些匹配所有指定表达式的行。 ALL （缺省）将返回所有候选行，包括重复的。 （参阅下面的 DISTINCT Clause [<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)] ）。
+<DT>9.<DD>
+FOR UPDATE 子句导致 SELECT  语句对并发的更新锁住选定的行。（参阅下面的 FOR UPDATE Clause [<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)] ）。
+</DL>
+<P>
+
+<P>
+
+<BR>&nbsp;你必须有&nbsp;SELECT&nbsp;权限用来从表中读取数值。&nbsp;使用&nbsp;FOR&nbsp;UPDATE&nbsp;还要求&nbsp;UPDATE&nbsp;权限。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<A NAME="lbAF">&nbsp;</A>
+<H3>FROM 子句</H3>
+
+<P>
+
+FROM 子句为 SELECT 声明一个或者多个源表。 如果声明了多个源表，那么结果就是所有源表的笛卡儿积（交叉连接）。 但是通常我们会添加一些条件，把返回行限制成笛卡儿积的一个小的结果集。
+<P>
+
+FROM-子句可以包括：
+<DL COMPACT>
+<DT><B></B><I>table_name</I><B></B><DD>
+<BR>&nbsp;一个现存的表或视图的名字（可以有模式修饰）。&nbsp;如果声明了ONLY，则只扫描该表。&nbsp;如果没有声明ONLY，该表和所有其派生表（如果有的话）都被扫描。&nbsp;可以在表名后面跟一个*来表示扫所有其后代表，&nbsp;但在目前的版本里，这是缺省特性。&nbsp;（在&nbsp;PostgreSQL&nbsp;7.1&nbsp;以前的版本里，ONLY是缺省特性。）&nbsp;缺省的特性可以通过修改配置选项&nbsp;sql_interitance&nbsp;来改变。
+<DT><B></B><I>alias</I><B></B><DD>
+<BR>&nbsp;为那些包含别名的&nbsp;FROM&nbsp;项目取的别名。别名用于缩写或者在自连接中消除歧义（自连接里，同一个表扫描了多次）。&nbsp;如果提供了别名，那么它就会完全隐藏表或者函数的实际名字；&nbsp;比如，如果给出&nbsp;FROM&nbsp;foo&nbsp;AS&nbsp;f，那么&nbsp;SELECT&nbsp;&nbsp;剩下的东西必须吧这个&nbsp;FROM&nbsp;项以&nbsp;f&nbsp;而不是&nbsp;foo&nbsp;引用。如果写了别名，&nbsp;我们也可以提供一个字段别名列表，这样可以替换表中一个或者多个字段的名字。
+<DT><B></B><I>select</I><B></B><DD>
+<BR>&nbsp;一个子&nbsp;SELECT&nbsp;在&nbsp;FROM&nbsp;子句里出现的。&nbsp;它的输出作用好象是为这条&nbsp;SELECT&nbsp;命令在其生存期里创建一个临时表。&nbsp;请注意这个子&nbsp;SELECT&nbsp;必须用园括弧包围。&nbsp;并且必须给它加别名。
+<DT><B></B><I>function_name</I><B></B><DD>
+<BR>&nbsp;函数调用可以出现在&nbsp;FROM&nbsp;子句里。&nbsp;（对于那些返回结果集的函数特别有用，但是任何函数都能用。）&nbsp;这么做就好像在这个&nbsp;SELECT&nbsp;命令的生命期中，&nbsp;把函数的输出创建为一个临时表一样。我们也可以使用别名。如果写了别名，&nbsp;我们还可以写一个字段别名列表，为函数返回的复合类型的一个或多个属性提供名字替换。&nbsp;如果函数定义为了&nbsp;record&nbsp;数据类型，&nbsp;那么必须出现一个&nbsp;AS&nbsp;关键字或者别名，后面跟着一个字段定义列表，&nbsp;形如：(&nbsp;column_name&nbsp;data_type&nbsp;[,&nbsp;...&nbsp;])。&nbsp;这个字段定义列表必须匹配函数返回的字段的实际数目和类型。
+<DT><B></B><I>join_type</I><B></B><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>&bull;<DD>
+[ INNER ] JOIN
+<DT>&bull;<DD>
+LEFT [ OUTER ] JOIN
+<DT>&bull;<DD>
+RIGHT [ OUTER ] JOIN
+<DT>&bull;<DD>
+FULL [ OUTER ] JOIN
+<DT>&bull;<DD>
+CROSS JOIN
+</DL>
+</DL>
+
+</DL>
+<P>
+
+<BR>&nbsp;之一。&nbsp;就&nbsp;INNER&nbsp;和&nbsp;OUTER&nbsp;连接类型，&nbsp;我们必须声明一个连接条件，也就是说一个&nbsp;NATURAL，&nbsp;ON&nbsp;join_condition，&nbsp;或者&nbsp;USING&nbsp;(join_column&nbsp;[,&nbsp;...])。&nbsp;见下文获取它们的含义，对于&nbsp;CROSS&nbsp;JOIN，这些子句都不能出现。
+<P>
+<BR>&nbsp;一个&nbsp;JOIN&nbsp;子句，组合了两个&nbsp;FROM&nbsp;项。&nbsp;必要时使用圆括弧以决定嵌套的顺序。&nbsp;如果没有圆括弧，JOIN&nbsp;的嵌套从左向右。&nbsp;在任何情况下，JOIN&nbsp;都比逗号分隔的&nbsp;FROM&nbsp;项绑定得更紧。
+<P>
+CROSS JOIN 和 INNER JOIN
+生成一个简单的笛卡儿积，和你在 FROM 的顶层列出两个项的结果相同。 CROSS JOIN 等效于 INNER JOIN ON (true)， 也就是说，没有被条件删除的行。这种连接类型只是符号上的方便， 因为它们和你用简单的 FROM 和 WHERE 干的事情是一样的。
+<P>
+LEFT OUTER JOIN 返回有条件的笛卡儿积（也就是说， 所有组合出来的行都通过了连接条件）中的行，加上左手边的表中没有对应的右手边表的行可以一起匹配通过连接条件的那些行。 这样的左手边的行扩展成连接生成表的全长，方法是在那些右手边表对应的字段位置填上空。请注意，只有在决定那些行是匹配的时候， 之计算 JOIN 子句自己的条件。外层的条件是在这之后施加的。
+<P>
+<BR>&nbsp;对应的是，RIGHT&nbsp;OUTER&nbsp;JOIN&nbsp;返回所有连接出来的行，&nbsp;加上每个不匹配的右手边行（左边用空值扩展）。这只是一个符号上的便利，因为我们总是可以把它转换成一个&nbsp;LEFT&nbsp;OUTER&nbsp;JOIN，&nbsp;只要把左边和右边的输入对掉一下即可。
+<P>
+FULL OUTER JOIN 返回所有连接出来的行，加上每个不匹配的左手边的行（右边用空值扩展）， 加上每个不匹配的右手边的行（左边用空值扩展）。
+<DL COMPACT>
+<DT><B>ON </B><I>join_condition</I><B></B><DD>
+<I>join_condition</I> 是一个表达式， 生成类型为 boolean 的结果（类似WHERE 子句）， 表示连接中那些行被认为是匹配的。
+<DT><B>USING (</B><I>join_column</I><B> [, ...])</B><DD>
+<BR>&nbsp;一个形如&nbsp;USING&nbsp;(&nbsp;a,&nbsp;b,&nbsp;...&nbsp;)&nbsp;的子句，&nbsp;是ON&nbsp;left_table.a&nbsp;=&nbsp;right_table.a&nbsp;AND&nbsp;left_table.b&nbsp;=&nbsp;right_table.b&nbsp;...&nbsp;&nbsp;的缩写。同样，USING&nbsp;蕴涵着：每对等效字段中只有一个包含在连接输出中，而不是两个都输出的意思。
+<DT><B>NATURAL</B><DD>
+NATURAL 是一个 USING 列表的缩写，这个列表说的是两个表中同名的的字段。
+</DL>
+<P>
+
+<A NAME="lbAG">&nbsp;</A>
+<H3>WHERE 子句</H3>
+
+<P>
+
+<BR>&nbsp;可选的&nbsp;WHERE&nbsp;条件有如下常见的形式：
+<P>
+<PRE>
+WHERE <I>condition</I>
+
+</PRE>
+
+<BR>&nbsp;这里&nbsp;condition&nbsp;&nbsp;可以是任意生成类型为&nbsp;boolean&nbsp;的表达式。&nbsp;任何不满足这个条件的行都会从输出中删除。如果一个行的数值替换到条件的引用中计算出来的条件为真，那么该行就算满足条件。
+<A NAME="lbAH">&nbsp;</A>
+<H3>GROUP BY 子句</H3>
+
+<P>
+
+<BR>&nbsp;可选的&nbsp;GROUP&nbsp;BY&nbsp;子句的一般形式
+<P>
+<PRE>
+GROUP BY <I>expression</I> [, ...]
+
+</PRE>
+
+<P>
+
+GROUP BY 将把所有在组合了的表达式上共享同样的值的行压缩成一行。 expression 可以是一个输入字段名字， 或者是一个输入字段（SELECT 列表）的序号，或者也可以是任意从输入字段值形成的任意表达式。 在有歧义的情况下，一个 GROUP BY 的名字将被解释成输入字段的名字，而不是输出字段的名字。
+<P>
+
+<BR>&nbsp;如果使用了聚集函数，那么就会对组成一组的所有行进行计算，为每个组生成一个独立的值（而如果没有&nbsp;GROUP&nbsp;BY，&nbsp;那么聚集对选出来的所有行计算出一个值）。如果出现了&nbsp;GROUP&nbsp;BY，&nbsp;那么&nbsp;SELECT&nbsp;列表表达式中再引用那些没有分组的字段就是非法的，&nbsp;除非放在聚集函数里，因为对于未分组的字段，可能会返回多个数值。
+<A NAME="lbAI">&nbsp;</A>
+<H3>HAVING 子句</H3>
+
+<P>
+
+<BR>&nbsp;可选的&nbsp;HAVING&nbsp;子句有如下形式：
+<P>
+<PRE>
+HAVING <I>condition</I>
+
+</PRE>
+
+<BR>&nbsp;这里&nbsp;condition&nbsp;&nbsp;和为&nbsp;WHERE&nbsp;子句里声明的相同。
+<P>
+
+HAVING 去除了一些不满足条件的组行。 HAVING 与 WHERE 不同： WHERE 在使用 GROUP BY  之前过滤出单独的行，而 HAVING 过滤由 GROUP BY 创建的行。 在 condition 里引用的每个字段都必须无歧义地引用一个分组的行，除非引用出现在一个聚集函数里。
+<A NAME="lbAJ">&nbsp;</A>
+<H3>UNION 子句</H3>
+
+<P>
+
+UNION 子句的一般形式是：
+<P>
+<PRE>
+<I>select_statement</I> UNION [ ALL ] <I>select_statement</I>
+
+</PRE>
+
+<BR>&nbsp;这里&nbsp;<I>select_statement</I>&nbsp;是任意没有&nbsp;ORDER&nbsp;BY，LIMIT，或者&nbsp;FOR&nbsp;UPDATE&nbsp;子句的&nbsp;SELECT语句。&nbsp;（如果用圆括弧包围，ORDER&nbsp;BY&nbsp;和&nbsp;LIMIT&nbsp;可以附着在子表达式里。&nbsp;如果没有圆括弧，这些子句将交给&nbsp;UNION&nbsp;的结果使用，&nbsp;而不是给它们右手边的输入表达式。）
+<P>
+
+UNION 操作符计算那些涉及到的所有 SELECT 语句返回的行的结果联合。 一个行如果至少在两个结果集中的一个里面出现，那么它就会在这两个结果集的集合联合中。 两个做为 UNION 直接操作数的SELECT必须生成相同数目的字段， 并且对应的字段必须有兼容的数据类型。
+<P>
+
+<BR>&nbsp;缺省地，UNION&nbsp;的结果不包含任何重复的行，除非声明了&nbsp;ALL&nbsp;子句。&nbsp;ALL&nbsp;制止了消除重复的动作。
+<P>
+
+<BR>&nbsp;同一SELECT语句中的多个&nbsp;UNION&nbsp;操作符是从左向右计算的，&nbsp;除非用圆括弧进行了标识。
+<P>
+
+<BR>&nbsp;目前，FOR&nbsp;UPDATE&nbsp;不能在&nbsp;UNION&nbsp;的结果或输入中声明。
+<A NAME="lbAK">&nbsp;</A>
+<H3>INTERSECT 子句</H3>
+
+<P>
+
+INTERSECT 子句的一般形式是：
+<P>
+<PRE>
+<I>select_statement</I> INTERSECT [ ALL ] <I>select_statement</I>
+
+</PRE>
+
+<I>select_statement</I> 是任何不带 ORDER BY， LIMIT，或者 FOR UPDATE 子句的 SELECT 语句。
+<P>
+
+<BR>&nbsp;INTERSECT&nbsp;计算涉及的&nbsp;SELECT&nbsp;语句返回的行的集合交集。&nbsp;如果一个行在两个结果集中都出现，那么它就在两个结果集的交集中。
+<P>
+
+<BR>&nbsp;NTERSECT&nbsp;的结果不包含任何重复行，除非你声明了&nbsp;ALL&nbsp;选项。&nbsp;用了&nbsp;ALL&nbsp;以后，一个在左手边的表里有&nbsp;m&nbsp;个重复而在右手边表里有&nbsp;n&nbsp;个重复的行将出现&nbsp;min(m,n)&nbsp;次。
+<P>
+
+<BR>&nbsp;除非用圆括号指明顺序，&nbsp;同一&nbsp;SELECT&nbsp;语句中的多个&nbsp;INTERSECT&nbsp;操作符是从左向右计算的。&nbsp;INTERSECT&nbsp;比&nbsp;UNION&nbsp;绑定得更紧&nbsp;---&nbsp;也就是说&nbsp;A&nbsp;UNION&nbsp;B&nbsp;INTERSECT&nbsp;C&nbsp;将读做&nbsp;A&nbsp;UNION&nbsp;(B&nbsp;INTERSECT&nbsp;C)，除非你用圆括弧声明。
+<A NAME="lbAL">&nbsp;</A>
+<H3>EXCEPT 子句</H3>
+
+<P>
+
+EXCEPT 子句有如下的通用形式：
+<P>
+<PRE>
+<I>select_statement</I> EXCEPT [ ALL ] <I>select_statement</I>
+
+</PRE>
+
+<BR>&nbsp;这里&nbsp;fIselect_statement&nbsp;是任何没有&nbsp;ORDER&nbsp;BY，LIMIT，或者&nbsp;FOR&nbsp;UPDATE&nbsp;&nbsp;子句的&nbsp;SELECT&nbsp;表达式。
+<P>
+
+EXCEPT 操作符计算存在于左边SELECT  语句的输出而不存在于右边语句输出的行。
+<P>
+
+EXCEPT 的结果不包含任何重复的行，除非声明了 ALL 选项。 使用 ALL 时，一个在左手边表中有 m 个重复而在右手边表中有 n 个重复的行将出现 max(m-n,0) 次。
+<P>
+
+<BR>&nbsp;除非用圆括弧指明顺序，同一&nbsp;SELECT&nbsp;语句中的多个&nbsp;EXCEPT&nbsp;操作符是从左向右计算的。&nbsp;EXCEPT&nbsp;和&nbsp;UNION&nbsp;绑定级别相同。
+<A NAME="lbAM">&nbsp;</A>
+<H3>SELECT 列表</H3>
+
+<P>
+
+<B>SELECT</B> 列表（在关键字 SELECT 和 FROM) 之间的东西）声明一个表达式，这个表达式形成 SELECT 语句的输出行。这个表达式可以（通常也的确是）引用那些在 FROM 子句里计算的字段。 通过使用 AS output_name， 我们可以为一个输出行声明另外一个名字。这个名字主要用做显示该行的标签。 它也可以在 ORDER BY 和 GROUP BY 子句里当作字段值的引用， 但是不能在 WHERE 或者 HAVING 子句里这么用；在那里，你必须写出表达式。
+<P>
+
+<BR>&nbsp;除了表达式之外，我们也可以在输出列表上写一个&nbsp;*&nbsp;表示选出的行的所有字段的缩写。同样，我们可以写&nbsp;<I>table_name.</I>*&nbsp;&nbsp;作为来自某个特定表的字段的缩写。
+<A NAME="lbAN">&nbsp;</A>
+<H3>ORDER BY 子句</H3>
+
+<P>
+
+<BR>&nbsp;可选的&nbsp;ORDER&nbsp;BY&nbsp;子句有下面的一般形式：
+<P>
+<PRE>
+ORDER BY <I>expression</I> [ ASC | DESC | USING <I>operator</I> ] [, ...]
+
+</PRE>
+
+<I>expression</I> 可以是一个输出字段（SELECT 列表）的名字或者序号， 或者也可以是用输入字段的数值组成的任意表达式。
+<P>
+
+ORDER BY 子句导致结果行根据指定的表达式进行排序。 如果根据最左边的表达式，两行的结果相同，那么就根据下一个表达式进行比较， 依此类推。如果对于所有声明的表达式他们都相同，那么以随机顺序返回。
+<P>
+
+<BR>&nbsp;序数指的是列/字段按顺序（从左到右）的位置。&nbsp;这个特性让我们可以对没有唯一名称的列/字段进行排序。&nbsp;这一点从来不是必须的，&nbsp;因为总是可以通过&nbsp;AS&nbsp;子句给一个要计算的列/字段赋予一个名称。
+<P>
+
+<BR>&nbsp;在&nbsp;ORDER&nbsp;BY&nbsp;里还可以使用任意表达式，&nbsp;包括那些没有出现在SELECT结果列表里面的字段。&nbsp;因此下面的语句现在是合法的：
+<P>
+<PRE>
+SELECT name FROM distributors ORDER BY code;
+
+</PRE>
+
+<BR>&nbsp;这个特性的一个局限就是应用于&nbsp;UNION，INTERSECT，&nbsp;或者&nbsp;EXCEPT&nbsp;查询的&nbsp;ORDER&nbsp;BY&nbsp;子句只能在一个输出字段名或者数字上声明，而不能在一个表达式上声明。
+<P>
+
+<BR>&nbsp;请注意如果一个&nbsp;ORDER&nbsp;BY&nbsp;表达式是一个简单名称，&nbsp;同时匹配结果字段和输入字段，&nbsp;ORDER&nbsp;BY&nbsp;将把它解释成结果字段名称。&nbsp;这和&nbsp;GROUP&nbsp;BY&nbsp;在同样情况下做的选择正相反。&nbsp;这样的不一致是由&nbsp;SQL&nbsp;标准强制的。
+<P>
+
+<BR>&nbsp;我们可以给&nbsp;ORDER&nbsp;BY&nbsp;子句里每个列/字段加一个关键字&nbsp;DESC&nbsp;（降序）或&nbsp;ASC（升序）。如果不声明，&nbsp;ASC&nbsp;是缺省。&nbsp;我们还可以在&nbsp;USING&nbsp;子句里声明一个排序操作符来实现排序。&nbsp;ASC&nbsp;等效于使用&nbsp;USING&nbsp;&lt;&nbsp;而&nbsp;DESC&nbsp;等效于使用&nbsp;USING&nbsp;&gt;。
+(But the creator of a user-defined data type can define exactly what the
+default sort ordering is, and it might correspond to operators with other
+names.)
+<P>
+
+<BR>&nbsp;在一个域里，空值排序时排在其它数值前面。换句话说，升序排序时，&nbsp;空值排在末尾，而降序排序时空值排在开头。
+<P>
+
+<BR>&nbsp;字符类型的数据是按照区域相关的字符集顺序排序的，这个区域是在数据库集群初始化的时候建立的。
+<A NAME="lbAO">&nbsp;</A>
+<H3>LIMIT 子句</H3>
+
+<P>
+
+LIMIT 子句由两个独立的子句组成：
+<P>
+<PRE>
+LIMIT { <I>count</I> | ALL }
+OFFSET <I>start</I>
+
+</PRE>
+
+<BR>&nbsp;这里&nbsp;<I>count</I>&nbsp;声明返回的最大行数，而&nbsp;<I>start</I>&nbsp;声明开始返回行之前忽略的行数。
+<BR>&nbsp;.PP
+<BR>&nbsp;&nbsp;LIMIT&nbsp;允许你检索由查询其他部分生成的行的某一部分。&nbsp;如果给出了限制计数，那么返回的行数不会超过哪个限制。&nbsp;如果给出了一个偏移量，那么开始返回行之前会忽略那个数量的行。
+<P>
+
+<BR>&nbsp;在使用&nbsp;LIMIT&nbsp;时，&nbsp;一个好习惯是使用一个&nbsp;ORDER&nbsp;BY&nbsp;子句把结果行限制成一个唯一的顺序。&nbsp;否则你会得到无法预料的查询返回的子集&nbsp;---&nbsp;你可能想要第十行到第二十行，&nbsp;但以什么顺序？除非你声明&nbsp;ORDER&nbsp;BY，否则你不知道什么顺序。
+<P>
+
+<BR>&nbsp;查询优化器在生成查询规划时把&nbsp;LIMIT&nbsp;考虑进去了，&nbsp;所以你很有可能因给出的&nbsp;LIMIT&nbsp;和&nbsp;OFFSET&nbsp;值不同而得到不同的规划（生成不同的行序）。&nbsp;因此用不同的&nbsp;LIMIT/OFFSET&nbsp;值选择不同的查询结果的子集将不会产生一致的结果，&nbsp;除非你用&nbsp;ORDER&nbsp;BY&nbsp;强制生成一个可预计的结果顺序。&nbsp;这可不是毛病；这是&nbsp;SQL&nbsp;生来的特点，因为除非用了&nbsp;ORDER&nbsp;BY&nbsp;约束顺序，&nbsp;SQL&nbsp;不保证查询生成的结果有任何特定的顺序。
+<A NAME="lbAP">&nbsp;</A>
+<H3>DISTINCT 子句</H3>
+
+<P>
+
+<BR>&nbsp;如果声明了&nbsp;DISTINCT，那么就从结果集中删除所有重复的行（每个有重复的组都保留一行）。&nbsp;ALL&nbsp;声明相反的作用：所有行都被保留；这个是缺省。
+<P>
+
+DISTINCT ON ( <I>expression</I> [, ...] )
+只保留那些在给出的表达式上运算出相同结果的行集合中的第一行。 DISTINCT ON 表达式是使用与 ORDER BY （见上文） 相同的规则进行解释的。请注意，除非我们使用了 ORDER BY 来保证我们需要的行首先出现，否则，每个 &quot;第一行&quot; 是不可预测的。 比如，
+<P>
+<PRE>
+SELECT DISTINCT ON (location) location, time, report
+    FROM weather_reports
+    ORDER BY location, time DESC;
+
+</PRE>
+
+<BR>&nbsp;为每个地点检索最近的天气报告。但是如果我们没有使用&nbsp;ORDER&nbsp;BY&nbsp;&nbsp;来强制对每个地点的时间值进行降序排序，那么我们就会得到每个地点的不知道什么时候的报告。
+<P>
+
+<BR>&nbsp;DISTINCT&nbsp;ON&nbsp;表达式必须匹配最左边的&nbsp;ORDER&nbsp;BY&nbsp;表达式。&nbsp;ORDER&nbsp;BY&nbsp;子句将通常包含额外的表达式来判断每个&nbsp;DISTINCT&nbsp;ON&nbsp;组里面需要的行的优先级。
+<A NAME="lbAQ">&nbsp;</A>
+<H3>FOR UPDATE 子句</H3>
+
+<P>
+
+FOR UPDATE 子句有下面的形式
+<P>
+<PRE>
+FOR UPDATE [ OF <I>table_name</I> [, ...] ]
+
+</PRE>
+
+<P>
+
+FOR UPDATE 令那些被 SELECT 语句检索出来的行被锁住，就像要更新一样。 这样就避免它们在当前事务结束前被其它事务修改或者删除； 也就是说，其它视图 UPDATE，DELETE， 或者 SELECT FOR UPDATE 这些行的事务将被阻塞， 直到当前事务结束。同样，如果一个来自其它事务的 UPDATE， DELETE，或者 SELECT FOR UPDATE  已经锁住了某个或某些选定的行，SELECT FOR UPDATE 将等到那些事务结束， 并且将随后锁住并返回更新的行（或者不返回行，如果行已经被删除）。更多的讨论参阅 Chapter 12 ``Concurrency Control'' 。
+<P>
+
+<BR>&nbsp;如果特定的表在&nbsp;FOR&nbsp;UPDATE&nbsp;中，那么只有来自这些表中的行才被锁住；&nbsp;任何在&nbsp;SELECT&nbsp;中使用的其它表都只是和平常一样读取。
+<P>
+
+FOR UPDATE 不能在那些无法使用独立的表数据行清晰标识返回行的环境里； 比如，它不能和聚集一起使用。
+<P>
+
+FOR UPDATE 可以在 LIMIT 前面出现， 主要是为了和 7.3 之前的 PostgreSQL 兼容。 不过，它在 LIMIT 后面执行更高效，因此我们建议放在 LIMIT 后面。
+<A NAME="lbAR">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;将表&nbsp;films&nbsp;和表&nbsp;distributors&nbsp;连接在一起：
+<P>
+<PRE>
+SELECT f.title, f.did, d.name, f.date_prod, f.kind
+    FROM distributors d, films f
+    WHERE f.did = d.did
+
+       title       | did |     name     | date_prod  |   kind
+-------------------+-----+--------------+------------+----------
+ The Third Man     | 101 | British Lion | 1949-12-23 | Drama
+ The African Queen | 101 | British Lion | 1951-08-11 | Romantic
+ ...
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;统计用kind&nbsp;分组的所有电影和组的列/字段的&nbsp;len（长度）的和：
+<P>
+<PRE>
+SELECT kind, sum(len) AS total FROM films GROUP BY kind;
+
+   kind   | total
+----------+-------
+ Action   | 07:34
+ Comedy   | 02:58
+ Drama    | 14:28
+ Musical  | 06:42
+ Romantic | 04:38
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;统计所有电影（films），组的列/字段&nbsp;len（长度）的和，用&nbsp;kind&nbsp;分组并且显示小于5小时的组总和：
+<P>
+<PRE>
+SELECT kind, sum(len) AS total
+    FROM films
+    GROUP BY kind
+    HAVING sum(len) &lt; interval '5 hours';
+
+   kind   | total
+----------+-------
+ Comedy   | 02:58
+ Romantic | 04:38
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;下面两个例子是根据第二列（name）的内容对单独的结果排序的经典的方法：
+<P>
+<PRE>
+SELECT * FROM distributors ORDER BY name;
+SELECT * FROM distributors ORDER BY 2;
+
+ did |       name
+-----+------------------
+ 109 | 20th Century Fox
+ 110 | Bavaria Atelier
+ 101 | British Lion
+ 107 | Columbia
+ 102 | Jean Luc Godard
+ 113 | Luso films
+ 104 | Mosfilm
+ 103 | Paramount
+ 106 | Toho
+ 105 | United Artists
+ 111 | Walt Disney
+ 112 | Warner Bros.
+ 108 | Westward
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;下面这个例子演示如何获得表&nbsp;distributors&nbsp;和&nbsp;actors的连接，&nbsp;只将每个表中以字母&nbsp;W&nbsp;开头的取出来。&nbsp;因为只取了不相关的行，所以关键字&nbsp;ALL&nbsp;被省略了：
+<P>
+<PRE>
+distributors:               actors:
+ did |     name              id |     name
+-----+--------------        ----+----------------
+ 108 | Westward               1 | Woody Allen
+ 111 | Walt Disney            2 | Warren Beatty
+ 112 | Warner Bros.           3 | Walter Matthau
+ ...                         ...
+
+SELECT distributors.name
+    FROM distributors
+    WHERE distributors.name LIKE 'W%'
+UNION
+SELECT actors.name
+    FROM actors
+    WHERE actors.name LIKE 'W%';
+
+      name
+----------------
+ Walt Disney
+ Walter Matthau
+ Warner Bros.
+ Warren Beatty
+ Westward
+ Woody Allen
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;这个例子显示了如何在&nbsp;FROM&nbsp;子句中使用一个函数，&nbsp;包括带有和不带字段定义列表的。
+<P>
+<PRE>
+CREATE FUNCTION distributors(int) RETURNS SETOF distributors AS '
+    SELECT * FROM distributors WHERE did = $1;
+' LANGUAGE SQL;
+
+SELECT * FROM distributors(111);
+ did |    name
+-----+-------------
+ 111 | Walt Disney
+
+CREATE FUNCTION distributors_2(int) RETURNS SETOF record AS '
+    SELECT * FROM distributors WHERE did = $1;
+' LANGUAGE SQL;
+
+SELECT * FROM distributors_2(111) AS (f1 int, f2 text);
+ f1  |     f2
+-----+-------------
+ 111 | Walt Disney
+
+</PRE>
+
+<A NAME="lbAS">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;当然，SELECT&nbsp;语句和&nbsp;SQL&nbsp;标准兼容。但是还有一些扩展和一些缺少的特性。
+<A NAME="lbAT">&nbsp;</A>
+<H3>省略 FROM 子句</H3>
+
+<P>
+
+PostgreSQL 允许我们在一个查询里省略 FROM 子句。 它的最直接用途就是计算简单的常量表达式的结果：
+<P>
+<PRE>
+SELECT 2+2;
+
+ ?column?
+----------
+        4
+
+</PRE>
+
+<BR>&nbsp;其它有些&nbsp;SQL&nbsp;数据库不能这么做，除非引入一个单行的伪表做&nbsp;SELECT&nbsp;的数据源。
+<P>
+
+<BR>&nbsp;这个特性的另外一个不太明显的用途是把一个普通的从一个或多个表的&nbsp;SELECT&nbsp;缩写：
+<P>
+<PRE>
+SELECT distributors.* WHERE distributors.name = 'Westward';
+
+ did |   name
+-----+----------
+ 108 | Westward
+
+</PRE>
+
+这样也可以运行是因为我们给 SELECT 中引用了但没有在 FROM 中提到的每个表都加了一个隐含的 FROM 项。
+<P>
+
+<BR>&nbsp;尽管这是个很方便的写法，但它却容易误用。&nbsp;比如，下面的查询
+<P>
+<PRE>
+SELECT distributors.* FROM distributors d;
+
+</PRE>
+
+可能就是个错误；用户最有可能的意思是
+<P>
+<PRE>
+SELECT d.* FROM distributors d;
+
+</PRE>
+
+而不是下面的他实际上得到的无约束的连接
+<P>
+<PRE>
+SELECT distributors.* FROM distributors d, distributors distributors;
+
+</PRE>
+
+为了帮助检测这种错误， PostgreSQL 以及以后的版本将在你使用一条即有隐含 FROM 特性又有明确的 FROM 子句的查询的时候给出警告。
+Also, it is possible to disable
+the implicit-FROM feature by setting the
+ADD_MISSING_FROM parameter to false.
+<A NAME="lbAU">&nbsp;</A>
+<H3>AS 关键字</H3>
+
+<P>
+
+<BR>&nbsp;在&nbsp;SQL&nbsp;标准里，可选的关键字&nbsp;AS&nbsp;是多余的，可以忽略掉而不对语句产生任何影响。&nbsp;PostgreSQL&nbsp;分析器在重命名列/字段时需要这个关键字，&nbsp;因为类型扩展的特性会导致在这个环境里的歧义。&nbsp;不过，AS&nbsp;在&nbsp;FROM&nbsp;项里是可选的。
+<A NAME="lbAV">&nbsp;</A>
+<H3>GROUP BY 和 ORDER BY 里可用的名字空间</H3>
+
+<P>
+
+<BR>&nbsp;在&nbsp;SQL92&nbsp;标准里，ORDER&nbsp;BY&nbsp;子句只能使用结果字段名或者编号，&nbsp;而&nbsp;GROUP&nbsp;BY&nbsp;子句只能用基于输入字段名的表达式。&nbsp;PostgreSQL&nbsp;对这两个子句都进行了扩展，&nbsp;允许另外一种选择（但是如果存在歧义，则使用标准的解释）。&nbsp;PostgreSQL&nbsp;还允许两个子句声明任意的表达式。&nbsp;请注意在表达式中出现的名字强总是被当作输入字段名，而不是结果字段名。
+<P>
+
+SQL99 uses a slightly different definition which is not upward compatible
+with SQL92. In most cases, however, PostgreSQL
+will interpret an ORDER BY or GROUP
+BY expression the same way SQL99 does.
+<A NAME="lbAW">&nbsp;</A>
+<H3>非标准子句</H3>
+
+<P>
+
+DISTINCT ON,
+LIMIT, 和 OFFSET 都没有在 SQL 标准中定义。
+<A NAME="lbAX">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DL>
+<DT><A HREF="#lbAF">FROM 子句</A><DD>
+<DT><A HREF="#lbAG">WHERE 子句</A><DD>
+<DT><A HREF="#lbAH">GROUP BY 子句</A><DD>
+<DT><A HREF="#lbAI">HAVING 子句</A><DD>
+<DT><A HREF="#lbAJ">UNION 子句</A><DD>
+<DT><A HREF="#lbAK">INTERSECT 子句</A><DD>
+<DT><A HREF="#lbAL">EXCEPT 子句</A><DD>
+<DT><A HREF="#lbAM">SELECT 列表</A><DD>
+<DT><A HREF="#lbAN">ORDER BY 子句</A><DD>
+<DT><A HREF="#lbAO">LIMIT 子句</A><DD>
+<DT><A HREF="#lbAP">DISTINCT 子句</A><DD>
+<DT><A HREF="#lbAQ">FOR UPDATE 子句</A><DD>
+</DL>
+<DT><A HREF="#lbAR">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAS">COMPATIBILITY 兼容性</A><DD>
+<DL>
+<DT><A HREF="#lbAT">省略 FROM 子句</A><DD>
+<DT><A HREF="#lbAU">AS 关键字</A><DD>
+<DT><A HREF="#lbAV">GROUP BY 和 ORDER BY 里可用的名字空间</A><DD>
+<DT><A HREF="#lbAW">非标准子句</A><DD>
+</DL>
+<DT><A HREF="#lbAX">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

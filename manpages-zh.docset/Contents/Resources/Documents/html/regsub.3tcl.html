@@ -1,0 +1,132 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of regsub</TITLE>
+</HEAD><BODY>
+<H1>regsub</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.3<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+regsub - 基于正则表达式模式匹配进行替换
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>regsub </B>?<I>switches</I>? <I>exp string subSpec varName</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令针对 <I>string </I>匹配正则表达式 <I>exp</I>，并且它把 <I>string</I> 复制到用 <I>varName</I> 给出名字的变量中。(正则表达式匹配的描述请参见 <B>re_syntax</B> 参考页。)如果有一个匹配，则在复制 <I>string</I> 到 <I>varName</I> 期间，<I>string</I> 中匹配 <I>exp</I> 的那部分将被替代为 <I>subSpec</I>。如果 <I>subSpec</I> 包含一个``&amp;''或``\0''，则在这个替换中它被替代为 <I>string</I> 中匹配 <I>exp </I>的那部分。如果 <I>subSpec</I> 包含一个``\<I>n</I>''，这里的 <I>n</I> 是在 1 和 9 之间的一个数字，则在这个替换中它将被替代为 <I>string</I> 中匹配第 <I>n </I>个圆括号中的子表达式 <I>exp </I>的那部分。 在 <I>subSpec</I> 中可以使用额外的反斜杠来防对``&amp;''、``\0''、``\<I>n</I>''或反斜杠的特殊解释。在 <I>subSpec</I> 中使用的反斜杠可能与 Tcl 分析器使用的反斜杠有所冲突。所以，如果 <I>subSpec</I> 中包含反斜杠，最安全的方式通常是把 <I>subSpec</I> 包围在花括号中。
+<P>
+
+如果给 <B>regexp</B> 的初始的参数以 <B>-</B> 为开始，则它们被作为开关来对待。当前支持下列开关:
+<DL COMPACT>
+<DT><B>-all</B><DD>
+找到 <I>string</I> 中匹配 <I>exp</I>  的所有范围，并对每个范围进行替换。没有这个选项，则只有第一个匹配的范围被找到并替换。如果指定了 <B>-all</B>，则对于每次替换使用相应的匹配信息来处理``&amp;''和``\<I>n</I>''序列。
+<DT><B>-expanded</B><DD>
+启用展开的(expanded)正则表示式语法，将忽略白空格和注释。这与指定 <B>(?x)</B> 嵌入选项相同。 (see METASYNTAX, below).
+<DT><B>-line</B><DD>
+启用换行敏感匹配。缺省的，换行是没有特殊意义的一个完全的普通字符。加上了这个标志，‘[^’ 方括号表达式和‘.’将永不匹配换行，‘^’除了它的正常功能之外还匹配在任何换行之后的空串，而‘$’除了它的正常功能之外还匹配在任何换行之前的空串。这个标志等价于指定 <B>-linestop</B> 和 <B>-lineanchor </B>二者，或者 <B>(?n)</B>  嵌入选项。 (see METASYNTAX, below).
+<DT><B>-linestop</B><DD>
+改变‘[^’方括号表达式和‘.’的行为，这样表示式将停止于换行。这与指定     <B>(?p)</B> 嵌入选项相同。(see METASYNTAX, below).
+<DT><B>-lineanchor</B><DD>
+改变‘^’和‘$’(“锚”)的行为，这样它们分别的匹配一行的开始和结束。这与指定 <B>(?w)</B> 嵌入选项相同。 (see METASYNTAX, below).
+<DT><B>-nocase</B><DD>
+Upper-case characters in <I>string</I> will be converted to lower-case
+before matching against <I>exp</I>;  however, substitutions specified
+by <I>subSpec</I> use the original unconverted form of <I>string</I>.
+
+
+
+
+
+
+
+<DT><B>-start</B> <I>index</I><DD>
+在字符串中指定一个字符索引，在这个偏移量上开始匹配。当使用了这个开关的时候，‘^’将不匹配行的开始，而     \A  将仍旧在 <I>index </I>上匹配字符串的开始。<I>index</I> 将被约束为输入字符串的束缚。
+
+
+
+
+
+
+<DT><B>--</B><DD>
+标记开关的结束。这个标志之后的参数即使以 <B>- </B>为开始仍被作为 <I>exp</I> 对待。
+</DL>
+<P>
+
+这个命令返回找到并替换的匹配范围的总数。正则表达式的解释详见 <B>regexp</B> 的手册条目。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+regexp">regexp</A>(n), <A HREF="/cgi-bin/man/man2html?n+re_syntax">re_syntax</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+match, pattern, regular expression, substitute
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/27</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

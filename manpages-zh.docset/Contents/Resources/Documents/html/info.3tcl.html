@@ -1,0 +1,129 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of info</TITLE>
+</HEAD><BODY>
+<H1>info</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.5<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+info - 返回关于 Tcl 解释器状态的信息
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>info </B><I>option </I>?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令提供关于 Tcl 解释器的各种内部信息。合法的<I>option</I> (可以是缩写)有: 
+<DL COMPACT>
+<DT><B>info args </B><I>procname</I><DD>
+返回一个列表，依次包含给过程<I>procname </I>的参数们的名字。<I>Procname</I>   必须是一个 Tcl 命令的名字。
+<DT><B>info body </B><I>procname</I><DD>
+返回过程 <I>procname</I> 的过程体。<I>Procname</I>   必须是一个Tcl 命令的名字。
+<DT><B>info cmdcount</B><DD>
+返回在这个解释器中已经被调用的命令的总数的统计。     
+<DT><B>info commands </B>?<I>pattern</I>?<DD>
+如果未指定 <I>pattern</I>  ，返回在当前名字空间中所有 Tcl 命令的名字的一个列表，包括用 C 写成的内置命令和使用 <B>proc</B>命令定义的命令过程。如果指定了 <I>pattern</I>，只返回匹配 <I>pattern</I> 的那些名字。使用与 <B>string match</B>相同的规则确定匹配。<I>pattern</I>  可以是象 <B>Foo::print*</B><B> </B>这样的一个限定的(qualified)名字。这样，可以使用由 <B>::</B><B></B>分隔的名字空间的名字序列来指定一个特定的名字空间，并可以用匹配后面特定字符的模式来指定在这个名字空间中的一系列命令。如果是 <I>pattern</I>是一个限定的名字，命令名字的结果列表中的每个元素都被指定名字空间的名字所限定。
+<DT><B>info complete </B><I>command</I><DD>
+如果 <I>command</I> 是一个完整的 Tcl 命令则返回 1，完整的意思是没有不闭合的引号、花括号、方括号或数组元素名，如果命令表现为不完整则返回 0。典型的，这个命令在面向行的输入环境中被用来允许用户键入分开(span)成多行的命令；如果命令不完整，脚本可以延期求值，直到键入增补的行完成这个命令。    
+<DT><B>info default </B><I>procname arg varname</I><DD>
+<I>Procname</I>  必须是一个 Tcl 命令过程的名字而 <I>arg</I> 必须是给这个过程的一个参数的名字。如果 <I>arg</I> 没有缺省值则命令返回 <B>0</B>。否则它返回 <B>1</B>  并把这个缺省值放置到变量 <I>varname</I> 中。
+<DT><B>info exists </B><I>varName</I><DD>
+如果在当前上下文中存在叫 <I>varName</I>  的变量(可以是一个全局变量或局部变量)，并已经通过给它一个值而被定义则返回 <B>1</B>，否则返回 <B>0</B>
+<DT><B>info globals </B>?<I>pattern</I>?<DD>
+如果未指定 <I>pattern</I> ，返回所有当前定义的全局变量的名字的一个列表。全局变量是在全局名字空间中的变量。如果指定了 <I>pattern</I> ，只返回匹配 <I>pattern</I> 的那些名字。使用与 <B>string match </B>相同的规则确定匹配。
+<DT><B>info hostname</B><DD>
+返回在其上执行这个调用的那个计算机的名字。
+<DT><B>info level</B> ?<I>number</I>?<DD>
+如果未指定 <I>number</I>，这个命令返回给出调用过程的栈层次的一个数，如果在顶层调用这个名字则返回 0。如果指定了 <I>number</I> ，则结果是由在栈上 <I>number</I> 层调用的过程的名字和值组成的一个列表。如果 <I>number</I>  是正数则选择的是一个特定的栈层次(1 参照最顶层活跃过程，2 是它调用的过程，以此类推)；否则给出的是相对当前层次的一个相对层次(0 参照当前过程，-1 是它的调用者，以此类推)。关于栈层次的详细信息参见 <B>uplevel</B> 命令。
+<DT><B>info library</B><DD>
+返回在其中存储标准 Tcl 脚本的库目录的名字。这实际上是 <B>tcl_library</B> 变量的值并可通过设置 <B>tcl_library </B>来变更。详情参见 <B>tclvars</B> 手册条目。
+<DT><B>info loaded </B>?<I>interp</I>?<DD>
+返回描述用 <B>load</B>  命令装载到 <I>interp</I>  中的所有包的一个列表。每个列表元素都是有两元素的一个子列表，它们是从其中装载包的文件的名字和包的名字。对于静态装载包这个文件名字是一个空串。如果省略了 <I>interp</I>  则返回在进程中所有的解释器中装载的包的信息。要得到当前解释器中的包的一个列表，指定 <I>interp</I>参数为一个空串。
+<DT><B>info locals </B>?<I>pattern</I>?<DD>
+如果未指定 <I>pattern</I>，返回所有当前定义的局部变量名字的一个列表，包括给当前过程的参数。 用 <B>global</B> 和 <B>upvar</B>命令定义的参数将不返回。如果指定了 <I>pattern</I> ，只返回匹配 <I>pattern</I> 的那些名字。使用与 <B>string match </B>相同的规则确定匹配。 
+<DT><B>info nameofexecutable</B><DD>
+返回完整的二进制文件的路径名，从这个文件中调用了应用(程序)。如果Tcl 不能标识这个文件，则返回一个空串。
+<DT><B>info patchlevel</B><DD>
+返回全局变量 <B>tcl_patchLevel</B><B> </B>的值；详情参见 <B>tclvars</B> 手册条目。
+<DT><B>info procs </B>?<I>pattern</I>?<DD>
+如果未指定 <I>pattern</I>  ，返回在当前的名字空间中的所有 Tcl 命令过程的名字的一个列表。如果指定了 <I>pattern</I>，在返回在当前名字空间中匹配 <I>pattern</I> 的过程名字。使用与 <B>string match </B>相同的规则确定匹配。
+<DT><B>info script</B><DD>
+如果当前正在求值一个 Tcl 脚本文件(例如，有一个 <B>Tcl_EvalFile</B> 调用处于活跃或有一个对 <B>source</B> 命令的活跃调用)，则这个命令返回被处理的最内部(innermost)文件的名字。否则这个命令返回一个空串。 
+<DT><B>info sharedlibextension</B><DD>
+返回在这个平台上包含共享库的文件使用的扩展名(例如，在Solaris 下是 <B>.so</B>)。如果在这个平台上不支持共享库则返回一个空串。
+<DT><B>info tclversion</B><DD>
+返回全局变量 <B>tcl_version </B>的值；详情参见 <B>tclvars</B>手册条目。
+<DT><B>info vars</B> ?<I>pattern</I>?<DD>
+如果未指定 <I>pattern</I>，则返回所有当前可见的变量的名字的一个列表。包括局部变量和当前可见的全局变量。如果指定了 <I>pattern</I>，只返回匹配 <I>pattern</I>  的那些名字。使用与 <B>string match </B>相同的规则确定匹配。<I>pattern</I>  可以是象 <B>Foo::print* </B>这样的一个限定的(qualified)名字。这样，可以使用由 <B>:: </B>分隔的名字空间的名字序列来指定一个特定的名字空间，并可以用匹配后面特定字符的模式来指定在这个名字空间中的一系列命令。如果是 <I>pattern</I>是一个限定的名字，命令名字的结果列表中的每个元素都被指定名字空间的名字所限定。
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+command, information, interpreter, level, namespace, procedure, variable
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/09/28</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

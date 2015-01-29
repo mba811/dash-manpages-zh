@@ -1,0 +1,192 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of load</TITLE>
+</HEAD><BODY>
+<H1>load</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.5<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+load - 装载机器代码并初始化新命令。
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>load </B><I>fileName</I>
+<BR>
+
+<B>load </B><I>fileName packageName</I>
+<BR>
+
+<B>load </B><I>fileName packageName interp</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令把二进制代码从一个文件装载到应用的地址空间中并调用在包(package)中的初始化过程来把它加入到解释器中。<I>fileName</I>    是包含代码的文件的名字；它准确的形式在不同的系统上是不同的，但在多数系统上是一个共享库，例如，在 Solaris  下的 <B>.so</B>  文件或在 Windows 下的一个 DLL。<I>packageName</I>   是包的名字，并被用于计算初始化过程的名字。<I>interp</I>   是要在其中装载包的解释器的路径名(详情参见 <B>interp</B>   手册条目)；如果省略了 <I>interp</I>  ，它的缺省是在其中调用  <B>load </B>命令的那个解释器。
+<P>
+
+一旦已经被装载到应用的地址空间中，两个初始化过程之一将在新代码中被调用。典型的，初始化进程将向一个   Tcl 解释器添加新命令。初始化过程的名字由    <I>packageName</I>   和目标解释器是否是安全解释器来确定。对于通常的解释器，初始化过程的名字的形式是 <I>pkg</I><B>_Init</B>，这里 <I>pkg</I>     与 <I>packageName</I>   相同，但是第一个字母被转换成大写而所有其他字母被转换成小写。例如，如果 <I>packageName</I>   是    
+<B>foo</B> 或 <B>FOo</B>，则初始化过程的名字将是 <B>Foo_Init</B>。
+<P>
+
+如果目标解释器是一个安全解释器，则初始化过程的名字将是 <I>pkg</I><B>_SafeInit</B>     而不是 <I>pkg</I><B>_Init</B>。写 <I>pkg</I><B>_SafeInit</B>   函数要仔细，在包中提供的功能中，只用由不可信任的代码使用是安全的的那部分初始化安全解释器。  关于 Safe-Tcl 的详细的信息，请参见 <B>safe</B>  手册条目。
+<P>
+
+初始化过程必须匹配下列原型 (prototype):   
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+typedef int Tcl_PackageInitProc(Tcl_Interp *<I>interp</I>);
+
+</PRE>
+
+</DL>
+
+
+<I>interp</I>   
+参数标识在其中装载包的解释器。初始化过程必须返回    <B>TCL_OK</B> 或 <B>TCL_ERROR</B>  来指示是否成功完成；在有错误的情况下，应把解释器的结果设置为指向一个错误消息。初始化过程返回的结果就是  <B>load</B>  命令的结果。
+<P>
+
+在一个应用中对每个 <I>fileName </I>只进行一次文件的实际装载。如果一个给定的 <I>fileName</I>   被装载到多个解释器中，则第一个 <B>load</B>   将装载代码并调用初始化过程；随后的 <B>load</B>  将调用初始化过程而不再次装载代码  。不可能卸载或重载一个包。
+<P>
+
+<B>load</B>   命令还支持同应用静态连接的包，条件是这些包已经通过调用 <B>Tcl_StaticPackage</B>  过程注册过了。如果 <I>fileName</I>  是一个空串，则必须指定<I>packageName</I>   。
+<P>
+
+如果省略了 <I>packageName</I>  或被指定为一个空串，Tcl  尝试着猜出包的名字。在不同的平台上可能是不同的。在多数 UNIX  平台上，缺省的猜测是接受 <I>fileName</I>  的最后的组成部分，如果前三个字符是 <B>lib </B>就去掉它们，使用所有随后的
+
+
+
+
+
+
+
+字母和下划线作为模块的名字。
+
+
+
+
+
+
+例如，命令 <B>load libxyz4.2.so</B>   使用模块名 <B>xyz</B>  而命令 <B>load bin/last.so {}</B>   使用模块名 <B>last</B>。
+
+<BR>
+
+
+
+
+
+
+
+<P>
+
+如果 <I>fileName</I>  是一个空串，则必须指定 <I>packageName</I>。<B>load</B>   命令首先用这个名字查找一个静态装载包(通过调用 <B>Tcl_StaticPackage</B>    过程注册的包)；如果找到了就使用它。否则，<B>load</B>   命令用这个名字查找动态装载包，如果找到就使用它。如果一些不同的文件被装载成包的不同版本，Tcl  选择被最先装载的文件。   
+
+
+
+
+
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>移植要点 PORTABILITY ISSUES</H2>
+
+<DL COMPACT>
+<DT><B>Windows</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<DD>
+在装载出现 &quot;library not found&quot; 错误的时候，也有可能是没找到一个依赖库。要查看依赖库，在一个 DOS  控制台中“dumpbin -imports &lt;dllname&gt;”来查看必须导入那些库。在当前目录中装载一个 DLL  的时候，Windows 将忽略作为一个路径指定符(specifier)的“./”，转而使用一次启发式(heuristic)的查找来找到这个 DLL。要避免如此，装载DLL  就要用   
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+    load [file join [pwd] mylib.DLL]
+
+</PRE>
+
+</DL>
+
+
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>BUGS</H2>
+
+<P>
+
+如果以不同的<I>fileName</I>s 装载同一个文件，它将被多次载入这个进程的地址空间。在不同的系统上装载的行为是不同的(一些系统可以检测多余的装载，其他的可能不能)。   
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B>info sharedlibextension</B>, <A HREF="/cgi-bin/man/man2html?3+Tcl_StaticPackage">Tcl_StaticPackage</A>(3), <A HREF="/cgi-bin/man/man2html?n+safe">safe</A>(n)
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+binary code, loading, safe interpreter, shared library
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/08/30  </B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">移植要点 PORTABILITY ISSUES</A><DD>
+<DT><A HREF="#lbAF">BUGS</A><DD>
+<DT><A HREF="#lbAG">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

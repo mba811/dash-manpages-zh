@@ -1,0 +1,127 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of history</TITLE>
+</HEAD><BODY>
+<H1>history</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+history - 操纵历史列表
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>history </B>?<I>option</I>? ?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>history</B> 命令完成与记录在一个历史列表中的最近执行过的命令有关的一些操作中的一个。每个记录的命令被作为一个“事件”来参照。使用下列形式给 <B>history</B> 命令指定的一个事件:
+<DL COMPACT>
+<DT>[1]<DD>
+一个数: 如果是正数，它用这个数来参照事件(所有事件多被从 1 开始计数)。如果是负数，它选择相对当前事件的一个事件(<B>-1</B> 参照上一个事件，<B>-2</B> 参照大上一个，以此类推)。事件 <B>0</B> 参照当前事件。
+<DT>[2]<DD>
+一个字符串: 选择匹配这个字符串的最新近的事件。在两种情况下一个事件被考虑为匹配这个字符串，要么这个字符串与这个命令的最前面的字符相同，要么这个字符串以与 <B>string match</B> 命令相同的方式匹配这个事件。
+</DL>
+<P>
+
+<B>history</B> 命令接受所有下列形式:
+<DL COMPACT>
+<DT><B>history</B><DD>
+同于下面描述的 <B>history info</B>。
+<DT><B>history add</B><I> command </I>?<B>exec</B>?<DD>
+把 <I>command</I> 参数作为一个新事件添加到历史列表中。如果指定了 <B>exec</B>(或其缩写) 则还执行这个命令并返回它的结果。如果没有指定 <B>exec</B> 则返回一个空串作为结果。
+<DT><B>history change</B><I> newValue</I> ?<I>event</I>?<DD>
+把给一个事件记录的值替代(replace)为 <I>newValue</I>。 <I>Event</I> 指定要替代的事件，缺省为当前 (<I>current</I>) 事件(不是事件 <B>-1</B>)。这个命令用在实现新形式的历史替换(substitution)的命令中，和用在想用通过替换建立的命令替代当前事件(调用这个替换的事件)的命令中。 返回值是一个空串。
+<DT><B>history clear</B><DD>
+删除历史列表。保持当前保留限制。重置历史事件数。
+<DT><B>history event</B> ?<I>event</I>?<DD>
+返回由 <I>event</I> 给出的事件的值。 <I>Event</I> 缺省为 <B>-1</B>。
+<DT><B>history info </B>?<I>count</I>?<DD>
+返回一个格式化了字符串(用于人们阅读)，它给出在历史列表中除了当前事件之外的每个事件的事件号和内容。如果指定了 <I>count</I>，则只返回新近的 <I>count</I> 个事件。
+<DT><B>history keep </B>?<I>count</I>?<DD>
+使用这个命令来变更历史列表的大小为 <I>count</I> 个事件。最初，在历史列表中保留 20 个事件。如果未指定 <I>count</I> ，则返回当前的保留限制。
+<DT><B>history nextid</B><DD>
+返回要记录在历史记录中的下一个事件的号码。这对象在命令行提示符下输出事件号这样的事有用。
+<DT><B>history redo </B>?<I>event</I>?<DD>
+重新执行由 <I>event</I> 指示的命令并返回它的结果。<I>Event</I> 缺省为 <B>-1</B>。这个命令导致历史修订: 详情见下面的段落。
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>历史修订 HISTORY REVISION</H2>
+
+<P>
+
+8.0 之前 的 Tcl 有一个复杂的历史修订机制。当前的机制受到了更多的限制，并且去除了老的历史操作 <B>substitute</B>  和 <B>words</B> 。(作为安慰，添加了 <B>clear</B> 操作。)
+<P>
+
+历史选项 <B>redo</B> 导致非常简单的“历史修订”。在调用这个选项的时候，修改最新近的事件来淘汰历史命令(的记录)并用历史命令的结果替换它。如果你打算重做一个事件而不修改历史列表，则使用 <B>event</B> 操作来检索某些事件，并使用 <B>add</B> 操作来向历史列表添加它并执行它。
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+event, history, record
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/09/03</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">历史修订 HISTORY REVISION</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,100 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ABORT</TITLE>
+</HEAD><BODY>
+<H1>ABORT</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ABORT - 退出当前事务
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+ABORT [ WORK | TRANSACTION ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>ABORT</B> 回卷当前事务并且废弃所有当前事务中做的更新。 这个命令和 SQL 命令
+ROLLBACK [<B><A HREF="/cgi-bin/man/man2html?7+rollback">rollback</A></B>(7)],
+的行为完全一样， 只是由于历史原因而保留下来。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B>WORK</B><DD>
+<DT><B>TRANSACTION</B><DD>
+<BR>&nbsp;可选的关键字，它们没有什么影响。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;使用&nbsp;COMMIT&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+commit">commit</A></B>(7)]&nbsp;to
+成功地中止一个事务。
+<P>
+
+<BR>&nbsp;如果不在事务内部发出&nbsp;ABORT&nbsp;不会有问题，但是会产生一个警告信息。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;退出全部变更：
+<P>
+<PRE>
+ABORT;
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;此命令是&nbsp;PostgreSQL&nbsp;基于历史原因做的扩展。&nbsp;ROLLBACK&nbsp;是&nbsp;SQL&nbsp;中等价的命令。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+BEGIN [<B><A HREF="/cgi-bin/man/man2html?7+begin">begin</A></B>(7)], COMMIT [<B><A HREF="/cgi-bin/man/man2html?l+commit">commit</A></B>(l)], ROLLBACK [<B><A HREF="/cgi-bin/man/man2html?l+rollback">rollback</A></B>(l)]
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

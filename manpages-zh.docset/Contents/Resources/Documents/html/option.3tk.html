@@ -1,0 +1,124 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of option</TITLE>
+</HEAD><BODY>
+<H1>option</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+option - 向/从选项数据库增加/取回窗口选项
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>option add </B><I>pattern value </I>?<I>priority</I>?
+<P>
+<B>option clear</B>
+<P>
+<B>option get </B><I>window name class</I>
+<P>
+<B>option readfile </B><I>fileName </I>?<I>priority</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>option</B> 命令允许你向 Tk 选项数据库增加条目或从这个数据取回(retrieve)选项。这个命令的 <B>add</B> 形式向数据库增加一个新选项。<I>Pattern</I> 包含被指定的选项，并且使用普通的 X 格式，由星号或点号分隔的名字和/或类组成。<I>Value</I> 包含一个与 <I>pattern</I> 相关联的文字串；可以通过到 <B>Tk_GetOption</B> 的调用或调用 <B>option get</B> 命令的调用返回这个值。如果指定了 <I>priority</I> ，它为这个选项指示特权级别(参见下面的合法值)；它缺省为 <B>interactive</B>。这个命令总是返回一个空串。
+<P>
+<P>
+
+<B>option clear</B> 命令清除选项数据库。下次向数据库增加或删除一个选项的时候，(从 <B>RESOURCE_MANAGER</B> 属性或 <B>.Xdefaults</B> 文件)自动的重新装载缺省选项。这个命令总是返回一个空串。
+<P>
+<P>
+
+<B>option get</B> 命令返回为在 <I>name</I> 和 <I>class</I> 下的 <I>window</I> 所指定选项的值。如果在数据库中的一些条目匹配 <I>window</I>、<I>name</I>��和 <I>class</I>，则这个命令返回用最高 <I>priority</I> 级别建立的那个条目。如果在同一个特权级别上有多个匹配的条目，则它返回最新近进入到选项数据库中的那个条目。如果没有匹配的条目，则返回空串。
+<P>
+<P>
+
+这个命令的 <B>readfile</B> 形式读取 <I>fileName</I>，它应当拥有用于 X 资源数据库如 <B>.Xdefaults</B> 的标准格式，并把在这个文件中指定的所有选项增加到选项数据库中。如果指定了 <I>priority</I>，则它指示以在何种优先级上加入选项；<I>priority</I> 缺省为 <B>interactive</B>。
+<P>
+<P>
+
+给 <B>option</B> 命令的 <I>priority</I> 参数通常使用下列值之一来用符号指定:
+<P>
+<DL COMPACT>
+<DT><B>widgetDefault</B><DD>
+级别 20。用于硬编码到组件中的缺省值。
+<DT><B>startupFile</B><DD>
+级别 40。用于在特定于应用的启动文件中指定的选项。
+<DT><B>userDefault</B><DD>
+级别 60。用于在特定于用户的缺省文件如 <B>.Xdefaults</B>，装载到 X 服务器内的资源数据库，或特定于用户的启动文件中指定的选项。
+<DT><B>interactive</B><DD>
+级别 80。用于应用程序开始运行之后交互的指定的选项。如果未指定 <I>priority</I>，则它缺省为这个级别。
+<P>
+</DL>
+<P>
+
+任何上述关键字都可以被缩写。此外，可以用 0 和 100 (含)之间的整数来用数值指定优先级。除非特权级不是上述给出的那些，否则用数值形式的优先级可能不是个好主意。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+database, option, priority, retrieve
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/07/10</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

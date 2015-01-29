@@ -1,0 +1,127 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SpinBox</TITLE>
+</HEAD><BODY>
+<H1>SpinBox</H1>
+Section: Misc. Reference Manual Pages (3tk)<BR>Updated: tcllib - BWidget<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>SpinBox - SpinBox 组件</B>
+
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>创建 CREATION</H2>
+
+<B>SpinBox pathName ?option value...?</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+SpinBox 组件使用户能在用 values 选项给出的一个列表，或用一个最小值、一个最大值和一个增量定义的一组值中选择一个值。注意 range 选项定义值的一个列表，所以 getvalue 和 setvalue 能操作 values 和 range 二者。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>组件特有选项 WIDGET-SPECIFIC OPTIONS</H2>
+
+<DL COMPACT>
+<DT>-modifycmd  <DD>
+指定在用户修改 SpinBox 的值的时候调用的 Tcl 命令。 
+<P>
+<DT>-range  <DD>
+指定描述 SpinBox 的最小值、最大值和增量的三个整数的一个列表。 
+<P>
+<DT>-values  <DD>
+指定 SpinBox 接受的值。这个选项优先于 range 选项。 
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>组件命令</H2>
+
+<P>
+<DL COMPACT>
+<DT>pathName bind ?arg...? <DD>
+在录入组件上设置绑定。 
+<P>
+<DT>pathName cget option  <DD>
+返回用 option 给出的配置选项的当前值。Option 可以是能被建立命令接受的任何值。
+<P>
+<DT>pathName configure ?option? ?value option value ...? <DD>
+查询或修改这个组件的配置选项。如果未指定 option ，则返回描述 pathName 的所有可获得的选项的一个列表。如果指定了不带 value 的 option，则这个命令返回描述这个指名的 option 的一个列表(这个列表与未指定 option 所返回的值的相应的子集是一样的)。如果指定了一个或多个选项-值 对，则这个命令把给定的组件选项修改为给定的值；在这种情况下这个命令返回一个空串。Option 可以是能被建立命令接受的任何值。只读选项不可修改。 
+<P>
+<DT>pathName getvalue  <DD>
+返回 SpinBox 当前文本在值的列表中的索引，如果它不匹配任何值则返回 -1。 
+<P>
+<DT>pathName setvalue index  <DD>
+把 SpinBox 的文本设置成用在值的列表中的索引指示的值。index 可以被指定为任何下列形式:
+<P>
+last
+指定值的列表的最后一个元素。 
+<P>
+first
+指定值的列表的第一个元素。 
+<P>
+next
+指定值的列表的当前元素(就是 getvalue 返回的那个)的下一个元素。 
+<P>
+previous
+指定值的列表的当前元素(就是 getvalue 返回的那个)的上一个元素。 
+<P>
+@number
+指定在值的列表的整数索引。 
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>绑定</H2>
+
+<P>
+在 SpinBox 的录入组件获得输入聚焦的时候，除了缺省的录入组件绑定之外，它还有下列绑定:
+<P>
+* Page up 把 SpinBox 的值设置为最后一个值。
+<P>
+* Page down 把 SpinBox 的值设置为第一个值。
+<P>
+* Arrow up 把 SpinBox 的值设置为下一个值。
+<P>
+* Arrow down 把 SpinBox 的值设置为上一个值。 
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/05/17</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">创建 CREATION</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">组件特有选项 WIDGET-SPECIFIC OPTIONS</A><DD>
+<DT><A HREF="#lbAF">组件命令</A><DD>
+<DT><A HREF="#lbAG">绑定</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,177 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of fconfigure</TITLE>
+</HEAD><BODY>
+<H1>fconfigure</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+fconfigure - 设置和获得一个通道上的选项      
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<PRE>
+<B>fconfigure </B><I>channelId</I>
+<B>fconfigure </B><I>channelId</I> <I>name</I>
+<B>fconfigure </B><I>channelId</I> <I>name value </I>?<I>name value ...</I>?
+</PRE>
+
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>fconfigure</B>   命令设置和检索一个通道的选项。<I>ChannelId</I> 标识要设置或查询某个选项的那个通道。如果没有提供 <I>name</I> 或 <I>value</I> 参数，命令返回一个列表，它包含着这个通道上可变更的选项名字和值。如果提供了 <I>name</I> 而没有 <I>value</I>  则命令返回给定选项的当前值。如果提供一对或多对 <I>name</I>和 <I>value</I>，命令把每个指名的选项设置成相应的 <I>value </I>；在这种情况下返回值是一个空串。
+<P>
+
+所有通道都支持下面描述的选项。额外的，每个通道类型都可以增加只有它自己支持的选项。参见建立各种类型通道的命令的手册条目来得到这个特定类型的通道所支持的选项。例如，参见  <B>socket</B>命令的手册条目来得到增补的选项。
+<DL COMPACT>
+<DT><B>-blocking</B> <I>boolean</I><DD>
+<B>-blocking</B>  选项决定在通道上的 I/O  操作是否可以导致进程无限的阻塞。选项的值必须是一个正确的 boolean  值。通道通常在阻塞模式中；如果把一个通道转换到非阻塞模式中，它将影响 <B>gets</B>、<B>read</B>、<B>puts</B>、<B>flush</B>、和 <B>close</B>  命令的操作；详见这些命令的文档。要使非阻塞模式正常工作，应用必须使用 Tcl    事件循环(例如，通过调用 <B>Tcl_DoOneEvent</B>  或调用 <B>vwait</B>  命令)。 
+<DT><B>-buffering</B> <I>newValue</I><DD>
+如果 <I>newValue</I>  是 <B>full</B>，则 I/O 系统直到它的内部缓冲变满或调用 <B>flush</B>   命令之后才将缓冲输出。如果 <I>newValue</I> 是 <B>line</B>，则 I/O 系统将在输出一个换行符的时候自动的刷新此通道的输出。如果 <I>newValue</I>  是 <B>none</B>，则 I/O 系统将在每次输出操作之后自动刷新。除了连接到终端类设备的通道被初始设置成 <B>line </B>之外，<B>-buffering</B>  的缺省被设置成 <B>full</B>。补充一下，<B>stdin</B>  和 <B>stdout</B>  被初始设置成 <B>line</B>，而 <B>stderr</B> 被设置成 <B>none</B>。               
+<DT><B>-buffersize</B> <I>newSize</I><DD>
+<I>Newvalue</I>必须是一个整数；使用它的值来设置随后分配给这个通道用来存储输入和输出的缓冲区的大小，以字节为单位。<I>Newvalue</I>  必须在十到一百万之间，即允许十到一百万字节大小的缓冲区。 
+
+<BR>
+
+
+
+
+
+
+
+<DT><B>-encoding</B> <I>name</I><DD>
+用这个选项来指定通道的编码，为了在 Tcl 中使用数据，数据可以转换成 Unicode 或从 Unicode 转换过来。例如，要使 Tcl 从用 <B>shiftjis</B>  编码的日文文件中读取字符并正确的处理和显示其中的内容，编码就应该设置成 <B>shiftjis</B>。此后，当从一个通道读取的时候，在这个日文文件中的字节如其所读的将被转换成 Unicode。同样也支持写入 - 即把要写到通道中的 Tcl 字符串自动的转换成输出上的特定编码。
+<DL COMPACT><DT><DD>
+<P>
+
+如果一个文件包含纯二进制数据(例如，一个 JPEG 图象)，这种通道应当被配置成 <B>binary</B>。Tcl  将对这种文件中的数据不赋予任何解释，而是简单的读或写原始(raw)的字节。使用Tcl <B>binary</B>  命令操纵这种原始字节数据。
+<P>
+
+给新打开的通道的缺省编码与同操作系统交互时使用的依赖于平台或本地的编码是一样的。              
+</DL>
+
+
+
+
+
+
+
+<DT><B>-eofchar</B> <I>char</I><DD>
+<DT><B>-eofchar</B> <B>{</B><I>inChar outChar</I><B>}</B><DD>
+这个选项支持 DOS 文件系统，它使用 Control-z (\x1a)作为文件结束的标记符(marker)。如果 <I>char</I>  不是一个空串，则在输入期间遇到这个字符时指示(signal)文件结束。对于输出，在关闭通道的时候输出文件结束字符。如果 <I>char</I> 是一个空串，则没有特定的文件结束字符标记符。对于读写通道，一个有两个元素的列表分别指定给输入和输出的文件结束标记符。作为一种约定，在给读写通道设置文件结束符的时候，你可以指定一个单一的值，同时提供给读和写。在查询一个读写通道的文件结束符时，将返回一个两个元素的列表。除了在 Windows 下的文件之外的情况下，<B>-eofchar</B>  缺省值是一个空串。在Windows 的情况下，对于读 <B>-eofchar</B>  是 Control-z (\x1a)，对于写是空串。              
+<DT><B>-translation</B> <I>mode</I><DD>
+<DT><B>-translation</B> <B>{</B><I>inMode outMode</I><B>}</B> <DD>
+在 Tcl 脚本中总是使用一个单一的换行符(\n)来表示一行的结束。但是在实际的文件和设备中的行结束在不同的平台上可能有不同的表示，甚至在相同的平台的不同的设备上也可能有不同的表示。例如，在 UNIX 下在文件中是换行符，而在网络连接中通常使用回车-换行(carriage-return-linefeed)序列。在输入上  (例如，使用 <B>gets</B> 和 <B>read</B>)，Tcl I/O 系统自动的把外部的行结束表示转换成换行符。在输出上(例如，使用 <B>puts</B>)，I/O 系统把换行符转换成外部的行结束表示。缺省的转换模式是 <B>auto</B>，即自动的处理所有一般情况，而 <B>-translation</B> 
+<BR>&nbsp;选项在提供显式的对行结束转换的控制。
+</DL>
+<P>
+
+对于只读和只写通道，与 <B>-translation</B>   相关联的值是一个单一的项目。对于读写通道这个值是一个两个元素的列表；列表的第一个元素是读转换模式，第二个元素是写转换模式。作为一种约定，在给读写通道设置行结束符的时候，你可以指定一个单一的值，同时提供给读和写。在查询一个读写通道的行结束符时，将返回一个两个元素的列表。当前支持下列值:              
+<DL COMPACT>
+<DT><B>auto</B><DD>
+作为输入转换模式，<B>auto</B>  把所有的换行(<B>lf</B>)、回车(<B>cr</B>)、或一个回车并跟随一个换行(<B>crlf</B>) 作为行结束表示。行结束表示甚至可以从行到行的改变，并且所有的情况都被转换成一个换行符。作为输出转换模式，<B>auto</B>  选择一个特定于平台的表示；对于套接口，Tcl 在所有平台上均选择 <B>crlf</B>，对于所有 Unix 版本(flavor)，它选择 <B>lf</B>，对Macintosh 平台它选择 <B>cr</B>，对于各种版本的Windows 它选择 <B>crlf</B>。对于输入和输出二者，<B>-translation</B>的缺省设置是 <B>auto</B>。               
+
+<BR>
+
+
+
+
+
+
+
+<DT><B>binary</B> <DD>
+不进行行结束转换。除了 <B>binary</B>模式额外的把文件结束符设置成空串(禁用文件结束符)，并且把编码设置成 <B>binary</B> (禁用编码过滤)之外，它与<B>lf</B>  模式基本一致。详细信息参见 <B>-eofchar</B> 和 <B>-encoding</B>。               
+
+
+
+
+
+
+<DT><B>cr</B><DD>
+在底层文件或设备中的行结束被表示为一个单一的回车符。作为输入转换模式，<B>cr</B>模式把回车符转换成换行符。作为输出转换模式，<B>cr</B>模式把换行符转换成回车符。这种模式典型的在 Macintosh 平台上使用。               
+<DT><B>crlf</B><DD>
+在底层文件或设备中的行结束被表示一个回车符并跟随一个换行符。作为输入转换模式，<B>crlf</B>模式把回车换行序列转换成换行符。作为输出模式，<B>crlf</B> 模式把换行符转换成回车换行序列。这种模式典型的在 Windows  平台和网络连接上使用。 
+<DT><B>lf</B><DD>
+在底层文件或设备中的行结束被表示为一个单一的换行符。在这种模式下在输入或输出期间没有转换发生。这种模式典型的在UNIX 平台上使用。
+
+</DL>
+<P>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+close">close</A>(n), <A HREF="/cgi-bin/man/man2html?n+flush">flush</A>(n), <A HREF="/cgi-bin/man/man2html?n+gets">gets</A>(n), <A HREF="/cgi-bin/man/man2html?n+puts">puts</A>(n), <A HREF="/cgi-bin/man/man2html?n+read">read</A>(n), <A HREF="/cgi-bin/man/man2html?n+socket">socket</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+blocking, buffering, carriage return, end of line, flushing, linemode,
+newline, nonblocking, platform, translation, encoding, filter, byte array,
+binary
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/08/02</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

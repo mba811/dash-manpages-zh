@@ -1,0 +1,123 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of fileevent</TITLE>
+</HEAD><BODY>
+<H1>fileevent</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.5<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+fileevent - 在一个通道变得可读或可写的时候执行一个脚本
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>fileevent </B><I>channelId </I><B>readable </B>?<I>script</I>?
+<P>
+<B>fileevent </B><I>channelId </I><B>writable </B>?<I>script</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令被用于建立<I>文件事件处理器</I>。一个文件事件处理器(handler)是在一个通道和一个脚本之间的一个绑定，这样在通道变得可读或可写的时候求这个脚本的值。通常使用文件事件处理器来允许在事件驱动的基础上从另一个进程接收数据，这样接受者可以在等待数据到来的时候继续与用户交互。如果一个应用在一个阻塞(模式下)的通道上调用 <B>gets</B>或 <B>read</B>，而此时没有可获得的数据，在输入数据到来之前，进程将被阻塞，它将不能服务于其他事件，所以对于用户它象是被“冷冻”了。使用 <B>fileevent</B>，进程可以在数据出现(present)的时候被告之，而只在不会导致阻塞的时候调用 <B>gets</B>或 <B>read</B>  。
+<P>
+
+给 <B>fileevent</B>的 <I>channelId</I>   参数参照一个打开的通道，比如从以前的 <B>open</B> 或 <B>socket</B>  命令的得到的返回值。如果指定了 <I>script</I>  参数，则 <B>fileevent</B>  建立一个新的事件处理器: 在通道变得可读或可写(依赖于给 <B>fileevent</B> 的第二个参数)的时候求 <I>script</I>  的值。在这种情况下 <B>fileevent</B> 返回一个空串。对于一个文件 <B>readable</B> 和 <B>writable</B>事件处理器是独立的，可以单独的建立和删除。但是，在一个特定的解释器中在一个特定的时间上对于一个文件最多只能有一个<B>readable</B>和一个 <B>writable</B>  处理器。如果调用 <B>fileevent</B>而此时指定的处理器已经在调用的解释器中存在，新的脚本替换旧的那个。  
+<P>
+
+如果没有指定 <I>script</I>  参数，<B>fileevent</B> 为 <I>channelId</I>返回当前的脚本，如果没有则返回一个空串。如果 指定 <I>script</I> 参数为一个空串则删除这个事件处理器，如此将不会有脚本被调用。在一个通道被关闭或它的解释器被删除的时候文件的事件处理器也自动的被删除。
+<P>
+
+如果在底层的设备上有可获得的未读的数据则把一个通道考虑为可读的。除了要从这个通道读的最近的尝试是不能在输入缓冲中找到一个完整的行的一个 <B>gets</B>  调用的特殊情况之外，如果在一个输入缓冲中有未读的数据也把一个通道考虑未可读的。这个特征允许使用事件从一个在非阻塞模式下的文件中一次读一行。如果在底层的文件或设备上有文件结束或出错的条件出现也把一个通道考虑为可读的。对于 <I>script</I> 检查这些条件和正确的处理它们是很重要的；例如，如果没有对文件结束的特定检查，可能发生一个无限的循环，这里<I>script</I>  读不到数据，返回，立即重新调用。
+<P>
+
+如果至少数据中有一字节可以写到底层文件或设备中而不阻塞，或者在底层的文件或设备上有错误的条件出现则把一个通道考虑为可写的。    
+<P>
+
+<P>
+事件驱动 I/O 最好为使用 <B>fconfigure</B>  命令配置成非阻塞模式的通道工作。在阻塞模式下，如果你给它的数据比底层文件或数据可接受的多，则 <B>puts</B> 命令将阻塞，而如果你读的数据比已经准备好的多，则<B>gets</B> 或 <B>read</B> 命令将阻塞；在命令阻塞时不处理事件。在非阻塞模式下，<B>puts</B>、<B>read</B>和 <B>gets</B>从不阻塞。参见这些单独命令的文档来得到关于它们如何处理阻塞和非阻塞通道的信息。
+<P>
+
+给一个文件事件的脚本在调用<B>fileevent</B>  命令的解释器的全局的层次上执行(在任何 Tcl 过程的上下文之外)。如果在执行脚本期间发生了错误则使用 <B>bgerror</B> 机制来报告错误。额外的，如果一个事件处理器曾经返回错误则删除它；目的是防止缺陷很多的处理器导致无限循环。  
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>感谢 CREDITS</H2>
+
+<P>
+
+<B>fileevent</B>  基于由 Mark Diekhans 建立的 <B>addinput</B>  命令。
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+bgerror">bgerror</A>(n), <A HREF="/cgi-bin/man/man2html?n+fconfigure">fconfigure</A>(n), <A HREF="/cgi-bin/man/man2html?n+gets">gets</A>(n), <A HREF="/cgi-bin/man/man2html?n+puts">puts</A>(n), <A HREF="/cgi-bin/man/man2html?n+read">read</A>(n)
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+asynchronous I/O, blocking, channel, event handler, nonblocking, readable,
+script, writable.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/08/13</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">感谢 CREDITS</A><DD>
+<DT><A HREF="#lbAF">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

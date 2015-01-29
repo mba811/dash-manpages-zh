@@ -1,0 +1,77 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SET CONSTRAINTS</TITLE>
+</HEAD><BODY>
+<H1>SET CONSTRAINTS</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+SET CONSTRAINTS - 设置当前事务的约束模式
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+SET CONSTRAINTS { ALL | <I>name</I> [, ...] } { DEFERRED | IMMEDIATE }
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>SET CONSTRAINTS</B> 设置当前事务里的约束运算的特性。 在 IMMEDIATE 模式下，约束是在每条语句后面进行检查的。 在 DEFERRED 模式下，一直到事务提交时才检查约束。
+<P>
+
+<BR>&nbsp;在你把约束的模式修改成&nbsp;IMMEDIATE&nbsp;之后，新的约束模式是反作用式地生效的：&nbsp;任何尚在等待的，需要在事务结束检查地数据修改的约束（在使用&nbsp;DEFERRED&nbsp;的时候）都将在执行&nbsp;SET&nbsp;CONSTRAINTS&nbsp;&nbsp;命令的时候马上检查。
+<P>
+
+<BR>&nbsp;从创建的时候开始，一个约束总是表现为下面三个特性之一：&nbsp;INITIALLY&nbsp;DEFERRED,
+INITIALLY IMMEDIATE DEFERRABLE, 或
+INITIALLY IMMEDIATE NOT DEFERRABLE。 第三个特性不会受 SET CONSTRAINTS影响。
+<P>
+
+<BR>&nbsp;目前，只有外键约束被这个设置影响。检查和唯一约束总是立即检查的而不是可推迟的。
+<A NAME="lbAE">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;这个命令只在当前事务里修改约束的行为。因此，如果你在事务块外面&nbsp;（BEGIN/COMMIT&nbsp;对）执行这个命令，&nbsp;它将显得没有任何作用那样。如果你希望不在每个事务中发出&nbsp;SET&nbsp;CONSTRAINTS&nbsp;也能修改约束的行为，&nbsp;那么在创建这些约束的时候声明&nbsp;INITIALLY&nbsp;DEFERRED&nbsp;或者&nbsp;INITIALLY&nbsp;IMMEDIATE。
+<A NAME="lbAF">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;这条命令与&nbsp;SQL&nbsp;标准里定义的行为兼容，只不过，在&nbsp;PostgreSQL&nbsp;里，它只适用于外键约束。
+<A NAME="lbAG">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">NOTES 注意</A><DD>
+<DT><A HREF="#lbAF">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAG">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

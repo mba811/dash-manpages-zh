@@ -1,0 +1,175 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of registry</TITLE>
+</HEAD><BODY>
+<H1>registry</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+registry - 操纵 Windows 注册表
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<P>
+<B>package require registry 1.0</B>
+<P>
+<B>registry </B><I>option</I> <I>keyName</I> ?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>registry</B> 包为操纵 Windows 注册表提供了一个通用的操作集。这个包实现了 Tcl 命令 <B>registry</B>。只在 Windows 平台上支持这个命令。警告: 使用这个命令必须谨慎，因为一个被破坏了的注册表将导致你的系统进入不可用状态。
+<P>
+
+<I>KeyName</I> 是一个注册表键的名字。注册表键必须是下列一种形式之一:
+<DL COMPACT>
+<DT><DD>
+<B>\\</B><I>hostname</I><B>\</B><I>rootname</I><B>\</B><I>keypath</I>
+<DT><DD>
+<I>rootname</I><B>\</B><I>keypath</I>
+<DT><DD>
+<I>rootname</I>
+</DL>
+<P>
+
+<I>Hostname</I> 指定任何有效的 Windows 主机名字，它导出了自己的注册表。<I>rootname</I> 组成部分必须是下列之一：
+<B>HKEY_LOCAL_MACHINE</B>, <B>HKEY_USERS</B>,
+
+
+
+
+
+
+
+<B>HKEY_CLASSES_ROOT</B>, <B>HKEY_CURRENT_USER</B>,
+<B>HKEY_CURRENT_CONFIG</B>, <B>HKEY_PERFORMANCE_DATA</B>, or
+<B>HKEY_DYN_DATA</B>.  
+<I>keypath</I> 可以是一个或更多
+
+
+
+
+
+
+注册表键的名字, 用反斜杠字符(<B>\fR)分隔。
+<P>
+
+</B><I>Option</I> 指示对注册表键名要做什么。可接受一个唯一的 <I>option</I> 的缩写。有效的选项有:
+<DL COMPACT>
+<DT><B>registry delete </B><I>keyName</I> ?<I>valueName</I>?<DD>
+如果提供了可选的 <I>valueName</I>     参数，则从注册表中删除 <I>keyName</I>     下的这个指定的值。如果省略了可选的 <I>valueName</I>，则删除这个指定的键和在注册表层次中位于其下的子键或值。如果不能删除这个键则生成一个错误。如果这个键不存在，这个命令没有作用。
+<DT><B>registry get </B><I>keyName valueName</I><DD>
+返回在键 <I>keyName </I>下面的值 <I>valueName</I>     所关联的数据。如果这个键或值不存在，则生成一个错误。     返回数据的格式的详情请参见下面的 SUPPORTED TYPES 支持的类型。
+<DT><B>registry keys </B><I>keyName</I> ?<I>pattern</I>?<DD>
+如果未指定 <I>pattern</I>，返回 <I>keyName </I>的所有子键的名字的一个列表。如果指定了 <I>pattern</I>，只返回匹配 <I>pattern</I> 的那些名字。使用与 <B>string</B> 相同的匹配规则确定匹配。如果指定的 <I>keyName</I>  不存在，则生成一个错误。
+<DT><B>registry set </B><I>keyName</I> ?<I>valueName data </I>?<I>type</I>??<DD>
+如果未指定 <I>valueName</I>，若键 <I>keyName</I> 不存在则建立之。如果指定了 <I>valueName</I>，如果需要的话，建立键  <I>keyName</I> 和值 <I>valueName</I>。<I>valueName</I> 的内容被设置成 <I>data</I>，用 <I>type </I>指示其类型。如果未指定 <I>type</I>，假定为类型 <B>sz</B>。数据和类型参数的详情请参见下面的 SUPPORTED TYPES 支持的类型。
+<DT><B>registry type </B><I>keyName valueName</I><DD>
+返回在键 <I>keyName </I>中的值 <I>valueName</I>     的类型。可能的类型的更多信息请参见下面的SUPPORTED TYPES 支持的类型。
+<DT><B>registry values </B><I>keyName</I> ?<I>pattern</I>?<DD>
+如果未指定 <I>pattern</I>，返回 <I>keyName </I>的所有值的名字的一个列表。如果指定了     <I>pattern</I> ，只返回匹配 <I>pattern</I> 的那些名字。使用与     <B>string</B> 相同的匹配规则确定匹配。
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>支持的类型 SUPPORTED TYPES</H2>
+
+在注册表中一个键之下的每个值包含特定类型的一些数据，这些数据存储为特定于类型的表示。<B>registry</B> 命令在这种内部表示和可以被 Tcl 脚本操作的表示之间进行转换。在多数情况下，数据被简单的返回为一个 Tcl 字符串。类型为数据指示目的用途，但不实际改变表示。对于一些类型，<B>registry</B> 命令以不同的形式返回数据以易于操纵。注册命令识别下列类型:
+<DL COMPACT>
+<DT><B>binary</B><DD>
+注册值包含任意二进制数据。数据在 Tcl     中被精确表示，包括所有嵌入的 null。
+<DT><B>none</B><DD>
+注册值包含未定义类型的任意二进制数据。数据在 Tcl     中被精确表示，包括所有嵌入的 null。
+<DT><B>sz</B><DD>
+注册值包含一个 null 终结的字符串。数据在 Tcl     中被表示为一个字符串。
+<DT><B>expand_sz</B><DD>
+注册值包含一个 null     终结的字符串，其中包含到环境变量的未展开的引用(unexpanded reference)，引用是通常的 Windows 式样(例如，&quot;%PATH%&quot;)。数据在 Tcl 中被表示为一个字符串。
+<DT><B>dword</B><DD>
+注册值包含一个小端(little-endian) 32 位数。数据在 Tcl     中被表示为一个十进制串。
+<DT><B>dword_big_endian</B><DD>
+注册值包含一个大端(big-endian) 32 位数。数据在 Tcl     中被表示为一个十进制串。
+<DT><B>link</B><DD>
+注册值包含一个符号连接。数据在 Tcl     中被精确表示，包括所有嵌入的 null。
+<DT><B>multi_sz</B><DD>
+注册值包含 null 终结的字符串的一个数组。数据在 Tcl     中被表示为字符串的一个列表。
+<DT><B>resource_list</B><DD>
+注册值包含一个设备-驱动器资源列表。数据在 Tcl     中被精确表示，包括所有嵌入的 null。
+</DL>
+<P>
+
+除了上面列出的用符号命名的类型之外，用对应于系统接口返回的类型代码的一个32位整数标识未知类型 。在这种情况下，数据在 Tcl 中被精确表示，包括所有嵌入的 null。
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>移植要点 PORTABILITY ISSUES</H2>
+
+只能在 Windows 中使用注册表命令。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+registry
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/29</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">支持的类型 SUPPORTED TYPES</A><DD>
+<DT><A HREF="#lbAF">移植要点 PORTABILITY ISSUES</A><DD>
+<DT><A HREF="#lbAG">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,109 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of for</TITLE>
+</HEAD><BODY>
+<H1>for</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+for - ``For'' 循环
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>for </B><I>start test next body</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>For</B>  是一个循环命令，在结构上类似与 C 语言的 <B>for</B>语句。<I>start</I>、<I>next</I>、和<I>body</I>  参数必须是 Tcl 命令串，而 <I>test</I> 是一个表达式串。<B>for</B>  命令首先调用 Tcl 解释器来执行 <I>start</I>。接着它重复的把 <I>test</I>作为一个表达式来求值；如果结果是非零则它在 <I>body </I>上调用 Tcl 解释器，接着在 <I>next </I>上调用 Tcl 解释器，接着重复这个循环。在 <I>test</I>  被求值为 0 的时候命令终止。如果<I>body</I>  中调用了 <B>continue</B>  命令则在 <I>body</I>  的当前执行中的所有剩余的命令都被跳过；处理继续，在 <I>next </I>上调用 Tcl 解释器，接着对 <I>test </I>求值。 等等. 如果在 <I>body</I> 或 <I>next </I>中调用 <B>break</B>  命令，则 <B>for</B>  命令将立即返回。<B>break</B>  和 <B>continue</B>  命令的操作类似于在 C 语言中相应的语句。<B>For</B>  返回一个空串。
+<P>
+
+注意: <I>test</I> 应当总是在花括号中包围着。如果不是这样，在 <B>for</B>  命令开始之前就作了变量替换，这意味着在循环体中做的变量变更在表达式中将不被考虑。将导致一个无限循环。如果 <I>test</I>  被包围在花括号中，变量替换将延迟，直到表达式求值(在每次循环重复之前)，所以变量的变更将是可见的。例如，尝试在 <B>$x&lt;10</B> 周围有和没有一对花括号的下列脚本: 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+for {set x 0} {$x&lt;10} {incr x} {
+   puts &quot;x is $x&quot;
+}
+
+</PRE>
+
+</DL>
+
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+break, continue, foreach, while
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+for, iteration, looping
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/08/05 </B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

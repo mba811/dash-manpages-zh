@@ -1,0 +1,96 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of gets</TITLE>
+</HEAD><BODY>
+<H1>gets</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.5<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+gets - 从一个通道读一行
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>gets </B><I>channelId</I> ?<I>varName</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令从 <I>channelId </I>读下一行，返回直到(但不包括)行结束字符的行中所有字符，并抛弃行结束字符。如果省略了 <I>varName</I>，把这一行作为命令的结果返回。如果指定了 <I>varName</I> ，则把这一行放置到叫这个名字的变量中而返回值是返回的字符总数。
+<P>
+
+如果在检索行结束的时候遇到了文件结束，命令返回直到文件结束可获得的所有输入。如果 <I>channelId</I>在非阻塞模式下并且不能获得完整的一行的输入，命令返回一个空串并不消耗任何输入。因为文件结束或因为在非阻塞模式下数据不充足，如果指定了 <I>varName</I> 并切返回了一个空串，则返回的总数是 -1。注意如果未指定 <I>varName</I>  则在文件结束和没有可获得的完整的一行的情况下产生的结果与输入行只由一个行结束字符组成同样。使用<B>eof</B> 和 <B>fblocked</B>命令来区别这三种情况。  
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+file">file</A>(n), <A HREF="/cgi-bin/man/man2html?n+eof">eof</A>(n), <A HREF="/cgi-bin/man/man2html?n+fblocked">fblocked</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+blocking, channel, end of file, end of line, line, nonblocking, read
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/09/02  </B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

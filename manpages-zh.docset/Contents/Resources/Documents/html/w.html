@@ -1,0 +1,160 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of W</TITLE>
+</HEAD><BODY>
+<H1>W</H1>
+Section: Linux User's Manual (1)<BR>Updated: 8 Dec 1993 <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+w - 显示已经登录的用户以及他们在做什么
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>w -</B>
+
+[<B>husfV</B>]
+
+[<I>user</I>]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>w </B>
+
+显示 系统中 当前用户 的 信息, 以及 他们 的 进程.
+第一行 中 依次 显示 当前时间, 系统的 持续运行时间, 登录的 用户数, 和 最近
+1, 5, 15 分钟 的 系统平均负载 (load average).
+<P>
+接下来 的 条目 显示 每位 用户 的:
+登录名, tty 名, 远程主机, 登录时间, 空闲时间, JCPU, PCPU, 以及
+他们 当前进程 的 命令行.
+<P>
+JCPU 时间 指 某个 tty 上 所有 进程 用掉的 时间, 不包括 过去的 后台任务,
+但是 包括 正在 运行 的 后台任务.
+<P>
+PCPU 时间 指 当前进程 用掉的 时间, 可以 在 &quot;what&quot; 域 看到 当前进程.
+<P>
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>命令行选项 (OPTIONS)</H2>
+
+<DL COMPACT>
+<DT><B>-h </B>
+
+<DD>
+不显示 首行.
+<DT><B>-u </B>
+
+<DD>
+确定 当前进程 和 CPU 时间 的 时候 忽略 用户名. 要 展示 这个 效果,
+执行 &quot;su&quot;, 然后 执行 &quot;w&quot; 和 &quot;w -u&quot;.
+<DT><B>-s </B>
+
+<DD>
+使用 简短格式. 不显示 登录时间, JCPU 或 PCPU 时间.
+<DT><B>-f </B>
+
+<DD>
+切换 显示
+<B>from</B>
+
+(远程主机) 域.  缺省的 发行 方式 是 不显示
+<B>from</B>
+
+域, 但是 系统管理员 或者 发行包 维护者 有可能 编译了 一个 缺省行为 是 显示
+<B>from</B>
+
+域 的 版本.
+<DT><B>-V </B>
+
+<DD>
+显示 版本信息.
+<DT><B>user </B>
+
+<DD>
+仅显示 指定用户 的 信息.
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>文件 (FILES)</H2>
+
+
+
+<I>/etc/utmp</I>
+
+已登录用户 的 信息
+<BR>
+
+<I>/proc</I>
+
+进程 信息
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+free">free</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+ps">ps</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+top">top</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+uptime">uptime</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?5+utmp">utmp</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?1+who">who</A></B>(1)
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者 (AUTHORS)</H2>
+
+<B>w</B>
+
+基于 Larry Greenfield &lt;<A HREF="mailto:greenfie@gauss.rutgers.edu">greenfie@gauss.rutgers.edu</A>&gt; 和 Michael K. Johnson
+&lt;<A HREF="mailto:johnsonm@redhat.com">johnsonm@redhat.com</A>&gt; 的 版本, Charles Blake 几乎 做了 彻底 重写.
+<P>
+请将 bug 报告 送往 &lt;<A HREF="mailto:procps-bugs@redhat.com">procps-bugs@redhat.com</A>&gt;
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">命令行选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">文件 (FILES)</A><DD>
+<DT><A HREF="#lbAG">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAH">作者 (AUTHORS)</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

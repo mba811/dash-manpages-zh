@@ -1,0 +1,136 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of selection</TITLE>
+</HEAD><BODY>
+<H1>selection</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: 8.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+selection - 操纵 X 选择
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>selection </B><I>option</I> ?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令提供到 X 选择机制的一个 Tcl 接口并实现了在 X 
+客户间通信协定手册(ICCCM)中描述全部选择功能。
+<P>
+
+给 <B>selection</B> 的第一个参数决定余下的参数的格式和命令的行为。当前支持下列形式:
+<P>
+
+<DL COMPACT>
+<DT><B>selection clear</B> ?<B>-displayof</B> <I>window</I>? ?<B>-selection</B> <I>selection</I>?<DD>
+如果 <I>selection</I> 存在于 <I>window </I>的显示器上的某个地方，则清除它这样就没有任何窗口拥有这个选择了。<I>Selection</I>     指定应该清除的 X 选择，并且应当是一个原子的名字如 PRIMARY 或 CLIPBOARD；详情请参见 X 客户间通信协定手册。<I>Selection</I>  缺省为 PRIMARY 而 <I>window</I> 缺省为“.”。返回一个空串。
+<DT><B>selection get</B> ?<B>-displayof</B> <I>window</I>? ?<B>-selection</B> <I>selection</I>? ?<B>-type</B> <I>type</I>?<DD>
+从 <I>window </I>的显示器取回 <I>selection</I> 的值并把它作为结果返回。<I>Selection</I> 缺省为 PRIMARY 而 <I>window</I>  缺省为“.”。<I>Type</I> 指定返回选择用的形式(用 ICCCM 术语是想要的转换的“目标”)，并且应当是一个原子的名字如 STRING 或 FILE_NAME； 详情请参见 X 客户间通信协定手册。<I>Type</I>  缺省为 STRING。选择拥有者可以在多种不同的表示格式中挑选返回选择(的格式)，比如 STRING、ATOM、INTEGER 等。(这个格式不同与选择类型，如有混淆请参见 ICCCM)。如果以非字符串格式返回选择。比如 INTEGER 或 ATOM，<B>selection</B>  命令把它转换字符串格式，即一组用空格分隔的字段:  把原子转换成他们的文字名字，把其他任何东西都转换成十六进制整数。
+<DT><B>selection handle</B> ?<B>-selection</B> <I>selection</I>? ?<B>-type</B> <I>type</I>? ?<B>-format</B> <I>format</I>? <I>window command</I><DD>
+为选择请求建立一个处理器(handler)，这样当 <I>window</I> 拥有 <I>selection</I> 并且有人尝试以用 <I>type</I> (比方说在 <B>selection get</B> 命令中指定了 <I>type</I>)给出的形式取回它的时候，则执行 <I>command</I> 。<I>Selection</I> 缺省为 PRIMARY，<I>type</I> 缺省为STRING，而 <I>format</I> 缺省为 STRING。如果 <I>command</I> 是一个空串，则删除针对 <I>window</I>、<I>type</I> 和 <I>selection</I> 的所有处理器。
+<DL COMPACT><DT><DD>
+<P>
+
+在要求 <I>selection</I> 的时候，<I>window</I>  是选择的所有者，而 <I>type</I> 是要求的类型，把 <I>command</I> 作为一个 Tcl 脚本来执行，并向它添加了两个补充的数(带有空格分隔符)。这两个补充的数
+
+
+
+
+
+
+
+是 <I>offset</I> 和 <I>maxChars</I>: <I>offset</I> 指定在选择中的开始位置而 <I>maxChars</I> 给出要取回的字符的最大数目。这个命令应该返回一个值，它由选择的最多 <I>maxChars</I> 字符组成，开始于位置 <I>offset</I>。对于非常大的选择(大于 <I>maxChars</I>)，使用递增 <I>offset</I> 值的多次 <I>command</I>  调用来取回选择。如果 <I>command</I> 返回其长度小于 <I>maxChars</I>  的一个字符串，则假定返回值包含选择的全部余下部分；如果  <I>command</I> 的结果的长度等于 <I>maxChars</I> 则将再次调用 <I>command</I> ，知道最终返回小于 <I>maxChars</I> 的一个结果。<I>maxChars</I> 总是相对的大(成千个字符)。
+
+
+
+
+
+
+<P>
+
+如果 <I>command</I> 返回一个错误，则丢弃取回的选择，如同选择根本不存在。
+<P>
+
+<I>format</I> 参数指定用来把选择传输(transmit)到请求者的表示法(ICCCM 的表 2 的第二列)，并且缺省为 STRING。如果 <I>format</I> 是 STRING，则把选择传输为 8-bit ASCII 字符。如果 <I>format</I> 是 ATOM，则把 <I>data</I> 分割为用白空格分隔的字段；把每个字段转换成它的原子值，传输 32-bit 原子值而不是原子的名字。对于任何其他的 <I>format</I>，把 <I>data</I> 分割为用白空格分隔的字段；把每个字段转换成一个 32-bit 整数；向选择的请求者传输一个整数的数组。
+<P>
+
+<I>format</I> 参数只在与不使用 Tk 的请求者相兼容时需要。如果使用 Tk 工具箱来取回 CLIPBOARD 选择，则在请求端把这个值转换回一个字符串，所以 <I>format</I> 是无关的(irrelevant)。
+</DL>
+
+<DT><B>selection own</B> ?<B>-displayof</B> <I>window</I>? ?<B>-selection</B> <I>selection</I>?<DD>
+<DT><B>selection own</B> ?<B>-command</B> <I>command</I>? ?<B>-selection</B> <I>selection</I>? <I>window</I><DD>
+第一种形式的 <B>selection own</B> 返回在这个应用中的一个窗口路径名字的名字，这个窗口拥有在容纳 <I>window </I>的显示器上的 <I>selection</I>，如果在这个应用种没有窗口拥有这个选择就返回一个空串。<I>Selection</I>   defaults to PRIMARY and <I>window</I> defaults to ``.''.
+</DL>
+<P>
+
+<B>selection own</B> 的第二种形式导致 <I>window</I> 成为在 <I>window </I>的显示器上的 <I>selection</I> 的新拥有者，它返回一个空串作为结果。通知现存的拥有者(如果有的话)它已经失去了这个选择。如果指定了<I>command</I>，在其他一些窗口向 <I>window </I>索取(claim)这个选择的所有权的时候，执行这个Tcl 脚本。<I>Selection</I> 缺省为 PRIMARY。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+clear, format, handler, ICCCM, own, selection, target, type
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/05/27</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

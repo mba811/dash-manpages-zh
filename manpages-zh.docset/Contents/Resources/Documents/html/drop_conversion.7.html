@@ -1,0 +1,89 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DROP CONVERSION</TITLE>
+</HEAD><BODY>
+<H1>DROP CONVERSION</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+DROP CONVERSION - 删除一个用户定义的编码转换
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+DROP CONVERSION <I>name</I> [ CASCADE | RESTRICT ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>DROP CONVERSION</B> 删除一个以前定义的编码转换。 要想删除一个转换，你必须拥有该转换。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;编码转换的名字。这个名字可以用模式修饰。
+<DT><B>CASCADE</B><DD>
+<DT><B>RESTRICT</B><DD>
+<BR>&nbsp;这些键字没有作用，因为编码转换上没有依赖关系。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;删除一个叫做&nbsp;myname&nbsp;的编码转换：
+<P>
+<PRE>
+DROP CONVERSION myname;
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;SQL&nbsp;标准里没有&nbsp;DROP&nbsp;CONVERSION。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+ALTER CONVERSION [<B><A HREF="/cgi-bin/man/man2html?7+alter_conversion">alter_conversion</A></B>(7)], CREATE CONVERSION [<B><A HREF="/cgi-bin/man/man2html?l+create_conversion">create_conversion</A></B>(l)]
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

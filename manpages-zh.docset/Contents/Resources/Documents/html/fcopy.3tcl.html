@@ -1,0 +1,177 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of fcopy</TITLE>
+</HEAD><BODY>
+<H1>fcopy</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+fcopy - 从一个通道向另一个复制数据
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>fcopy </B><I>inchan</I> <I>outchan</I> ?<B>-size </B><I>size</I>? ?<B>-command </B><I>callback</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>fcopy</B>  命令从一个 I/O 通道 <I>inchan</I>  向另一个 I/O 通道 <I>outchan</I>  
+复制数据。<B>fcopy</B>  命令在 Tcl I/O 系统中起到缓冲的杠杆作用(leverage)，它避免额外的复制，并且在向慢速目标如网络套接口复制大文件的时候避免在主存中缓冲过多的数据。
+<P>
+
+<BR>&nbsp;<B>fcopy</B>&nbsp;命令从&nbsp;<I>inchan</I>&nbsp;&nbsp;传输数据直到文件结束或传输完&nbsp;<I>size</I>字节。如果没有给出&nbsp;<B>-size</B>&nbsp;参数，则复制持续到文件结束。从&nbsp;<I>inchan</I>读的所有数据都复制到&nbsp;<I>outchan</I>。如果没有&nbsp;<B>-command</B>选项，在复制完成并返回写到&nbsp;<I>outchan&nbsp;</I>的字节数之前&nbsp;<B>fcopy</B>&nbsp;&nbsp;将阻塞。
+<P>
+
+<B>-command</B> 参数使 <B>fcopy</B>在后台工作。在这种情况下它立即返回，并在复制完成时调用  <I>callback</I>。调用 <I>callback</I> 加上一个或两个额外的参数来指示有多少字节被写到了 <I>outchan</I>。在后台复制期间如果发生了一个错误，第二个参数是与错误相关联的错误字符串。使用后台复制不需要把 <I>inchan</I> 或 <I>outchan</I> 转换成非阻塞模式；<B>fcopy</B> 命令将自动关照这些。但是，需要使用 <B>vwait</B> 命令或使用 Tk 进入事件循环。
+<P>
+
+在后台复制期间不允许对 <I>inchan</I> 或 <I>outchan </I>做其他 I/O 操作。如果在复制进行期间 <I>inchan</I> 或 <I>outchan</I>  中被关闭，停止当前的复制并且不做命令回调。如果 <I>inchan</I>被关闭，则写出为 <I>outchan</I>  而排队(queue)的所有数据。
+<P>
+
+注意在一个命令复制期间 <I>inchan</I> 可以变成可读的。在一个后台复制期间你应该关闭任何 <B>fileevent</B>句柄，这样这些句柄不与复制相触及(interfere)。通过一个 <B>fileevent</B>句柄的任何 I/O 尝试将得到一个 &quot;channel busy&quot;  错误。
+<P>
+
+<P>
+
+<B>Fcopy</B>  依据 <I>inchan</I> 和 <I>outchan </I>的 <B>-translation</B>选项来转换它们中的文件行结束序列。参见<B>fconfigure</B>的手册条目来得到 <B>-translation</B>  选项的详情。转换意味着从 <I>inchan</I> 读到的字节数与写到 <I>outchan</I>.的字节数可能不同。只报告写到 <I>outchan</I>中的字节数。要么作为同步的 <B>fcopy</B> 的返回值，要么作为给异步的 <B>fcopy </B>的回调的参数。  
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>范例 EXAMPLE</H2>
+
+<P>
+
+第一个例子展示了回调如何得到传递给它的传输了的字节数。它还使用 vwait  来使应用进入事件循环。当然，不使用回调也能做出这个简化了的例子。
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+proc Cleanup {in out bytes {error {}}} {
+    global total
+    set total $bytes
+    close $in
+    close $out
+    if {[string length $error] != 0} {
+        # error occurred during the copy
+    }
+}
+set in [open $file1]
+set out [socket $server $port]
+fcopy $in $out -command [list Cleanup $in $out]
+vwait total
+
+
+</PRE>
+
+</DL>
+
+<P>
+
+<P>
+
+第二个例子按块(chunk)复制并在命令回调中测试文件结束。  
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+proc CopyMore {in out chunk bytes {error {}}} {
+    global total done
+    incr total $bytes
+    if {([string length $error] != 0) || [eof $in] {
+        set done $total
+        close $in
+        close $out
+    } else {
+        fcopy $in $out -command [list CopyMore $in $out $chunk] \
+            -size $chunk
+    }
+}
+set in [open $file1]
+set out [socket $server $port]
+set chunk 1024
+set total 0
+fcopy $in $out -command [list CopyMore $in $out $chunk] -size $chunk
+vwait done
+
+
+</PRE>
+
+</DL>
+
+<P>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+eof">eof</A>(n), <A HREF="/cgi-bin/man/man2html?n+fblocked">fblocked</A>(n), <A HREF="/cgi-bin/man/man2html?n+fconfigure">fconfigure</A>(n)
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+blocking, channel, end of line, end of file, nonblocking, read, translation
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/08/02</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">范例 EXAMPLE</A><DD>
+<DT><A HREF="#lbAF">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

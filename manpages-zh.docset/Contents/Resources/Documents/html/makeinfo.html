@@ -1,0 +1,224 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MAKEINFO</TITLE>
+</HEAD><BODY>
+<H1>MAKEINFO</H1>
+Section: User Commands (1)<BR>Updated: June 2003<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+makeinfo - 翻译 Texinfo 文档
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<B>makeinfo</B>
+
+[<I>OPTION</I>]... <I>TEXINFO-FILE</I>...
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+将 Texinfo 源文档翻译为各种其他格式，默认是可以用 Emacs 或者独立的 GNU Info 查看的，适于在线阅读的 Info 文件。
+<A NAME="lbAE">&nbsp;</A>
+<H3>通用选项：</H3>
+
+<DL COMPACT>
+<DT><B>--error-limit</B>=<I>NUM</I><DD>
+在遇到 NUM 个错误后退出。默认是 100。
+<DT><B>--force</B><DD>
+即使发生错误也保留输出内容。
+<DT><B>--help</B><DD>
+显示这份帮助，然后退出。
+<DT><B>--no-validate</B><DD>
+不进行节点交叉引用的验证。
+<DT><B>--no-warn</B><DD>
+阻止提示警告 (但是不阻止提示错误)。
+<DT><B>--reference-limit</B>=<I>NUM</I><DD>
+警告达到了引用的最大数量 NUM (默认是 1000)。
+<DT><B>-v</B>, <B>--verbose</B><DD>
+解释正在做什么。
+<DT><B>--version</B><DD>
+显示版本信息，然后退出。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H3>输出格式选择 (默认产生 Info)：</H3>
+
+<DL COMPACT>
+<DT><B>--docbook</B><DD>
+输出 DocBook XML 而不是 Info。
+<DT><B>--html</B><DD>
+输出 HTML 而不是 Info。
+<DT><B>--xml</B><DD>
+输出 Texinfo XML 而不是 Info。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H3>通用输出选项：</H3>
+
+<DL COMPACT>
+<DT><B>-E</B>, <B>--macro-expand</B> FILE<DD>
+输出扩展了宏的源文件，保存到 FILE。忽略任何 @setfilename。
+<DT><B>--no-headers</B><DD>
+从 Info 输出中去除节点分隔符，Node:lines 和菜单 (以产生普通文本)，或者从 HTML 输出中去除它们 (以产生短一些的文本)；同时，默认输出到标准输出。
+<DT><B>--no-split</B><DD>
+阻止拆分 Info 或 HTML 输出，只产生单一的输出文件。
+<DT><B>--number-sections</B><DD>
+输出章节和段落号。
+<DT><B>-o</B>, <B>--output</B>=<I>FILE</I><DD>
+输出到文件 FILE (如果拆分 HTML 的话，就表示目录 FILE)。
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H3>用于 Info 和普通文本的选项：</H3>
+
+<DL COMPACT>
+<DT><B>--enable-encoding</B><DD>
+根据 @documentencoding，在 Info 输出中输出着重符号和特殊字符。
+<DT><B>--fill-column</B>=<I>NUM</I><DD>
+输出 NUM 个字符之后分行。默认是 72。
+<DT><B>--footnote-style</B>=<I>STYLE</I><DD>
+根据 STYLE，在 Info 中输出脚注：
+`separate' 将把它们放在它们自己的节点中；
+`end' 将把它们放在定义它们的节点
+<DT><DD>
+的末尾。
+<DT><B>--paragraph-indent</B>=<I>VAL</I><DD>
+缩进 Info 段落 VAL 个空格，默认是 3。如果 VAL 是 `none'，不进行缩进；如果 VAL 是 `asis'，将维持已有的缩进。
+<DT><B>--split-size</B>=<I>NUM</I><DD>
+输出 NUM 个字符后拆分新的文件。默认是 300000。
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H3>用于 HTML 的选项：</H3>
+
+<DL COMPACT>
+<DT><B>--css-include</B>=<I>FILE</I><DD>
+在输出的 HTML &lt;style&gt; 标签中包含 FILE 的内容；如果 FILE 是 `-' 就从标准输入读取。
+</DL>
+<A NAME="lbAJ">&nbsp;</A>
+<H3>输入文件选项：</H3>
+
+<DL COMPACT>
+<DT><B>--commands-in-node-names</B><DD>
+允许在节点名称中出现 @ 命令。
+<DT><B>-D</B> VAR<DD>
+定义变量 VAR，如同使用了 @set。
+<DT><B>-I</B> DIR<DD>
+将 DIR 添加到 @include 搜索路径中。
+<DT><B>-P</B> DIR<DD>
+将 DIR 添加到 @include 搜索路径之前。
+<DT><B>-U</B> VAR<DD>
+取消变量 VAR 的定义，如同使用了 @clear。
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H3>在输入中使用条件处理：</H3>
+
+<DL COMPACT>
+<DT><B>--ifhtml</B><DD>
+处理 @ifhtml 和 @html，即使不是在生成 HTML。
+<DT><B>--ifinfo</B><DD>
+处理 @ifinfo，即使不是在生成 Info。
+<DT><B>--ifplaintext</B><DD>
+处理 @ifplaintext，即使不是在生成普通文本。
+<DT><B>--iftex</B><DD>
+处理 @iftex 和 @tex；隐含了 <B>--no-split</B>。
+<DT><B>--ifxml</B><DD>
+处理 @ifxml 和 @xml。
+<DT><B>--no-ifhtml</B><DD>
+不处理 @ifhtml 和 ＠html 文本。
+<DT><B>--no-ifinfo</B><DD>
+不处理 @ifinfo 文本。
+<DT><B>--no-ifplaintext</B><DD>
+不处理 @ifplaintext 文本。
+<DT><B>--no-iftex</B><DD>
+不处理 @iftex 和 @tex 文本。
+<DT><B>--no-ifxml</B><DD>
+不处理 @ifxml 和 @xml 文本。
+<DT><DD>
+@if... 条件语句的默认处理方法取决于输出格式：
+如果在生成 HTML，<B>--ifhtml</B> 就是打开的，其他的是关闭的；
+如果在生成 Info，<B>--ifinfo</B> 就是打开的，其他的是关闭的；
+如果在生成普通文本，<B>--ifplaintext</B> 就是打开的，其他的是关闭的；
+如果在生成 XML，<B>--ifxml</B> 就是打开的，其他的是关闭的。
+</DL>
+<A NAME="lbAL">&nbsp;</A>
+<H2>EXAMPLES 范例</H2>
+
+<DL COMPACT>
+<DT>makeinfo foo.texi<DD>
+输出 Info，保存为 foo 的 @setfilename 指定的文件
+<DT>makeinfo <B>--html</B> foo.texi<DD>
+输出 HTML，保存为 @setfilename
+<DT>makeinfo <B>--xml</B> foo.texi<DD>
+输出 XML，保存为 @setfilename
+<DT>makeinfo <B>--docbook</B> foo.texi<DD>
+输出 DocBook XML，保存为 @setfilename
+<DT>makeinfo <B>--no-headers</B> foo.texi<DD>
+输出普通文本，显示在标准输出上。
+<DT><DD>
+makeinfo <B>--html</B> <B>--no-headers</B> foo.texi 
+输出没有 node lines 和菜单的 html
+makeinfo <B>--number-sections</B> foo.texi
+输出 Info 并且为段落编号
+makeinfo <B>--no-split</B> foo.texi
+输出单一的 Info 文件，不管它多大
+</DL>
+<A NAME="lbAM">&nbsp;</A>
+<H2>REPORTING BUGS 报告错误</H2>
+
+将错误报告发送到 <A HREF="mailto:bug-texinfo@gnu.org">bug-texinfo@gnu.org</A>，一般的问题和讨论则发送到 <A HREF="mailto:help-texinfo@gnu.org">help-texinfo@gnu.org</A>。
+Texinfo 主页：<A HREF="http://www.gnu.org/software/texinfo/">http://www.gnu.org/software/texinfo/</A>
+<A NAME="lbAN">&nbsp;</A>
+<H2>COPYRIGHT</H2>
+
+Copyright &#169; 2003 Free Software Foundation, Inc.
+There is NO warranty.  You may redistribute this software
+under the terms of the GNU General Public License.
+For more information about these matters, see the files named COPYING.
+<A NAME="lbAO">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B>install-info</B>
+
+的全部文档以 Texinfo 手册页形式保存。如果你的主机上正确安装了
+<B>info</B>
+
+和
+<B>install-info</B>
+
+程序，命令
+<DL COMPACT>
+<DT><DD>
+<B>info install-info</B>
+
+</DL>
+<P>
+
+将使你可以读取完整的手册。
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DL>
+<DT><A HREF="#lbAE">通用选项：</A><DD>
+<DT><A HREF="#lbAF">输出格式选择 (默认产生 Info)：</A><DD>
+<DT><A HREF="#lbAG">通用输出选项：</A><DD>
+<DT><A HREF="#lbAH">用于 Info 和普通文本的选项：</A><DD>
+<DT><A HREF="#lbAI">用于 HTML 的选项：</A><DD>
+<DT><A HREF="#lbAJ">输入文件选项：</A><DD>
+<DT><A HREF="#lbAK">在输入中使用条件处理：</A><DD>
+</DL>
+<DT><A HREF="#lbAL">EXAMPLES 范例</A><DD>
+<DT><A HREF="#lbAM">REPORTING BUGS 报告错误</A><DD>
+<DT><A HREF="#lbAN">COPYRIGHT</A><DD>
+<DT><A HREF="#lbAO">SEE ALSO 参见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

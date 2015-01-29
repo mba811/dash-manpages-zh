@@ -1,0 +1,218 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of scan</TITLE>
+</HEAD><BODY>
+<H1>scan</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.3<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+scan - 使用 sscanf 式样的转换指定符分析字符串
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>scan </B><I>string format </I>?<I>varName varName ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>INTRODUCTION</H2>
+
+<P>
+
+这个命令用与 ANSI C <B>sscanf</B> 过程相同的方式从输入字符串中分析字段并返回完成的转换数目的总计，如果在任何转换被完成之前到达了输入字符串的结束则返回 -1。<I>String</I> 给出要被分析的输入而 <I>format</I> 指示如何分析它，使用与 <B>sscanf</B> 相同的 <B>%</B> 转换指定符。每个 <I>varName</I> 给出一个变量的名字；在从 <I>string</I> 中检索出一个字段的时候，结果被转换回一个字符串并赋值给相应的变量。
+
+
+
+
+
+
+
+如果未指定 <I>varName</I> 变量，则 <B>scan</B> 在行内(inline)方式下工作，返回的数据将是一个列表而不存储在变量中。在行内方式下，如果在任何转换被完成之前到达了输入字符串的结束则返回，则返回一个空串。
+
+
+
+
+
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>检索细节 DETAILS ON SCANNING</H2>
+
+<P>
+
+<B>Scan</B> 操作一起检索 <I>string</I> 和 <I>format</I>。如果在 <I>format</I> 的下一个字符是一个空字符(blank)或跳格字符(tab)则它匹配在 <I>string</I> 中任何数目(包括零个)的白空格字符。
+如果它不是一个 <B>%</B> 字符则它必须匹配 <I>string </I>的下一个字符。当在 <I>format</I> 中遇到一个 <B>%</B> 的时候，它指示一个转换指定符的开始。
+一个转换指定符包括 <B>% </B>和后面的最多四个字段: 一个 <B>*</B>，它指示丢弃被转换出的值而不是赋值到变量中；一个 XPG3 位置指定符；一个数指示最大的字段宽度；和一个转换字符。除了转换字符之外所有这些字段都是可选的。存在的字段必须按照上面给出的次序出现。
+<P>
+
+当 <B>scan</B> 在 <I>format </I>中发现一个转换指定符的时候，它首先跳过 <I>string</I> 中的所有白空格(除非指定符是 <B>[</B> 或 <B>c</B>)。接着它依据转换指定符转换下一组输入字符，并把结果存储到用给 <B>scan</B> 的下一个参数给出的变量中。
+<P>
+
+如果 <B>%</B> 跟随着一个十进制数和一个 <B>$</B>，比如``<B>%2$d</B>''，则使用的变量不取自下一个顺序的参数。而是取自用这个数字指定的参数，这里 1 对应着第一个 <I>varName</I>。如果在 <I>format</I> 中有任何位置指定符则所有指定符都必须被指定位置。每个在参数列表上的 <I>varName</I> 必须准确的对应于一个转换指定符，否则生成一个错误。在行内方式下，任何位置指定符可以指定最多一次，并且用空串填充空位置指定符。
+<P>
+
+支持下列转换字符:
+<DL COMPACT>
+<DT><B>d</B><DD>
+输入字段必须是一个十进制整数。它被读入并作为一个十进制字符串存储到变量中。
+<DT><B>o</B><DD>
+输入字段必须是一个八进制整数。它被读入并作为一个八进制字符串存储到变量中。
+
+
+
+
+
+
+
+If the value exceeds MAX_INT (017777777777 on platforms using 32-bit
+integers), it will be truncated to a signed integer.  Hence, 037777777777
+will appear as -1 on a 32-bit machine.
+
+
+
+
+
+
+<DT><B>x</B><DD>
+输入字段必须是一个十六进制整数。它被读入并作为一个十六进制字符串存储到变量中。
+
+
+
+
+
+
+
+If the value exceeds MAX_INT (0x7FFFFFFF on platforms using 32-bit
+integers), it will be truncated to a signed integer.  Hence, 0xFFFFFFFF
+will appear as -1 on a 32-bit machine.
+
+
+
+
+
+
+<DT><B>u</B><DD>
+输入字段必须是一个十进制整数。它被读入并作为一个无符号十进制字符串存储到变量中。
+<DT><B>i</B> <DD>
+输入字段必须是一个整数。使用与 <B>expr</B> 中描述的相同方式确定基数(base)(例如，十进制、八进制、或十六进制)。值被作为一个十进制字符串存储到变量中。
+<DT><B>c</B><DD>
+读入一个单一的字符并把它的二进制值作为一个十进制字符串存储到变量中。在这种情况下不跳过初始的白空格，这样输入字段可以是一个白空格字符。这个转换不同于  ANSI 标准的地方是输入字段总是由一个单一字段组成并且不可以指定字段宽度。
+<DT><B>s</B><DD>
+输入字段由到下一个白空格为止的所有字符组成；把这些字符复制到变量中。
+<DT><B>e</B> 或 <B>f</B> 或 <B>g</B><DD>
+输入字段必须是一个浮点数，其组成是一个可选的正负号，一个可能有小数点的十进制数字的字符串，和一个可选的指数，它由一个 <B>e</B> 或 <B>E</B>  并跟随着一个可选的正负号和一个十进制数字的字符串组成。它被读入并作为一个浮点数存储到变量中。
+<DT><B>[</B><I>chars</I><B>]</B><DD>
+输入字段由任何数目的在 <I>chars </I>中的字符组成。把匹配的字符串存储到变量中。如果在方括号之间的第一个字符是<B>]</B> 则它被作为 <I>chars</I> 的一部分来对待而不是这个字符集合的闭合方括号。
+如果 <I>chars</I> 包括一个 <I>a</I><B>-</B><I>b</I> 形式的序列，则匹配在 <I>a</I> 和 <I>b</I> 之间(包括二者)的任何字符。如果在方括号之间的第一个或最后一个字符是一个 <B>-</B>，则它被作为 <I>chars</I> 的一部分来对待而不是指示一个范围。
+<DT><B>[^</B><I>chars</I><B>]</B><DD>
+输入字段由任何数目的不在 <I>chars </I>中的字符组成。把匹配的字符串存储到变量中。如果紧随在     <B>^</B> 后面的字符是一个 <B>]</B> 则它被作为 <I>chars</I>     的一部分来对待而不是这个字符集合的闭合方括号。
+如果<I>chars</I>     包括一个 <I>a</I><B>-</B><I>b</I>  形式的序列，则从字符的集合中排除在 <I>a</I> 和 <I>b</I>     之间(包括二者)的任何字符。如果在方括号之间的第一个或最后一个字符是一个     <B>-</B>，则它被作为 <I>chars</I>     的一部分来对待而不是指示一个范围。
+<DT><B>n</B><DD>
+不从输入字符串中消耗输入。而是把到现在为止从输入字符串中检索到的字符总数存储到变量中。
+</DL>
+<P>
+
+对于一个转换从输入中读的字符数目应该是对特定转换最大的数目(例如，对 <B>%d </B>是尽可能多的十进制数字，对于 <B>%o </B>是尽可能多的八进制数字，以此类推)。给一个给定转换的输入要么终止于遇到一个白空格要么终止于达到了最大的字段宽度，只要其中一种情况满足就终止。如果在转换指定符中存在一个 <B>*</B> 则不赋值变量并且不消耗下一个检索参数。
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>与ANSI SSCANF 的区别 DIFFERENCES FROM ANSI SSCANF</H2>
+
+<P>
+
+除了下列区别之外 <B>scan</B> 命令的行为与 ANSI C <B>sscanf</B> 过程的行为相同:
+<DL COMPACT>
+<DT>[1]<DD>
+当前不支持 <B>%p</B> 转换指定符。
+<DT>[2]<DD>
+对于 <B>%c</B>  转换，把一个单一字符转换成一个十进制字符串，接着把它赋值给相应的  <I>varName</I>；对于这个转换不能指定字段宽度。
+<DT>[3]<DD>
+忽略 <B>l</B>、<B>h</B>、和 <B>L</B>  修饰符；转换整数值总是如同不存在修饰符，而转换实数值总是如同存在  <B>l</B> 修饰符(就是说，对于内部表示使用类型 <B>double</B>)。
+<DT>[4]<DD>
+
+
+
+
+
+
+
+如果在任何转换被完成之前到达了输入字符串的结束并且未给出变量，则返回一个空串。
+
+
+
+
+
+
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+format">format</A>(n), <A HREF="/cgi-bin/man/man2html?3+sscanf">sscanf</A>(3)
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+conversion specifier, parse, scan
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/11/07</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">INTRODUCTION</A><DD>
+<DT><A HREF="#lbAE">检索细节 DETAILS ON SCANNING</A><DD>
+<DT><A HREF="#lbAF">与ANSI SSCANF 的区别 DIFFERENCES FROM ANSI SSCANF</A><DD>
+<DT><A HREF="#lbAG">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

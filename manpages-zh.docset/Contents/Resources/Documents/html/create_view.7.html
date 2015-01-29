@@ -1,0 +1,149 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE VIEW</TITLE>
+</HEAD><BODY>
+<H1>CREATE VIEW</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE VIEW - 定义一个视图
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE [ OR REPLACE ] VIEW <I>name</I> [ ( <I>column_name</I> [, ...] ) ] AS <I>query</I>
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE VIEW</B> 定义一个查询的视图。 这个视图不是物理上实际存在（于磁盘）的。具体的说，自动生成一个改写索引规则（一个 ON SELECT 规则）的查询用以支持在视图上的检索。
+<P>
+
+<B>CREATE OR REPLACE VIEW</B> 类似，不过是如果一个同名的视图已经存在，那么就替换它。 你只能用一个生成相同字段的新查询替换一个视图（也就是说，同样字段名和数据类型）。
+<P>
+
+<BR>&nbsp;如果给出了一个模式名（比如，CREATE&nbsp;VIEW&nbsp;myschema.myview&nbsp;...），那么该视图是在指定的模式中创建的。&nbsp;否则它是在当前模式中创建的。&nbsp;该视图名字必需和同一模式中任何其它视图，表，序列或者索引的名字不同。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;所要创建的视图名称（可以有模式修饰）。
+<DT><B></B><I>column_name</I><B></B><DD>
+<BR>&nbsp;一个可选的名字列表，用于当作视图的字段名。如果没有给出，&nbsp;字段名取自查询。
+<DT><B></B><I>query</I><B></B><DD>
+<BR>&nbsp;一个将为视图提供行和列的查询（也就是一条&nbsp;SELECT&nbsp;语句）。
+<P>
+<BR>&nbsp;请参阅&nbsp;SELECT&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)]&nbsp;获取有效查询的更多信息。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;目前，视图是只读的：系统将不允许在视图上插入，更新，或者删除数据。&nbsp;你可以通过在视图上创建把插入等动作重写为向其它表做合适操作的规则来实现可更新视图的效果。&nbsp;更多信息详见
+CREATE RULE [<B><A HREF="/cgi-bin/man/man2html?7+create_rule">create_rule</A></B>(7)].
+<P>
+
+<BR>&nbsp;使用&nbsp;DROP&nbsp;VIEW&nbsp;语句删除视图
+<P>
+
+<BR>&nbsp;请注意视图字段的名字和类型不一定是你们期望的那样。比如，
+<P>
+<PRE>
+CREATE VIEW vista AS SELECT 'Hello World';
+
+</PRE>
+
+<BR>&nbsp;在两个方面很糟糕：字段名缺省是&nbsp;?column?，并且字段的数据类型缺省是&nbsp;unknown。&nbsp;如果你想视图的结果是一个字串文本，那么用类似下面这样的东西
+<P>
+<PRE>
+CREATE VIEW vista AS SELECT text 'Hello World' AS hello;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;对视图引用的表的访问的权限由视图的所有者决定。&nbsp;不过，在视图里调用的函数当作他们直接从使用视图的查询里调用看待。&nbsp;因此，视图的用户必须有使用视图调用的所有函数的权限。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;创建一个由所有喜剧电影组成的视图：
+<P>
+<PRE>
+CREATE VIEW comedies AS
+    SELECT *
+    FROM films
+    WHERE kind = 'Comedy';
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;SQL&nbsp;标准为&nbsp;CREATE&nbsp;VIEW&nbsp;声明了一些附加的功能：
+<P>
+<PRE>
+CREATE VIEW <I>name</I> [ ( <I>column</I> [, ...] ) ]
+    AS query
+    [ WITH [ CASCADE | LOCAL ] CHECK OPTION ]
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;完整的SQL命令可选的子句是：
+<DL COMPACT>
+<DT><B>CHECK OPTION</B><DD>
+<BR>&nbsp;这个选项用于可更新视图。&nbsp;所有对视图的INSERT和UPDATE都要经过视图定义条件的校验。&nbsp;（也就是说，新数据应该可以通过视图看到。）如果没有通过校验，更新将被拒绝。
+<DT><B>LOCAL</B><DD>
+<BR>&nbsp;对这个视图进行完整性检查。
+<DT><B>CASCADE</B><DD>
+<BR>&nbsp;对此视图和任何相关视图进行完整性检查。&nbsp;在既没有声明&nbsp;CASCADE&nbsp;也没有声明&nbsp;LOCAL&nbsp;时，假设为&nbsp;CASCADE。
+</DL>
+<P>
+
+<P>
+
+<B>CREATE OR REPLACE VIEW</B> 是 PostgreSQL 的扩展。
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

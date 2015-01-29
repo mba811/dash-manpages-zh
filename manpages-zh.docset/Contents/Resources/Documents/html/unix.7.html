@@ -1,0 +1,393 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of UNIX</TITLE>
+</HEAD><BODY>
+<H1>UNIX</H1>
+Section: Linux程序员手册 (7)<BR>Updated: 1999年5月7日<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称）</H2>
+
+unix, PF_UNIX, AF_UNIX, PF_LOCAL, AF_LOCAL - 用于本地内部进程通讯的套接字。
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/sys/socket.h">sys/socket.h</A>&gt;</B>
+
+<BR>
+
+<B>#include &lt;<A HREF="file:///usr/include/sys/un.h">sys/un.h</A>&gt;</B>
+
+<P>
+<I>unix_socket</I><B> = socket(PF_UNIX, type, 0);</B>
+
+<BR>
+
+<I>error</I><B> = socketpair(PF_UNIX, type, 0, int *</B><I>sv</I><B>);</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<B>PF_UNIX</B>
+
+(也称作
+<B>PF_LOCAL )</B>
+
+套接字族用来在同一机器上的提供有效的进程间通讯.Unix 套接字可以是匿名的(由
+<B><A HREF="/cgi-bin/man/man2html?2+socketpair">socketpair</A></B>(2)
+
+创建), 也可以与套接字类型文件相关联.
+Linux 还支持一种抽象名字空间, 它是独立于文件系统的.
+<P>
+有效的类型有:
+<B>SOCK_STREAM</B>
+
+用于面向流的套接字,
+<B>SOCK_DGRAM</B>
+
+用于面向数据报的套接字,其可以保存消息界限.
+Unix 套接字总是可靠的,而且不会重组数据报.
+<P>
+Unix 套接字支持把文件描述符或者进程的信用证明作为数据报的辅助数据
+传递给其它进程．
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>ADDRESS FORMAT(地址格式)</H2>
+
+unix 地址定义为文件系统中的一个文件名
+或者抽象名字空间中的一个单独的字符串.
+由
+<B><A HREF="/cgi-bin/man/man2html?2+socketpair">socketpair</A></B>(2)
+
+创建的套接字是匿名的.对于非匿名的套接字,目标地址可使用
+<B><A HREF="/cgi-bin/man/man2html?2+connect">connect</A></B>(2)
+
+设置.
+本地地址可使用
+<B><A HREF="/cgi-bin/man/man2html?2+bind">bind</A></B>(2)
+
+设置.
+当套接字连接上而且它没有一个本地地址时,
+会自动在抽象名字空间中生成一个唯一的地址.
+<P>
+<DL COMPACT><DT><DD>
+<PRE>
+#define UNIX_PATH_MAX   108
+
+
+struct sockaddr_un {
+sa_family_t     sun_family;     /* AF_UNIX */
+char    sun_path[UNIX_PATH_MAX];        /* 路径名 */
+};
+</PRE>
+
+</DL>
+
+<P>
+<B>sun_family</B>
+
+总是包含
+<B>AF_UNIX</B>.
+
+<B>sun_path</B>
+
+包含空零结尾的套接字在文件系统中的路径名.
+如果
+<B>sun_path</B>
+
+以空零字节开头,它指向由 Unix 协议模块维护的抽象名字空间.
+该套接字在此名字空间中的地址由
+<B>sun_path</B>
+
+中的剩余字节给定.
+注意抽象名字空间的名字都不是空零终止的. 
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>SOCKET OPTIONS(套接字选项)</H2>
+
+由于历史原因, 这些套接字选项通过 SOL_SOCKET 类型确定,
+即使它们是 PF_UNIX 指定的.
+它们可以由
+<B><A HREF="/cgi-bin/man/man2html?2+setsockopt">setsockopt</A></B>(2)
+
+设置.
+通过指定 SOL_SOCKET 作为套接字族
+用 
+<B><A HREF="/cgi-bin/man/man2html?2+getsockopt">getsockopt</A></B>(2)
+
+来读取. 
+<P>
+<B>SO_PASSCRED</B>
+
+允许接收进程辅助信息发送的信用证明.
+当设置了该选项且套接字尚未连接时,
+则会自动生成一个抽象名字空间的唯一名字.
+值为一个整数布尔标识.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>ANCILLARY MESSAGES(辅助信息)</H2>
+
+由于历史原因,这些辅助信息类型通过 SOL_SOCKET 类型确定,
+即使它们是 PF_UNIX 指定的.
+要发送它们, 可设置结构
+<B>cmsghdr</B>
+
+的
+<B>cmsg_level</B>
+
+字段为 SOL_SOCKET, 并设置
+<B>cmsg_type</B>
+
+字段为其类型. 要获得更多信息, 请参看
+<B><A HREF="/cgi-bin/man/man2html?3+cmsg">cmsg</A></B>(3).
+
+<P>
+<DL COMPACT>
+<DT><B>SCM_RIGHTS</B>
+
+<DD>
+为其他进程发送或接收一套打开文件描述符.
+其数据部分包含一个文件描述符的整型数组.
+已传文件描述符的效果就如它们已由
+<B><A HREF="/cgi-bin/man/man2html?2+dup">dup</A></B>(2)
+
+创建过一样.
+<P>
+<DT><B>SCM_CREDENTIALS</B>
+
+<DD>
+发送或者接收 unix 信用证明.
+可用作认证.信用证明传送以
+<B>struct ucred</B>
+
+辅助信息的形式传送．
+<P>
+<DL COMPACT><DT><DD>
+<PRE>
+
+struct ucred {
+pid_t   pid;     /* 发送进程的进程标识 */
+uid_t   uid;     /* 发送进程的用户标识 */
+gid_t   gid;     /* 发送进程的组标识 */
+};
+</PRE>
+
+</DL>
+
+<P>
+发送者确定的信用证明由内核检查.
+一个带有有效用户标识 0 的进程允许指定不与其自身值相
+匹配的值.发送者必须确定其自身的进程标识(除非它带有
+<B>CAP_SYS_ADMIN</B>),
+
+其用户标识,有效用户标识或者设置用户标识(除非它带有
+<B>CAP_SETUID</B>),
+
+以及其组标识,有效组标识或者设置组标识(除非它带有
+<B>CAP_SETGID</B>).
+
+为了接收一条
+<B>struct ucred</B>
+
+消息,必须在套接字上激活
+<B>SO_PASSCRED</B>
+
+选项.
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>VERSIONS(版本)</H2>
+
+<B>SCM_CREDENTIALS</B>
+
+和抽象名字空间是在 Linux 2.2 中引入的,不应该在要求可移植的程序中使用.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>NOTES(注意)</H2>
+
+在 Linux 实现中,
+在文件系统中可见的套接字拥有它们所在目录的权限许可.
+它们的所有者,组和权限可以作修改.
+如果进程不拥有对创建的套接字所在目录的写和搜索(执行)权限,
+则创建一个新的套接字会失败.
+这种执行方式与许多由 BSD 发展而来的系统不同,
+那些系统会忽略 Unix 套接字所需的权限.
+可移植的程序不应把这项功能用于安全方面．
+<P>
+绑定文件名到套接字会在文件系统中创建一个套接字,
+这个套接字在它不再需要时必须由调用者
+删除(使用
+<B><A HREF="/cgi-bin/man/man2html?2+unlink">unlink</A></B>(2)).
+
+通用的 Unix 相关语义可适用;
+套接字可在任何时候删除, 而且当最后一个引用关闭时,
+最终会从文件系统中删除.
+<P>
+要传递文件描述符或者信用证明, 你需要发送/读取至少一个字节.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>ERRORS(错误)</H2>
+
+<DL COMPACT>
+<DT><B>ENOMEM</B>
+
+<DD>
+内存溢出.
+<P>
+<DT><B>ECONNREFUSED</B>
+
+<DD>
+<B><A HREF="/cgi-bin/man/man2html?2+connect">connect</A></B>(2)
+
+调用了一个未在监听的套接字对象.
+这可能发生在远程套接字不存在或者文件名不是套接字的时候.
+<P>
+<DT><B>EINVAL</B>
+
+<DD>
+传递了无效参数.
+通常的产生原因是已传地址的 sun_type 字段的 AF_UNIX 设置丢失,
+或者套接字对应用的操作处于无效状态.
+<P>
+<DT><B>EOPNOTSUPP</B>
+
+<DD>
+在非面向流的套接字上调用了流操作,或者试图使用出界的数据选项.
+<P>
+<DT><B>EPROTONOSUPPORT</B>
+
+<DD>
+传递的协议是非 PF_UNIX 的.
+<P>
+<DT><B>ESOCKTNOSUPPORT</B>
+
+<DD>
+未知的套接字类型.
+<P>
+<DT><B>EPROTOTYPE</B>
+
+<DD>
+远程套接字与本地套接字类型不匹配 (SOCK_DGRAM 对 SOCK_STREAM).
+<P>
+<DT><B>EADDRINUSE</B>
+
+<DD>
+选择的本地地址已经占用,或者文件系统套接字对象已经存在.
+<P>
+<DT><B>EISCONN</B>
+
+<DD>
+在一个已经连接的套接字上调用
+<B><A HREF="/cgi-bin/man/man2html?2+connect">connect</A></B>(2)
+
+或者指定的目标地址在一个已连接的套接字上.
+<P>
+<DT><B>ENOTCONN</B>
+
+<DD>
+套接字操作需要一个目的地址,但是套接字尚未连接.
+<P>
+<DT><B>ECONNRESET</B>
+
+<DD>
+远程套接字意外关闭.
+<DT><B>EPIPE</B>
+
+<DD>
+远程套接字在一个流套接字上关闭了.如果激活,会同时发送一个
+<B>SIGPIPE</B>
+
+标识.这可以通过传递
+<B>MSG_NOSIGNAL</B>
+
+标识给
+<B><A HREF="/cgi-bin/man/man2html?2+sendmsg">sendmsg</A></B>(2)
+
+或者
+<B><A HREF="/cgi-bin/man/man2html?2+recvmsg">recvmsg</A></B>(2)
+
+来避免.
+<DT><B>EFAULT</B>
+
+<DD>
+用户内存地址无效.
+<DT><B>EPERM</B>
+
+<DD>
+发送者在
+<B>struct ucred</B>
+
+中传递无效的信用证明.
+</DL>
+<P>
+
+当生成一个文件系统套接字对象时,
+可能会由通用套接层或者文件系统产生其它错误.
+要获得更多信息,可参见合适的手册页.
+<A NAME="lbAK">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+recvmsg">recvmsg</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+sendmsg">sendmsg</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+socket">socket</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+socket">socket</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+socketpair">socketpair</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?3+cmsg">cmsg</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?7+socket">socket</A></B>(7)
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>CREDITS(尾注)</H2>
+
+本man页作者Andi Kleen.
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/07/19</B>
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称）</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAE">ADDRESS FORMAT(地址格式)</A><DD>
+<DT><A HREF="#lbAF">SOCKET OPTIONS(套接字选项)</A><DD>
+<DT><A HREF="#lbAG">ANCILLARY MESSAGES(辅助信息)</A><DD>
+<DT><A HREF="#lbAH">VERSIONS(版本)</A><DD>
+<DT><A HREF="#lbAI">NOTES(注意)</A><DD>
+<DT><A HREF="#lbAJ">ERRORS(错误)</A><DD>
+<DT><A HREF="#lbAK">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAL">CREDITS(尾注)</A><DD>
+<DT><A HREF="#lbAM">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAN">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAO">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

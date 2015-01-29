@@ -1,0 +1,96 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SET SESSION AUTHORIZATION</TITLE>
+</HEAD><BODY>
+<H1>SET SESSION AUTHORIZATION</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+SET SESSION AUTHORIZATION - 为当前会话设置会话用户标识符和当前用户标识符
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+SET [ SESSION | LOCAL ] SESSION AUTHORIZATION <I>username</I>
+SET [ SESSION | LOCAL ] SESSION AUTHORIZATION DEFAULT
+RESET SESSION AUTHORIZATION
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<BR>&nbsp;这条命令把当前&nbsp;SQL&nbsp;会话环境里的会话用户标识和当前用户标识设置为&nbsp;username。&nbsp;这个用户名可以写成一个标识符或者一个字串文本。&nbsp;使用这个命令，我们可以临时变成一个非特权用户，稍后再切换回超级用户。
+<P>
+
+<BR>&nbsp;会话用户标识符一开始设置为（可能经过认证的）客户端提供的用户名。&nbsp;当前用户标识符通常等于会话用户标识符，&nbsp;但是可能在&nbsp;&quot;setuid&quot;&nbsp;的环境里或者类似的机制里临时改变。&nbsp;当前用户标识符和权限检查相关。
+<P>
+
+<BR>&nbsp;只有在初始会话用户（<I>认证了的用户</I>）有超级用户权限的时候，会话用户标识符才能改变。&nbsp;否则，只有在指定了被认证的用户名的情况下，系统才接受该命令。
+<P>
+
+SESSION 和 LOCAL 修饰词和普通 SET [<B><A HREF="/cgi-bin/man/man2html?7+set">set</A></B>(7)]
+命令里的作用相同。
+<P>
+
+DEFAULT 和 RESET 形式重置会话和当前用户标识符为初始认证的用户名。这些形式可以为任何用户执行。
+<A NAME="lbAE">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+<PRE>
+SELECT SESSION_USER, CURRENT_USER;
+
+ session_user | current_user 
+--------------+--------------
+ peter        | peter
+
+SET SESSION AUTHORIZATION 'paul';
+
+SELECT SESSION_USER, CURRENT_USER;
+
+ session_user | current_user 
+--------------+--------------
+ paul         | paul
+
+</PRE>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;SQL&nbsp;标准允许一些其它的表达式出现在文本&nbsp;username&nbsp;&nbsp;的位置上，不过这个东西实际上并不重要。&nbsp;PostgreSQL&nbsp;允许标识符语法&nbsp;（&quot;username&quot;），而&nbsp;SQL&nbsp;不允许。&nbsp;SQL&nbsp;不允许在一个事务的过程中用这条命令；&nbsp;PostgreSQL&nbsp;没有这个限制，因为没有什么理由不允许这样用。&nbsp;标准中表示执行这条命令的权限要求是具体实现定义的。
+<A NAME="lbAG">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAF">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAG">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,252 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE TYPE</TITLE>
+</HEAD><BODY>
+<H1>CREATE TYPE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE TYPE - 定义一个新的数据类型
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE TYPE <I>name</I> AS
+    ( <I>attribute_name</I> <I>data_type</I> [, ... ] )
+
+CREATE TYPE <I>name</I> (
+    INPUT = <I>input_function</I>,
+    OUTPUT = <I>output_function</I>
+    [ , RECEIVE = <I>receive_function</I> ]
+    [ , SEND = <I>send_function</I> ]
+    [ , INTERNALLENGTH = { <I>internallength</I> | VARIABLE } ]
+    [ , PASSEDBYVALUE ]
+    [ , ALIGNMENT = <I>alignment</I> ]
+    [ , STORAGE = <I>storage</I> ]
+    [ , DEFAULT = <I>default</I> ]
+    [ , ELEMENT = <I>element</I> ]
+    [ , DELIMITER = <I>delimiter</I> ]
+)
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE TYPE</B> 为当前数据库注册一个新的数据类型。 定义该类型的用户成为其所有者。
+<P>
+
+<BR>&nbsp;如果给出模式名，那么该类型是在指定模式中创建。&nbsp;否则它是在当前模式中创建。类型名必需和同一模式中任何现有的类型或者域不同。&nbsp;（因为表和数据类型有联系，类型名不能和同模式中的表名字冲突。）
+<A NAME="lbAE">&nbsp;</A>
+<H3>COMPOSITE TYPES 复合类型</H3>
+
+<P>
+
+<BR>&nbsp;第一种形式的&nbsp;CREATE&nbsp;TYPE&nbsp;创建一个复合类型。&nbsp;复合类型是通过一列属性名和数据类型声明的。这样实际上和一个表的行类型一样，&nbsp;但是如果我们只是想定义一个类型，那么使用&nbsp;CREATE&nbsp;TYPE&nbsp;避免了直接创建实际的表。&nbsp;一个独立的复合类型对于一个函数的返回类型非常有用。
+<A NAME="lbAF">&nbsp;</A>
+<H3>BASE TYPES 基本类型</H3>
+
+<P>
+
+<BR>&nbsp;第二种形式的CREATE&nbsp;TYPE创建一种新的基本类型（标量类型）。&nbsp;参数可以以任意的顺序出现，而不是上面显示的那样。并且大多数都是可选的。&nbsp;它要求要在定义类型之前先注册两个函数（用CREATE&nbsp;FUNCTION命令）。&nbsp;支持函数&nbsp;input_function&nbsp;和&nbsp;output_function&nbsp;是必须的，&nbsp;而函数&nbsp;receive_function&nbsp;和&nbsp;send_function&nbsp;是可选的。&nbsp;通常，这些函数必须用&nbsp;C&nbsp;或者其它低层语言编写。
+<P>
+
+<BR>&nbsp;函数&nbsp;input_function&nbsp;&nbsp;将该类型的外部文本形式转换成可以被对该类型操作的操作符和函数识别的内部形式。&nbsp;output_function&nbsp;&nbsp;用做相反用途。&nbsp;输入函数可以声明为接受一个类型为&nbsp;c_string&nbsp;的参数，或者接受三个类型分别为&nbsp;c_string，oid，integer&nbsp;的参数。&nbsp;（第一个参数是&nbsp;C&nbsp;字串形式的输入文本，第二个是在该类型为数组类型时其元素的类型，&nbsp;第三个是目标字段的typmod，如果已知的话。）&nbsp;它应该返回一个该数据类型本身的数值。&nbsp;输出函数可以声明为接受一个类型为新数据类型的参数，&nbsp;或者接受两个类型，第二个参数的类型是&nbsp;oid。&nbsp;第二个参数也是用于数组类型的数组元素类型。输出函数应该返回类型&nbsp;cstring。
+<P>
+
+<BR>&nbsp;可选的&nbsp;receive_function&nbsp;把该类型的外部二进制表现形式转换成内部表现形式。&nbsp;如果没有提供这个函数，那么该类型不能用二进制输入。二进制格式应该选取那种转换成内部格式比较容易的，同时还有一定移植性的。&nbsp;（比如，标准的整数数据类型使用网络字节序作为外部的二进制表现形式，而内部表现形式是机器的本机字节序。）&nbsp;接收函数应该声明为接受一个类型为&nbsp;internal&nbsp;的参数，或者两个类型分别为&nbsp;internal&nbsp;和&nbsp;oid&nbsp;的参数。&nbsp;它必须返回一个数据类型自身的数值。（第一个参数是一个指向一个&nbsp;StringInfo&nbsp;缓冲区的，保存接受字节串的指针；&nbsp;可选的第二个参数是元素类型——如果类型是一个数组类型的话。）类似的，可选的&nbsp;send_function&nbsp;&nbsp;把类型转换为外部二进制表现形式。&nbsp;如果没有提供这些函数，那么类型就不能用二进制方式输出。发送函数可以声明为接收一个新数据类型，&nbsp;或者接收两个参数，第二个参数的类型是&nbsp;oid。第二个参数仍然是用做数组类型的。&nbsp;发送函数必须返回&nbsp;bytea。
+<P>
+
+<BR>&nbsp;这个时候你应该觉得奇怪，就是输入和输出函数怎么可以声明为返回新类型的结果或者是接受新类型的参数，&nbsp;而且是在新类型创建之前就需要创建它们。&nbsp;答案是输入函数必须先创建，然后是输出函数，最后是数据类型。&nbsp;PostgreSQL&nbsp;将首先把新数据类型的名字看作输入函数的返回类型。&nbsp;它将创建一个&quot;壳&quot;类型，这个类型只是在&nbsp;pg_type里面的一个占位符，然后把输入函数定义和这个壳类型连接起来。&nbsp;类似的是输出函数将连接到（现在已经存在）的壳类型。最后，&nbsp;CREATE&nbsp;TYPE&nbsp;把这个壳类型替换成完整的类型定义，这样就可以使用新类型了。
+<P>
+
+<BR>&nbsp;尽管新类型的内部表现形式只有&nbsp;I/O&nbsp;函数和其它你创建来使用该类型的函数了解，&nbsp;但内部表现还是有几个属性必须为&nbsp;PostgreSQL&nbsp;声明。&nbsp;这些中最重要的是&nbsp;internallength。&nbsp;基本数据类型可定义成为定长，这时&nbsp;internallength&nbsp;&nbsp;是一个正整数，也可以是变长的，通过把&nbsp;internallength&nbsp;&nbsp;设置为&nbsp;VARIABLE&nbsp;表示。（在内部，这个状态&nbsp;是通过将typlen设置为&nbsp;-1&nbsp;实现的。）所有变长类型的内部形式都必须以一个四字节整数开头，这个整数给出此类型这个数值的全长。
+<P>
+
+<BR>&nbsp;可选的标记&nbsp;PASSEDBYVALUE&nbsp;表明该类型的数值是用值传递的，&nbsp;而不是用引用。你不能传递那些内部形式大于&nbsp;Datum&nbsp;（大多数机器上是&nbsp;4&nbsp;字节，有些是&nbsp;8&nbsp;字节）类型的尺寸的数据类型的值。
+<P>
+
+alignment 参数声明该数据类型要求的对齐存储方式。 允许的数值等效于按照 1，2，4，或者 8 字节边界对齐。请注意变长类型必须有至少 4 字节的对齐， 因为它们必须包含一个 int4 作为它们的第一个成份。
+<P>
+
+storage 参数允许为变长数据类型选择存储策略。 （定长类型只允许使用 plain）。 plain 声明该数据类型总是用内联的方式而不是压缩的方式存储。 extended 声明系统将首先试图压缩一个长的数据值，然后如果它仍然太长的话就将它的值移出主表的行， 但系统将不会压缩它。 main 允许压缩，但是不赞成把数值移动出主表。 （用这种存储策略的数据项可能仍将移动出主表，如果不能放在一行里的话， 但是它们将比 extended 和 external 项更愿意呆在主表里。）
+<P>
+
+<BR>&nbsp;如果用户希望字段的数据类型缺省时不是&nbsp;NULL，而是其它什么东西，&nbsp;那么你可以声明一个缺省值。&nbsp;在&nbsp;DEFAULT&nbsp;关键字里面声明缺省值。&nbsp;（这样的缺省可以被附着在特定字段上的明确的&nbsp;DEFAULT&nbsp;子句覆盖。）
+<P>
+
+<BR>&nbsp;要表示一个类型是数组，用&nbsp;ELEMENT&nbsp;关键字声明数组元素的类型。&nbsp;比如，要定义一个&nbsp;4&nbsp;字节整数(int4)的数组，声明
+<BR>&nbsp;
+ELEMENT = int4
+<P>
+。 有关数组类型的更多细节在下面描述。
+<P>
+
+<BR>&nbsp;要声明用于这种类型数组的外部形式的数值之间的分隔符，可用&nbsp;delimiter&nbsp;&nbsp;声明指定分隔符。缺省的分隔符是逗号（,）。&nbsp;请注意分隔符是和数组元素类型相关联，而不是数组类型本身。
+<A NAME="lbAG">&nbsp;</A>
+<H3>ARRAY TYPES 数组类型</H3>
+
+<P>
+
+<BR>&nbsp;在创建用户定义数据类型的时候，PostgreSQL&nbsp;&nbsp;自动创建一个与之关联的数组类型，其名字由该基本类型的名字前缀一个下划线组成。&nbsp;分析器理解这个命名传统，并且把对类型为&nbsp;foo[]&nbsp;的字段的请求转换成对类型为&nbsp;_foo&nbsp;&nbsp;的字段的请求。这个隐含创建的数组类型是变长并且使用内建的输入和输出函数&nbsp;array_in&nbsp;和&nbsp;array_out。
+<P>
+
+<BR>&nbsp;你很可能会问如果系统自动制作正确的数组类型，那为什么有个&nbsp;ELEMENT选项？使用&nbsp;ELEMENT&nbsp;有用的唯一的场合是在你制作的定长类型碰巧在内部是一个一定数目相同事物的数组，&nbsp;而你又想允许这&nbsp;N&nbsp;个事物可以通过脚标直接关联，以及那些你准备把该类型当做整体进行的操作。&nbsp;比如，类型&nbsp;name&nbsp;就允许其构成&nbsp;char&nbsp;用这种方法关联。&nbsp;一个二维的&nbsp;point&nbsp;类型也可以允许其两个构成浮点型按照类似&nbsp;point[0]&nbsp;和&nbsp;point[1]&nbsp;的方法关联。&nbsp;
+请注意这个功能只适用与那些内部形式是一个相同的定长域的序列的类型。 一个可以脚标化的变长类型必须有被 array_in 和 array_out 使用的一般化的内部表现形式。 出于历史原因（也就是说，那些明显错误但补救来得太迟的问题），定长数组类型的脚标从零开始，而不是象变长类型那样的从一开始。
+<A NAME="lbAH">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;将要创建的类型名（可以有模式修饰）。
+<DT><B></B><I>attribute_name</I><B></B><DD>
+<BR>&nbsp;复合类型的一个属性（字段）的名字。
+<DT><B></B><I>data_type</I><B></B><DD>
+<BR>&nbsp;一个要成为一个复合类型的字段的现有数据类型的名字。
+<DT><B></B><I>input_function</I><B></B><DD>
+<BR>&nbsp;一个函数的名称，&nbsp;将数据从外部类型转换成内部类型。
+<DT><B></B><I>output_function</I><B></B><DD>
+<BR>&nbsp;一个函数的名称，&nbsp;将数据从内部格式转换成适于显示的形式。
+<DT><B></B><I>receive_function</I><B></B><DD>
+<BR>&nbsp;把数据从类型的外部二进制形式转换成其内部形式的函数的名字。
+<DT><B></B><I>send_function</I><B></B><DD>
+<BR>&nbsp;把数据从类型的内部形式转换成其外部二进制形式的函数名。
+<DT><B></B><I>internallength</I><B></B><DD>
+<BR>&nbsp;一个数值常量，说明新类型的内部表现形式的长度。缺省的假设是它是变长的。
+<DT><B></B><I>alignment</I><B></B><DD>
+<BR>&nbsp;该数据类型的存储对齐要求。如果声明了，必须是&nbsp;char，&nbsp;int2，&nbsp;int4&nbsp;或&nbsp;double；&nbsp;缺省是&nbsp;int4。
+<DT><B></B><I>storage</I><B></B><DD>
+<BR>&nbsp;该数据类型的存储策略。如果声明了，必须是&nbsp;plain，external，&nbsp;extended，或&nbsp;main；&nbsp;缺省是&nbsp;plain。
+<DT><B></B><I>default</I><B></B><DD>
+<BR>&nbsp;该类型的缺省值。通常是省略它的，所以缺省是&nbsp;NULL。
+<DT><B></B><I>element</I><B></B><DD>
+<BR>&nbsp;被创建的类型是数组；这个声明数组元素的类型。
+<DT><B></B><I>delimiter</I><B></B><DD>
+<BR>&nbsp;将用做数组的数据元素之间分隔符的字符。
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;用户定义类型名不能以下划线（_）&nbsp;开头而且只能有&nbsp;62&nbsp;个字符长。（或者通常是&nbsp;NAMEDATALEN-2，&nbsp;而不是其它名字那样的可以有&nbsp;NAMEDATALEN-1&nbsp;个字符）。&nbsp;以下划线开头的类型名被解析成内部创建的数组类型名。
+<P>
+
+<BR>&nbsp;在&nbsp;PostgreSQL&nbsp;版本&nbsp;7.3&nbsp;以前，我们要通过使用占位伪类型&nbsp;opaque&nbsp;代替函数的前向引用来避免创建壳类型。&nbsp;7.3&nbsp;之前&nbsp;cstring&nbsp;参数和结果同样需要声明伪&nbsp;opaque。&nbsp;要支持装载旧的转储外那间，CREATE&nbsp;TYPE&nbsp;将接受那些用&nbsp;opaque声明的函数，&nbsp;但是它回发出一条通知并且用正确的类型改变函数的声明。
+<A NAME="lbAJ">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;这个例子创建一个复合类型并且在一个函数定义中使用它：
+<P>
+<PRE>
+CREATE TYPE compfoo AS (f1 int, f2 text);
+CREATE FUNCTION getfoo() RETURNS SETOF compfoo AS
+  'SELECT fooid, fooname FROM foo' LANGUAGE SQL;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;这个命令创建box数据类型，并且将这种类型用于一个表定义：
+<P>
+<PRE>
+CREATE TYPE box (
+    INTERNALLENGTH = 16,
+    INPUT = my_box_in_function,
+    OUTPUT = my_box_out_function
+);
+
+CREATE TABLE myboxes (
+    id integer,
+    description box
+);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;如果&nbsp;box&nbsp;的内部结构是一个四个&nbsp;float4&nbsp;的数组，我们可以说
+<P>
+<PRE>
+CREATE TYPE box (
+    INTERNALLENGTH = 16,
+    INPUT = my_box_in_function,
+    OUTPUT = my_box_out_function,
+    ELEMENT = float4
+);
+
+</PRE>
+
+<BR>&nbsp;它允许一个&nbsp;box&nbsp;的数值成分成员可以用脚标访问。&nbsp;否则该类型和前面的行为一样。
+<P>
+
+<BR>&nbsp;这条命令创建一个大对象类型并将其用于一个表定义：
+<P>
+<PRE>
+CREATE TYPE bigobj (
+    INPUT = lo_filein, OUTPUT = lo_fileout,
+    INTERNALLENGTH = VARIABLE
+);
+CREATE TABLE big_objs (
+    id integer,
+    obj bigobj
+);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;更多的例子，包括合适的输入和输出函数，在&nbsp;Chapter&nbsp;31``Extending&nbsp;SQL''&nbsp;in&nbsp;the&nbsp;documentation。
+<A NAME="lbAK">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>CREATE TYPE</B> 命令是 PostgreSQL 扩展。在 SQL99 里有一个 CREATE TYPE 语句，但是细节上和 PostgreSQL 的有比较大区别。
+<A NAME="lbAL">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+CREATE FUNCTION [<B><A HREF="/cgi-bin/man/man2html?7+create_function">create_function</A></B>(7)], DROP TYPE [<B><A HREF="/cgi-bin/man/man2html?l+drop_type">drop_type</A></B>(l)]
+<A NAME="lbAM">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DL>
+<DT><A HREF="#lbAE">COMPOSITE TYPES 复合类型</A><DD>
+<DT><A HREF="#lbAF">BASE TYPES 基本类型</A><DD>
+<DT><A HREF="#lbAG">ARRAY TYPES 数组类型</A><DD>
+</DL>
+<DT><A HREF="#lbAH">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAI">NOTES 注意</A><DD>
+<DT><A HREF="#lbAJ">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAK">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAL">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAM">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

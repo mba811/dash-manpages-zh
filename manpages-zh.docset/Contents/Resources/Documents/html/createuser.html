@@ -1,0 +1,173 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATEUSER</TITLE>
+</HEAD><BODY>
+<H1>CREATEUSER</H1>
+Section: PostgreSQL Client Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+createuser - 定义一个新的 PostgreSQL 用户帐户
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>createuser</B> [ <B></B><I>option</I><B></B>...<B> </B>] [ <B></B><I>username</I><B> </B>]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>createuser</B> 创建一个新的 PostgreSQL 用户。只有超级用户（在
+pg_shadow 表中设置了 usesuper 的用户）可以创建新的 PostgreSQL 用户。 因此，
+createuser 必须由某位可以以 PostgreSQL 超级用户连接的用户执行。
+<P>
+
+<BR>&nbsp;作为超级用户同时也意味着绕开数据库内访问检查的能力，&nbsp;因此我们应该少赋予超级用户权限。
+<P>
+
+<B>createuser</B> 是 SQL 命令 CREATE USER [<B><A HREF="/cgi-bin/man/man2html?7+create_user">create_user</A></B>(7)] 的封装。
+因此，用那种方法创建新用户都没什么特别的。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<B>createuser</B> 接受下列命令行参数：
+<DL COMPACT>
+<DT><B></B><I>username</I><B></B><DD>
+声明要创建的 PostgreSQL 用户名称。 该名称必须在所有 PostgreSQL 用户中唯一。
+<DT><B>-a</B><DD>
+<DT><B>--adduser</B><DD>
+允许该新建用户创建其他用户。(注意: 实际上这样做相当于把这个新用户变成了
+superuser，只不过这个选项命名得比较烂。)
+<DT><B>-A</B><DD>
+<DT><B>--no-adduser</B><DD>
+<BR>&nbsp;不允许该新建用户创建其他用户。&nbsp;（也就是说，该用户是一个普通用户，不是超级用户）。
+<DT><B>-d</B><DD>
+<DT><B>--createdb</B><DD>
+<BR>&nbsp;允许该新建用户创建数据库。
+<DT><B>-D</B><DD>
+<DT><B>--no-createdb</B><DD>
+<BR>&nbsp;禁止该新建用户创建数据库。
+<DT><B>-e</B><DD>
+<DT><B>--echo</B><DD>
+<BR>&nbsp;回显&nbsp;createuser&nbsp;生成的命令并发送给服务器。
+<DT><B>-E</B><DD>
+<DT><B>--encrypted</B><DD>
+<BR>&nbsp;对保存在数据库里的用户口令加密。如果没有声明，&nbsp;则使用缺省值。
+<DT><B>-i </B><I>number</I><B></B><DD>
+<DT><B>--sysid </B><I>number</I><B></B><DD>
+<BR>&nbsp;允许你给新用户使用非缺省用户标识。这个也不是必须的，但是有些人喜欢这样。
+<DT><B>-N</B><DD>
+<DT><B>--unencrypted</B><DD>
+<BR>&nbsp;不对保存在数据库里的用户口令加密。如果没有声明，&nbsp;则使用缺省值，
+<DT><B>-P</B><DD>
+<DT><B>--pwprompt</B><DD>
+<BR>&nbsp;如果给出，createuser&nbsp;将发出一个提示符要求输入新用户的口令。&nbsp;如果你不打算用口令认证，那么这是不必要的。
+<DT><B>-q</B><DD>
+<DT><B>--quiet</B><DD>
+<BR>&nbsp;不显示响应。
+</DL>
+<P>
+
+<P>
+
+<BR>&nbsp;如果没有在命令行上声明名称和其他的一些缺少的信息，脚本会提示你输入。
+<P>
+
+<B>createuser</B> 还接受下列命令行参数用作连接参数：
+<DL COMPACT>
+<DT><B>-h </B><I>host</I><B></B><DD>
+<DT><B>--host </B><I>host</I><B></B><DD>
+<BR>&nbsp;声明运行服务器的机器的主机名。&nbsp;如果数值以斜扛开头，则它被用做到&nbsp;Unix&nbsp;域套接字的路径。
+<DT><B>-p </B><I>port</I><B></B><DD>
+<DT><B>--port </B><I>port</I><B></B><DD>
+<BR>&nbsp;声明服务器&nbsp;正在侦听的互联网&nbsp;TCP&nbsp;端口号或本地Unix域套接字的文件扩展（描述符）。
+<DT><B>-U </B><I>username</I><B></B><DD>
+<DT><B>--username </B><I>username</I><B></B><DD>
+<BR>&nbsp;连接的用户名（不是要创建的用户名）。
+<DT><B>-W</B><DD>
+<DT><B>--password</B><DD>
+<BR>&nbsp;强制口令提示（与服务器连接的口令，不是新用户的口令。）
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>PGHOST</B><DD>
+<DT><B>PGPORT</B><DD>
+<DT><B>PGUSER</B><DD>
+<BR>&nbsp;缺省连接参数。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>DIAGNOSTICS 诊断</H2>
+
+<P>
+
+<BR>&nbsp;如果出现错误，将会显示后端错误信息。参阅&nbsp;CREATE&nbsp;USER&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+create_user">create_user</A></B>(7)]&nbsp;和&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1)&nbsp;&nbsp;获取可能信息描述。数据库服务器必须在目标主机上运行。&nbsp;同样，任何&nbsp;libpq&nbsp;前端库使用的缺省连接设置和环境变量都将适用。
+<A NAME="lbAH">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;在缺省数据库服务器上创建一个用户&nbsp;joe：
+<P>
+<PRE>
+$ <B>createuser joe</B>
+Is the new user allowed to create databases? (y/n) <B>n</B>
+Shall the new user be allowed to create more new users? (y/n) <B>n</B>
+CREATE USER
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;用在主机eden上的服务器创建用户&nbsp;joe，端口是&nbsp;5000，避免提示并且显示执行的命令：
+<P>
+<PRE>
+$ <B>createuser -p 5000 -h eden -D -A -e joe</B>
+CREATE USER &quot;joe&quot; NOCREATEDB NOCREATEUSER
+CREATE USER
+
+</PRE>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+dropuser">dropuser</A></B>(1), CREATE USER [<B><A HREF="/cgi-bin/man/man2html?7+create_user">create_user</A></B>(7)]
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAG">DIAGNOSTICS 诊断</A><DD>
+<DT><A HREF="#lbAH">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

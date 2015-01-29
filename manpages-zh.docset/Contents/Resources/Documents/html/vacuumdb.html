@@ -1,0 +1,177 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of VACUUMDB</TITLE>
+</HEAD><BODY>
+<H1>VACUUMDB</H1>
+Section: PostgreSQL Client Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+vacuumdb - 收集垃圾并且分析一个PostgreSQL 数据库
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>vacuumdb</B> [ <B></B><I>connection-option</I><B></B>...<B> </B>] [ <B>--full</B> | <B>-f</B> ] [ <B>--verbose</B> | <B>-v</B> ] [ <B>--analyze</B> | <B>-z</B> ] [ <B>--table | -t </B><I>table</I><B></B> [ <B>( </B><I>column</I><B> [,...] ) </B>]<B> </B>] [ <B></B><I>dbname</I><B> </B>]
+<P>
+<B>vacuumdb</B> [ <B></B><I>connection-options</I><B></B>...<B> </B>] [ <B>--all</B> | <B>-a</B> ] [ <B>--full</B> | <B>-f</B> ] [ <B>--verbose</B> | <B>-v</B> ] [ <B>--analyze</B> | <B>-z</B> ]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>vacuumdb</B> 是一个用于整理 PostgreSQL 数据库的工具。 vacuumdb 还将会生成用于 PostgreSQL 查询优化器的内部统计数据。
+<P>
+
+<B>vacuumdb</B> 是 SQL 命令 VACUUM [<B><A HREF="/cgi-bin/man/man2html?7+vacuum">vacuum</A></B>(7)] 的封装。 因此，用哪种方法清理数据库都没什么特别的。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<B>vacuumdb</B> 接受下列命令行参数：
+<DL COMPACT>
+<DT><B>-a</B><DD>
+<DT><B>--all</B><DD>
+<BR>&nbsp;清理所有数据库。
+<DT><B>[-d] </B><I>dbname</I><B></B><DD>
+<DT><B>[--dbname] </B><I>dbname</I><B></B><DD>
+<BR>&nbsp;声明要被清理或分析的数据库名称。&nbsp;如果没有声明这个参数并且没有使用&nbsp;-a（或&nbsp;--all），&nbsp;那么从环境变量&nbsp;PGDATABASE&nbsp;里读取数据库名。&nbsp;如果那个也没有设置，则使用连接的用户名。
+<DT><B>-e</B><DD>
+<DT><B>--echo</B><DD>
+<BR>&nbsp;回显&nbsp;vacuumdb&nbsp;生成的查询并且把它发送到服务器。
+<DT><B>-f</B><DD>
+<DT><B>--full</B><DD>
+<BR>&nbsp;执行&quot;完全&quot;清理．
+<DT><B>-q</B><DD>
+<DT><B>--quiet</B><DD>
+<BR>&nbsp;不显示响应。
+<DT><B>-t </B><I>table</I><B> [ (</B><I>column</I><B> [,...]) ]</B><DD>
+<DT><B>--table </B><I>table</I><B> [ (</B><I>column</I><B> [,...]) ]</B><DD>
+<BR>&nbsp;只是清理或分析&nbsp;table。&nbsp;字段名称只是在与&nbsp;--analyze&nbsp;选项联合使用时才需要声明。
+<P>
+<DL COMPACT><DT><DD>
+<B>Tip:</B>
+
+提示:  如果你声明了要清理的字段，你可能不得不在 shell 上逃逸圆括弧（见下面的例子）。
+</DL>
+
+<P>
+<DT><B>-v</B><DD>
+<DT><B>--verbose</B><DD>
+<BR>&nbsp;在处理过程中打印详细信息。
+<DT><B>-z</B><DD>
+<DT><B>--analyze</B><DD>
+<BR>&nbsp;计算用于优化器的该数据库的统计值。
+</DL>
+<P>
+
+<P>
+
+<B>vacuumdb</B> 还接受下面的命令行参数用于联接参数：
+<DL COMPACT>
+<DT><B>-h </B><I>host</I><B></B><DD>
+<DT><B>--host </B><I>host</I><B></B><DD>
+<BR>&nbsp;声明运行服务器的机器的主机名。&nbsp;如果主机名以斜扛开头，则它被用做到&nbsp;Unix&nbsp;域套接字的路径。
+<DT><B>-p </B><I>port</I><B></B><DD>
+<DT><B>--port </B><I>port</I><B></B><DD>
+<BR>&nbsp;声明服务器在侦听联接的&nbsp;TCP&nbsp;端口号或一个本地的&nbsp;Unix&nbsp;域套接字文件句柄。
+<DT><B>-U </B><I>username</I><B></B><DD>
+<DT><B>--username </B><I>username</I><B></B><DD>
+<BR>&nbsp;进行联接的用户名。
+<DT><B>-W</B><DD>
+<DT><B>--password</B><DD>
+<BR>&nbsp;强制口令输入提示。
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>PGDATABASE</B><DD>
+<DT><B>PGHOST</B><DD>
+<DT><B>PGPORT</B><DD>
+<DT><B>PGUSER</B><DD>
+<BR>&nbsp;缺省连接参数
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>DIAGNOSTICS 诊断</H2>
+
+<P>
+
+<BR>&nbsp;如果出差错了。参阅&nbsp;VACUUM&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+vacuum">vacuum</A></B>(7)]&nbsp;&nbsp;和&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1)&nbsp;&nbsp;获取关于错误信息和可能问题的详细描述。&nbsp;数据库服务器必须在目标主机上运行。同时，前端库&nbsp;libpq&nbsp;使用的任何缺省连接设置和环境变量都适用。
+<A NAME="lbAH">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<B>vacuumdb</B> 可能需要与 PostgreSQL  服务器连接若干次，每次都询问口令。在这种情况下，设立一个 <I>$HOME/.pgpass</I>  是比较方便的。参阅 Section 27.11 获取更多信息。
+<A NAME="lbAI">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;整理数据库&nbsp;test：
+<P>
+<PRE>
+$ <B>vacuumdb test</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;为优化器清理和分析一个名为&nbsp;bigdb&nbsp;的数据库：
+<P>
+<PRE>
+$ <B>vacuumdb --analyze bigdb</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;为清理数据库xyzzy里表&nbsp;foo，&nbsp;并且为优化器分析列&nbsp;bar：
+<P>
+<PRE>
+$ <B>vacuumdb --analyze --verbose --table 'foo(bar)' xyzzy</B>
+
+</PRE>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+VACUUM [<B><A HREF="/cgi-bin/man/man2html?7+vacuum">vacuum</A></B>(7)]
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAG">DIAGNOSTICS 诊断</A><DD>
+<DT><A HREF="#lbAH">NOTES 注意</A><DD>
+<DT><A HREF="#lbAI">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAJ">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAK">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

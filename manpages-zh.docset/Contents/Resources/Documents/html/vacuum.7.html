@@ -1,0 +1,155 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of VACUUM</TITLE>
+</HEAD><BODY>
+<H1>VACUUM</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+VACUUM - 垃圾收集以及可选地分析一个数据库
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+VACUUM [ FULL ] [ FREEZE ] [ VERBOSE ] [ <I>table</I> ]
+VACUUM [ FULL ] [ FREEZE ] [ VERBOSE ] ANALYZE [ <I>table</I> [ (<I>column</I> [, ...] ) ] ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>VACUUM</B> 回收已删除元组占据的存储空间。 在一般的 PostgreSQL 操作里， 那些已经 DELETE 的元组或者被 UPDATE 过后过时的元组是没有从它们所属的表中物理删除的； 在完成 VACUUM 之前它们仍然存在。 因此我们有必须周期地运行 VACUUM， 特别是在常更新的表上。
+<P>
+
+<BR>&nbsp;如果没有参数，VACUUM&nbsp;处理当前数据库里每个表，&nbsp;如果有参数，VACUUM&nbsp;只处理那个表。
+<P>
+
+<B>VACUUM ANALYZE</B> 先执行一个 VACUUM  然后是给每个选定的表执行一个 ANALYZE。 对于日常维护脚本而言，这是一个很方便的组合。参阅
+ANALYZE [<B><A HREF="/cgi-bin/man/man2html?7+analyze">analyze</A></B>(7)]
+获取更多有关其处理的细节。
+<P>
+
+<BR>&nbsp;简单的&nbsp;VACUUM&nbsp;（没有FULL）&nbsp;只是简单地回收空间并且令其可以再次使用。这种形式的命令可以和对表的普通读写并行操作，&nbsp;因为没有请求排他锁。VACUUM&nbsp;FULL&nbsp;&nbsp;执行更广泛的处理，包括跨块移动元组，以便把表压缩到最少的磁盘块数目里。&nbsp;这种形式要慢许多并且在处理的时候需要在表上施加一个排它锁。
+<P>
+
+FREEZE 是一种特殊用途的选项，它导致元组尽可能快地标记为&quot;冻结(frozen)&quot;， 而不是等到它们已经相当老的时候才标记。如果在同一个数据库上没有其它运行着的事务的时候完成这个命令， 那么系统就保证在数据库里的所有元组都是&quot;冻结(frozen)&quot;的， 因此不会有事务 ID 重叠的问题，而和数据库未清理的时间没有关系。 我们不建议把 FREEZE 用做日常用途。我们用它的唯一目地是准备和用户定义的模板数据库联接的时候， 或者是其它完全是只读的， 不会等到日常维护性 VACUUM 操作的数据库。 参阅 Chapter 21 ``Routine Database Maintenance'' 获取细节。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B>FULL</B><DD>
+<BR>&nbsp;选择&quot;完全&quot;清理，这样可以恢复更多的空间，&nbsp;但是花的时间更多并且在表上施加了排它锁。
+<DT><B>FREEZE</B><DD>
+<BR>&nbsp;选择激进的元组&quot;冻结&quot;。
+<DT><B>VERBOSE</B><DD>
+<BR>&nbsp;为每个表打印一份详细的清理工作报告。
+<DT><B>ANALYZE</B><DD>
+<BR>&nbsp;更新用于优化器的统计信息，以决定执行查询的最有效方法。
+<DT><B></B><I>table</I><B></B><DD>
+<BR>&nbsp;要清理的表的名称（可以有模式修饰）。缺省时是当前数据库中的所有表。
+<DT><B></B><I>column</I><B></B><DD>
+<BR>&nbsp;要分析的具体的列/字段名称。缺省是所有列/字段。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>OUTPUTS 输出</H2>
+
+<P>
+
+<BR>&nbsp;如果声明了&nbsp;VERBOSE，VACUUM&nbsp;发出过程信息，&nbsp;以表明当前正在处理那个表。各种有关这些表的统计也会打印出来。
+<A NAME="lbAG">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;我们建议在经常VACUUMM（清理）（至少每晚一次）生产数据库，&nbsp;以保证不断地删除失效的行。尤其是在增删了大量记录之后，&nbsp;对受影响的表执行&nbsp;VACUUM&nbsp;ANALYZE&nbsp;&nbsp;命令是一个很好的习惯。这样做将更新系统目录为最近的更改，并且允许&nbsp;PostgreSQL&nbsp;&nbsp;查询优化器在规划用户查询时有更好的选择。
+<P>
+
+<BR>&nbsp;我们不建议日常使用&nbsp;FULL&nbsp;选项，但是可以在特殊情况下使用。&nbsp;一个例子就是在你删除了一个表的大部分行之后，希望从物理上缩小该表以减少磁盘空间占用。VACUUM&nbsp;FULL&nbsp;&nbsp;通常要比单纯的&nbsp;VACUUM&nbsp;收缩更多表的尺寸。
+<A NAME="lbAH">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;下面是一个在&nbsp;regression&nbsp;（蜕变）数据库里某个表上执行&nbsp;VACUUM的一个例子：
+<P>
+<PRE>
+regression=# VACUUM VERBOSE ANALYZE onek;
+INFO:  vacuuming &quot;public.onek&quot;
+INFO:  index &quot;onek_unique1&quot; now contains 1000 tuples in 14 pages
+DETAIL:  3000 index tuples were removed.
+0 index pages have been deleted, 0 are currently reusable.
+CPU 0.01s/0.08u sec elapsed 0.18 sec.
+INFO:  index &quot;onek_unique2&quot; now contains 1000 tuples in 16 pages
+DETAIL:  3000 index tuples were removed.
+0 index pages have been deleted, 0 are currently reusable.
+CPU 0.00s/0.07u sec elapsed 0.23 sec.
+INFO:  index &quot;onek_hundred&quot; now contains 1000 tuples in 13 pages
+DETAIL:  3000 index tuples were removed.
+0 index pages have been deleted, 0 are currently reusable.
+CPU 0.01s/0.08u sec elapsed 0.17 sec.
+INFO:  index &quot;onek_stringu1&quot; now contains 1000 tuples in 48 pages
+DETAIL:  3000 index tuples were removed.
+0 index pages have been deleted, 0 are currently reusable.
+CPU 0.01s/0.09u sec elapsed 0.59 sec.
+INFO:  &quot;onek&quot;: removed 3000 tuples in 108 pages
+DETAIL:  CPU 0.01s/0.06u sec elapsed 0.07 sec.
+INFO:  &quot;onek&quot;: found 3000 removable, 1000 nonremovable tuples in 143 pages
+DETAIL:  0 dead tuples cannot be removed yet.
+There were 0 unused item pointers.
+0 pages are entirely empty.
+CPU 0.07s/0.39u sec elapsed 1.56 sec.
+INFO:  analyzing &quot;public.onek&quot;
+INFO:  &quot;onek&quot;: 36 pages, 1000 rows sampled, 1000 estimated total rows
+VACUUM
+
+</PRE>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+SQL 标准里没有 VACUUM 语句。
+<A NAME="lbAJ">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+vacuumdb [<B><A HREF="/cgi-bin/man/man2html?1+vacuumdb">vacuumdb</A></B>(1)]
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">OUTPUTS 输出</A><DD>
+<DT><A HREF="#lbAG">NOTES 注意</A><DD>
+<DT><A HREF="#lbAH">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAI">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAJ">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAK">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

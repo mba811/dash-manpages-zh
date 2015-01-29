@@ -1,0 +1,101 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of INSTALL-INFO</TITLE>
+</HEAD><BODY>
+<H1>INSTALL-INFO</H1>
+Section: User Commands (1)<BR>Updated: June 2003<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+install-info - 更新 info/dir 项
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<B>install-info</B>
+
+[<I>OPTION</I>]... [<I>INFO-FILE </I>[<I>DIR-FILE</I>]]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+从 Info 目录文件 DIR-FILE 中的文件 INFO-FILE 中安装或删除 dir 目录项。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<DL COMPACT>
+<DT><B>--delete</B><DD>
+删除 DIR-FILE 中的 INFO-FILE 里已有的项；不插入任何新项。
+<DT><B>--dir-file</B>=<I>NAME</I><DD>
+指定 Info 目录文件的文件名。这等价于使用 DIR-FILE 参数。
+<DT><B>--entry</B>=<I>TEXT</I><DD>
+插入 TEXT，作为一个 Info 目录项。TEXT 的形式应当是一个 Info 目录项的一行，加上 0 个或多个以空白开始的行。如果指定了超过一项，它们都将被添加。如果不指定任何项，就根据它们的 Info 文件中的信息来判断。
+<DT><B>--help</B><DD>
+显示此帮助，然后退出。
+<DT><B>--info-file</B>=<I>FILE</I><DD>
+指定要安装到目录中的 Info 文件。这等价于使用 INFO-FILE 参数。
+<DT><B>--info-dir</B>=<I>DIR</I><DD>
+与 <B>--dir-file</B>=<I>DIR</I>/dir 相同。
+<DT><B>--item</B>=<I>TEXT</I><DD>
+与 <B>--entry</B> TEXT 相同。一个 Info 目录项实际是一个菜单项。
+<DT><B>--quiet</B><DD>
+阻止发出警告。
+<DT><B>--remove</B><DD>
+与 <B>--delete</B> 相同。
+<DT><B>--section</B>=<I>SEC</I><DD>
+将文件中所有项添加到目录的 SEC 段。如果指定了超过一个段，所有项都被添加到每一个段当中。如果不指定任何段，就根据它们的 Info 文件中的信息来判断。
+<DT><B>--version</B><DD>
+显示版本信息，然后退出。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>REPORTING BUGS 报告错误</H2>
+
+将错误报告发送到 <A HREF="mailto:bug-texinfo@gnu.org">bug-texinfo@gnu.org</A>，一般的问题和讨论则发送到 <A HREF="mailto:help-texinfo@gnu.org">help-texinfo@gnu.org</A>。
+Texinfo 主页: <A HREF="http://www.gnu.org/software/texinfo/">http://www.gnu.org/software/texinfo/</A>
+<A NAME="lbAG">&nbsp;</A>
+<H2>COPYRIGHT</H2>
+
+Copyright &#169; 2003 Free Software Foundation, Inc.
+There is NO warranty.  You may redistribute this software
+under the terms of the GNU General Public License.
+For more information about these matters, see the files named COPYING.
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B>install-info</B>
+
+的全部文档以 Texinfo 手册页形式保存。如果你的主机上正确安装了
+<B>info</B>
+
+和
+<B>install-info</B>
+
+程序，命令
+<DL COMPACT>
+<DT><DD>
+<B>info install-info</B>
+
+</DL>
+<P>
+
+将使你可以读取完整的手册。
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">REPORTING BUGS 报告错误</A><DD>
+<DT><A HREF="#lbAG">COPYRIGHT</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,188 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CBDSQR</TITLE>
+</HEAD><BODY>
+<H1>CBDSQR</H1>
+Section: C Library Functions (3)<BR>Updated: 15 June 2000<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CBDSQR - 计算一个实 (real) NxN 上/下 (upper/lower) 三角 (bidiagonal) 矩阵 B 的单值分解 (singular value decomposition (SVD))
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<DL COMPACT>
+<DT>SUBROUTINE CBDSQR(<DD>
+UPLO, N, NCVT, NRU, NCC, D, E, VT, LDVT, U,
+LDU, C, LDC, RWORK, INFO )
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+CHARACTER
+UPLO
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+INTEGER
+INFO, LDC, LDU, LDVT, N, NCC, NCVT, NRU
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+REAL
+D( * ), E( * ), RWORK( * )
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+COMPLEX
+C( LDC, * ), U( LDU, * ), VT( LDVT, * )
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>PURPOSE</H2>
+
+CBDSQR computes the singular value decomposition (SVD) of a real N-by-N (upper or lower) bidiagonal matrix B: B = Q * S * P' (P' denotes the transpose of P), where S is a diagonal matrix with
+non-negative diagonal elements (the singular values of B), and Q
+and P are orthogonal matrices.
+<BR>
+
+<P>
+The routine computes S, and optionally computes U * Q, P' * VT,
+or Q' * C, for given complex input matrices U, VT, and C.
+<P>
+See &quot;Computing  Small Singular Values of Bidiagonal Matrices With
+Guaranteed High Relative Accuracy,&quot; by J. Demmel and W. Kahan,
+LAPACK Working Note #3 (or SIAM J. Sci. Statist. Comput. vol. 11,
+no. 5, pp. 873-912, Sept 1990) and
+<BR>
+
+&quot;Accurate singular values and differential qd algorithms,&quot; by
+B. Parlett and V. Fernando, Technical Report CPAM-554, Mathematics
+Department, University of California at Berkeley, July 1992
+for a detailed description of the algorithm.
+<BR>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>ARGUMENTS</H2>
+
+<DL COMPACT>
+<DT>UPLO    (input) CHARACTER*1<DD>
+= 'U':  B is upper bidiagonal;
+<BR>
+
+= 'L':  B is lower bidiagonal.
+<DT>N       (input) INTEGER<DD>
+The order of the matrix B.  N &gt;= 0.
+<DT>NCVT    (input) INTEGER<DD>
+The number of columns of the matrix VT. NCVT &gt;= 0.
+<DT>NRU     (input) INTEGER<DD>
+The number of rows of the matrix U. NRU &gt;= 0.
+<DT>NCC     (input) INTEGER<DD>
+The number of columns of the matrix C. NCC &gt;= 0.
+<DT>D       (input/output) REAL array, dimension (N)<DD>
+On entry, the n diagonal elements of the bidiagonal matrix B.
+On exit, if INFO=0, the singular values of B in decreasing
+order.
+<DT>E       (input/output) REAL array, dimension (N)<DD>
+On entry, the elements of E contain the
+offdiagonal elements of of the bidiagonal matrix whose SVD
+is desired. On normal exit (INFO = 0), E is destroyed.
+If the algorithm does not converge (INFO &gt; 0), D and E
+will contain the diagonal and superdiagonal elements of a
+bidiagonal matrix orthogonally equivalent to the one given
+as input. E(N) is used for workspace.
+<DT>VT      (input/output) COMPLEX array, dimension (LDVT, NCVT)<DD>
+On entry, an N-by-NCVT matrix VT.
+On exit, VT is overwritten by P' * VT.
+VT is not referenced if NCVT = 0.
+<DT>LDVT    (input) INTEGER<DD>
+The leading dimension of the array VT.
+LDVT &gt;= max(1,N) if NCVT &gt; 0; LDVT &gt;= 1 if NCVT = 0.
+<DT>U       (input/output) COMPLEX array, dimension (LDU, N)<DD>
+On entry, an NRU-by-N matrix U.
+On exit, U is overwritten by U * Q.
+U is not referenced if NRU = 0.
+<DT>LDU     (input) INTEGER<DD>
+The leading dimension of the array U.  LDU &gt;= max(1,NRU).
+<DT>C       (input/output) COMPLEX array, dimension (LDC, NCC)<DD>
+On entry, an N-by-NCC matrix C.
+On exit, C is overwritten by Q' * C.
+C is not referenced if NCC = 0.
+<DT>LDC     (input) INTEGER<DD>
+The leading dimension of the array C.
+LDC &gt;= max(1,N) if NCC &gt; 0; LDC &gt;=1 if NCC = 0.
+<DT>RWORK   (workspace) REAL array, dimension (4*N)<DD>
+<DT>INFO    (output) INTEGER<DD>
+= 0:  successful exit
+<BR>
+
+&lt; 0:  If INFO = -i, the i-th argument had an illegal value
+<BR>
+
+&gt; 0:  the algorithm did not converge; D and E contain the
+elements of a bidiagonal matrix which is orthogonally
+similar to the input matrix B;  if INFO = i, i
+elements of E have not converged to zero.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>PARAMETERS</H2>
+
+<DL COMPACT>
+<DT>TOLMUL  REAL, default = max(10,min(100,EPS**(-1/8)))<DD>
+TOLMUL controls the convergence criterion of the QR loop.
+If it is positive, TOLMUL*EPS is the desired relative
+precision in the computed singular values.
+If it is negative, abs(TOLMUL*EPS*sigma_max) is the
+desired absolute accuracy in the computed singular
+values (corresponds to relative accuracy
+abs(TOLMUL*EPS) in the largest singular value.
+abs(TOLMUL) should be between 1 and 1/EPS, and preferably
+between 10 (for fast convergence) and .1/EPS
+(for there to be some accuracy in the results).
+Default is to lose at either one eighth or 2 of the
+available decimal digits in each computed singular value
+(whichever is smaller).
+<DT>MAXITR  INTEGER, default = 6<DD>
+MAXITR controls the maximum number of passes of the
+algorithm through its inner loop. The algorithms stops
+(and so fails to converge) if the number of passes
+through the inner loop exceeds MAXITR*N**2.
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>姓名 &lt;email&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>yyyy.mm.dd</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">PURPOSE</A><DD>
+<DT><A HREF="#lbAE">ARGUMENTS</A><DD>
+<DT><A HREF="#lbAF">PARAMETERS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

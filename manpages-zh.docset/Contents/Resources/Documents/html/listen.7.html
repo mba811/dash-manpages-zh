@@ -1,0 +1,101 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LISTEN</TITLE>
+</HEAD><BODY>
+<H1>LISTEN</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+LISTEN - 监听一个通知
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+LISTEN <I>name</I>
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>LISTEN</B> 将当前会话注册为通知条件 name
+<P>
+
+<BR>&nbsp;当执行了命令&nbsp;NOTIFY&nbsp;name&nbsp;&nbsp;后，不管是此会话还是其他联接到同一数据库的会话执行的，&nbsp;所有正在监听此通知条件的会话都将收到通知，&nbsp;并且接下来每个会话将通知与其相连的前端应用．请参考&nbsp;NOTIFY&nbsp;&nbsp;获取更多信息．
+<P>
+
+<BR>&nbsp;使用&nbsp;UNLISTEN&nbsp;命令，可以将一个会话内已注册的通知条件删除．&nbsp;同样，会话退出时自动删除该会话正在监听的已注册通知条件．
+<P>
+
+<BR>&nbsp;前端应用检测通知事件的方法取决于&nbsp;PostgreSQL&nbsp;应用使用的编程接口．&nbsp;如果使用基本的libpq库，&nbsp;应用将&nbsp;LISTEN&nbsp;当作普通&nbsp;SQL&nbsp;命令使用，而且必须周期地调用&nbsp;PQnotifies&nbsp;过程来检测是否有通知到达．&nbsp;其他像libpgtcl接口提供了更高级的控制通知事件的方法；实际上，&nbsp;使用libpgtcl，应用程序员不应该直接使用&nbsp;LISTEN&nbsp;或&nbsp;UNLISTEN．&nbsp;请参考你使用的接口的文档获取更多细节．
+<P>
+
+NOTIFY [<B><A HREF="/cgi-bin/man/man2html?7+notify">notify</A></B>(7)]
+的手册页包含更广泛的关于 LISTEN 和 NOTIFY 的使用的讨论．
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;通知条件名&nbsp;(任何标识符)。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;在&nbsp;<B>psql</B>&nbsp;里配制和执行一个监听/通知序列：
+<P>
+<PRE>
+LISTEN virtual;
+NOTIFY virtual;
+Asynchronous notification &quot;virtual&quot; received from server process with PID 8448.
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;在&nbsp;SQL&nbsp;标准里没有&nbsp;LISTEN
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+NOTIFY [<B><A HREF="/cgi-bin/man/man2html?7+notify">notify</A></B>(7)], UNLISTEN [<B><A HREF="/cgi-bin/man/man2html?l+unlisten">unlisten</A></B>(l)]
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

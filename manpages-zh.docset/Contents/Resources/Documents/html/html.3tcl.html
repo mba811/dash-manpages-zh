@@ -1,0 +1,312 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of html</TITLE>
+</HEAD><BODY>
+<H1>html</H1>
+Section: HTML Generation (3tcl)<BR>Updated: 1.2.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+html - 产生 HTML 框架的子程序
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+package require <B>Tcl 8.2</B>
+<P>
+package require <B>html ?1.2.1?</B>
+<P>
+<B>::html::author</B> <I>author</I>
+<P>
+<B>::html::bodyTag</B> <I>args</I>
+<P>
+<B>::html::cell</B> <I>param value</I> ?<I>tag</I>?
+<P>
+<B>::html::checkbox</B> <I>name value</I>
+<P>
+<B>::html::checkSet</B> <I>key sep list</I>
+<P>
+<B>::html::checkValue</B> <I>name</I> ?<I>value</I>?
+<P>
+<B>::html::closeTag</B> 
+<P>
+<B>::html::default</B> <I>key</I> ?<I>param</I>?
+<P>
+<B>::html::description</B> <I>description</I>
+<P>
+<B>::html::end</B> 
+<P>
+<B>::html::eval</B> <I>arg</I> ?<I>args</I>?
+<P>
+<B>::html::extractParam</B> <I>param key</I> ?<I>varName</I>?
+<P>
+<B>::html::font</B> <I>args</I>
+<P>
+<B>::html::for</B> <I>start test next body</I>
+<P>
+<B>::html::foreach</B> <I>varlist1 list1</I> ?<I>varlist2 list2 ...</I>? <I>body</I>
+<P>
+<B>::html::formValue</B> <I>name</I> ?<I>defvalue</I>?
+<P>
+<B>::html::getFormInfo</B> <I>args</I>
+<P>
+<B>::html::getTitle</B> 
+<P>
+<B>::html::h</B> <I>level string</I> ?<I>param</I>?
+<P>
+<B>::html::h1</B> <I>string</I> ?<I>param</I>?
+<P>
+<B>::html::h2</B> <I>string</I> ?<I>param</I>?
+<P>
+<B>::html::h3</B> <I>string</I> ?<I>param</I>?
+<P>
+<B>::html::h4</B> <I>string</I> ?<I>param</I>?
+<P>
+<B>::html::h5</B> <I>string</I> ?<I>param</I>?
+<P>
+<B>::html::h6</B> <I>string</I> ?<I>param</I>?
+<P>
+<B>::html::hdrRow</B> <I>args</I>
+<P>
+<B>::html::head</B> <I>title</I>
+<P>
+<B>::html::headTag</B> <I>string</I>
+<P>
+<B>::html::if</B> <I>expr1 body1</I> ?<B>elseif</B> <I>expr2 body2 ...</I>? ?<B>else</B> <I>bodyN</I>?
+<P>
+<B>::html::keywords</B> <I>args</I>
+<P>
+<B>::html::mailto</B> <I>email</I> ?<I>subject</I>?
+<P>
+<B>::html::meta</B> <I>args</I>
+<P>
+<B>::html::minorMenu</B> <I>list</I> ?<I>sep</I>?
+<P>
+<B>::html::minorList</B> <I>list</I> ?<I>ordered</I>?
+<P>
+<B>::html::openTag</B> <I>tag args</I>
+<P>
+<B>::html::passwordInput</B> ?<I>name</I>?
+<P>
+<B>::html::passwordInputRow</B> <I>label</I> ?<I>name</I>?
+<P>
+<B>::html::quoteFormValue</B> <I>value</I>
+<P>
+<B>::html::radioSet</B> <I>key sep list</I>
+<P>
+<B>::html::radioValue</B> <I>name value</I>
+<P>
+<B>::html::refresh</B> <I>seconds url</I>
+<P>
+<B>::html::init</B> ?<I>list</I>?
+<P>
+<B>::html::row</B> <I>args</I>
+<P>
+<B>::html::paramRow</B> <I>list</I> ?<I>rparam</I>? ?<I>cparam</I>?
+<P>
+<B>::html::select</B> <I>name param choices</I> ?<I>current</I>?
+<P>
+<B>::html::selectPlain</B> <I>name param choices</I> ?<I>current</I>?
+<P>
+<B>::html::submit</B> <I>label</I> ?<I>name</I>?
+<P>
+<B>::html::set</B> <I>var val</I>
+<P>
+<B>::html::tableFromArray</B> <I>arrname</I> ?<I>param</I>? ?<I>pat</I>?
+<P>
+<B>::html::tableFromList</B> <I>querylist</I> ?<I>param</I>?
+<P>
+<B>::html::textarea</B> <I>name</I> ?<I>param</I>? ?<I>current</I>?
+<P>
+<B>::html::textInput</B> <I>name args</I>
+<P>
+<B>::html::textInputRow</B> <I>label name args</I>
+<P>
+<B>::html::title</B> <I>title</I>
+<P>
+<B>::html::varEmpty</B> <I>name</I>
+<P>
+<B>::html::while</B> <I>test body</I>
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>html</B> 包提供了产生 HTML 的命令。这些命令一般返回 HTML 字符串作为结果。特殊的是，它们不向 <B>stdout</B> 输出结果。
+<P>
+
+<B>::html::init</B> 命令应当最早调用，从而初始化整个模块。也可以使用这个子程序来定义 HTML 标记参数的默认值。
+<DL COMPACT>
+<DT><B>::html::author</B> <I>author</I><DD>
+<B>Side effect only</B>.  在调用 <B>::html::head</B> 之前调用它，来定义页面的作者。作者以 HEAD 段中的注释形式给出。
+<DT><B>::html::bodyTag</B> <I>args</I><DD>
+产生一个 BODY 标签。标签参数来自 <I>args</I> 或是在 <B>::html::init</B> 中定义的 body.* 属性。
+<DT><B>::html::cell</B> <I>param value</I> ?<I>tag</I>?<DD>
+产生一个 TD (或 TH) 标签，一个值，和一个关闭 TD (或 TH) 标签。标签参数来自<I>param</I> 或是在 <B>::html::init</B> 中定义的 TD.* 属性。它使用 <B>::html::font</B> 来在表格单元中插入一个标准的 FONT 标签。 <I>tag</I> 参数默认是 &quot;td&quot;.
+<DT><B>::html::checkbox</B> <I>name value</I><DD>
+产生一个 CHECKBOX 表单元素，使用指定的名称和值。这使用了 <B>::html::checkValue</B>.
+<DT><B>::html::checkSet</B> <I>key sep list</I><DD>
+产生一个 CHECKBOX 表单元素和相关标签的集合。<I>list</I> 应当包含一个可选标签和值的列表。这使用了 <B>::html::checkbox</B>.
+<DT><B>::html::checkValue</B> <I>name</I> ?<I>value</I>?<DD>
+为一个 CHECKBOX 表单元素产生一个 &quot;name=<I>name</I> value=<I>value</I>&quot; . 如果 CGI 变量 <I>name</I>
+的值是 <I>value</I>，那么 SELECTED 将加入到返回值中。<I>value</I> 默认值是 &quot;1&quot;.
+<DT><B>::html::closeTag</B> <DD>
+从 <B>::html::openTag</B> 创建的栈中弹出一个标签，产生相应的关闭标签 (例如，/BODY)。
+<DT><B>::html::default</B> <I>key</I> ?<I>param</I>?<DD>
+这个子程序由 <B>::html::tagParam</B> 用来产生标签的参数名称和值列表。<B>::html::default</B> 子程序用来为那些不在 <I>param</I> 中的项目产生默认值。如果 <I>key</I> 代表的值匹配 <I>param</I> 中的一个值，那么这个子程序返回孔字符串。否则，它为 <I>key</I> 代表的表单元素返回一个 &quot;parameter=value&quot; 字符串。<I>key</I> 的形式是 &quot;tag.parameter&quot; (例如，body.bgcolor)。使用 <B>::html::init</B> 来注册默认值。<I>param</I> 默认是空字符串。
+<DT><B>::html::description</B> <I>description</I><DD>
+<B>Side effect only</B>.  在调用 <B>::html::head</B> 前调用它来为页面定义一个 META 标签。这个标签在随后调用  <B>::html::head</B> 时产生。
+<DT><B>::html::end</B> <DD>
+从栈中弹出所有开标签，产生相应的关闭标签 (例如，&lt;/body&gt;&lt;/html&gt;)。
+<DT><B>::html::eval</B> <I>arg</I> ?<I>args</I>?<DD>
+这个子程序类似于内置的 Tcl <B>eval</B> 命令，唯一的区别是它返回 &quot;&quot;, 因此可以在一个 HTML 模板文件中调用，不会添加不需要的结果。
+<DT><B>::html::extractParam</B> <I>param key</I> ?<I>varName</I>?<DD>
+这是一个解释程序，从 <I>param</I> ，一个 HTML 式样的 &quot;name=quotedvalue&quot; 列表中得到所有 <I>key</I> 的值。<I>varName</I> 用作一个 Tcl 变量名，赋以参数中找到的值。这个函数返回 1，如果 <I>param</I> 中找到了参数，否则返回 0。如果没有指定 <I>varName</I> ，将使用 <I>key</I> 作为变量名。
+<DT><B>::html::font</B> <I>args</I><DD>
+产生一个标准的 FONT 标签。标签的参数来自 <I>args</I> 和 <B>::html::init</B> 定义的 HTML 默认值。
+<DT><B>::html::for</B> <I>start test next body</I><DD>
+这个子程序与内置的 Tcl <B>for</B> 控制结构相似。但它返回联接的 (subst'ed) <I>body</I> 而不是去计算 body 的值。循环的每一次都会在返回值中联接另外一个字符串。
+<DT><B>::html::foreach</B> <I>varlist1 list1</I> ?<I>varlist2 list2 ...</I>? <I>body</I><DD>
+这个子程序与内置的 Tcl <B>foreach</B> 控制结构相似。但它返回联接的 <I>body</I> 而不是去计算 body 的值。循环的每一次都会将另外一个字符串联接到返回值中。
+<DT><B>::html::formValue</B> <I>name</I> ?<I>defvalue</I>?<DD>
+返回一个名称-值对，使用现有的 CGI 数据来初始化值。结果有以下形式：
+<P>
+<PRE>
+  name=&quot;fred&quot; value=&quot;freds value&quot;
+</PRE>
+
+<DT><B>::html::getFormInfo</B> <I>args</I><DD>
+产生隐藏的字段来捕获表单值。如果 <I>args</I> 是空，那么为所有 CGI 值创建隐藏字段。否则 <I>args</I> 是一个匹配表单元素名称的字符串模式的列表。
+<DT><B>::html::getTitle</B> <DD>
+返回 title 字符串，没有包围的 TITLE 标签。title 以一个先前调用的 <B>::html::title</B> 定义。
+<DT><B>::html::h</B> <I>level string</I> ?<I>param</I>?<DD>
+产生一个标题 (例如, H1) 标签。<I>string</I> 嵌于标题中，<I>param</I> 用作标签参数。
+<DT><B>::html::h1</B> <I>string</I> ?<I>param</I>?<DD>
+产生一个 H1 标签。参见 <B>::html::h</B>.
+<DT><B>::html::h2</B> <I>string</I> ?<I>param</I>?<DD>
+产生一个 H2 标签。参见 <B>::html::h</B>.
+<DT><B>::html::h3</B> <I>string</I> ?<I>param</I>?<DD>
+产生一个 H3 标签。参见 <B>::html::h</B>.
+<DT><B>::html::h4</B> <I>string</I> ?<I>param</I>?<DD>
+产生一个 H4 标签。参见 <B>::html::h</B>.
+<DT><B>::html::h5</B> <I>string</I> ?<I>param</I>?<DD>
+产生一个 H5 标签。参见 <B>::html::h</B>.
+<DT><B>::html::h6</B> <I>string</I> ?<I>param</I>?<DD>
+产生一个 H6 标签。参见 <B>::html::h</B>.
+<DT><B>::html::hdrRow</B> <I>args</I><DD>
+产生一个表格行，包含 TR 和 TH 标签。<I>args</I> 中的每个值都置入自己的表格单元中。这使用了 <B>::html::cell</B>.
+<DT><B>::html::head</B> <I>title</I><DD>
+产生一个 HEAD 段，包含页面的 TITLE。如果先前调用了
+<B>::html::author</B>,
+<B>::html::keywords</B>,
+<B>::html::description</B>,
+或
+<B>::html::meta</B>
+那么附加的标签将插入到 HEAD 段中。它使用 <B>::html::openTag</B> 将一个开 HTML 标签入栈.
+<DT><B>::html::headTag</B> <I>string</I><DD>
+保存一个包含于 <B>::html::head</B> 产生的 HEAD 段中的标签。<I>string</I> 是一个标签中除了尖括号之外的所有东西。
+<DT><B>::html::if</B> <I>expr1 body1</I> ?<B>elseif</B> <I>expr2 body2 ...</I>? ?<B>else</B> <I>bodyN</I>?<DD>
+这个子程序与内置的 Tcl <B>if</B> 控制结构相似。但它返回联接的 <I>body</I> 而不是去计算它每个分支 body 的值。注意这个语法与内置的 Tcl <B>if</B> 控制结构相比稍有限制。
+<DT><B>::html::keywords</B> <I>args</I><DD>
+<B>Side effect only</B>.  在调用 <B>::html::head</B> 之前调用它来定义一个页面的关键字 META 标签。在 <B>::html::head</B> 结果中将包含这个 META 标签。
+<DT><B>::html::mailto</B> <I>email</I> ?<I>subject</I>?<DD>
+产生一个到 mailto: URL 的超链接。
+<DT><B>::html::meta</B> <I>args</I><DD>
+<B>Side effect only</B>.  在调用 <B>::html::head</B> 之前调用它来定义一个页面的 META 标签。  <I>args</I> 是一个 Tcl 样式的名称和值列表，用作 META 标签的 name= 和 value= 参数。在 <B>::html::head</B> 结果中将包含这个 META 标签。
+<DT><B>::html::minorMenu</B> <I>list</I> ?<I>sep</I>?<DD>
+产生一系列超链接。<I>list</I> 是一个 Tcl 样式的名称和值列表，内容是链接的标签和地址。<I>sep</I> 是分隔每个链接的文本，默认是 &quot; | &quot;.
+<DT><B>::html::minorList</B> <I>list</I> ?<I>ordered</I>?<DD>
+产生一个排序的或未排序的链接列表。<I>list</I> 是一个 Tcl 样式的名称和值列表，内容是链接的标签和地址。<I>ordered</I> 是一个布尔值，用来选择有序表或无序表，默认是 <B>false</B>.
+<DT><B>::html::openTag</B> <I>tag args</I><DD>
+将 <I>tag</I> 入栈，为它产生一个开标签。使用 <B>::html::closeTag</B> 来从栈中弹出标签。
+<DT><B>::html::passwordInput</B> ?<I>name</I>?<DD>
+产生一个 PASSWORD 类型的 INPUT 标签。 <I>name</I> 默认为 &quot;password&quot;.
+<DT><B>::html::passwordInputRow</B> <I>label</I> ?<I>name</I>?<DD>
+格式化一个包含一个标签和一个 PASSWORD 类型的 INPUT 标签的表格行。<I>name</I> 默认为 &quot;password&quot;.
+<DT><B>::html::quoteFormValue</B> <I>value</I><DD>
+使用 HTML 实体 (quotes, ampersand, and angle brackets.) 来替换 <I>value</I> 中的特殊字符，从而可以引用它们。
+<DT><B>::html::radioSet</B> <I>key sep list</I><DD>
+产生一个 RADIO 类型的 INPUT 标签集合以及一个相关的文本标签。所有单选按钮共享同样的 <I>key</I> 作为它们的名字。<I>sep</I> 是用来分隔各元素的文本。<I>list</I> 是一个 Tcl 风格的标签，值列表。
+<DT><B>::html::radioValue</B> <I>name value</I><DD>
+为一个 RADIO 表单元素产生一个 &quot;name=<I>name</I> value=<I>value</I>&quot; .如果 CGI 变量 <I>name</I> 值为 <I>value</I>, 那么 SELECTED 将被加入返回值中。
+<DT><B>::html::refresh</B> <I>seconds url</I><DD>
+建立一个刷新 META 标签。在调用 <B>::html::head</B> 之前调用它，HEAD 段中将包含一个 META 标签使得页面每 <I>seconds</I> 刷新一次。 <I>url</I> 是可选的，如果指定的话它指定了刷新间隔之后读取的新页面。
+<DT><B>::html::init</B> ?<I>list</I>?<DD>
+<B>::html::init</B> 接受一个 Tcl 样式的 name-value 列表，定义了名称是 &quot;tag.parameter&quot; 形式的对象的值。例如， &quot;body.bgcolor&quot; 默认将为 BODY 标签定义背景色。
+<DT><B>::html::row</B> <I>args</I><DD>
+产生一个表格行，包含 TR 和 TD 标签。<I>args</I> 的每个值都置入各自的表格单元中。它使用了 <B>::html::cell</B>.
+<DT><B>::html::paramRow</B> <I>list</I> ?<I>rparam</I>? ?<I>cparam</I>?<DD>
+产生一个表格行，包含 TR 和 TD 标签。<I>args</I> 的每个值都置入各自的表格单元中。它使用了 <B>::html::cell</B>.  <I>rparam</I>  用作 TR 标签的参数，<I>cparam</I>  的值被传给 <B>::html::cell</B>，作为 TD 标签的参数。
+<DT><B>::html::select</B> <I>name param choices</I> ?<I>current</I>?<DD>
+产生一个 SELECT 表单元素以及内置的 OPTION 标签。 <I>name</I> 和 <I>param</I> 用来产生 SELECT 标签。 <I>choices</I> 列表是一个 Tcl 样式的 name-value 列表。
+<DT><B>::html::selectPlain</B> <I>name param choices</I> ?<I>current</I>?<DD>
+类似 <B>::html::select</B> 但 <I>choices</I> 是一个 Tcl 值的列表，用于 OPTION 标签。每个 OPTION 的标签和值是相同的。
+<DT><B>::html::submit</B> <I>label</I> ?<I>name</I>?<DD>
+产生一个 SUBMIT 类型的 INPUT 标签。 <I>name</I> 默认是 &quot;submit&quot;.
+<DT><B>::html::set</B> <I>var val</I><DD>
+这个子程序与内置的 Tcl <B>set</B> 控制结构相似。主要区别是它返回 &quot;&quot; 因此可以在一个 HTML 模板文件中调用，不会产生奇怪的结果。另外的区别是它需要两个参数。
+<DT><B>::html::tableFromArray</B> <I>arrname</I> ?<I>param</I>? ?<I>pat</I>?<DD>
+产生一个 TABLE 和内置的行，来显示一个 Tcl 数组。<I>param</I> 是为 TABLE 标签准备的。<I>pat</I> 是一个 <B>string match</B> 模式，用来选择数组元素，默认是 &quot;*&quot;.
+<DT><B>::html::tableFromList</B> <I>querylist</I> ?<I>param</I>?<DD>
+产生一个 TABLE 和内置的行来显示 <I>querylist</I>, 一个 Tcl 样式的名称和值列表。<I>param</I> 是为 TABLE 标签设置的。
+<DT><B>::html::textarea</B> <I>name</I> ?<I>param</I>? ?<I>current</I>?<DD>
+产生一个 TEXTAREA 标签，包围 (wrapped) 在它的当前值
+<DT><B>::html::textInput</B> <I>name args</I><DD>
+产生一个 TEXT 类型的 INPUT 表单标签。这使用了 <B>::html::formValue</B>.  参数是你想在 INPUT 标签中添加的任何附加标签属性。
+<DT><B>::html::textInputRow</B> <I>label name args</I><DD>
+产生一个 TEXT 类型的 INPUT 标签，和一个相关标签一起格式化到一个表格行中。参数是你想在 INPUT 标签中添加的任何附加标签属性。
+<DT><B>::html::title</B> <I>title</I><DD>
+<B>Side effect only</B>. 在调用 <B>::html::head</B> 调用它来定义页面的 TITLE。
+<DT><B>::html::varEmpty</B> <I>name</I><DD>
+如果指定名称的变量不存在或者为空值则返回 1 。
+<DT><B>::html::while</B> <I>test body</I><DD>
+这个子程序类似于内置的 Tcl <B>while</B> 空值结构。但它返回联接的 <I>body</I> 而不是计算 body。循环的每一次都将另一个字符串联接到返回值中。
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+ncgi, htmlparse
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+html, form, table, checkbox, radiobutton, checkbutton
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>袁乙钧</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/11/10</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

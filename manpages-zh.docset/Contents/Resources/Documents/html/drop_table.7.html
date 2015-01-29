@@ -1,0 +1,93 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DROP TABLE</TITLE>
+</HEAD><BODY>
+<H1>DROP TABLE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+DROP TABLE - 删除一个表
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+DROP TABLE <I>name</I> [, ...] [ CASCADE | RESTRICT ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>DROP TABLE</B> 从数据库中删除表或视图。 只有其所有者才能删除一个表或视图。要清空一个表，而不删除表， 使用 DELETE。
+<P>
+
+<B>DROP TABLE</B> 总是删除目标表上现有的任何索引， 规则，触发器以及约束。但是，要删除一个由另外一个表用外键约束引用的表， 我们必须声明 CASCADE。（CASCADE 将删除外键约束，而不是另外一个表。）
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;要删除的现存表的名字（可以有模式修饰）。
+<DT><B>CASCADE</B><DD>
+<BR>&nbsp;自动删除依赖于表的对象。（比如视图）。
+<DT><B>RESTRICT</B><DD>
+<BR>&nbsp;如果存在依赖对象，则拒绝删除该表。这个是缺省。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;删除&nbsp;films&nbsp;和&nbsp;distributors表：
+<P>
+<PRE>
+DROP TABLE films, distributors;
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;此命令遵循&nbsp;SQL&nbsp;标准。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+ALTER TABLE [<B><A HREF="/cgi-bin/man/man2html?7+alter_table">alter_table</A></B>(7)], CREATE TABLE [<B><A HREF="/cgi-bin/man/man2html?l+create_table">create_table</A></B>(l)]
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

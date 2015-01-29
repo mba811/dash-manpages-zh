@@ -1,0 +1,221 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SHUTDOWN</TITLE>
+</HEAD><BODY>
+<H1>SHUTDOWN</H1>
+Section: Linux System Administrator's Manual (8)<BR>Updated: Juli 31, 2001<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+shutdown - 关闭系统
+
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>/sbin/shutdown</B>
+
+[<B>-t</B>
+
+<I>sec</I>]
+
+[<B>-arkhncfF</B>]
+
+<I>time</I>
+
+[<I>warning-message</I>]
+
+
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<B>shutdown</B>
+
+以一种安全的方式关闭系统。所有登陆用户都可以看到关机信息提示，并且 <B><A HREF="/cgi-bin/man/man2html?1+login">login</A></B>(1) 将被阻塞。可以指定立刻关机，也可以指定系统在一定的延时后关机。所有进程都将接收到 <FONT SIZE="-2">SIGTERM</FONT> 信号。这可以使 <B><A HREF="/cgi-bin/man/man2html?1+vi">vi</A></B>(1) 等程序有时间将处于编辑状态的文件进行存储，邮件和新闻程序进程则可以将所有缓冲池内的数据进行适当的清除等等。
+<B>shutdown</B>
+
+通过通知 <B>init</B> 进程，要求它改换运行级别来实现。运行级别 <B>0</B> 用来关闭系统，运行级别 <B>6</B> 用来重启系统，运行级别 <B>1</B> 用来使系统进入执行系统管理任务状态，如果没有给出 <I>-h</I> 或 <I>-r</I> 标志时，这是
+<B>shutdown</B>
+
+命令的默认工作状态。具体关机或重启所执行的操作请查阅 <I>/etc/inittab</I> 文件中相应的运行级别栏。
+
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+
+<DL COMPACT>
+<DT><B>-a</B><DD>
+使用 <B>/etc/shutdown.allow</B> 来验证身份。
+
+
+<DT><B>-t</B> <I>sec</I><DD>
+通知 <B><A HREF="/cgi-bin/man/man2html?8+init">init</A></B>(8) 在转换到其它运行级别前，发送警告 (warning) 信号后延时 (<I>sec</I>) 秒数后再发送关闭 (kill) 信号。
+
+
+<DT><B>-k</B><DD>
+并非真正关机，只向所有人显示警告信息。
+
+
+<DT><B>-r</B><DD>
+重启。
+
+
+<DT><B>-h</B><DD>
+停机。
+
+
+<DT><B>-n</B><DD>
+[DEPRECATED(不应再使用)] 不调用 <B><A HREF="/cgi-bin/man/man2html?8+init">init</A></B>(8) 程序进行关机操作，而由自己进行。不建议用户使用这种关机方式，它的结果一般也不是你希望的那样。
+
+
+<DT><B>-f</B><DD>
+重启时跳过磁盘检测。
+
+
+<DT><B>-F</B><DD>
+重启时强制磁盘检测。
+
+
+<DT><B>-c</B><DD>
+取消运行中的 shutdown 进程。不可能为此选项指定 <B>time</B> 参数，但你可以在命令行输入一条解释消息来向所有用户说明。(一般的shutdown指令可以用按“+”号来进行中断)
+
+
+<DT><I>time</I><DD>
+关机时间。
+
+
+<DT><I>warning-message</I><DD>
+发送给所有用户的消息。
+
+</DL>
+<P>
+
+<BR>&nbsp;<I>time</I>&nbsp;参数的格式可以有很多种。首先，可以是&nbsp;<I>hh:mm</I>&nbsp;格式的绝对时间，其中&nbsp;<I>hh</I>&nbsp;指的是小时（一到二位数），<I>mm</I>&nbsp;指的是分钟（二位数）。第二种是&nbsp;<B>+</B><I>m</I>&nbsp;格式，其中&nbsp;<I>m</I>&nbsp;指的是等待的分钟数。&nbsp;<B>now</B>&nbsp;是&nbsp;<B>+0</B>&nbsp;的别名。
+<P>
+
+如果
+<B>shutdown</B>
+
+在调用时使用了延时，它将自动创建一个咨询 (advisory) 文件
+<I>/etc/nologin</I>
+
+，作用是禁止 <I><A HREF="/cgi-bin/man/man2html?1+login">login</A>(1)</I> 允许新用户登陆，除非
+<B>shutdown 在向 init 发信号前意外中止 (就是说，它被取消或出了什么问题)。它会在调用 init 改变运行级之前删除这个文件。</B>
+
+<P>
+
+<B>-f</B> 标志意味着 `快速重启'。这将创建一个咨询 (advisory) 文件 <I>/fastboot</I> ，此文件在系统重启时会被检测到。启动脚本 rc 会检测是否存在这样的文件，如果有，就不会再运行 <B><A HREF="/cgi-bin/man/man2html?1+fsck">fsck</A></B>(1)，因为系统是以正常方式关闭的。这之后，启动进程会删除 <I>/fastboot</I>。
+<P>
+
+<B>-F</B> 标志意味着 `强制 fsck'。这将创建一个咨询 (advisory) 文件 <I>/forcefsck</I>，此文件在系统重启时会被检测到。启动脚本 rc 会检测是否存在这个文件，如果有，就运行 <B><A HREF="/cgi-bin/man/man2html?1+fsck">fsck</A></B>(1) 并且加上一个特殊的 `force' 标志，以使得即使正常卸载的文件系统也被检查。这之后，启动进程会删除 <I>/forcefsck</I>。
+<P>
+
+<BR>&nbsp;<B>-n</B>&nbsp;标志导致&nbsp;<B>shutdown</B>&nbsp;不调用&nbsp;<B>init</B>&nbsp;程序进行关机，而是自己关闭所有运行中的进程。<B>shutdown</B>&nbsp;接下来会关闭配额&nbsp;(quota)，记账&nbsp;(accounting)&nbsp;和交换分区，卸载所有文件系统。
+
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>访问控制 ACCESS CONTROL</H2>
+
+如果在 <I>/etc/inittab</I> 文件中有适当的条目，当按下特殊键 <B>CTRL-ALT-DEL</B> 时，<B>shutdown</B> 可以被 <B><A HREF="/cgi-bin/man/man2html?8+init">init</A></B>(8) 调用。这意味着可以物理地接触到终端键盘的任何人都可以关闭系统。要避免这种行为，<B>shutdown</B> 可以检测是否有授权的用户登录到了虚拟终端之一。如果 <B>shutdown</B> 在调用时带有 <B>-a</B> 参数 (可以将它添加到 <I>/etc/inittab</I> 中 shutdown 的执行命令之后)，它将检测是否存在 <I>/etc/shutdown.allow</I> 文件。接下来它比较文件中的登录名与虚拟终端的登录用户列表 (在<I>/var/run/utmp</I>)。只有当授权的用户之一 <B>或者 root</B> 登录了，它才会继续。否则，它会把信息
+<P>
+<PRE>
+<B>shutdown: no authorized users logged in</B>
+</PRE>
+
+<P>
+写到 (物理的) 系统终端。<I>/etc/shutdown.allow</I> 的格式是每行一个用户名。允许出现空行和注释行 (以 <B>#</B> 开头)。此文件当前有最多 32 个用户的限制。
+<P>
+注意，如果 <I>/etc/shutdown.allow</I> 不存在，<B>-a</B> 参数将被忽略。
+<A NAME="lbAG">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+<PRE>
+/fastboot
+/etc/inittab
+/etc/init.d/halt
+/etc/init.d/reboot
+/etc/shutdown.allow
+</PRE>
+
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>注意 NOTES</H2>
+
+很多用户忘记了传递 <I>time</I> 参数，结果被 <B>shutdown</B> 产生的错误消息所迷惑。<I>time</I> 参数是必须的，90% 的情况下这个参数会是 <B>now</B>。
+<P>
+
+Init 只能在终端模式捕获 CTRL-ALT-DEL 并且启动 shutdown。如果系统正在运行 X window System，X 服务器处理所有的按键。一些 X11 环境使得捕获 CTRL-ALT-DEL 成为可能，但是这个事件究竟做了什么依赖于那个环境。
+<P>
+
+<B>Shutdown 没有被设计为使用 setuid。</B><I>/etc/shutdown.allow</I> 不用来找出谁在执行
+
+<B>shutdown</B>
+
+，它<B>*只*</B>用来检查当前在终端 (之一) 登录的用户。
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+Miquel van Smoorenburg, <A HREF="mailto:miquels@cistron.nl">miquels@cistron.nl</A>
+
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+fsck">fsck</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+init">init</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+halt">halt</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+poweroff">poweroff</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+reboot">reboot</A></B>(8)
+
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>所罗门 &lt;<A HREF="mailto:solomen@email.com.cn">solomen@email.com.cn</A>&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>Nov 21 2000</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">访问控制 ACCESS CONTROL</A><DD>
+<DT><A HREF="#lbAG">文件 FILES</A><DD>
+<DT><A HREF="#lbAH">注意 NOTES</A><DD>
+<DT><A HREF="#lbAI">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAJ">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

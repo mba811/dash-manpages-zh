@@ -1,0 +1,209 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LAPACK</TITLE>
+</HEAD><BODY>
+<H1>LAPACK</H1>
+Section: LAPACK FORTRAN LIBRARY ROUTINES (7)<BR>Updated: 2 April 1993<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+LAPACK - library of linear algebra routines
+<A NAME="lbAC">&nbsp;</A>
+<H2>什么是 LAPACK ?</H2>
+
+
+<B>LAPACK</B> 是一个 <I>Fortran 77</I> 子程序的 transportable library ，
+用来解决多数数字线性代数中共同的问题：
+systems of linear equations, linear least squares problems, eigenvalue problems,
+还有 singular value problems. 
+它在大部分现代的高性能计算机中可以高效地运作。
+<P>
+<B>LAPACK</B> 是 <I>LINPACK</I> 和 <I>EISPACK</I> 的后继者。
+它扩展了这些库的功能，包含了线性系统的
+equilibration, iterative refinement, error bounds, 和 driver routines，
+routines for computing and re-ordering the Schur factorization，
+还有 condition estimation routines for eigenvalue problems.  
+<B>LAPACK</B> 通过包含
+finding singular values and eigenvalues of bidiagonal and tridiagonal matrices
+respectively that arise in SVD and symmetric eigenvalue problems 
+的高精度算法提高了 <I>EISPACK</I> 中标准算法的精度。
+这些算法和软件被重新编写，在向量处理器上，高性能 ``superscalar'' 工作站上和
+共享内存的多处理器上都可以获得高效率。
+<B>LAPACK</B> 软件还附带了一个复杂的测试和时间测算套件。
+<BR>&nbsp;
+<A NAME="lbAD">&nbsp;</A>
+<H2>如何得到 LAPACK</H2>
+
+
+完整的 <B>LAPACK</B> 软件包可以从 xnetlib 和 NAG 得到，也可以从 netlib 获得特定的库。
+要查看 <B>LAPACK</B> 内容的描述，向 <A HREF="mailto:netlib@ornl.gov">netlib@ornl.gov</A> 发一封消息类型为：
+<I>send index from lapack</I> 的电子邮件。
+<P>
+Xnetlib is an X-version of netlib recently developed at the University
+of Tennessee and Oak Ridge National Laboratory.  Unlike netlib, which
+uses electronic mail to process requests for software and other text,
+xnetlib uses an X Window graphical user interface and a socket-based
+connection between the user's machine and the xnetlib server machine to
+process software requests. The complete contents of LAPACK is available
+in tar/compress format from xnetlib.
+<P>
+To receive a copy of xnetlib send the message &quot;send xnetlib.shar from
+xnetlib&quot; to <A HREF="mailto:netlib@ornl.gov">netlib@ornl.gov</A>.
+<P>
+When you receive the shar file, remove the mail header, save it to a
+file, type 'sh filename' and follow the instructions in the README
+file.
+<P>
+Alternatively, the complete LAPACK package can be
+obtained from NAG on magnetic media for a handling charge. 
+For further details contact NAG at one of the following addresses:
+<BR>&nbsp;
+<PRE>
+NAG Inc                       NAG Ltd              NAG GmbH
+1400 Opus Place               Wilkinson House      Schleissheimerstrasse 5
+Suite 200                     Jordan Hill Road     W-8046 Garching bei Munchen
+Downers Grove, IL 60515-5702  Oxford OX2 8DR       Germany 
+USA                           England
+Tel: +1 708 971 2337          Tel: +44 865 511245  Tel: +49 89 3207395
+Fax: +1 708 971 2706          Fax: +44 865 310139  Fax: +49 89 3207396
+</PRE>
+
+<BR>&nbsp;
+LAPACK has been thoroughly tested, on many different
+types of computers.  The LAPACK project supports the package in the
+sense that reports of errors or poor performance will gain immediate
+attention from the developers. Such reports, descriptions
+of interesting applications, and other comments should be sent by
+electronic mail to <A HREF="mailto:lapack@cs.utk.edu">lapack@cs.utk.edu</A>.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>LAPACK USERS' GUIDE</H2>
+
+
+The LAPACK Users' Guide is published by SIAM and was made available
+May, 1992.  LAPACK Users' Guide gives an informal introduction to
+the design of the algorithms and software, summarizes the contents
+of the package, and describes the conventions used in the software
+and documentation, and includes complete specifications for calling
+the routines.  The LAPACK Users' Guide can be purchased from:
+SIAM; 3600 University City Science Center; Philadelphia, PA 19104-2688;
+215-382-9800, FAX 215-386-7999.  It will also be available from
+booksellers.  The Guide costs $15.60 for SIAM members, and $19.50
+for non-members.  Please specify order code OT31 when ordering.
+To order by email, send email to <A HREF="mailto:service@siam.org">service@siam.org</A>.
+<P>
+A list of known problems, bugs, and compiler errors for LAPACK, as 
+well as errata for the LAPACK Users' Guide and the LAPACK code itself, is
+maintained on netlib.  For a copy of this report, send email to
+<A HREF="mailto:netlib@ornl.gov">netlib@ornl.gov</A> with a message of the form: send release_notes from
+lapack.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>LAPACK WORKING NOTES</H2>
+
+
+A number of working notes were written during the
+development of LAPACK and published as LAPACK Working Notes,
+initially by Argonne National Laboratory and later by the University
+of Tennessee.  Many of these reports have subsequently appeared as
+journal articles.  Most of these working notes are available in postscript
+form from netlib.  To receive a list of available reports, send email to
+<A HREF="mailto:netlib@ornl.gov">netlib@ornl.gov</A> with a message of the form: send index from lapack/lawns.
+Otherwise, requests for copies of these working notes can be sent to
+the following address.
+<P>
+LAPACK Project
+c/o J.J. Dongarra
+Computer Science Department
+University of Tennessee
+Knoxville, Tennessee 37996-1301
+USA
+Email: <A HREF="mailto:lapack@cs.utk.edu">lapack@cs.utk.edu</A>
+<BR>&nbsp;
+<A NAME="lbAG">&nbsp;</A>
+<H2>ACKNOWLEDGEMENTS</H2>
+
+
+LAPACK has been funded in part by NSF, DOE, and DARPA, with
+developmental support from NAG Ltd., Cray Research, and many friends
+and colleagues around the world.
+<BR>&nbsp;
+<P>
+Ed Anderson, Zhao-jun Bai, Chris Bischof, Jim Demmel, Jack Dongarra,
+Jeremy Du Croz, Anne Greenbaum, Sven Hammarling, Alan McKenney,
+Susan Ostrouchov, and Danny Sorensen
+<BR>&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;l&nbsp;&nbsp;&nbsp;&nbsp;l&nbsp;&nbsp;&nbsp;&nbsp;l&nbsp;&nbsp;&nbsp;&nbsp;l&nbsp;)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;&nbsp;&nbsp;-a&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;&nbsp;&nbsp;-a&nbsp;)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1/4&nbsp;*&nbsp;(&nbsp;p&nbsp;&nbsp;&nbsp;&nbsp;p&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-p&nbsp;&nbsp;&nbsp;-p&nbsp;)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;a&nbsp;&nbsp;&nbsp;-a&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-a&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;c&nbsp;&nbsp;&nbsp;&nbsp;c&nbsp;&nbsp;&nbsp;-c&nbsp;&nbsp;&nbsp;-c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;k&nbsp;&nbsp;&nbsp;-k&nbsp;&nbsp;&nbsp;-k&nbsp;&nbsp;&nbsp;&nbsp;k&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+<P>
+<BR>&nbsp;
+<A NAME="lbAH">&nbsp;</A>
+<H2>NAMING SCHEME</H2>
+
+
+The name of each LAPACK routine is a coded specification of
+its function (within the very tight limits of standard Fortran 77
+6-character names).
+<BR>&nbsp;
+All driver and computational routines have names of the form XYYZZZ,
+where for some driver routines the 6th character is blank.
+<BR>&nbsp;
+The first letter, X, indicates the data type as follows:
+<BR>&nbsp;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S&nbsp;&nbsp;REAL
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;D&nbsp;&nbsp;DOUBLE&nbsp;PRECISION
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;&nbsp;COMPLEX
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Z&nbsp;&nbsp;COMPLEX*16&nbsp;&nbsp;or&nbsp;DOUBLE&nbsp;COMPLEX
+<BR>&nbsp;
+The next two letters, YY, indicate the type of matrix (or of the most
+significant matrix).  Most of these two-letter codes apply to both real
+and complex matrices; a few apply specifically to one or the other.
+<BR>&nbsp;
+The last three letters ZZZ indicate the computation performed.
+For example, SGEBRD is a single precision routine that performs a
+bidiagonal reduction (BRD) of a real general matrix.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>姓名 &lt;email&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>yyyy.mm.dd</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">什么是 LAPACK ?</A><DD>
+<DT><A HREF="#lbAD">如何得到 LAPACK</A><DD>
+<DT><A HREF="#lbAE">LAPACK USERS' GUIDE</A><DD>
+<DT><A HREF="#lbAF">LAPACK WORKING NOTES</A><DD>
+<DT><A HREF="#lbAG">ACKNOWLEDGEMENTS</A><DD>
+<DT><A HREF="#lbAH">NAMING SCHEME</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

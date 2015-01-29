@@ -1,0 +1,383 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of HOSTNAME</TITLE>
+</HEAD><BODY>
+<H1>HOSTNAME</H1>
+Section: Linux Programmer's Manual(Linux程序员手册) (1)<BR>Updated: 1996年1月28日<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+hostname - 显示或设置系统的主机名
+<BR>
+
+domainname - 显示或设置系统的NIS/YP域名
+<BR>
+
+dnsdomainname - 显示系统的DNS域名
+<BR>
+
+nisdomainname - 显示或设置系统的NIS/YP域名
+<BR>
+
+ypdomainname - 显示或设置系统的NIS/YP域名
+<BR>
+
+nodename - 显示或设置系统的DECnet节点名
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>hostname</B>
+
+[<B>-v</B>]
+
+[<B>-a</B>]
+
+[<B>--alias</B>]
+
+[<B>-d</B>]
+
+[<B>--domain</B>]
+
+[<B>-f</B>]
+
+[<B>--fqdn</B>]
+
+[<B>-i</B>]
+
+[<B>--ip-address</B>]
+
+[<B>--long</B>]
+
+[<B>-s</B>]
+
+[<B>--short</B>]
+
+[<B>-y</B>]
+
+[<B>--yp</B>]
+
+[<B>--nis</B>]
+
+[<B>-n</B>]
+
+[<B>--node</B>]
+
+<P>
+<P>
+
+<B>hostname</B>
+
+[<B>-v</B>]
+
+[<B>-F&nbsp;filename</B>]
+
+[<B>--file&nbsp;filename</B>]
+
+[<B>hostname</B>]
+
+<P>
+<P>
+
+<B>domainname</B>
+
+[<B>-v</B>]
+
+[<B>-F&nbsp;filename</B>]
+
+[<B>--file&nbsp;filename</B>]
+
+[<B>name</B>]
+
+<P>
+<P>
+
+<B>nodename</B>
+
+[<B>-v</B>]
+
+[<B>-F&nbsp;filename</B>]
+
+[<B>--file&nbsp;filename</B>]
+
+[<B>name</B>]
+
+<P>
+<P>
+
+<B>hostname</B>
+
+[<B>-v</B>]
+
+[<B>-h</B>]
+
+[<B>--help</B>]
+
+[<B>-V</B>]
+
+[<B>--version</B>]
+
+<P>
+<P>
+
+<B>dnsdomainname</B>
+
+[<B>-v</B>]
+
+<BR>
+
+<B>nisdomainname</B>
+
+[<B>-v</B>]
+
+<BR>
+
+<B>ypdomainname</B>
+
+[<B>-v</B>]
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<B>Hostname</B>
+
+是一个用来设置或显示当前主机,域或者系统的节点名的程序.许多联网程序使用这些名字来
+标识机器.NIS/YP同样也使用域名.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H3>GET NAME(获取名字)</H3>
+
+如果不调用任何参数,程序即显示当前的名字:
+<P>
+<P>
+
+<B>hostname</B>
+
+会打印系统的名字为通过
+<B><A HREF="/cgi-bin/man/man2html?2+gethostname">gethostname</A></B>(2)
+
+函数返回的值.
+<P>
+<P>
+
+<B>domainname,nisdomainname,ypdomainname</B>
+
+会打印系统的名字为通过
+<B><A HREF="/cgi-bin/man/man2html?2+getdomainname">getdomainname</A></B>(2)
+
+函数返回的值.这同时也被看作系统的YP/NIS域名.
+<P>
+<P>
+
+<B>nodename</B>
+
+会打印系统的DECnet节点名为通过
+<B><A HREF="/cgi-bin/man/man2html?2+getnodename">getnodename</A></B>(2)
+
+函数返回的值.
+<P>
+<P>
+
+<B>dnsdomainname</B>
+
+会打印FQDN(完全资格域名)的域部分.系统的完整的FQDN可使用
+<B>hostname --fqdn</B>
+
+返回.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H3>SET NAME(设置名字)</H3>
+
+如果带一个参数或者带
+<B>--file</B>
+
+选项调用的话,命令即设置主机名,NIS/YP域名或者节点名.
+<P>
+<P>
+
+注意,只有超级用户才可以修改这些名字.
+<P>
+<P>
+
+不可能使用
+<B>dnsdomainname</B>
+
+命令(参看下面的
+<B>THE FQDN )</B>
+
+来设置FQDN或者DNS域名.
+<P>
+<P>
+
+每次系统启动时,主机名通常在
+<I>/etc/rc.d/rc.inet1</I>
+
+或
+<I>/etc/init.d/boot</I>
+
+(一般通过读取文件的内容,其中包括了主机名,例如,
+<I>/etc/hostname</I>
+
+)中设置.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H3>THE FQDN</H3>
+
+你不能使用该命令修改FQDN(通过
+<B>hostname --fqdn</B>
+
+返回)
+或者DNS域名(通过
+<B>dnsdomainname</B>
+
+返回).系统的FQDN是一个由
+<B><A HREF="/cgi-bin/man/man2html?3+resolver">resolver</A></B>(3)
+
+返回的主机名.
+<P>
+<P>
+
+从技术上说:FQDN指的是使用
+<B><A HREF="/cgi-bin/man/man2html?2+gethostbyname">gethostbyname</A></B>(2)
+
+以返回
+gethostname (2)
+所返回主机名的名字.
+DNS域名是第一个圆点之后的部分.
+<P>
+
+因此它依赖于你修改方式的配置(通常在
+<I>/etc/host.conf</I>
+
+中).通常(如果hosts文件在DNS或NIS之前解析)你可以在
+<I>/etc/hosts</I>
+
+中修改.
+<P>
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>OPTIONS(选项)</H2>
+
+<DL COMPACT>
+<DT><I>-a,--alias</I>
+
+<DD>
+显示主机的别名(如果使用了的话).
+<DT><I>-d,--domain</I>
+
+<DD>
+显示DNS域名.不要使用命令
+<B>domainname</B>
+
+来获得DNS域名,因为这会显示NIS域名而非DNS域名.可使用
+<B>dnsdomainname</B>
+
+替换之.
+<DT><I>-F,--file filename</I>
+
+<DD>
+从指定文件中读取主机名.注释(以一个`#'开头的行)可忽略.
+<DT><I>-f,--fqdn,--long</I>
+
+<DD>
+显示FQDN(完全资格域名).一个FQDN包括一个短格式主机名和DNS域名.除非你正在使用bind或
+者NIS来作主机查询,否则你可以在<I>/etc/hosts</I>文件中修改FQDN和DNS域名(这是FQDN的一
+部分).
+<DT><I>-h,--help</I>
+
+<DD>
+打印用法信息并退出.
+<DT><I>-i,--ip-address</I>
+
+<DD>
+显示主机的IP地址(组).
+<DT><I>-n,--node</I>
+
+<DD>
+显示DECnet节点名.如果指定了参数(或者指定了
+<B>--file name</B>
+
+),那么root也可以设置一个新的节点名.
+<DT><I>-s,--short</I>
+
+<DD>
+显示短格式主机名.这是一个去掉第一个圆点后面部分的主机名.
+<DT><I>-V,--version</I>
+
+<DD>
+在标准输出上打印版本信息并以成功的状态退出.
+<DT><I>-v,--verbose</I>
+
+<DD>
+详尽说明并告知所正在执行的.
+<DT><I>-y,--yp,--nis</I>
+
+<DD>
+显示NIS域名.如果指定了参数(或者指定了
+<B>--file name</B>
+
+),那么root也可以设置一个新的NIS域.
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>FILES(相关文件)</H2>
+
+<B>/etc/hosts</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>AUTHOR(作者)</H2>
+
+Peter Tobias, &lt;<A HREF="mailto:tobias@et-inf.fho-emden.de">tobias@et-inf.fho-emden.de</A>&gt;
+<BR>
+
+ernd Eckenfels, &lt;<A HREF="mailto:net-tools@lina.inka.de">net-tools@lina.inka.de</A>&gt; (NIS and manpage).
+<BR>
+
+Steve Whitehouse, &lt;<A HREF="mailto:SteveW@ACM.org">SteveW@ACM.org</A>&gt; (DECnet support and manpage).
+<P>
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/14</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DL>
+<DT><A HREF="#lbAE">GET NAME(获取名字)</A><DD>
+<DT><A HREF="#lbAF">SET NAME(设置名字)</A><DD>
+<DT><A HREF="#lbAG">THE FQDN</A><DD>
+</DL>
+<DT><A HREF="#lbAH">OPTIONS(选项)</A><DD>
+<DT><A HREF="#lbAI">FILES(相关文件)</A><DD>
+<DT><A HREF="#lbAJ">AUTHOR(作者)</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

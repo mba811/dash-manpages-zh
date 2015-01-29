@@ -1,0 +1,132 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of uplevel</TITLE>
+</HEAD><BODY>
+<H1>uplevel</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+uplevel - 在一个不同的栈桢中执行一个脚本
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>uplevel </B>?<I>level</I>?<I> arg </I>?<I>arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+串联所有 <I>arg</I> 参数如同把它们传递给 <B>concat</B> 一样；接着在用 <I>level</I> 指示出的变量上下文中对结果进行求值。<B>Uplevel</B> 返回这次求值的结果。
+<P>
+
+如果 <I>level</I> 是一个整数则它给出执行这个命令之前要移动的距离(在过程调用栈上)。如果<I>level</I> 由 <B>#</B> 和随后的一个数字组成，则这个数字给出一个绝对的层次数。如果省略了 <I>level</I> 则它缺省为 <B>1</B>。如果第一个 <I>command</I> 参数以一个数字或 <B>#</B> 则不能缺省 <I>Level</I>。
+<P>
+
+例如，假设从顶层调用过程 <B>a</B>，而它调用 <B>b</B>，接着<B>b</B> 调用 <B>c</B>。假设 <B>c</B> 调用了 <B>uplevel</B> 命令。如果 <I>level</I> 是 <B>1</B> 或 <B>#2</B> 或被省略了，则命令将在 <B>b</B> 的变量上下文中在执行。如果 <I>level</I> 是 <B>2</B> 或 <B>#1</B> 则命令将在 <B>a</B> 的变量上下文中执行。如果 <I>level</I> 是 <B>3</B> 或 <B>#0</B> 则命令将在顶层执行(只有全局变量是可见的)。
+<P>
+
+<B>uplevel</B> 命令导致调用它的过程在命令执行的时候从过程调用栈中消失。在上面的例子中，假设 <B>c</B> 调用了命令
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>uplevel 1 {set x 43; d}</B>
+
+</PRE>
+
+</DL>
+
+
+这里的 <B>d</B> 是另一个 Tcl 过程。<B>set</B> 命令将修改在 <B>b </B>的上下文中的变量 <B>x</B> ，而 <B>d</B> 将在层次 3 上执行，如同从 <B>b</B> 调用它一样。如果 <B>d</B> 接着执行命令
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>uplevel {set x 42}</B>
+
+</PRE>
+
+</DL>
+
+
+则 <B>set</B> 命令将修改在 <B>b </B>的上下文中的同一个变量 <B>x</B>: 在 <B>d</B> 执行的时候过程 <B>c</B> 在调用栈上不出现。可以使用命令“<B>info level</B>”来获得当前过程的层次。
+<P>
+
+<B>Uplevel</B> 使实现如同 Tcl 过程的新控制结构成为可能(例如，可以使用 <B>uplevel</B> 把 <B>while</B> 构造实现为一个 Tcl 过程)。
+<P>
+
+namespace eval 是改变 Tcl 命令上下文的另一种方式(除了过程调用之外)。它向栈增加一个调用桢来表示名字空间上下文。这意味着每个 namespace eval 命令被视为给 <B>uplevel</B> 和 <B>upvar</B> 命令的另一个调用层次。例如，info level 1 将返回描述一个命令的列表，它要么是最外的过程要么是最外的 namespace eval 命令。还有，uplevel #0 在最外面的名字空间(全局名字空间)中的顶层求值一个脚本。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+namespace">namespace</A>(n), <A HREF="/cgi-bin/man/man2html?n+upvar">upvar</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+context, level, namespace, stack frame, variables
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/11/21</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

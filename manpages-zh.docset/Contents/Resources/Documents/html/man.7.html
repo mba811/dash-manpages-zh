@@ -1,0 +1,960 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MAN</TITLE>
+</HEAD><BODY>
+<H1>MAN</H1>
+Section: Linux Programmer's Manual (7)<BR>Updated: 1999-06-16<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+man - 格式化手册页的宏
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>groff -Tascii -man</B>
+
+<I>file</I>
+
+...
+<P>
+
+<B>groff -Tps -man</B>
+
+<I>file</I>
+
+...
+<P>
+
+<B>man</B>
+
+[<I>section</I>]
+
+<I>title</I>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+此手册页解释了
+<B>groff tmac.man</B>
+
+宏包 (通常叫做
+<B>man</B>
+
+宏包) 以及相关的创建手册页的惯例。
+开发者可以使用这个宏包来为 linux 书写或移植手册文档。
+它与其他版本的这个宏包一般是兼容的，因此移植不是一个大问题
+(但是 NET-2 BSD 发布中使用了一个完全不同的宏包叫做 mdoc，参见
+<B><A HREF="/cgi-bin/man/man2html?7+mdoc">mdoc</A></B>(7)).
+
+<P>
+
+注意 NET-2 BSD mdoc 手册页也可以使用
+<B>groff</B>
+
+处理，只要指定
+<B>-mdoc</B>
+
+选项而不是
+<B>-man</B>
+
+选项。推荐使用
+<B>-mandoc</B>
+
+选项，因为这样会自动判断应当使用哪一个。
+<A NAME="lbAE">&nbsp;</A>
+<H2>导言 PREAMBLE</H2>
+
+一篇手册页的第一个命令 (注释行之后) 应当是
+<DL COMPACT><DT><DD>
+<P>
+<B>.TH</B>
+
+<I>title section date source manual</I>,
+
+<P>
+</DL>
+
+这里：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><I>title</I>
+
+<DD>
+手册页的标题 (例如，
+<I>MAN</I>).
+
+<DT><I>section</I>
+
+<DD>
+手册页的章节号应当放在这里 (例如，
+<I>7</I>).
+
+<DT><I>date</I>
+
+<DD>
+最后修改日期 -- 记住要在每次修改过此手册页之后修改它，
+这样可以方便地进行版本控制
+<DT><I>source</I>
+
+<DD>
+命令的来源
+<P>
+对于二进制文件，使用这样的表述：
+<I>GNU</I>, <I>NET-2</I>, <I>SLS Distribution</I>, <I>MCC Distribution</I>.
+
+<P>
+对于系统调用，使用它适用的内核版本来表述：
+<I>Linux 0.99.11</I>.
+
+<P>
+对于库调用，使用函数的来源来表述：
+<I>GNU</I>, <I>BSD 4.3</I>, <I>Linux DLL 4.4.1</I>.
+
+<DT><I>manual</I>
+
+<DD>
+手册的标题 (例如：
+<I>Linux Programmer's Manual</I>).
+
+</DL>
+</DL>
+
+<P>
+
+注意 BSD mdoc 格式的手册页以
+<B>Dd</B>
+
+命令开始，而不是
+<B>TH</B>
+
+命令
+<P>
+
+手册章节传统上如下定义：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>1 Commands</B>
+
+<DD>
+用户可从 shell 运行的命令
+<DT><B>2 System calls</B>
+
+<DD>
+必须由内核完成的功能
+<DT><B>3 Library calls</B>
+
+<DD>
+大多数
+<I>libc</I>
+
+函数，例如
+<B><A HREF="/cgi-bin/man/man2html?3+qsort">qsort</A></B>(3))
+
+<DT><B>4 Special files</B>
+
+<DD>
+<I>/dev</I>)
+
+目录中的文件
+<DT><B>5 File formats and conventions</B>
+
+<DD>
+<I>/etc/passwd</I>
+
+等人类可读的文件的格式说明
+<DT><B>6 Games</B>
+
+<DD>
+<DT><B>7 Macro packages and conventions</B>
+
+<DD>
+文件系统标准描述，网络协议，ASCII 和其他字符集，还有你眼前这份文档以及其他东西
+<DT><B>8 System management commands</B>
+
+<DD>
+类似
+<B><A HREF="/cgi-bin/man/man2html?8+mount">mount</A></B>(8)
+
+等命令，大部分只能由
+<I>root</I>
+
+执行
+<DT><B>9 Kernel routines</B>
+
+<DD>
+这是废弃的章节。
+原来曾想把一些关于核心的文件放在这里，
+但是实际上只有极少数可以写成文件放在这里，而且它们也很快过时了。
+核心开发者可以找到其他更好的资源。
+</DL>
+</DL>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>段 SECTIONS</H2>
+
+段以
+<B>.SH</B>
+
+开始，后跟标题名。如果标题包含空格并且和
+<B>.SH</B>
+
+在同一行，则需在标题上加双引号。
+传统的或建议的标题包括：
+NAME, 总览 SYNOPSIS, 描述 DESCRIPTION, 返回值 RETURN VALUE,
+退出状态 EXIT STATUS, 错误处理 ERROR HANDLING, 错误 ERRORS,
+选项 OPTIONS, 用法 USAGE, 示例 EXAMPLES, 文件 FILES, 
+环境 ENVIRONMENT, 诊断 DIAGNOSTICS, 安全 SECURITY,
+遵循 CONFORMING TO, 注意 NOTES,
+BUGS, 作者 AUTHOR, 和 参见 SEE ALSO.
+在适合使用约定标题的地方，请使用它；
+这样做可以使文章更易读、易懂。
+不过，只要您的标题能够增加易懂性，请放心使用。
+唯一必须的标题是
+<I>NAME</I>,
+
+他应是手册页的第一段，后面应紧跟对该命令的简单描述。比如：
+<DL COMPACT><DT><DD>
+<P>
+.SH NAME
+<BR>
+
+chess \- the game of chess
+<P>
+</DL>
+
+请一定要按照这个格式来写，注意在短横线 (dash `-') 前要有个斜杠 (slash `').
+这种语法结构在
+<B><A HREF="/cgi-bin/man/man2html?8+makewhatis">makewhatis</A></B>(8)
+
+程序为
+<B><A HREF="/cgi-bin/man/man2html?1+whatis">whatis</A></B>(1)
+
+和
+<B><A HREF="/cgi-bin/man/man2html?1+apropos">apropos</A></B>(1)
+
+命令建立简短命令描述时要用到。
+<P>
+
+其他约定段的内容应为：
+<DL COMPACT>
+<DT><B>总览 SYNOPSIS</B>
+
+<DD>
+简要描述命令或函数接口。
+对命令，显示他的命令和参数（包括各种选项）；黑体表示各种参数，
+下划线（或斜体字）表示可以替换的选项；
+方括号[]中的是可选项，竖线 | 用于把几个选项间隔开，
+小括号()中的部分可以自动重复。
+对函数，显示需要的数据声明或需
+<B>#include</B>
+
+包含的项目，后跟函数声明。
+<DT><B>描述 DESCRIPTION</B>
+
+<DD>
+解释命令、函数或格式的用途。
+说明其如何与文件及标准输入交互，他们的标准输出及标准错误。
+必须要指明的细节。描述一般情况。
+选项和参数信息放在 OPTIONS（选项）段。
+如果有语法说明和一些复杂的设定，
+建议把它们放到 USAGE（用法）段（本段中最好只写一个概要）。
+<DT><B>返回值 RETURN VALUE</B>
+
+<DD>
+列出程序或函数会返回的值，指出引发返回值的条件或原因。
+<DT><B>退出状态 EXIT STATUS</B>
+
+<DD>
+列出可能的退出状态的值，指出引起返回的程序或原因。
+<DT><B>选项 OPTIONS</B>
+
+<DD>
+指出程序可用的选项，及其作用。
+<DT><B>用法 USAGE</B>
+
+<DD>
+描述程序的较高级的使用方法。
+<DT><B>示例 EXAMPLES</B>
+
+<DD>
+provides one or more examples describing how this function, file or
+command is used.
+<DT><B>文件 FILES</B>
+
+<DD>
+列出程序或函数使用到的文件，
+比如配置文件、启动文件和程序直接操作的文件。
+给出文件的绝对路径，
+使用安装程序调整这些路径以使其与用户的实际情况相符。
+对大多数程序来说，缺省的安装路径是 /usr/local，
+所以你的文件要与此一致。
+<DT><B>环境 ENVIRONMENT</B>
+
+<DD>
+列出影响你的程序的所有环境变量，并说明影响的原因。
+<DT><B>诊断 DIAGNOSTICS</B>
+
+<DD>
+写出常会出现的错误概述，并说明解决的办法。
+你无需解释系统错误信息或信号，
+除非它们会影响到您的程序。
+<DT><B>安全 SECURITY</B>
+
+<DD>
+讨论安全问题和相关话题。对应予避免的配置和环境，
+可能有安全隐患的命令等等给出警告，
+特别是当它们不是很明显时。
+单独用一段来讨论安全并不必要；如果比较好理解的话，把它放在其他段中
+（比如 描述 或 用法 段）。但是，最好加上它。
+<DT><B>遵循 CONFORMING TO</B>
+
+<DD>
+描述它实现的任何标准或约定
+<DT><B>注意 NOTES</B>
+
+<DD>
+提供杂项注意事项
+<DT><B>BUGS</B>
+
+<DD>
+列出局限、已知的缺点或不便之处，还有其他可能存在的问题。
+<DT><B>作者 AUTHOR</B>
+
+<DD>
+列出程序或文件作者，联系办法等。
+<DT><B>参见 SEE ALSO</B>
+
+<DD>
+以字母顺序列出相关的手册页（man pages)。通常来讲，这是一个手册页的最后一段。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>字体 FONTS</H2>
+
+虽然在 UNIX 世界中有各种对手册页（man pages)的不同约定，
+但在 linux 系统下存在一个字体的标准：
+<DL COMPACT>
+<DT><DD>
+对函数，其参数通常用下划线（或斜体），
+<I>在总览（SYNOPSIS)中也是这样</I>
+
+，其他部分用黑体。
+例如
+<DL COMPACT><DT><DD>
+<B>int myfunction(int </B><I>argc</I><B>, char **</B><I>argv</I><B>);</B>
+
+</DL>
+
+<DT><DD>
+文件名用下划线（或斜体），例如，.IR &quot;/usr/include/stdio.h&quot; ),
+但在总览（SYNOPSIS)中，包含的文件用黑体，例如
+<B>#include &lt;<A HREF="file:///usr/include/stdio.h">stdio.h</A>&gt;</B>).
+
+<DT><DD>
+专用宏，一般大写表示，用黑体（如：
+<B>MAXINT</B>).
+
+<DT><DD>
+列举错误代号时，代号用黑体（这种列举通常使用
+<B>.TP</B>
+
+宏命令）。
+<DT><DD>
+对其他手册页的引用（或本页中某主体的引用）用黑体。
+手册章节号用普通体（如： 
+<B><A HREF="/cgi-bin/man/man2html?7+man">man</A></B>(7)).
+
+设置字体的宏命令如下：
+<DT><B>.B</B>
+
+<DD>
+黑体
+<DT><B>.BI</B>
+
+<DD>
+黑体和下划线（或斜体）交替（描述函数时非常有用）
+<DT><B>.BR</B>
+
+<DD>
+黑体和普通体交替（描述引用时非常有用）
+<DT><B>.I</B>
+
+<DD>
+下划线（或斜体）
+<DT><B>.IB</B>
+
+<DD>
+下划线（或斜体）和黑体交替
+<DT><B>.IR</B>
+
+<DD>
+普通体和下划线（或斜体）交替
+<DT><B>.RB</B>
+
+<DD>
+普通体和下划线（或斜体）交替
+<DT><B>.RI</B>
+
+<DD>
+小号字和黑体交替
+<DT><B>.SB</B>
+
+<DD>
+小号字和黑体交替
+<DT><B>.SM</B>
+
+<DD>
+小号字（用于缩写）
+</DL>
+<P>
+
+按照惯例，每个命令最多可以有六个小节的参数，
+但是 GNU 去除了这个限制。小节之间以空格隔开。
+如果某小节含有空格，则需要给其加上双引号。
+各小节在显示时无间隔，所以 
+<B>.BR</B>
+
+命令可以指定一个黑体的词，
+后跟一个普通体的标点。如果命令后无参数，则命令作用于下一行。 
+<A NAME="lbAH">&nbsp;</A>
+<H2>其他宏命令和字符串 OTHER MACROS AND STRINGS</H2>
+
+<P>
+
+下面是其他一些相关的宏和预定义的字符串。
+除非指明，否则所有的宏在本行文本结束时终止。
+多数宏使用“流行缩进”（prevailing indent)方式。
+“流行缩进”的值由紧跟着宏命令的 
+<I>i </I>
+
+值指定，如果不指定，那就会使用当前的“流行缩进”值。
+这样，连续的缩进段就可使用相同的缩进值而不需要重新指定。
+普通段（不缩进）将“流行缩进”值重值为缺省值（0.5 英寸）。
+缺省时，缩进是有规则的 en(s)：用 en(s) 或者 em(s) 作为缩进的单位，
+因为它们会自动地调整字体的大小。
+(注：度量距离有不同的单位，当请求需要用到不同的距离时，可以使用默认
+类型来修饰数字，度量单位是英寸，厘米，pica,en,em,点，unit和垂直行距。
+1pica等于1/6英寸，1em等于字母m的宽度，默认宽度取决于troff中使用
+的字体。En是em的一半。)
+其他宏命令定义如下：
+<A NAME="lbAI">&nbsp;</A>
+<H3>普通段（无缩进） Normal Paragraphs</H3>
+
+<DL COMPACT>
+<DT><B>.LP</B>
+
+<DD>
+与
+<B>.PP</B>
+
+相同（开始一个新段）
+<DT><B>.P</B>
+
+<DD>
+与
+<B>.PP</B>
+
+相同（开始一个新段）
+<DT><B>.PP</B>
+
+<DD>
+开始一个新段，重置“流行缩进”值。
+</DL>
+<A NAME="lbAJ">&nbsp;</A>
+<H3>相对缩进 Relative Margin Indent</H3>
+
+<DL COMPACT>
+<DT><B>.RS</B><I> i</I>
+
+<DD>
+开始相对缩进 -- 把左边界右移 
+<I>i</I>
+
+<BR>&nbsp;(如果不指定&nbsp;
+<I>i </I>
+
+值，则使用“流行缩进”值 ）。
+同时设定“流行缩进”值为 0.5 英寸。
+直到使用
+<B>.RE</B>
+
+结束这些设定。
+<DT><B>.RE</B>
+
+<DD>
+结束相对缩进同时把“流行缩进”恢复原值。
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H3>缩进 Indented Paragraph Macros</H3>
+
+<DL COMPACT>
+<DT><B>.HP</B><I> i</I>
+
+<DD>
+开始悬挂式缩进（段的第一行从左边揭开时，其余缩进显示）
+<DT><B>.IP</B><I> x i</I>
+
+<DD>
+在段上标签 
+<I>x</I>
+
+。如果不指定 
+<I>x </I>
+
+，则整个段缩进 
+<I>i</I>
+
+。如果指定了 
+<I>x </I>
+
+，则 
+<I>x </I>
+
+之前的段不缩进，之后的段缩进（有些象 
+<B>.TP</B>
+
+，不过 
+<I>x </I>
+
+是跟在命令后面而不是在下一行）。
+如果 
+<I>x </I>
+
+太长，后面的文本会挪到下一行（文本不会丢 失或割断）。
+</DL>
+<P>
+
+做公告列表，可以用 \(bu (bullet) 或 \(em (em dash). 
+要用数字或字母列表, 可以用.IP 1. 或 .IP A. 这样转换成其他 格式就简单了。
+<DL COMPACT>
+<DT><B>.TP</B><I> i</I>
+
+<DD>
+在段上悬挂标签。标签在下一行指定，但是结果和 
+<B>.IP</B>
+
+相像。
+</DL>
+<A NAME="lbAL">&nbsp;</A>
+<H3>超文本链接宏 Hypertext Link Macros</H3>
+
+<DL COMPACT>
+<DT><B>.UR</B><I> u</I>
+
+<DD>
+建立一个超文本链接到 URI (URL)
+<I>u</I>;
+
+并以
+<B>UE</B>
+
+结束。当转换为 HTML 格式时，他会转换为
+<B>&lt;A HREF=&quot;</B><I>u</I><B>&quot;&gt;</B>.
+有个例外：如果 
+<I>u</I>
+
+是特殊字符 “ ：”，则之后不能建立任何超级链接，直到以
+<B>UE</B>
+
+结束（这用来在不需要超级链接时禁止他）。
+<B>:</B>
+
+<A HREF="/cgi-bin/man/man2html?1+LALR">LALR</A>(1)
+</DL>
+<P>
+
+这个宏比较新，很多程序可能并不对他进行处理。但是由于很多工具 (包括 troff) 简单地忽略未定义宏
+(或者最坏的将它们插入到文本中), 插入它们是安全的
+<DL COMPACT>
+<DT><B>.UE</B>
+
+<DD>
+结束相应的
+<B>UR</B>
+
+超级链接。转换为HTML后是
+<B>&lt;/A&gt;</B>.
+<DT><B>.UN</B><I> u</I>
+
+<DD>
+给超级联接指定名称为
+<I>u</I>;
+
+不需要以
+<B>UE</B>
+
+UE 结束。转换为 HTML 后为： 
+<B>&lt;A NAME=&quot;</B><I>u</I><B>&quot; id=&quot;</B><I>u</I><B>&quot;&gt;&amp;nbsp;&lt;/A&gt;</B>
+(the &amp;nbsp; is optional if support for Mosaic is unneeded).
+</DL>
+<A NAME="lbAM">&nbsp;</A>
+<H3>杂项宏 Miscellaneous Macros</H3>
+
+<DL COMPACT>
+<DT><B>.DT</B>
+
+<DD>
+重置 tab 值为缺省(每一个0.5英寸)。不引起中断。
+<DT><B>.IX</B><I> ... </I>
+
+<DD>
+插入索引信息（方便搜索系统工作，或打印索引列表）。
+在页中索引信息不能正常显示。
+如果只有一个参数，
+参数作为独立的索引项指向手册页的内容。
+如果有两个参数，他可能是 Perl 手册页格式；
+第一个参数指定类型名
+（命令名，标题 ，题头，子段货源素之一），
+第二个参数指明自己的索引名。
+另外，长索引形式：每个参数是一个索引项，
+次级索引项，再次级索引项，等等直到以空参数结束，
+然后是程序名参数，\m，还有一小段描述。
+还可能在跟上一个空参数，有可能是页控制信息
+（如： PAGE START)。举例如下：
+&quot;programmingtools&quot;&quot;make&quot;&quot;&quot;&quot;<TT>make</TT>--- build programs&quot;.
+<DT><B>.PD</B><I> d</I>
+
+<DD>
+在段中间垂直距离空开 d (如果不指定，则缺省为 d=0.4v)，不引起中断。
+<DT><B>.SS</B><I> t</I>
+
+<DD>
+子标题 
+<I>t</I>
+
+象是 
+<B>.SH</B>,
+
+但是作为段中的字标题使用）
+</DL>
+<A NAME="lbAN">&nbsp;</A>
+<H3>预定义字符串 Predefined Strings</H3>
+
+<B>man</B>
+
+预定义了下列字符串
+<DL COMPACT>
+<DT>\*R<DD>
+注册符号: &#174;
+<DT>\*S<DD>
+改变成缺省字体大小
+<DT>\*(Tm<DD>
+商标符号: 
+<DT>\*(lq<DD>
+左双引号: ``
+<DT>\*(rq<DD>
+右双引号: ''
+</DL>
+<A NAME="lbAO">&nbsp;</A>
+<H2>安全子集 SAFE SUBSET</H2>
+
+理论上
+<B>man</B>
+
+是一个 troff 宏命令包，实际上很多工具程序没有支持所有的 man 宏命令。
+因此，为了这些程序可以正常工作最好忽略 troff 的一些比较另类的宏。
+避免使用各种不同的 troff 预处理程序
+（如果必须的话，用 
+<B><A HREF="/cgi-bin/man/man2html?1+tbl">tbl</A></B>(1)
+
+吧，
+但是在建立双列表时请使用 
+<B>IP </B>
+
+和 
+<B>TP </B>
+
+命令）。避免使用计算；大多数其他程序不能处理他。
+使用简单的命令比较容易转换为其他格式。
+下面的宏命令一般认为是安全的（虽然多数时候他们都被忽略了）：
+<B>\ ,</B>
+
+<B>.</B>,
+
+<B>ad</B>,
+
+<B>bp</B>,
+
+<B>br</B>,
+
+<B>ce</B>,
+
+<B>de</B>,
+
+<B>ds</B>,
+
+<B>el</B>,
+
+<B>ie</B>,
+
+<B>if</B>,
+
+<B>fi</B>,
+
+<B>ft</B>,
+
+<B>hy</B>,
+
+<B>ig</B>,
+
+<B>in</B>,
+
+<B>na</B>,
+
+<B>ne</B>,
+
+<B>nf</B>,
+
+<B>nh</B>,
+
+<B>ps</B>,
+
+<B>so</B>,
+
+<B>sp</B>,
+
+<B>ti</B>,
+
+<B>tr</B>.
+
+<P>
+
+你还可能使用 troff 转义字符（这些转移符号以 \ 开始）。
+但你要在文本中显示反斜线时，用\e。
+其他转义字符包括：
+<B>\'</B>,
+
+<B>\`</B>,
+
+<B>\-</B>,
+
+<B>\.</B>,
+
+<B>\ ,</B>
+
+<B>\%</B>,
+
+<B>\*x</B>,
+
+<B>\*(xx</B>,
+
+<B>\(xx</B>,
+
+<B>\$N</B>,
+
+<B>\nx</B>,
+
+<B>\n(xx</B>,
+
+<B>\fx</B>,
+
+和
+<B>\f(xx</B>.
+
+其中 x、xx 是任意字符，N 是任意数字不要使用转义字符来画图。
+<P>
+
+不要随意使用 
+<B>bp</B>
+
+（break page(中断页））。
+<B>sp</B>
+
+（vertical space(垂直距离）只应使用正值。
+不要用
+(<B>de</B>)
+
+（define（定义）定义与现有的宏同名的宏（无论 man 或 mdoc)；
+这种重新定义可能会被忽略。
+每个正缩进
+(<B>in</B>)
+
+应对应一个负缩进（即使在使用 RS 和 RE 是也不例外）。
+The condition test
+(<B>if,ie</B>)
+
+should only have 't' or 'n' as the condition.
+可以使用的只有可忽略的转换
+(<B>tr</B>)<B>.</B>
+
+改变字体命令
+(<B>ft</B>
+
+和 <B>\f</B>  转义序列) 只能带如下参数： 1, 2, 3, 4, R, I, B, P, or CW
+(ft 命令也可以不带参数)。
+<P>
+
+如果你是用更多的功能，用各种程序仔细察看一下结果。
+如果你肯定某功能是安全的，请告诉我们，以便把他增加到这个列表中。
+<A NAME="lbAP">&nbsp;</A>
+<H2>注意 NOTES</H2>
+
+<P>
+
+尽量在文本中包含完整的 URL（或URIs）；
+一些工具软件（如：
+<B><A HREF="/cgi-bin/man/man2html?1+man2html">man2html</A></B>(1)
+
+）能够自动把它们转换为超级链接。
+您也可用 
+<B>UR </B>
+
+命令指定链接到相关信息。
+输入完整的 URL(如：&lt;<A HREF="http://www.kernel-notes.org">http://www.kernel-notes.org</A>&gt; )。 
+<P>
+
+Tools processing these files should open the file and examine the first
+non-whitespace character.
+以(.)或（')开始一行，表明是基于 troff 的文件（如： man 或 mdoc)。
+如果是（&lt;）表明基于 SGML/XML (如：HTML 或 Docbook)．
+其他可能是纯文本。(例如 &quot;catman&quot; 的结果)
+<P>
+
+有些 man 以'\&quot;和空格再加字符列开始，表示他的预处理方法。
+为了 troff 翻译器程序处理起来简单一些，
+您仅应使用 
+<B><A HREF="/cgi-bin/man/man2html?1+tbl">tbl</A></B>(1),
+
+而不是其他什么东东，Linux 可以检测到这一点。
+不过，你或许想要包含这些信息以使其可以在其他系统得到处理。
+下面是预处理调用的定义：
+<DL COMPACT>
+<DT><B>e</B>
+
+<DD>
+<A HREF="/cgi-bin/man/man2html?1+eqn">eqn</A>(1)
+<DT><B>g</B>
+
+<DD>
+<A HREF="/cgi-bin/man/man2html?1+grap">grap</A>(1)
+<DT><B>p</B>
+
+<DD>
+<A HREF="/cgi-bin/man/man2html?1+pic">pic</A>(1)
+<DT><B>r</B>
+
+<DD>
+<A HREF="/cgi-bin/man/man2html?1+refer">refer</A>(1)
+<DT><B>t</B>
+
+<DD>
+<A HREF="/cgi-bin/man/man2html?1+tbl">tbl</A>(1)
+<DT><B>v</B>
+
+<DD>
+<A HREF="/cgi-bin/man/man2html?1+vgrind">vgrind</A>(1)
+</DL>
+<A NAME="lbAQ">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+<I>/usr/share/groff/</I>[*/]<I>tmac/tmac.an</I>
+
+<BR>
+
+<I>/usr/man/whatis</I>
+
+<A NAME="lbAR">&nbsp;</A>
+<H2>BUGS</H2>
+
+<P>
+
+大多数宏命令描述的是格式（比如：字体和空格）而不是内容描述（比如： 这段文字指向另外一页），
+与 mdoc 和 DocBook 正好相反（HTML 也有比较多的内容描述）。
+这使得 
+<B>man </B>
+
+难以转换为其他形式，不容易与其他文件组合或自动插入交叉引用。
+遵照以上的安全说明，就比较容易在将来把他转换为其他格式。
+<P>
+
+The Sun macro
+<B>TX</B>
+
+下不能用。 
+<A NAME="lbAS">&nbsp;</A>
+<H2>作者 AUTHORS</H2>
+
+<DL COMPACT>
+<DT>---<DD>
+James Clark (<A HREF="mailto:jjc@jclark.com">jjc@jclark.com</A>) wrote the implementation of the macro package.
+<DT>---<DD>
+Rickard E. Faith (<A HREF="mailto:faith@cs.unc.edu">faith@cs.unc.edu</A>) wrote the initial version of
+this manual page.
+<DT>---<DD>
+Jens Schweikhardt (<A HREF="mailto:schweikh@noc.fdn.de">schweikh@noc.fdn.de</A>) wrote the Linux Man-Page Mini-HOWTO
+(which influenced this manual page).
+<DT>---<DD>
+David A. Wheeler (<A HREF="mailto:dwheeler@ida.org">dwheeler@ida.org</A>) heavily modified this
+manual page, such as adding detailed information on sections and macros.
+</DL>
+<A NAME="lbAT">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+apropos">apropos</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+groff">groff</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+man">man</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+man2html">man2html</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?7+mdoc">mdoc</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?7+mdoc.samples">mdoc.samples</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?1+whatis">whatis</A></B>(1)
+
+<P>
+<A NAME="lbAU">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>RedCandle &lt;<A HREF="mailto:redcandle51@chinaren.com">redcandle51@chinaren.com</A>&gt;</B>
+
+<A NAME="lbAV">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003.11.25</B>
+
+<A NAME="lbAW">&nbsp;</A>
+<H2>《中国linux论坛man手册翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">导言 PREAMBLE</A><DD>
+<DT><A HREF="#lbAF">段 SECTIONS</A><DD>
+<DT><A HREF="#lbAG">字体 FONTS</A><DD>
+<DT><A HREF="#lbAH">其他宏命令和字符串 OTHER MACROS AND STRINGS</A><DD>
+<DL>
+<DT><A HREF="#lbAI">普通段（无缩进） Normal Paragraphs</A><DD>
+<DT><A HREF="#lbAJ">相对缩进 Relative Margin Indent</A><DD>
+<DT><A HREF="#lbAK">缩进 Indented Paragraph Macros</A><DD>
+<DT><A HREF="#lbAL">超文本链接宏 Hypertext Link Macros</A><DD>
+<DT><A HREF="#lbAM">杂项宏 Miscellaneous Macros</A><DD>
+<DT><A HREF="#lbAN">预定义字符串 Predefined Strings</A><DD>
+</DL>
+<DT><A HREF="#lbAO">安全子集 SAFE SUBSET</A><DD>
+<DT><A HREF="#lbAP">注意 NOTES</A><DD>
+<DT><A HREF="#lbAQ">文件 FILES</A><DD>
+<DT><A HREF="#lbAR">BUGS</A><DD>
+<DT><A HREF="#lbAS">作者 AUTHORS</A><DD>
+<DT><A HREF="#lbAT">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAU">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAV">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAW">《中国linux论坛man手册翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

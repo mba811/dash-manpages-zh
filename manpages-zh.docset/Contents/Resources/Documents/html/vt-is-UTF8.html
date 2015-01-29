@@ -1,0 +1,120 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of VT-IS-UTF8</TITLE>
+</HEAD><BODY>
+<H1>VT-IS-UTF8</H1>
+Section: Linux 用户手册 (1)<BR>Updated: 10 Aug 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+vt-is-UTF8 - check whether current VT is in UTF8- or byte-mode.
+检查当前VT是否处于VTF8模式或是字节模式.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>vt-is-UTF8 [</B><I>-h</I><B>|</B><I>--help</I><B>] [</B><I>-V</I><B>|</B><I>--version</I><B>] [</B><I>-q</I><B>|</B><I>--quiet</I><B>]</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>vt-is-UTF8</B>
+
+checks whether the current VT is in UTF8 mode, by writing (and erasing
+afterwards) a 3-byte-long UTF8 sequence, and looking how much chars where
+displayed by the console driver.
+<B>vt-is-UTF8</B>
+
+检查当前VT是否处于 UTF8 模式, 其方式是写(并且随后擦除)
+一个 3 字节的 UTF8 序列, 然后察看控制台驱动展示了多少个字符. 
+<P>
+A message telling in which mode the console is is then written to stdout
+(except if the
+<I>--quiet</I>
+
+option was given).
+然后会在标准输出上给出一个信息, 指出控制台所用模式(除非给出了
+<I>--quiet</I>
+
+选项).
+<P>
+If the 
+<I>--quiet</I>
+
+option is not given, the value returned is 1 if an error occurs, else 0.
+在有错误发生时, 如果没有选取
+<I>--quiet</I>
+
+选项, 返回值将是 1 , 否则将是 0 .
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><I>-h --help</I>
+
+<DD>
+display version number, a short help message and exit.
+展示版本号, 以及一个简短的帮助信息, 然后退出. 
+<P>
+<DT><I>-V --version</I>
+
+<DD>
+display version number and exit.
+展示版本号然后退出. 
+<P>
+<DT><I>-q --quiet</I>
+
+<DD>
+do not print on stdout in with mode we are, but return the state as
+exit-status 1 if in UTF8-mode, 0 if in byte-mode. In case of error, 0 is
+returned and a message is displayed on stderr.
+不在标准输出上打印所处模式, 但是返回一个状态, 对于 UTF8 模式该退出状态为 1 ,
+而对于字节模式该状态为 0 . 如果发生错误, 也返回 0 , 并且送给标准错误一个信息. 
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>BUGS</H2>
+
+The check should be done by directly asking the kernel, which is not possible
+as of kernels 2.0.x.
+模式的检查可能应该通过直接请求内核来进行, 但从内核 2.0.x 开始这就不可能了.
+<P>
+As of kernel 2.0.35, the byte-mode is sometimes erroneously detected
+as UTF8-mode, after switching from a 512-chars font to a 256-chars
+font.  This is probably a console-driver bug.
+从 2.0.35 的内核开始, 在做了从 512 字符字体到 256 字符字体的切换后, 
+字节模式有时会被错误地认为是 UTF8 模式. 这或许就是一个控制台驱动的 bug . 
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>另见</H2>
+
+<P>
+<B><A HREF="/cgi-bin/man/man2html?1+unicode_start">unicode_start</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+unicode_stop">unicode_stop</A></B>(1).
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">BUGS</A><DD>
+<DT><A HREF="#lbAG">另见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

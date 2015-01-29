@@ -1,0 +1,104 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ANALYZE</TITLE>
+</HEAD><BODY>
+<H1>ANALYZE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ANALYZE - 收集与数据库有关的统计
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+ANALYZE [ VERBOSE ] [ <I>table</I> [ (<I>column</I> [, ...] ) ] ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>ANALYZE</B> 收集有关 PostgreSQL  表的内容的统计，然后把结果保存在系统表 pg_statistic  里。随后，查询规划器就可以使用这些统计帮助判断查询的最有效的规划。
+<P>
+
+<BR>&nbsp;如果没有参数，ANALYZE&nbsp;检查在当前数据库里的所有表。&nbsp;如果有参数，ANALYZE&nbsp;只检查那个表。&nbsp;你还可以给出一列字段名字，这个时候只收集那些字段的统计信息。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B>VERBOSE</B><DD>
+<BR>&nbsp;打开处理过程信息的显示。
+<DT><B></B><I>table</I><B></B><DD>
+<BR>&nbsp;要分析的特定表（可能用模式名修饰）的名字。缺省是当前数据库里所有表。
+<DT><B></B><I>column</I><B></B><DD>
+<BR>&nbsp;要分析的特定字段的名字。缺省是所有字段。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>OUTPUTS 输出</H2>
+
+<P>
+
+<BR>&nbsp;如果声明了&nbsp;VERBOSE，<B>ANALYZE</B>&nbsp;发出进度信息，表明当前正在处理的是哪行。&nbsp;同时打印有关改表的很多其它信息。
+<A NAME="lbAG">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;周期性地运行&nbsp;ANALYZE，或者在对表的大部分内容做了更改之后马上运行它是个好习惯，&nbsp;准确的统计信息将帮助规划器选择最合适的查询规划，并因此而改善查询处理的速度。&nbsp;一种比较经常采用的策略是每天在低负荷的时候运行一次&nbsp;VACUUM&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+vacuum">vacuum</A></B>(7)]
+和 ANALYZE。
+<P>
+
+<BR>&nbsp;和&nbsp;VACUUM&nbsp;FULL&nbsp;不同的是，&nbsp;ANALYZE&nbsp;只需要在目标表上有一个读取锁，&nbsp;因此它可以和表上的其它活动并行地运行。
+<P>
+
+<BR>&nbsp;收集的统计信息通常包括一个每字段最常用数值的列表以及一个包线图，显示每个字段里数据的近似分布。&nbsp;如果&nbsp;ANALYZE&nbsp;认为它们都没有什么用，&nbsp;（比如，在一个唯一键字的字段上没有公共的数值）或者是该字段数据类型不支持相关的操作符，&nbsp;那么它们都可以忽略。在&nbsp;Chapter&nbsp;21&nbsp;``Routine&nbsp;Database&nbsp;Maintenance''&nbsp;中有关于统计的更多信息。
+<P>
+
+<BR>&nbsp;对于大表，ANALYZE&nbsp;采集表内容的一个随机的抽样做统计，而不是检查每一行。&nbsp;这样就保证了即使是在很大的表上，我们也只需要很少的一些时间就可以完成分析。&nbsp;不过，要注意的是统计只是近似的结果，而且每次运行ANALYZE都会导致&nbsp;EXPLAIN&nbsp;显示的规划器的预期开销有一些小变化，&nbsp;即使表内容实际上没有改变也这样。在很小的概率的情况下，这个不确定的行为会导致查询优化器在不同&nbsp;ANALYZE&nbsp;&nbsp;之间选择不同的查询规划。为了避免这个问题，可以提高&nbsp;ANALYZE&nbsp;收集的统计数量，像下面描述的那样。
+<P>
+
+<BR>&nbsp;分析的广度可以通过用调整&nbsp;default_statistics_target&nbsp;参变量，&nbsp;或者是以每字段为基础通过用&nbsp;ALTER&nbsp;TABLE&nbsp;...&nbsp;ALTER&nbsp;COLUMN&nbsp;...&nbsp;SET&nbsp;STATISTICS&nbsp;&nbsp;（参阅&nbsp;&nbsp;ALTER&nbsp;TABLE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+alter_table">alter_table</A></B>(7)]）&nbsp;设置每字段的统计目标来控制。目标数值设置最常用数值列表中的记录的最大数目以及包线图中的最大块数。&nbsp;缺省的目标数值是&nbsp;10，不过我们可以调节这个数值获取规划器计算精度和&nbsp;ANALYZE&nbsp;运行所需要的时间以及&nbsp;pg_statistic&nbsp;里面占据的空间数目之间的平衡。&nbsp;特别是，把统计目标设置为零就关闭了该字段的统计收集。&nbsp;这么做对那些从来不参与到查询的&nbsp;WHERE，GROUP&nbsp;BY，或者&nbsp;ORDER&nbsp;BY&nbsp;子句里的字段是很有用的，因为规划器不会使用到这样的字段上的统计。
+<P>
+
+<BR>&nbsp;在被分析的字段中最大的统计目标决定为统计采样的表中的行的数目。&nbsp;增大目标会导致做&nbsp;ANALYZE&nbsp;的时候成比例地增大对时间和空间的需求。
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+SQL 标准里没有 ANALYZE 语句。
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">OUTPUTS 输出</A><DD>
+<DT><A HREF="#lbAG">NOTES 注意</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

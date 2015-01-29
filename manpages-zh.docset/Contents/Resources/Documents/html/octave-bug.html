@@ -1,0 +1,101 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of octave-bug</TITLE>
+</HEAD><BODY>
+<H1>octave-bug</H1>
+Section: User Commands  (1)<BR>Updated: 6 March 2000<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+octave-bug - 报告 GNU Octave 中的 bug
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<B>octave-bug</B>
+
+[<B>-s</B>
+
+<I>subject</I>]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<B>octave-bug</B>
+
+是一个 shell 脚本，用于以一种标准的格式撰写有关 Octave 的 bug 报告并发送。
+<B>octave-bug</B>
+
+通常由 Octave 命令
+<B>bug_report</B>
+
+启动，这个命令只能在 Octave 内部，以交互方式调用。这种方式是提交 Octave 错误报告的最佳放方式。它创建一个错误报告的空模板文件，并用一个编辑器打开它。编辑完成后，错误报告将被发送到 bug-octave 邮件列表 (这样做的前提是你的系统可以发送邮件)。但是，用户也可以在 Octave 之外使用 <B>octave-bug</B> 命令。
+<P>
+
+请阅读 Octave 手册页中的 `Bugs' 章节，学习如何提交错误报告来使 Octave 的维护者修正问题。如果不能使用 bug_report 命令，就直接将邮件发送到 bug-octave 邮件列表，就是 <A HREF="mailto:bug-octave@bevo.che.wisc.edu">bug-octave@bevo.che.wisc.edu</A> 。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<DL COMPACT>
+<DT><B>-s&nbsp;</B><I>subject</I>
+
+<DD>
+指定错误报告的主题行。主题中的空格必须被引用。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT VARIABLES 环境变量</H2>
+
+<B>octave-bug </B>
+
+使用环境变量
+<B>USER,</B>
+
+<B>EDITOR,</B>
+
+和
+<B>PAGER </B>
+
+从而定制工具
+<A NAME="lbAG">&nbsp;</A>
+<H2>VERSION 版本</H2>
+
+本文档最后一次校订与 Octave 2.0.16 同时发布。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+octave">octave</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+bashbug">bashbug</A></B>(1)
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>AUTHOR</H2>
+
+<PRE>
+John W. Eaton
+Department of Chemical Engineering
+University of Wisconsin-Madison
+Madison, WI 53706
+USA
+&lt;<A HREF="mailto:jwe@bevo.che.wisc.edu">jwe@bevo.che.wisc.edu</A>&gt;       
+
+</PRE>
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT VARIABLES 环境变量</A><DD>
+<DT><A HREF="#lbAG">VERSION 版本</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">AUTHOR</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

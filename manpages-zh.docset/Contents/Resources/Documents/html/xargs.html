@@ -1,0 +1,183 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of XARGS</TITLE>
+</HEAD><BODY>
+<H1>XARGS</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+xargs - 从标准输入重建并执行命令行
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>xargs</B>
+
+[-0prtx] [-e[eof-str]] [-i[replace-str]] [-l[max-lines]]
+[-n max-args] [-s max-chars] [-P max-procs] [--null] [--eof[=eof-str]]
+[--replace[=replace-str]] [--max-lines[=max-lines]] [--interactive]
+[--max-chars=max-chars] [--verbose] [--exit] [--max-procs=max-procs]
+[--max-args=max-args] [--no-run-if-empty] [--version] [--help]
+[command [initial-arguments]]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+此 手册页 描述 GNU 版本 的
+<B>xargs</B>.
+
+<B>xargs</B>
+
+从 标准 输入 读入 参数. 参数 用 空格(可以 用 双引号 单引号 或 反斜杠 转意) 或者 回车 隔开.
+然后 一次 或者 多次 执行 命令
+<I>command</I>
+
+(默认 是 /bin/echo), 其 参数 是
+<I>initial-arguments</I>
+
+后面 再 加上 从 标准 输入 读入 的 参数. 标准 输入中 的 空格 被 忽略.
+<P>
+
+<B>xargs</B>
+
+退出 可以有 如下 状态:
+<PRE>
+0 如果 成功
+123 如果 任何 一个 被 调用 的 命令 command 退出 状态 为 1-125
+124 如果 命令 command 退出 状态 为 255
+125 如果 命令 command 被 信号 终止
+126 如果 不能 执行 命令 command
+127 如果 命令 command 没有 找到
+1 如果 发生 其它 错误
+</PRE>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H3>选项 (OPTIONS)</H3>
+
+<DL COMPACT>
+<DT><I>--null, -0</I>
+
+<DD>
+输入 的 文件名 以 null 字符 结尾, 而不是 空格, 引号 和 反斜杠 并不 特殊 处理
+(所有 字符 都以 字面 意思 解释). 禁止 文件尾 字符串, 当 另一个 参数 处理. 当
+参数 含有 空格, 引号, 反斜杠 时 很方便. GNU find 的 -print0 选项 产生 适合
+这种 模式 的 输出.
+<DT><I>--eof[=eof-str], -e[eof-str]</I>
+
+<DD>
+把 文件尾 字符串 设置 成<I>eof-str</I>. 如果 文件尾 字符串 出现 在 输入中 的
+某行, 余下的 行 将被 忽略. 如果 没有 <I>eof-str</I> , 就 没有 文件尾 字符串.
+如果 没有 这个 选项, 文件尾 字符串 默认 是 &quot;_&quot;.
+<DT><I>--help</I>
+
+<DD>
+显示
+<B>xargs</B>
+
+的 选项, 然后 退出.
+<DT><I>--replace[=replace-str], -i[replace-str]</I>
+
+<DD>
+把 initial-arguments 里的 所有 <I>replace-str</I> 替换为 从 标准 输入 里 读入
+的 名称. 同时, 没有 用 引号 括起来 的 空格 不会 结束 参数. 如果 没有
+<I>replace-str</I> , 它 默认为 &quot;{}&quot; (同 `find -exec' 一样). 此 选项 隐含有
+<I>-x</I> 和 <I>-l 1</I> 选项.
+<DT><I>--max-lines[=max-lines], -l[max-lines]</I>
+
+<DD>
+每个 命令行 最多 可以 有 <I>max-lines</I> 行 非空格 输入; <I>max-lines</I> 默认
+是 1.  后面 跟着 的 空格 会使 后面 一行 逻辑 上 是 一个 输入行 的 继续. 此 选项
+隐含有 <I>-x</I> 选项.
+<DT><I>--max-args=max-args, -n max-args</I>
+
+<DD>
+每个 命令行 最多 可以 有 <I>max-args</I> 个 参数. 如果 大小 超出了 (见 -s 选项)
+那么 参数 个数 将 会用 比 <I>max-args</I> 小; 除非 用了 -x 选项, 那么
+<B>xargs</B> 将 退出.
+<DT><I>--interactive, -p</I>
+
+<DD>
+提示 用户 是否 运行 每个 命令行, 然后 从 终端 读入 一行. 只有 当 此行 以 'y'
+或 'Y' 开头 才会 运行 此 命令行. 此 选项 隐含有 <I>-t</I> 选项.
+<DT><I>--no-run-if-empty, -r</I>
+
+<DD>
+如果 标准 输入 不 包含 任何 非空格, 将 不运行 命令. 一般 情况下, 就算 没有
+输入, 命令 也会 运行 一次.
+<DT><I>--max-chars=max-chars, -s max-chars</I>
+
+<DD>
+每个 命令行 最多 可以 有 <I>max-chars</I> 个 字符, 包括 命令 和 初始 参数, 还
+包括 参数 后面 结尾 的 null. 默认 是 尽可能的 大, 有 20k 个 字符.
+<DT><I>--verbose, -t</I>
+
+<DD>
+在 执行 之前 在 标准 错误 输出 显示 命令行.
+<DT><I>--version</I>
+
+<DD>
+显示
+<B>xargs</B>
+
+的 版本号, 然后 退出.
+<DT><I>--exit, -x</I>
+
+<DD>
+如果 大小 超出 (见 <I>-s</I> 选项) 就 退出.
+<DT><I>--max-procs=max-procs, -P max-procs</I>
+
+<DD>
+同时 最多 运行 <I>max-procs</I> 个 进程; 默认 是 1. 如果 <I>max-procs</I> 为 0,
+<B>xargs</B> 将 同时 运行 尽可能 多 的 进程. 最好 同时 用 <I>-n</I> 选项; 不然
+很 可能 只会 做 一次 exec.
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1L+find">find</A></B>(1L), <B><A HREF="/cgi-bin/man/man2html?1L+locate">locate</A></B>(1L), <B><A HREF="/cgi-bin/man/man2html?5L+locatedb">locatedb</A></B>(5L), <B><A HREF="/cgi-bin/man/man2html?1+updatedb">updatedb</A></B>(1)
+<B>Finding Files</B> (在线 Info, 或者 打印的)
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/31</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DL>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+</DL>
+<DT><A HREF="#lbAF">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

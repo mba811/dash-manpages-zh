@@ -1,0 +1,261 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of tclvars</TITLE>
+</HEAD><BODY>
+<H1>tclvars</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tclvars - Tcl 使用的变量
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+Tcl 库自动的建立和管理下列全局变量。除了下面专做说明的地方之外，对特定于应用的代码和用户，这些变量通常应当作为只读的来对待。
+<DL COMPACT>
+<DT><B>env</B><DD>
+Tcl     把这个变量维护为一个数组，它的元素是这个进程的环境变量。读取一个元素将返回相应的环境变量的值。设置这个数组的一个元素将修改相应的环境变量，如果它不存在则建立一个新的。删除     <B>env</B> 的一个元素将删除相应的环境变量。对 <B>env</B>     数组的变更将影响通过象 <B>exec </B>这样的命令传递给子进程的环境变量。如果删除了整个     <B>env</B> 数组，则 Tcl 将停止监视 <B>env</B>     访问并且将不更新环境变量。
+<DL COMPACT><DT><DD>
+
+
+
+
+
+
+
+在 Windows 下，任何大小写形式的环境变量 PATH 和  COMSPEC 都被自动转换成
+大写的。例如，PATH  环境变量可以被操作系统导出为"path"、"Path"、"PaTh"、
+等，这导致其他简单  Tcl 代码必须支持许多特殊的写法。Tcl  继承的所有其他
+环境变量保持不变。
+
+
+
+
+
+
+</DL>
+
+<DL COMPACT><DT><DD>
+在 Macintosh 上，Tcl  把环境变量构造为非现存的全局环境变量。为 Tcl  建立的环境变量包括:
+<DL COMPACT>
+<DT><B>LOGIN</B><DD>
+它持有 Macintosh 的 Chooser 名字。
+<DT><B>USER</B><DD>
+它也持有 Macintosh 的 Chooser 名字。
+<DT><B>SYS_FOLDER</B><DD>
+到系统目录的路径。
+<DT><B>APPLE_M_FOLDER</B><DD>
+到 Apple 菜单目录的路径。
+<DT><B>CP_FOLDER</B><DD>
+到控制面板目录的路径。
+<DT><B>DESK_FOLDER</B><DD>
+到桌面目录的路径。
+<DT><B>EXT_FOLDER</B><DD>
+到系统扩展目录的路径。
+<DT><B>PREF_FOLDER</B><DD>
+到偏好目录的路径。
+<DT><B>PRINT_MON_FOLDER</B><DD>
+到打印监控器目录的路径。
+<DT><B>SHARED_TRASH_FOLDER</B><DD>
+到网络垃圾箱目录的路径。
+<DT><B>TRASH_FOLDER</B><DD>
+到垃圾箱目录的路径。
+<DT><B>START_UP_FOLDER</B><DD>
+到启动目录的路径。
+<DT><B>HOME</B><DD>
+到应用程序的缺省目录的路径。
+</DL>
+<P>
+
+你还可以为 Macintosh 建立你自己的环境变量。叫做 <B>Tcl Environment Variables</B> 的一个文件将被放置到 Mac 系统文件夹中的偏好文件夹中。这个文件中的每行的形式都是 <I>VAR_NAME=var_data</I>。
+<P>
+
+最后的选择是把环境变量放置到这个应用的叫做 <B>Tcl Environment
+Variables</B> 的一个`STR#'资源文件中。这被认为是更象"Mac 式"而不是
+一个 Unix 式样的环境变量文件。`STR#'资源中每个条目有与上述相同的格式。源
+代码文件 <I>tclMacEnv.c</I> 包含 env 机制的实现。这个文件包含许多 #define
+，它们允许你定制 env 机制来适合你的应用的需要。
+</DL>
+
+<DT><B>errorCode</B><DD>
+在发生了一个错误之后，设置这个变量为持有关于错误的补充信息，它的形式易于用程序处理。<B>errorCode</B> 由有一个或多个元素的一个 Tcl 列表组成。这个列表的第一个元素标识错误的一个一般的类别，并决定列表余下部分的格式。Tcl 核心为 <B>errorCode</B> 使用下列格式；个别应用可以定义补充的格式。
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>ARITH</B><I> code msg</I><DD>
+在发生一个算术错误的时候使用这个格式(例如，在 <B>expr</B> 命令中尝试除以零)。<I>Code</I> 标识准确的错误而 <I>msg</I> 提供一个人可阅读的对错误的描述。<I>Code</I> 将是下列之一：DIVZERO (尝试除以零)、DOMAIN (如果函数的一个参数在它的作用域之外，比如 acos(-3))、IOVERFLOW (整数溢出)、 OVERFLOW (浮点数溢出)、或 UNKNOWN (如果不能确定错误的原因)。
+<DT><B>CHILDKILLED</B><I> pid sigName msg</I><DD>
+在子进程被一个信号所终止的时候使用这个格式。<B>errorCode</B> 的第二个元素是这个进程的标识符(十进制数)。第三个元素标识导致进程终止的信号的符号名字；它将是在文件 signal.h 中包含的名字之一，比如 <B>SIGPIPE</B>。第四个元素是一个描述这个信号的人可阅读的短消息，比如对 <B>SIGPIPE</B>是"write on pipe with no readers"。
+<DT><B>CHILDSTATUS</B><I> pid code</I><DD>
+在子进程以非零状态退出的时候使用这个格式。<B>errorCode </B>的第二个元素是这个进程的标识符(十进制数)，而第三个元素是这个进程返回的退出代码(也是十进制数)。
+<DT><B>CHILDSUSP</B><I> pid sigName msg</I><DD>
+在子进程被一个信号所挂起的时候使用这个格式。<B>errorCode</B> 的第二个元素是这个进程的标识符，是一个十进制数。第三个元素识导致进程挂起的信号的符号名字；它将是在文件signal.h 中包含的名字之一，比如 <B>SIGTTIN</B>。 第四个元素是一个描述这个信号的人可阅读的短消息，比如对 <B>SIGTTIN </B>是"background tty read"。
+<DT><B>NONE</B><DD>
+对除了返回错误消息之外没有其他可获得的补充信息的错误使用这个格式。在这种情况下 <B>errorCode</B> 将由只有一个单一元素的一个列表组成，这个元素的内容是 <B>NONE</B>。
+<DT><B>POSIX </B><I>errName msg</I><DD>
+如果 <B>errorCode</B> 的第一个元素是 <B>POSIX</B>，则错误发生在一个 POSIX 内核调用期间。这个列表的第二个元素将包含发生的错误的符号名字，比如 <B>ENOENT</B>；它将是在包含文件 errno.h 中定义的值之一。这个列表的第三个元素是对应于 <I>errName</I> 的一个人可阅读的消息，比如对 <B>ENOENT</B> 是"no such file or directory"。
+</DL>
+<P>
+
+要设置 <B>errorCode</B>，应用应当使用库过程比如 <B>Tcl_SetErrorCode</B> 和 <B>Tcl_PosixError</B>，或者调用  <B>error</B> 命令。如果使用了这些方法之一，则 Tcl 解释器将在下个错误之后重置这个变量为 <B>NONE</B>。
+</DL>
+
+<DT><B>errorInfo</B><DD>
+在一个错误发生之后，这个字符串将包含标识在最新近的错误发生时正在执行的 Tcl 命令和过程的一行或多行。它的内容使用栈跟踪的形式，展示在错误发生时调用的各个嵌套的 Tcl 命令。
+<DT><B>tcl_library</B><DD>
+这个变量持有包含系统 Tcl  脚本库的一个目录的名字，比如用于自动装载的那些目录。<B>info library</B> 命令返回这个变量的值。关于 Tcl  脚本库的详情请参见 <B>library</B> 手册条目。 除了 Tcl 脚本库之外，每个应用或包通常都有它自己的特定于应用的脚本库；每个应用都应该设置名字象  <B>$</B><I>app</I><B>_library</B> 这样的一个全局变量(这里的 <I>app</I>  是这个应用的名字)来持有这个应用的库目录的网络文件名字。在建立解释器的时候，通过查找许多不同目录直到找到包含一个适当的 Tcl 启动脚本的目录，来设置 <B>tcl_library</B> 的最初的值。如果 <B>TCL_LIBRARY</B> 环境变量存在，则首先访问它指名的目录。如果 <B>TCL_LIBRARY</B> 未被设置或不参照一个适当的目录，则 Tcl 检查基于在其中编译(compiled-in)的缺省位置的其他一些目录、包含应用的二进制文件的位置、和当前工作目录。
+<DT><B>tcl_patchLevel</B><DD>
+在建立解释器的时候 Tcl 初始化这个变量来持有给出当前的 Tcl   补丁级别的一个字符串，比如 <B>7.3p2 </B>是Tcl 7.3 的第二次官方补丁，而 <B>7.4b4</B> 是 Tcl 7.4 的第四次 beta    发布。<B>info patchlevel</B> 命令返回这个值。
+
+<BR>
+
+
+
+
+
+
+
+<DT><B>tcl_pkgPath</B><DD>
+这个变量持有一个目录的列表，它一般指示把包安装到哪里。在 Windows 上不使
+用它。它典型的包含一个或两个条目；如果它包含两个条目，第一个通常是依赖于
+平台的包的目录(例如，共享库的二进制文件)而第二个通常是平台无关的包的目录
+(例如，脚本文件)。典型的把包安装为在  <B>$tcl_pkgPath</B> 中的一个条目的
+一个子目录。在 <B>$tcl_pkgPath</B> 中的目录缺省的包含在 <B>auto_path</B> 
+变量中，所以 <B>package require</B> 命令期间自动的在它们和它们的直接子目
+录中查找包。注意: 不希望应用修改 <B>tcl_pkgPath</B>。在启动时它的值被添加
+到  <B>auto_path</B>；对 <B>tcl_pkgPath</B> 的变动不会反映到
+<B>auto_path</B>   中。如果你想让 Tcl 来在额外的目录中查找包，你应该把这
+些目录的名字添加到 <B>auto_path</B>，而不是 <B>tcl_pkgPath</B>。
+
+
+
+
+
+
+<DT><B>tcl_platform</B><DD>
+这是一个关联数组，它的元素包含关于应用在其上运行的平台的信息，比如操作系统的名字、它的当前发行号、和机器的指令集。总是定义下列元素，但是如果 Tcl 不能检索到任何有关的信息，则它们的值将是空串。除此之外，扩展和应用可以向这个数组添加补充的值。预先定义的元素是:
+<P>
+<DL COMPACT><DT><DD>
+
+
+
+
+
+
+
+<DL COMPACT>
+<DT><B>byteOrder</B><DD>
+这个机器的本地字节序: <B>littleEndian</B> 或 <B>bigEndian</B>。
+
+
+
+
+
+
+<DT><B>debug</B><DD>
+如果这个变量存在，则编译解释器时启用了调试符号。只在 Windows 上存在这个变量，扩展作者可以依赖于所装载的 C 运行时库来指定装载哪个包。
+<DT><B>machine</B><DD>
+这个机器执行的指令集，比如 <B>intel</B>、<B>PPC</B>、<B>68k</B>、或<B>sun4m</B>。在 UNIX 机器上，用 <B>uname -m</B> 返回这个值。
+<DT><B>os</B> <DD>
+在这个机器上运行的操作系统的名字，比如 <B>Windows 95</B>、<B>Windows NT</B>、<B>MacOS</B>、或 <B>SunOS</B>。 在 UNIX 机器上，用 <B>uname -s</B> 返回这个值。在 Windows 95 和 Windows 98 上，返回的值将是 <B>Windows 95</B> 来提供更好的对 Windows 95 的反向兼容；要区别二者，请检查 <B>osVersion</B>。
+<DT><B>osVersion</B><DD>
+在这个机器上运行的操作系统的版本号。在 UNIX 机器上，用 <B>uname -r</B> 返回这个值。在 Windows 95 上，版本将是 4.0；在 Windows 98 上，版本将是 4.10。
+<DT><B>platform</B><DD>
+<B>windows</B>、<B>macintosh</B>、或 <B>unix </B>之一。它表示这个机器的一般操作环境。
+<DT><B>threaded</B><DD>
+如果这个变量存在，则编译这个解释器时启用了线程。
+<DT><B>user</B><DD>
+它基于在平台上获得的登录信息标识当前用户。在 Unix 它源自 USER 或 LOGNAME 环境变量，在 Windows 和 Macintosh 上源自 GetUserName。
+</DL>
+</DL>
+
+<DT><B>tcl_precision</B><DD>
+
+
+
+
+
+
+
+这个变量在把浮点数转换成字符串时控制生成的数字的数目。它缺省的是 12。对于 IEEE 浮点数 17 位数字是"最佳的"，这样允许双精度值在二进制和字符串之间来回转换而不丢失信息。但是，使用  17 位数字将禁止任何舍入，这将生成更长，而更不直观的值。例如，<B>expr 1.4</B> 在设置 <B>tcl_precision</B> 为 17 时返回 1.3999999999999999，而在设置 <B>tcl_precision</B> 为 12 时返回 1.4 。
+<DL COMPACT><DT><DD>
+在一个进程中的所有解释器共享一个单一的 <B>tcl_precision</B>  值: 在一个解释器中改变它将同样影响所有其他解释器。但是，不允许安全解释器修改这个变量。
+</DL>
+
+
+
+
+
+
+
+<DT><B>tcl_rcFileName</B><DD>
+在初始化期间使用这个变量来指示特定于用户的启动文件的名字。如果在特定于应用的初始化中设置了它，则 Tcl 启动代码将检查这个文件是否存在，并且如果它存在的话则 <B>source</B> (载入)它。例如，对于 <B>wish</B> ，这个变量被设置成给 Unix 的 <B>~/.wishrc</B> 和给 Windows 的 <B>~/wishrc.tcl</B>。
+<DT><B>tcl_rcRsrcName</B><DD>
+这个变量只在 Macintosh  系统上使用。在初始化期间使用这个变量来指示位于应用或扩展资源  fork 中的一个特定于应用的 <B>TEXT</B>  资源的名字。如果特定于应用的初始化设置了它，则 Tcl  启动代码将检查资源是否存在，如果存在则 <B>source</B>   它。例如，Macintosh <B>wish</B>  应用设置这个变量为 <B>tclshrc</B>。
+<DT><B>tcl_traceCompile</B><DD>
+设置这个变量的值来控制在字节码编译期间显示多少跟踪信息。缺省的，tcl_traceCompile    是零且不显示信息。设置 tcl_traceCompile 为 1，在编译一个过程或顶层命令的时候在标准输出上生成一行总结。设置它为 2，在标准输出上详细的列出在每次编译期间散发(??? emit)的字节码指令。在跟踪怀疑是 Tcl 编译器的问题时很有用。在把现存代码转换成 Tcl8.0 时也偶尔有用。
+<DT><B>tcl_traceExec</B><DD>
+设置这个变量的值来控制在字节码执行期间显示多少跟踪信息。缺省的，tcl_traceExec    是零而不显示信息。设置 tcl_traceExec 为 1，在每次调用一个 Tcl 过程的时候在标准输出上生成一行跟踪。设置它为 2，在用命令的名字和它的参数调用任何Tcl 命令的时候，生成一行输出。设置它为 3，生成一个详细的跟踪，展示每个字节码指令的执行结果。注意在 tcl_traceExec 是 2 或 3 的时候，不展示象 set 和 incr 这样已经被整个替换为一个字节码指令序列的命令。在跟踪怀疑是 Tcl 编译器和解释器的问题时很有用。在把现存代码转换成 Tcl8.0 时也偶尔有用。
+<DT><B>tcl_wordchars</B><DD>
+这个变量的值是一个正则表达式，设置它来控制认把什么字符认为是"字"字
+符。例如在  Tk 的文本框中用双击来选择一个字。它是平台相关的。在  Windows
+上，它缺省为 <B>\S</B>，意思是除了 Unicode  空格字符之外的任何字符。其他
+平台上缺省为 <B>\w</B>，它是任何   Unicode 字字符(数字、字母、下划线)。
+<DT><B>tcl_nonwordchars</B><DD>
+这个变量的值是一个正则表达式，设置它来控制认把什么字符认为是"非字"
+字符。例如在   Tk 的文本框中用双击来选择一个字。它是平台相关的。在
+Windows 上，它缺省为 <B>\s</B>，意思是任何 Unicode 空格字符。其他平台上缺
+省为 <B>\W</B>，它是除了 Unicode 字字符(数字、字母、下划线)之外的任何字符
+。
+<DT><B>tcl_version</B><DD>
+在建立解释器的时候，Tcl 初始化这个变量来持有这个版本的 Tcl 的版本号，形式是 <I>x.y</I>。对  <I>x</I> 的变更表示可能导致不兼容的较大的变化，对 <I>y</I>  的变更表示保持反向兼容的小增强和缺陷修理，<B>info tclversion</B> 命令返回这个变量的值。
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+eval">eval</A>(n)
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+arithmetic, bytecode, compiler, error, environment, POSIX, precision, subprocess, variables
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/12/10</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

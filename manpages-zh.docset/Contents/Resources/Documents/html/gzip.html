@@ -1,0 +1,622 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of GZIP</TITLE>
+</HEAD><BODY>
+<H1>GZIP</H1>
+Section: User Commands  (1)<BR>Updated: local<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+gzip, gunzip, zcat -  压缩或展开文件
+<A NAME="lbAC">&nbsp;</A>
+<H2>总揽</H2>
+
+
+<B>gzip</B>
+
+[<B> -acdfhlLnNrtvV19 </B>]
+
+[<B>-S&nbsp;后缀</B>]
+
+[
+<I>文件名 ...</I>
+
+]
+
+<BR>
+
+<B>gunzip</B>
+
+[<B> -acfhlLnNrtvV </B>]
+
+[<B>-S&nbsp;后缀</B>]
+
+[
+<I>文件名 ...</I>
+
+]
+<BR>
+
+<B>zcat</B>
+
+[<B> -fhLV </B>]
+
+[
+<I>文件名 ...</I>
+
+]
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<I>Gzip</I>
+
+采用Lempel-Ziv 编码算法(LZ77)压缩给定文件的大小。
+在可能的情况下, 每个文件被具有扩展名
+<B>.gz,</B>
+
+的文件所替换, 同时保留原属主状态，存取和修改时间
+(在VMS系统下缺省扩展名为
+<B>-gz</B>
+
+在MSDOS、OS/2 FAT, Windows NT FAT 和Atari系统下，缺省扩展名为
+<B>z</B>
+
+)
+如果未指定文件名，或者指定了一个名为&quot;-&quot;的文件名，则从标准输入读取数据，压缩的
+结果输出到标准输出。
+<I>Gzip</I>
+
+只尝试压缩常规文件，特别地，它将忽略符号连接。
+<P>
+
+如果压缩后的文件名对于所在的文件系统来说太长，
+<I>gzip</I>
+
+会将其截断。
+<I>Gzip</I>
+
+只尝试截断文件名中大于3个字符的段（每个段由点分隔）。如果文件名只由较小的段
+组成，最长的段将被截断。例如，如果文件名的长度限制是14个字符，文件gzip.msdos.exe
+将被压缩为gzi.msd.exe.gz。在没有文件名长度限制的系统中，文件名将不会被截断。
+<P>
+
+缺省情况下，
+<I>gzip</I>
+
+将原始文件名和时间信息保存在压缩后的文件中。
+当采用
+<B>-N</B>
+
+选项解压缩文件时，这些信息将被利用。在经过文件传输后文件名被截断及时间信息
+未被保留的情况下，这些信息将将用于恢复文件名及时间信息。
+<P>
+
+用
+<I>gzip -d</I>
+
+或者
+<I>gunzip</I>
+
+以及
+<I>zcat.</I>
+
+可以将压缩后的文件恢复到原始的形式。如果保留在压缩文件中的原始文件名不适合
+于当前的文件系统，将根据原文件名新建一个合法的文件名。
+<P>
+
+<I>gunzip</I>
+
+将命令行中以.gz, -gz, .z, -z, _z 或 .Z结尾并具有正确标志头的文件
+解压缩，并以去掉扩展名的解压缩文件替换原文件。
+<I>gunzip</I>
+
+也能识别扩展名为
+<B>.tgz</B>
+
+和
+<B>.taz</B>
+
+的文件，并将其分别当作
+<B>.tar.gz</B>
+
+和
+<B>.tar.Z</B>
+
+的缩写。
+在压缩时，如果采用
+<B>.tar</B>
+
+扩展名则需要对文件名进行截断处理时，
+<I>gzip</I>
+
+将采用
+<B>.tgz</B>
+
+作为扩展名。
+<P>
+
+<I>gunzip</I>
+
+目前能够解压由
+<I>gzip, zip, compress, compress -H</I>
+
+以及
+<I>pack</I>
+
+产生的文件。
+对输入格式的检测是自动的。当采用前两种格式时，
+<I>gunzip</I>
+
+检查一个32位的CRC校验码。对于
+<I>pack, gunzip</I>
+
+则检查压缩前的数据长度。标准的
+<I>compress</I>
+
+格式的设计无法实现一致性检查。但有时
+<I>gunzip</I>
+
+仍然能检测到坏的.Z文件。如果你在解压一个.Z文件时出现错误，不要简单地因为标准的
+<I>uncompress</I>
+
+没有报错就认定.Z文件是正确的。
+这通常意味着标准的
+<I>uncompress</I>
+
+没有检查它的输入数据，而盲目地产生了错误的输出。SCO的compress -H格式(lzh压缩方
+法）不包含CRC校验码，但也允许一些一致性检查。
+<P>
+
+由
+<I>zip</I>
+
+生成的文件, 如果其内容只有一个文件并且是以'deflation'方式压缩的，则可
+由gzip解压。这一特性只是为了方便将tar.zip 格式的文件转换为tar.gz格式而加入的。
+要解压含有多个文件的zip文件，请用
+<I>unzip.</I>
+
+<P>
+
+<I>zcat</I>
+
+的功能与
+<I>gunzip</I>
+
+<B>-c.</B>
+
+相同。
+(在一些系统中,
+<I>zcat</I>
+
+可能被安装成
+<I>gzcat</I>
+
+以保留
+<I>compress</I>
+
+与zcat的原有连接。)
+<I>zcat</I>
+
+将命令行中列出的文件或由标准输入输入的数据解压，解压后的数据写到标准输出。
+<I>zcat</I>
+
+解压具有正确标志头的文件，而不管其是否带有
+<B>.gz</B>
+
+后缀。
+<P>
+
+<I>Gzip</I>
+
+采用
+<I>zip</I>
+
+和 PKZIP 中所采用的Lempel-Ziv算法。得到的压缩比依赖于输入数据的大小以及公用
+子串的分布。例如源程序和英文文档能够压缩60-70%。
+压缩比通常比LZW(
+<I>compress</I>
+
+采用的算法)、Huffman编码(
+<I>pack</I>
+
+所采用的算法）、以及自适应Huffman编码(
+compact<I>)</I>
+
+等方法要好得多。
+<P>
+
+即使压缩后的文件略大于原文件，压缩也照样进行。最坏的情况下，多出的数据包括
+gzip文件头中的若干个字节，加上每块32K的5个字节，或者，对于大文件来说0.015%
+的放大率。注意实际占用的硬盘块数目几乎从不增加。
+<I>gzip</I>
+
+在压缩和解压缩时保留原文件的属主和时间信息。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-a --ascii</B>
+
+<DD>
+Ascii文本模式：按本地习惯转换行结束符。该选项仅在一些非Unix 系统上有效。
+对于MSDOS，在压缩时CR LF(译注：即回车和换行符)被转换为LF，在解压时LF被
+转换为CR LF。
+<DT><B>-c --stdout --to-stdout</B>
+
+<DD>
+将结果写到标准输出；原文件保持不变。如果有多个输入文件，输出将由一系列
+独立的压缩文件组成。如果想得到较好的压缩率，在压缩前应将多个文件连在一起。
+<DT><B>-d --decompress --uncompress</B>
+
+<DD>
+解压缩。
+<DT><B>-f --force</B>
+
+<DD>
+强制压缩和解压缩，即使指定文件具有多重连接，或相应文件已经存在，或压缩数据
+来自或写往一个终端。
+如果输入数据是
+<I>gzip</I>
+
+无法识别的格式，同时在命令行中也给出了--stdout选项，gzip将把输入数据拷贝至标准
+输出而不做任何改动，就象cat所做的一样。
+如果未给出
+<B>-f</B>
+
+选项，并且未在后台运行，
+<I>gzip</I>
+
+会提示用户以确认是否覆盖一个已存在的文件。
+<DT><B>-h --help</B>
+
+<DD>
+显示帮助信息然后退出。
+<DT><B>-l --list</B>
+
+<DD>
+列出每个压缩文件的如下项目：
+<P>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;compressed&nbsp;size:&nbsp;&nbsp;压缩文件的长度
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;uncompressed&nbsp;size:&nbsp;&nbsp;压缩前文件的长度
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;ratio:&nbsp;压缩率(如果未知则为0.0%)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;uncompressed_name:&nbsp;压缩前的文件名
+<P>
+对于非gzip格式的文件，压缩前文件长度显示为-1，例如由compress压缩的.Z文件。
+可用下列命令得到这种文件压缩前的长度：
+<P>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;zcat&nbsp;file.Z&nbsp;|&nbsp;wc&nbsp;-c
+<P>
+如果同时指定了--verbose选项，下列项目也被列出:
+<P>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;压缩方式
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;crc:&nbsp;未压缩数据的32位CRC校验码
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;date&nbsp;&amp;&nbsp;time:&nbsp;压缩前文件的时间信息
+<P>
+目前支持的压缩方式有deflate、compress、lzh(SCO下的compress -H)以及pack等方式。
+对于非gzip格式的文件，crc校验码显示为ffffffff。
+<P>
+若指定了--name选项，如果有的话，压缩前文件名，日期以及时间是保存在压缩文件中
+的内容。
+<P>
+若指定了--verbose选项，还将列出所有文件的长度总和，除非某些文件的长度未知。
+若指定--quiet选项，将不显示标题和合计两行内容。
+<DT><B>-L --license</B>
+
+<DD>
+显示
+<I>gzip</I>
+
+的许可证信息然后退出。
+<DT><B>-n --no-name</B>
+
+<DD>
+在压缩时，缺省不保留原始文件名和时间信息。(如果必须对文件名作截断处理，
+则原始文件名总是被保存。) 在解压缩时，即使有也不恢复原始文件名（仅将压
+缩文件名中的
+<I>gzip</I>
+
+后缀去掉）和时间信息（拷贝压缩文件中相应信息）。该选项是压缩时的缺省选项。
+<DT><B>-N --name</B>
+
+<DD>
+在压缩时总是保存原始文件名和时间信息；该选项为缺省选项。在解压缩时，如果
+存在原始文件名和时间信息则恢复之。该选项可用于对文件名长度有限制的系统，
+以及经过文件传输后丢失时间信息的情况。
+<DT><B>-q --quiet</B>
+
+<DD>
+压制所有警告信息。
+<DT><B>-r --recursive</B>
+
+<DD>
+递归地访问目录结构。如果命令行中有目录名，
+<I>gzip</I>
+
+将进入目录并压缩所有找到的文件（如果执行的命令是
+<I>gunzip</I>
+
+则对其解压缩）。
+<DT><B>-S .suf   --suffix .suf</B>
+
+<DD>
+采用.suf后缀取代.gz后缀。可以指定任何后缀，但应避免使用除了.z和.gz以外
+的其它后缀，以免文件传输到其它系统时发生混淆。一个空后缀将迫使gunzip
+解压缩所有文件而不管它具有什么样的后缀，例如：
+<P>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;gunzip&nbsp;-S&nbsp;&quot;&quot;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(在MSDOS下用*.*替换*)
+<P>
+以前版本的gzip采用.z后缀。为了避免与
+<I><A HREF="/cgi-bin/man/man2html?1+pack">pack</A></I>(1).
+
+冲突，后来作了改动。
+<DT><B>-t --test</B>
+
+<DD>
+测试。检查压缩文件的完整性。
+<DT><B>-v --verbose</B>
+
+<DD>
+详尽模式。显示每个压缩或解压缩文件的名字和压缩率。
+<DT><B>-V --version</B>
+
+<DD>
+版本。显示版本号和编译选项后退出。
+Version. Display the version number and compilation options then quit.
+<DT><B>-# --fast --best</B>
+
+<DD>
+用指定的数字
+<I>#</I>
+
+调整压缩速度，
+其中
+<B>-1</B>
+
+及
+<B>--fast</B>
+
+对应最快压缩方式（压缩率较低），
+<B>-9</B>
+
+及
+<B>--best</B>
+
+对应最慢压缩方式（压缩率最佳）。缺省的压缩级别为
+<B>-6</B>
+
+（也就是说，以速度为代价偏向于高压缩率）。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>高级用法</H2>
+
+多个被压缩的文件可以连在一起。在这种情况下，
+<I>gunzip</I>
+
+能一次解压所有文件。例如：
+<P>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gzip&nbsp;-c&nbsp;file1&nbsp;&nbsp;&gt;&nbsp;foo.gz
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gzip&nbsp;-c&nbsp;file2&nbsp;&gt;&gt;&nbsp;foo.gz
+<P>
+然后
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gunzip&nbsp;-c&nbsp;foo
+<P>
+上面的命令等价于
+<P>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cat&nbsp;file1&nbsp;file2
+<P>
+如果.gz文件中的某一个文件损坏，其他文件仍可以恢复（如果损坏的文件被删除的话）。
+而且一次压缩所有文件能得到较好的压缩率：
+<P>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cat&nbsp;file1&nbsp;file2&nbsp;|&nbsp;gzip&nbsp;&gt;&nbsp;foo.gz
+<P>
+上面用法的压缩率比下面用法的高:
+<P>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gzip&nbsp;-c&nbsp;file1&nbsp;file2&nbsp;&gt;&nbsp;foo.gz
+<P>
+如果想重新压缩连接起来的文件以得到较高的压缩率，可以用下面的命令:
+<P>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gzip&nbsp;-cd&nbsp;old.gz&nbsp;|&nbsp;gzip&nbsp;&gt;&nbsp;new.gz
+<P>
+如果一个压缩文件由多个文件组成，--list选项只能列出最后一个成员的
+解压后文件长度和CRC校验码。如果需要所有成员的解压后文件长度，可用如下命令：
+<P>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gzip&nbsp;-cd&nbsp;file.gz&nbsp;|&nbsp;wc&nbsp;-c
+<P>
+如果想要产生一个具有多个成员的存档文件，以便将来能够独立地取出其中的成员，
+可以用tar或zip这样的归档软件。GNU tar支持-z选项，可直接调用gzip。gzip设计为
+tar的补充，而非它的取代物。
+<A NAME="lbAG">&nbsp;</A>
+<H2>环境变量</H2>
+
+环境变量
+<B>GZIP</B>
+
+能够控制一系列
+<I>gzip</I>
+
+的缺省选项。
+这些选项被首先解释，并且能被命令行参数中的直接定义覆盖。例如:
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在sh下:&nbsp;&nbsp;&nbsp;&nbsp;GZIP=&quot;-8v&nbsp;--name&quot;;&nbsp;export&nbsp;GZIP
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在csh下:&nbsp;&nbsp;&nbsp;setenv&nbsp;GZIP&nbsp;&quot;-8v&nbsp;--name&quot;
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在MSDOS下:&nbsp;set&nbsp;GZIP=-8v&nbsp;--name
+<P>
+在Vax/VMS系统中，为了避免与调用该程序的符号设置冲突，该环境变量名为GZIP_OPT。
+<A NAME="lbAH">&nbsp;</A>
+<H2>另见</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+znew">znew</A>(1), <A HREF="/cgi-bin/man/man2html?1+zcmp">zcmp</A>(1), <A HREF="/cgi-bin/man/man2html?1+zmore">zmore</A>(1), <A HREF="/cgi-bin/man/man2html?1+zforce">zforce</A>(1), <A HREF="/cgi-bin/man/man2html?1+gzexe">gzexe</A>(1), <A HREF="/cgi-bin/man/man2html?1+zip">zip</A>(1), <A HREF="/cgi-bin/man/man2html?1+unzip">unzip</A>(1), <A HREF="/cgi-bin/man/man2html?1+compress">compress</A>(1),
+<A HREF="/cgi-bin/man/man2html?1+pack">pack</A>(1), <A HREF="/cgi-bin/man/man2html?1+compact">compact</A>(1)
+<A NAME="lbAI">&nbsp;</A>
+<H2>诊断</H2>
+
+正常的退出状态为0；如果出现错误，退出状态为1。如果出现警告信息，退出状态为2。
+<P>
+
+Usage: gzip [-cdfhlLnNrtvV19] [-S suffix] [file ...]
+
+在命令行中出现非法的选项。
+
+<I>file</I>:
+
+not in gzip format
+
+指定给
+<I>gunzip</I>
+
+的文件没有被压缩。
+
+<I>file:</I>
+
+Corrupt input. Use zcat to recover some data.
+
+压缩文件已损坏。在损坏点以前的数据可以用下列命令恢复。
+
+zcat file &gt; recover
+
+<I>file</I>:
+
+compressed with 
+<I>xx</I>
+
+bits, can only handle 
+<I>yy</I>
+
+bits
+
+文件
+<I>File</I>
+
+是由一个比在当前机器上能处理更多
+<I>位</I>
+
+的程序压缩的（采用LZW算法）。用gzip重新压缩该文件，将得到较好的压缩率，并且
+占用的内存较少。
+
+<I>file</I>:
+
+already has .gz suffix -- no change
+
+gzip认为该程序已经压缩。改变文件名再试。
+
+<I>file</I>
+
+already exists; do you wish to overwrite (y or n)?
+
+如果你想覆盖该文件回答&quot;y&quot;，如果不是回答&quot;n&quot;。
+<P>
+
+gunzip: corrupt input
+
+探测到一个SIGSEGV非法操作，这通常意味着输入文件已经损坏。
+
+<I>xx.x%</I>
+
+
+由于压缩而减少的数据量相对于输入数据的百分比。（仅对应于
+<B>-v</B>
+
+和
+<B>-l</B>
+
+选项。）
+
+-- not a regular file or directory: ignored
+
+如果输入文件不是常规文件或目录，（例如符号连接，socket文件，FIFO文件，
+设备文件），该文件将保持不变。
+
+-- has 
+<I>xx </I>
+
+other links: unchanged
+
+该文件有连接，将保持不变。更多信息参见
+<I><A HREF="/cgi-bin/man/man2html?1+ln">ln</A></I>(1).
+
+采用
+<B>-f</B>
+
+强制压缩多重连接文件。
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>警告</H2>
+
+在向磁带写压缩数据时，通常需要在数据尾部充零以使数据总长度为磁带数据块
+长度的整数倍。当用
+<I>gunzip</I>
+
+对这样的数据解压缩时，
+<I>gunzip</I>
+
+能检测到尾部的无用数据，在缺省情况下将发出一个警告信息。必须采用--quiet
+选项才能压制这一警告信息。该选项可以设在
+<B>GZIP</B>
+
+环境变量中，例如：
+<BR>&nbsp;&nbsp;在sh下:&nbsp;&nbsp;GZIP=&quot;-q&quot;&nbsp;&nbsp;tar&nbsp;-xfz&nbsp;--block-compress&nbsp;/dev/rst0
+<BR>&nbsp;&nbsp;在csh下:&nbsp;(setenv&nbsp;GZIP&nbsp;-q;&nbsp;tar&nbsp;-xfz&nbsp;--block-compr&nbsp;/dev/rst0
+<P>
+在上面的例子中，gzip被采用了-z选项的GNU tar调用。在磁带上读写压缩数据时，
+应确保采用同样的数据块长度（tar的
+<B>-b</B>
+
+选项）。（本例假定使用的是GNU版本的tar。）
+<A NAME="lbAK">&nbsp;</A>
+<H2>缺陷</H2>
+
+如果数据长度超过2GB, 采用--list选项时报告的文件长度不正确。
+如果压缩文件位于不能定位的存储介质上，采用--list选项时报告的文件长度为-1，crc
+校验码为ffffffff。
+<P>
+在极少数情况下，--best选项得到的压缩率比缺省情况(-6)还差。对于一些高度冗余
+的文件，
+<I>compress</I>
+
+比
+<I>gzip</I>
+
+压缩得更好。
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Liu JingSong &lt;<A HREF="mailto:js-liu@263.net">js-liu@263.net</A>&gt;</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2000/12/28
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总揽</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">高级用法</A><DD>
+<DT><A HREF="#lbAG">环境变量</A><DD>
+<DT><A HREF="#lbAH">另见</A><DD>
+<DT><A HREF="#lbAI">诊断</A><DD>
+<DT><A HREF="#lbAJ">警告</A><DD>
+<DT><A HREF="#lbAK">缺陷</A><DD>
+<DT><A HREF="#lbAL">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAM">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAN">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

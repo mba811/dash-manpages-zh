@@ -1,0 +1,736 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of rpm</TITLE>
+</HEAD><BODY>
+<H1>rpm</H1>
+Section: Red Hat Linux (8)<BR>Updated: 1998年12月22日<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+rpm - Red Hat 包管理器
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>rpm</B> [选项] 
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>rpm</B>是一个很有用的<I>包管理器</I>, 可以用于生成, 安装, 查询, 核实, 
+更新以及卸载单个软件包. 一个<I>包</I>通常包括一个文件档以及关于包
+的信息, 比如名字, 版本, 描述等.
+<P>
+必须选取下列基本模式中一个:
+<I>初始化数据库</I>, <I>重新生成数据库</I>, 
+<I>生成包</I>, <I>重新编译包</I>, <I>从Tar包生成RPM包</I>, 
+<I>查询</I>, <I>显示查询标签</I>, 
+<I>安装</I>, <I>更新</I>, <I>卸载</I>, 
+<I>核实</I>, <I>签名检查</I>, <I>再签名</I>, <I>添加签名</I>, 
+<I>设置所有者和组</I> 以及 <I>显示配置</I>.
+<P>
+<P>
+数据库维护:
+<BR>
+
+<I></I><B>    rpm -i [--initdb]</B>
+
+<BR>
+
+<I></I><B>    rpm -i [--rebuilddb]</B>
+
+<P>
+生成:
+<BR>
+
+<I></I><B>    rpm [-b|t] [package_spec]+</B>
+
+<BR>
+
+<I></I><B>    rpm [--rebuild] [sourcerpm]+</B>
+
+<BR>
+
+<I></I><B>    rpm [--tarbuild] [tarredsource]+</B>
+
+<BR>
+
+<P>
+查询:
+<BR>
+
+<I></I><B>    rpm [--query] [queryoptions]</B>
+
+<BR>
+
+<I></I><B>    rpm [--querytags]</B>
+
+<BR>
+
+<P>
+维护已安装的包:
+<BR>
+
+<I></I><B>    rpm [--install] [installoptions] [package_file]+</B>
+
+<BR>
+
+<I></I><B>    rpm [--freshen|-F] [installoptions] [package_file]+</B>
+
+<BR>
+
+<I></I><B>    rpm [--uninstall|-e] [uninstalloptions] [package]+</B>
+
+<BR>
+
+<I></I><B>    rpm [--verify|-V] [verifyoptions] [package]+</B>
+
+<BR>
+
+<P>
+签名:
+<BR>
+
+<I></I><B>    rpm [--verify|-V] [verifyoptions] [package]+</B>
+
+<BR>
+
+<I></I><B>    rpm [--resign] [package_file]+</B>
+
+<BR>
+
+<I></I><B>    rpm [--addsign] [package_file]+</B>
+
+<BR>
+
+<P>
+Miscellaneous:
+<BR>
+
+<I></I><B>    rpm [--showrc]</B>
+
+<BR>
+
+<I></I><B>    rpm [--setperms] [package]+</B>
+
+<BR>
+
+<I></I><B>    rpm [--setgids] [package]+</B>
+
+<BR>
+
+<P>
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>普通选项</H2>
+
+这些选项可以各种不同的方式使用.
+<DL COMPACT>
+<DT><B>-vv</B><DD>
+将打印出许多难以阅读的调试信息.
+<DT><B>--quiet</B><DD>
+打印尽可能少的信息 - 普通只展示错误信息.
+<DT><B>--help</B><DD>
+给出比常规更多的用法信息.
+<DT><B>--version</B><DD>
+在单独一个行里给出所用 <B>rpm</B> 的版本号
+<DT><B>--rcfile </B><I>&lt;filelist&gt;</I><DD>
+在<I>&lt;filelist&gt;</I>里列出了一些文件, 各文件之间以冒号分隔, 
+<B>rpm</B> 顺序读取这些文件以获得配置信息. <I>&lt;filelist&gt;</I>缺省
+是<B>/usr/lib/rpm/rpmrc:/etc/rpmrc:~/.rpmrc</B>.
+列表中的第一个文件(/usr/lib/rpm/rpmrc)且只有这个文件
+必须存在, 代字符~指向<B>$HOME</B>的值. 
+<DT><B>--root </B><I>&lt;dir&gt;</I><DD>
+对所有操作均将<I>&lt;dir&gt;</I>视为系统根目录. 注意这意味着对数
+据库的读或修改操作都将是在<I>&lt;dir&gt;</I>目录下进行, 并且脚本
+的<I>pre</I>或<I>post</I>操作都是在做了以<I>&lt;dir&gt;</I>为根目录的chroot()
+之后进行.
+<DT><B>--dbpath </B><I>&lt;path&gt;</I><DD>
+依照<I>&lt;path&gt;</I>使用RPM的数据库.
+<DT><B>--justdb</B><DD>
+更新只针对数据库,而不是整个文件系统.
+<DT><B>--ftpproxy </B><I>&lt;host&gt;</I>, <B>--httpproxy </B><I>&lt;host&gt;</I><DD>
+设<I>&lt;host&gt;</I>为FTP或HTTP的代理服务器. 参阅<B>FTP/HTTP 选项</B>.
+<DT><B>--ftpport </B><I>&lt;port&gt;</I>, <B>--httpport </B><I>&lt;port&gt;</I><DD>
+设<I>&lt;port&gt;</I>为FTP或HTTP的代理服务器的端口. 参阅<B>FTP/HTTP 选项</B>.
+<DT><B>--pipe </B><I>&lt;cmd&gt;</I><DD>
+通过管道将<B>rpm</B>的输出输入到命令<I>&lt;cmd&gt;</I>.
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>安装和升级选项</H2>
+
+通常的rpm安装命令如下:
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT><B>rpm -i [install-options] </B><I>&lt;package_file&gt;+</I><BR>
+<P>
+
+这样将安装一个新的包. 通常的rpm升级命令如下:
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT><B>rpm -U [install-options] </B><I>&lt;package_file&gt;+</I><BR>
+<P>
+
+这样将当前已安装的包升级或新安装到一个新的RPM版本. 升级和
+安装是一样的, 区别在于升级要将所有别的版本的包从系统移去.
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT><B>rpm [-F|--freshen] [install-options] </B><I>&lt;package_file&gt;+</I><BR>
+<P>
+
+这样也升级包, 但只有在系统存在一个更早版本的包时候才使用这
+种方式.
+<P>
+<P>
+如果包在安装之前要先进行下载, <I>&lt;package_file&gt;</I>应该指明为一个
+ftp或者http URL. 要得到关于RPM包生成的ftp和http支持的信息, 
+可以参阅<B>FTP/HTTP 选项</B>.
+<P>
+
+<DL COMPACT>
+<DT><B>--force</B><DD>
+与使用<B>--replacepkgs</B>, <B>--replacefiles</B>, 以及<B>--oldpackage</B>效果相同
+<DT><B>-h</B>, <B>--hash</B><DD>
+包档如果没有被解包, 打印50个破折号. 配合<B>-v</B>使用可以
+使得有更好的展示.
+<DT><B>--oldpackage</B><DD>
+允许用旧版本的包取代较新的版本.
+<DT><B>--percent</B><DD>
+给出文件从包档解包的百分比. 该项的作用是为了使rpm相
+比于别的工具更容易使用.
+<DT><B>--replacefiles</B><DD>
+即使要安装的包会取代别的已安装包的文件, 也安装该包.
+<DT><B>--replacepkgs</B><DD>
+即使包的部分内容已安装在系统里,也安装该包.
+<DT><B>--allfiles</B><DD>
+安装或升级包里所有的缺失文件,不管其是否存在.
+<DT><B>--nodeps</B><DD>
+在安装或升级包之前不做依赖检查.
+<DT><B>--noscripts</B><DD>
+不执行安装前或安装后脚本
+<DT><B>--notriggers</B><DD>
+不执行由该包的安装所激发的脚本
+<DT><B>--ignoresize</B><DD>
+安装该包前不检查mount文件系统是否有足够的磁盘空间.
+<DT><B>--excludepath </B><I>&lt;path&gt;</I><DD>
+不安装文件名以路径<I>&lt;path&gt;</I>开头的文件.
+<DT><B>--excludedocs</B><DD>
+不安装任何标记为文档的文件(包括手册页及文本信息档案).
+<DT><B>--includedocs</B><DD>
+安装文档文件, 这是缺省的操作.
+<DT><B>--test</B><DD>
+不安装包, 只是简单地检查并报告可能的冲突.
+<DT><B>--ignorearch</B><DD>
+允许安装或升级其体系与主机不匹配的二进制RPM包.
+<DT><B>--ignoreos</B><DD>
+允许安装或升级其操作系统与主机不匹配的二进制RPM包.
+<DT><B>--prefix </B><I>&lt;path&gt;</I><DD>
+对于可浮动包, 这将把安装前缀设置到<I>&lt;path&gt;</I>.
+<DT><B>--relocate </B><I>&lt;oldpath&gt;</I><B>=</B><I>&lt;newpath&gt;</I><DD>
+将文件从<I>&lt;oldpath&gt;</I>改置到<I>&lt;newpath&gt;</I>, 这使得可以浮动包.
+<DT><B>--badreloc</B><DD>
+与--relocate配合使用, 强制改置不可浮动的包.
+<DT><B>--noorder</B><DD>
+安装时对包不重新排序, 正常在安装时应该重新排序包列
+表, 以满足依赖性.
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>查询选项</H2>
+
+rpm的查询命令通常的格式如下:
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT><B>rpm -q [query-options]</B><BR>
+<P>
+
+可以制定包信息的打印格式, 这时要用<B>[--queryformat|-qf]</B>选项, 
+格式串跟在选项后面. 
+<P>
+查询格式由标准<B><A HREF="/cgi-bin/man/man2html?3+printf">printf</A>(3)</B>格式的版本决定. 格式由静态字符串
+(包括除了换行符, tab, 以及其它的特殊字符之外的标准C字符), 
+以及<B><A HREF="/cgi-bin/man/man2html?3+printf">printf</A>(3)</B>类型格式符. 如果<B>rpm</B>已经知道打印类型, 
+则类型说明就必须被忽略, 并且以要打印的头部tag的名字取代, 
+该名字被括在<B>{}</B>之间. 而且tag的<B>RPMTAG_</B>部分也被忽略.
+<P>
+可以用<B>:</B><I>typetag</I>来改变输出格式.当前支持的有如下类型:<B>octal</B>,
+<B>date</B>, <B>shescape</B>, <B>perms</B>, <B>fflags</B>, 以及 <B>depflags</B>.
+<P>
+例如,要只打印被查询包的名字,可以用<B>%{名称}</B>作为格式字符串.
+要在两个栏里打印包名及分布信息,可以用<B>%-30{名称}%{分布}</B>.
+<P>
+当被<B>--querytags</B>参数激发时,<B>rpm</B>将列出所有tags.
+<P>
+查询选项有两种子设置: 包选择和信息选择.
+<P>
+包选择选项:
+<BR>
+
+<DL COMPACT>
+<DT><B></B><I>&lt;package_name&gt;</I><DD>
+查询名为<I>&lt;package_name&gt;</I>的安装包.
+<DT><B>-a</B>, <B>--all</B><DD>
+查询所有安装的包.
+<DT><B>--whatrequires </B><I>&lt;capability&gt;</I><DD>
+查询所有需要<I>&lt;capability&gt;</I>才能提供适当功能的包.
+<DT><B>--whatprovides </B><I>&lt;virtual&gt;</I><DD>
+查询所有提供<I>&lt;virtual&gt;</I>功能的包.
+<DT><B>-f </B><I>&lt;file&gt;</I>, <B>--file </B><I>&lt;file&gt;</I><DD>
+查询拥有文件<I>&lt;file&gt;</I>的包.
+<DT><B>-g </B><I>&lt;group&gt;</I>, <B>--group </B><I>&lt;group&gt;</I><DD>
+查询属于???组<I>&lt;group&gt;</I>的包
+<DT><B>-p </B><I>&lt;package_file&gt;</I><DD>
+查询一个没有安装的包<I>&lt;package_file&gt;</I>.
+<I>&lt;package_file&gt;</I>可以被说明为ftp或http URL,这时包头会被下载并被查询.
+要得到关于RPM生成的ftp和http客户端支持的信息,请参阅<B>FTP/HTTP OPTIONS</B>
+<DT><B>--specfile </B><I>&lt;specfile&gt;</I><DD>
+像对待一个包一样Parse并查询<I>&lt;specfile&gt;</I>.
+虽然不是所有的信息(例如文件列表)可用,这种查询类型
+允许rpm在不用写一个specfile parser的情况下从spec files提取信息.
+<DT><B>--querybynumber </B><I>&lt;num&gt;</I><DD>
+直接查询<I>&lt;num&gt;</I>数据库入口,该选项在调试时很有用处.
+<DT><B>--triggeredby </B><I>&lt;pkg&gt;</I><DD>
+查询由包<I>&lt;pkg&gt;</I>所激发的包.
+<P>
+</DL>
+<P>
+
+信息选择选项:
+<BR>
+
+<DL COMPACT>
+<DT><B>-i</B><DD>
+展示包信息,包括名字,版本,以及描述.???
+<DT><B>-R</B>, <B>--requires</B><DD>
+列出该包所依赖的别的包.
+<DT><B>--provides</B><DD>
+列出该包所提供的功能.
+<DT><B>--changelog</B><DD>
+展示该包的变更信息.
+<DT><B>-l</B>, <B>--list</B><DD>
+列出该包的文件.
+<DT><B>-s</B>, <B>--state</B><DD>
+展示该包各文件的状态信息,因此该选项实际隐含了<B>-l</B>选项.
+文件状态可以是如下之一:
+<I>normal</I>, <I>not installed</I>, 或者 <I>replaced</I>.
+<DT><B>-d</B>, <B>--docfiles</B><DD>
+只列出文档文件(隐含<B>-l</B>选项).
+<DT><B>-c</B>, <B>--configfiles</B><DD>
+只列出配置文件(隐含<B>-l</B>选项).
+<DT><B>--scripts</B><DD>
+如果有的话,就列出该包里作为安装或卸载过程一部分的特殊shell脚本.
+<DT><B>--triggers</B>, <B>--triggerscripts</B><DD>
+如果有的话,展示该包包含的激发子脚本.
+<DT><B>--dump</B><DD>
+如下的哑文件信息: path size mtime md5sum mode
+owner group isconfig isdoc rdev symlink.
+该选项必须至少配合如下选项之一:<B>-l</B>, <B>-c</B>, <B>-d</B>使用.
+<DT><B>--last</B><DD>
+按包的安装时间进行排序,这使得最新的包在序列顶部.
+<DT><B>--querybypkg</B><DD>
+列出每个包里的所有文件.
+<DT><B>--triggerscripts</B><DD>
+显示所选包的所有激发子脚本.
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>核实选项</H2>
+
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT><B>rpm -V|-y|--verify [verify-options]</B><BR>
+<P>
+
+将所安装包的文件信息和源发包的文件信息以及在rpm数据库的文件信息做比较, 以此来核实包.
+对于别的东西,则???
+任何的差异都会展示.包的说明选项与查询选项相同.
+<P>
+对于不是从包安装的文件,例如在安装的时候用&quot;<B>--excludedocs</B>&quot;
+选项排除了的文档文件,将在没有提示的情况下被忽略掉.
+<P>
+核实选项可以使用如下模式:
+<P>
+<DL COMPACT>
+<DT><B>--nofiles</B><DD>
+核实时忽略缺失文件
+<DT><B>--nomd5</B><DD>
+核实时忽略MD5校验错误
+<DT><B>--nopgp</B><DD>
+核实时忽略PGP校验错误
+<DT><B>--nofiles</B><DD>
+核实时忽略缺失文件
+<P>
+<P>
+输出的格式是一个八个字符的字符串,和一个可能有的&quot;<B>c</B>&quot;,
+指明后面是一个配置文件,以及后面的文件名.
+八个字符中的每一个都代表着一个文件属性与保存在RPM的数据库中的属性纪录值的比较结果.
+单个的&quot;<B>.</B>&quot;(句号)表明检查通过.下列字符代表特定检查的失败:
+<P>
+<P>
+<DT><B>5</B><DD>
+MD5校验和
+<DT><B>S</B><DD>
+文件大小
+<DT><B>L</B><DD>
+符号连接
+<DT><B>T</B><DD>
+修改时间
+<DT><B>D</B><DD>
+设备
+<DT><B>U</B><DD>
+用户
+<DT><B>G</B><DD>
+组
+<DT><B>M</B><DD>
+模式(包括许可和文件类型)
+<P>
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>签名检查</H2>
+
+通常的rpm签名检查命令如下:
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT><B>rpm --checksig </B><I>&lt;package_file&gt;+</I><BR>
+<P>
+
+这将检查包<I>&lt;package_file&gt;</I>的PGP签名以确保其完整性和源发性.
+可以从配置文件读取PGP配置信息.细节请查阅 PGP 签名 部分.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>卸载选项</H2>
+
+rpm卸载命令的通常格式如下:
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT><B>    rpm -e </B><I>&lt;package_name&gt;+</I><BR>
+<P>
+
+<DL COMPACT>
+<DT><B>--allmatches</B><DD>
+将移去与<I>&lt;package_name&gt;</I>相匹配的所有版本的包.正常的话,如果<I>&lt;package_name&gt;</I>与多个包相匹配,就会给出错误信息.
+<DT><B>--noscripts</B><DD>
+不执行安装前或安装后脚本.
+<DT><B>--notriggers</B><DD>
+不执行由移去该包所激发的脚本
+<DT><B>--nodeps</B><DD>
+卸载前不检查依赖性
+<DT><B>--test</B><DD>
+不真正卸载任何东西,只是遍历该动作.配合<B>-vv</B>选项会很有用处.
+<P>
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H2>生成选项</H2>
+
+The general form of an rpm build command is
+<P>
+
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;<B>rpm&nbsp;-[b|t]</B><I>O</I>&nbsp;[build-options]&nbsp;<I>&lt;package_spec&gt;+</I>
+<P>
+
+The argument used is <B>-b</B> if a spec file is being used to build the package
+and <B>-t</B> if <B>RPM</B> should look inside of a gzipped (or compressed) tar
+file for the spec file to use. After the first argument, the next argument
+(<I>O</I>) specifies the stages of building and packaging to be done and
+is one of:
+rpm通常的生成选项如下:
+<P>
+
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;<B>rpm&nbsp;-[b|t]</B><I>O</I>&nbsp;[build-options]&nbsp;<I>&lt;package_spec&gt;+</I>
+<P>
+
+<P>
+<P>
+<DL COMPACT>
+<DT><B>-bp</B><DD>
+Executes the &quot;%prep&quot; stage from the spec file.  Normally this
+involves unpacking the sources and applying any patches.
+<P>
+<DT><B>-bl</B><DD>
+Do a &quot;list check&quot;.  The &quot;%files&quot; section from the spec file
+is macro expanded, and checks are made to verify that each file
+exists.
+<DT><B>-bc</B><DD>
+Do the &quot;%build&quot; stage from the spec file (after doing the prep stage).
+This generally involves the equivalent of a &quot;make&quot;.
+<DT><B>-bi</B><DD>
+Do the &quot;%install&quot; stage from the spec file (after doing the prep
+and build stages).  This generally involves the equivalent of a
+&quot;make install&quot;.
+<DT><B>-bb</B><DD>
+生成一个二进制包(在完成prep, build, 以及 install阶段之后)
+<DT><B>-bs</B><DD>
+只生成源包(在完成prep, build, 以及 install阶段之后)
+<DT><B>-ba</B><DD>
+生成二进制包和源包(在完成prep, build, 以及 install阶段之后)
+</DL>
+<P>
+
+<P>
+还可以使用的选项如下:
+<DL COMPACT>
+<DT><B>--short-circuit</B><DD>
+忽略导致specified阶段(比如,忽略所有导致specified阶段的阶段).
+只有与<B>-bc</B> 以及 <B>-bi</B>合用才有效.
+<DT><B>--timecheck</B><DD>
+设置&quot;timecheck&quot;的值(0-?).该值也可以通过定义宏&quot;_timecheck&quot;来配置.
+timecheck值以秒为单位,表示一个包生成的最大年龄.如果时间超过了该值,
+则对所有文件皆给出警告信息.
+<DT><B>--clean</B><DD>
+在包完成之后,移去生成树.
+<DT><B>--rmsource</B><DD>
+在完成包的生成之后移去源和spec文件
+(也可以单独使用,比如:&quot;<B>rpm --rmsource foo.spec</B>&quot;).
+<DT><B>--test</B><DD>
+不执行任何生成阶段.在测试spec文件时很有用处.
+<DT><B>--sign</B><DD>
+在包中嵌入一个PGP签名.该签名可以用来核实该包的完整性和源发性.
+配置细节可以察看 PGP 签名 一节.
+<DT><B>--buildroot </B><I>&lt;dir&gt;</I><DD>
+在生成包的时候,用目录<I>&lt;dir&gt;</I>覆盖包的生成根目录tag.
+<DT><B>--target </B><I>&lt;platform&gt;</I><DD>
+在生成包的时候,将<I>&lt;platform&gt;</I>解释为<B>arch-vendor-os</B>,并且相应地设置
+宏<B>_target</B>, <B>_target_arch</B> 以及 <B>_target_os</B>.
+<DT><B>--buildarch </B><I>&lt;arch&gt;</I><DD>
+在生成包的时候,将architecture设置到<I>&lt;arch&gt;</I>.
+该选项在RPM 3.0中由于<B>--target</B><I>的出现而被抛弃.
+<DT></I><B>--buildos </B><I>&lt;os&gt;</I><DD>
+在生成包的时候,将architecture设置到<I>&lt;os&gt;</I>.
+该选项在RPM 3.0中由于<B>--target</B><I>的出现而被抛弃.
+<P>
+</DL>
+</I><A NAME="lbAL">&nbsp;</A>
+<H2>重新生成以及重新编译选项</H2>
+
+<P>
+There are two other ways to invoke building with rpm:
+有两种不同的方法用rpm重新生成包:
+<P>
+<I></I><B>rpm --recompile </B><I>&lt;source_package_file&gt;+</I>
+
+<P>
+<I></I><B>rpm --rebuild </B><I>&lt;source_package_file&gt;+</I>
+
+<P>
+当以这种方式激发的时候,<B>rpm</B>安装指明的源包,并且完成prep,compile,install工作.
+另外,<B>--rebuild</B>生成一个新的二进制包.
+当包的生成完成的时候,生成所用目录被移去(就如同使用了<B>--clean</B>),
+而且该包的源和spec文件也要移走.
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>签名一个已存在的RPM</H2>
+
+<P>
+<I></I><B>rpm --resign </B><I>&lt;binary_package_file&gt;+</I>
+
+<P>
+该选项生成并将新签名插入所列出的包里.已存在的签名会被移走.
+<P>
+<I></I><B>rpm --addsign </B><I>&lt;binary_package_file&gt;+</I>
+
+<P>
+该选项生成并将新签名附加到所列出的包的签名之后.
+<P>
+<A NAME="lbAN">&nbsp;</A>
+<H2>PGP 签名</H2>
+
+<P>
+要使用签名特性,RPM必须要能够运行PGP(要安装了PGP并且你可以访问它),
+而且还需PGP能找到一个带有RPM公钥的公钥环.
+缺省情况下,RPM使用PGP的缺省设置(著名的PGPPATH)来查找钥环.
+如果你的钥环并不在PGP所期望它们处在的地方,则你需要配置宏
+<DL COMPACT>
+<DT><B>_pgp_path</B><DD>
+将其设为要使用的PGP钥环所在的位置.
+</DL>
+<P>
+
+<P>
+如果你想要签名一个你自己生成的包,你还必须创建自己的公钥和密钥对(请参阅PGP手册).
+还需要配置签名类型宏:
+<DL COMPACT>
+<DT><B>_signature</B><DD>
+目前只支持pgp.还有用户名宏:
+<DT><B>_pgp_name</B><DD>
+指明想要使用其键去签名你的包的用户.
+<P>
+在生成包的时候,可以将--sign加到命令行里.这样只需给出你的口令短语,
+就可以在生成包的同时对其签名.
+<P>
+比如,要想以用户&quot;John Doe &lt;<A HREF="mailto:jdoe@foo.com">jdoe@foo.com</A>&gt;&quot;的身份,用在
+<B>/etc/rpm/.pgp</B>的钥环,去签名一个包,就应该将
+<P>
+<DT><B>%_signature</B><DD>
+<B>pgp</B>
+<DT><B>%_pgp_name</B><DD>
+<B>/etc/rpm/.pgp</B>
+<DT><B>%_pgp_name</B><DD>
+<B>John Doe &lt;<A HREF="mailto:jdoe@foo.com">jdoe@foo.com</A>&gt;&quot;
+</DL>
+<P>
+
+<P>
+包括在一个宏配置文件里.
+对于系统的配置可以使用/etc/rpm/macros</B>,
+而对于个人配置可以使用<B>~/.rpmmacros</B>.
+<P>
+<A NAME="lbAO">&nbsp;</A>
+<H2>重新生成数据库选项</H2>
+
+<P>
+rpm重建数据库的命令是
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT><B>rpm --rebuilddb</B><BR>
+<P>
+
+<P>
+要重建一个新的数据库,可以:
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT><B>rpm --initdb</B><BR>
+<P>
+
+对这些模式唯一的选项是<B>--dbpath</B> 和 <B>--root</B>.
+<P>
+<A NAME="lbAP">&nbsp;</A>
+<H2>SHOWRC </H2>
+
+<P>
+运行
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT><B>rpm --showrc</B><BR>
+<P>
+<P>
+
+展示一些设置在<I>rpmrc</I>文件里的值,RPM所有选项都会利用这些值.
+<P>
+<A NAME="lbAQ">&nbsp;</A>
+<H2>FTP/HTTP选项</H2>
+
+<P>
+RPM包括简单的FTP和HTTP客户端程序,这样可以简化那些从internet取得的包的安装和查询.
+用于安装,升级,以及查询操作的包文件可以说明为ftp或者http格式的URL:
+<P>
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT><B>ftp://&lt;user&gt;:&lt;password&gt;@hostname:&lt;port&gt;/path/to/package.rpm</B><BR>
+<P>
+
+如果忽略掉<B>:password</B>部分,会提示要求给出口令(每个用户/主机名对一次)
+如果用户名和口令都忽略了,就使用匿名ftp. 
+总是使用消极(PASV) ftp传送. 
+<P>
+RPM允许使用下列操作辅助ftp URLs
+<P>
+<DL COMPACT>
+<DT><B>--ftpproxy </B><I>&lt;hostname&gt;</I><DD>
+主机<I>&lt;hostname&gt;</I>将被作为所有ftp传输的代理服务器使用, 
+这样允许用户通过使用了代理系统的防火墙机器来做ftp传输. 
+该选项也可以通过配置宏<B>_ftpproxy</B>来指明. 
+<P>
+<DT><B>--ftpport </B><I>&lt;port&gt;</I><DD>
+用该TCP<I>&lt;端口&gt;</I>号取代缺省的端口去连接代理ftp服务器. 
+该选项也可以通过配置宏<B>_ftpport</B>来指明. 
+</DL>
+<P>
+
+<P>
+RPM允许使用下列操作辅助http URLs
+<P>
+<DL COMPACT>
+<DT><B>--httpproxy </B><I>&lt;hostname&gt;</I><DD>
+将主机<I>&lt;主机名&gt;</I>作为所有http传输的代理服务器使用. 
+该选项可以通过配置宏<B>_httpproxy</B>来指明. 
+<P>
+<DT><B>--httpport </B><I>&lt;port&gt;</I><DD>
+用该TCP<I>&lt;端口&gt;</I>号取代缺省的端口去连接代理http服务器. 
+该选项也可以通过配置宏<B>_httpport</B>来指明. 
+</DL>
+<P>
+
+<P>
+<A NAME="lbAR">&nbsp;</A>
+<H2>文件</H2>
+
+<PRE>
+/usr/lib/rpm/rpmrc
+/etc/rpmrc
+~/.rpmrc
+/var/lib/rpm/packages
+/var/lib/rpm/pathidx
+/var/lib/rpm/nameidx
+/tmp/rpm*
+</PRE>
+
+<A NAME="lbAS">&nbsp;</A>
+<H2>另见</H2>
+
+<I><A HREF="/cgi-bin/man/man2html?8+glint">glint</A></I>(8)，
+
+<I><A HREF="/cgi-bin/man/man2html?8+rpm2cpio">rpm2cpio</A></I>(8)
+
+<B><A HREF="http://www.rpm.org/">http://www.rpm.org/</A></B>
+
+<PRE>
+</PRE><A NAME="lbAT">&nbsp;</A>
+<H2>作者</H2>
+
+<PRE>
+Marc Ewing &lt;<A HREF="mailto:marc@redhat.com">marc@redhat.com</A>&gt;
+Jeff Johnson &lt;<A HREF="mailto:jbj@redhat.com">jbj@redhat.com</A>&gt;
+Erik Troan &lt;<A HREF="mailto:ewt@redhat.com">ewt@redhat.com</A>&gt;
+</PRE>
+
+<P>
+<A NAME="lbAU">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>mapping &lt;email&gt;</B>
+
+<A NAME="lbAV">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2001/7/21
+<A NAME="lbAW">&nbsp;</A>
+<H2>《Linuxfourm 中文MAN-PAGE计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">普通选项</A><DD>
+<DT><A HREF="#lbAF">安装和升级选项</A><DD>
+<DT><A HREF="#lbAG">查询选项</A><DD>
+<DT><A HREF="#lbAH">核实选项</A><DD>
+<DT><A HREF="#lbAI">签名检查</A><DD>
+<DT><A HREF="#lbAJ">卸载选项</A><DD>
+<DT><A HREF="#lbAK">生成选项</A><DD>
+<DT><A HREF="#lbAL">重新生成以及重新编译选项</A><DD>
+<DT><A HREF="#lbAM">签名一个已存在的RPM</A><DD>
+<DT><A HREF="#lbAN">PGP 签名</A><DD>
+<DT><A HREF="#lbAO">重新生成数据库选项</A><DD>
+<DT><A HREF="#lbAP">SHOWRC </A><DD>
+<DT><A HREF="#lbAQ">FTP/HTTP选项</A><DD>
+<DT><A HREF="#lbAR">文件</A><DD>
+<DT><A HREF="#lbAS">另见</A><DD>
+<DT><A HREF="#lbAT">作者</A><DD>
+<DT><A HREF="#lbAU">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAV">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAW">《Linuxfourm 中文MAN-PAGE计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

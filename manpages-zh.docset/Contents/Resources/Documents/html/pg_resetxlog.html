@@ -1,0 +1,69 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PG_RESETXLOG</TITLE>
+</HEAD><BODY>
+<H1>PG_RESETXLOG</H1>
+Section: PostgreSQL Server Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+pg_resetxlog - 重置一个 PostgreSQL 数据库集群的预写日志以及其它控制内容
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>pg_resetxlog</B> [ <B> -f  </B>] [ <B> -n  </B>] [ <B> -o </B><I>oid</I><B>  </B>] [ <B> -x </B><I>xid</I><B>  </B>] [ <B> -l </B><I>fileid</I><B>,</B><I>seg</I><B>  </B>] <B></B><I>datadir</I><B></B>
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>pg_resetxlog</B> 清理预写日志（WAL）并且可以选择地重置其它一些控制信息（存储在 pg_control 文件中）。 有时候，如果这些文件崩溃了，我们需要这个功能。 我们一定只把它用作最后的方法，就是说只有因为这样的崩溃导致服务器无法启动的时候才使用。
+<P>
+
+<BR>&nbsp;在运行这个命令之后，我们可能可以启动服务器了，但是，一定要记住数据库可能因为部分提交的事务而含有不完整的数据。&nbsp;你应该马上转储你的数据，运行&nbsp;initdb，然后重新装载。&nbsp;在重新装载之后，检查不完整的部分然后根据需要进行修复。
+<P>
+
+<BR>&nbsp;这个命令只能由安装服务器的用户运行，因为它需要对数据目录的读写权限。&nbsp;出于安全考虑，你必须在命令行上声明数据目录。&nbsp;pg_resetxlog&nbsp;不使用环境变量&nbsp;<B>PGDATA</B>。
+<P>
+
+如果 <B>pg_resetxlog</B> 抱怨说它无法判断用于 pg_control 的有效数据，那么你可以强制它继续处理， 方法是声明 -f （强制）开关。在这种情况下，那些丢失了的数据的值将用模糊的近似数值代替。 大多数字段都可以匹配上，但是下一个 OID，下一个事务 ID，WAL 开始地址以及数据库区域字段可能需要手工帮助， 前面三个可以用下面讨论的开关设置。pg_resetxlog  自己的环境是猜测区域字段的来源；看看 LANG 等等东西，它们应该和 initdb 运行的环境相匹配。 如果你不能判断所有这些字段的正确数值，那么还是可以使用 -f， 但是这样恢复过来的数据库更要怀疑有问题：立即转储和重置是必须的。 在转储之前不要执行任何修改数据的操作，因为任何这样的动作都可能把事情搞得更糟糕。
+<P>
+
+<BR>&nbsp;-o,&nbsp;-x,&nbsp;和&nbsp;-l&nbsp;开关允许我们手工设置下一个&nbsp;OID，下一个事务&nbsp;ID，以及&nbsp;WAL&nbsp;起始位置的数值。&nbsp;只有在&nbsp;pg_resetxlog&nbsp;无法通过读取&nbsp;pg_control&nbsp;&nbsp;判断合适的数值的时候才需要它。对于下一个事务&nbsp;ID&nbsp;而言，一个安全的数值是看看数据目录里的&nbsp;/pg_clog&nbsp;里数值最大的文件名，&nbsp;然后加一，然后再乘上&nbsp;1048576。请注意那些文件名是十六进制的。通常我们也以十六进制的形式声明开关值是最简单得。&nbsp;比如，如果&nbsp;<I>0011</I>&nbsp;是&nbsp;pg_clog&nbsp;里&nbsp;最大的记录，-x&nbsp;0x1200000&nbsp;就可以了（后面的五个零提供了合适的乘积）。&nbsp;WAL&nbsp;的起始位置应该比目前存在于数据目录里得&nbsp;/pg_xlog&nbsp;&nbsp;里面的任何文件号都大。它也是十六进制的，并且有两部分。比如，如果&nbsp;000000FF0000003A&nbsp;是&nbsp;pg_xlog&nbsp;里最大的条目，&nbsp;那么-l&nbsp;0xFF,0x3B&nbsp;就可以了。我们没有很容易的办法来判断比数据库中最大的&nbsp;OID&nbsp;大一号的下一个&nbsp;OID，&nbsp;不过很走运的是获取正确的下一个&nbsp;OID&nbsp;并非非常关键。
+<P>
+
+<BR>&nbsp;开关&nbsp;-n&nbsp;（无操作）指示&nbsp;pg_resetxlog&nbsp;打印从&nbsp;pg_control&nbsp;重新构造的数值然后不修改任何值就退出。&nbsp;这主要是一个调试工具，但是在&nbsp;pg_resetxlog&nbsp;真正处理前进行的整洁性检查的时候可能会有用。
+<A NAME="lbAE">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;在&nbsp;postmaster&nbsp;服务器运行的时候一定不要运行这个命令。&nbsp;如果发现在数据文件目录里有锁文件，那么&nbsp;pg_resetxlog&nbsp;&nbsp;将拒绝启动。如果&nbsp;postmaster&nbsp;崩溃，那么可能会剩下一个锁文件；&nbsp;如果这样，你可以删除该锁文件以便允许&nbsp;pg_resetxlog&nbsp;&nbsp;运行。但是在你这么做之前，一定要确信没有任何postmaster或者后端服务器仍在运行。
+<A NAME="lbAF">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">NOTES 注意</A><DD>
+<DT><A HREF="#lbAF">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

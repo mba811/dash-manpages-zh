@@ -1,0 +1,229 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DIRCOLORS</TITLE>
+</HEAD><BODY>
+<H1>DIRCOLORS</H1>
+Section: User Commands  (1)<BR>Updated: November 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME[名字]</H2>
+
+dircolors - 设置`ls'显示结果的颜色
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS[总览]</H2>
+
+<B>dircolors</B>
+
+<B>[-b] [--sh] [--bourne-shell]</B>
+
+<B>[-c] [--csh] [--c-shell]</B>
+
+<B>[-p] [--print-database]</B>
+
+<B>[--help] [--version]</B>
+
+<B>[</B><I>FILE</I><B>]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>dircolors</B>
+
+输出希望得到的输出颜色，是由
+<B>ls</B>
+
+(和
+<B>dir</B>,
+
+等.). 典型的用法:
+<BR>
+
+<DL COMPACT><DT><DD>
+eval `dircolors [OPTION]... [FILE]`
+</DL>
+
+<P>
+
+如果指定了
+<I>FILE</I>
+
+,
+<B>dircolors</B>
+
+从该文件确定那些颜色用于什么文件类型和外延.
+否则使用一个预先编译好的数据库.
+关于这个文件的详细格式, 运行`dircolors --print-database'.
+<P>
+
+输出是一个shell命令去设置
+<B>LS_COLORS</B>
+
+环境变量.你能够指定shell语法来在命令行使用,或者
+<B>dircolors</B>
+
+将推测它是来自
+<B>SHELL</B>
+
+环境变量的值.
+<P>
+
+完成这个命令后, `ls --color' (可能已经alias 为 ls)
+会以渴望的颜色列表文件.
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-b, --sh, --bourne-shell</B>
+
+<DD>
+输出 Bourne shell 命令.如果设置了
+<B>SHELL</B>
+
+环境变量设置了和没有以
+<I>csh</I>
+
+或是
+<I>tcsh</I>
+
+结尾，这就是默认值.
+<DT><B>-c, --csh, --c-shell</B>
+
+<DD>
+输出C shell 命令. 如果
+<B>SHELL</B>
+
+以
+<I>csh</I>
+
+或
+<I>tcsh</I>
+
+结尾的时候是默认值.
+<DT><B>-p, --print-database</B>
+
+<DD>
+显示（已编译）的默认颜色配置数据库.
+这个输出本身就是有效的配置文件
+并且相当清楚地描述了可能的情况．
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>GNU 标准选项</H2>
+
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+显示使用信息在标准输出并退出.
+<DT><B>--version</B>
+
+<DD>
+显示版本信息在标准输出并退出.
+<DT><B>--</B>
+
+<DD>
+结束选项列表.
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>环境（变量）</H2>
+
+变量 SHELL and TERM 通常能从shell命令中正确找到.
+变量LANG, LC_ALL, LC_CTYPE 和 LC_MESSAGES 有通常的意义.
+变量LS_COLORS 被用于信息到
+<B>ls</B>.
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>遵循</H2>
+
+有色彩的
+<B><A HREF="/cgi-bin/man/man2html?1+ls">ls</A></B>(1)
+
+输出是一项 GNU 扩展.
+这个实现和跟着最早的
+Slackware Linux 发布的
+<B>dircolors</B>/<B>color-ls</B>
+
+包不太兼容. 尤其是没有提供对 Z shell 和 Korn shell 的支持．
+使用这些shells 应该使用 Bourne shell (-b) 模式.
+<A NAME="lbAI">&nbsp;</A>
+<H2>参考</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?5+dir_colors">dir_colors</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?1+ls">ls</A></B>(1)
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>相关文件</H2>
+
+<DL COMPACT>
+<DT><I>/etc/dir_colors</I>
+
+<DD>
+System-wide configuration file for
+为
+<B>dircolors.</B>
+
+提供的系统普用配置文件
+<DT><I>~/.dir_colors</I>
+
+<DD>
+每个用户
+<B>dircolors</B>
+
+配置文件.
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H2>注意</H2>
+
+这份
+<B>dircolors</B>
+
+的描述能够在 fileutils-4.0 包中找到;
+其它的版本也许有些微的不同.
+对于修改和新增的请邮到 <A HREF="mailto:aeb@cwi.nl">aeb@cwi.nl</A>.
+漏洞报告邮到 <A HREF="mailto:fileutils-bugs@gnu.ai.mit.edu">fileutils-bugs@gnu.ai.mit.edu</A>.
+<BR>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Scorpio &lt;<A HREF="mailto:rawk@chinese.com">rawk@chinese.com</A>&gt;</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/9</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME[名字]</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS[总览]</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">GNU 标准选项</A><DD>
+<DT><A HREF="#lbAG">环境（变量）</A><DD>
+<DT><A HREF="#lbAH">遵循</A><DD>
+<DT><A HREF="#lbAI">参考</A><DD>
+<DT><A HREF="#lbAJ">相关文件</A><DD>
+<DT><A HREF="#lbAK">注意</A><DD>
+<DT><A HREF="#lbAL">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAM">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAN">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

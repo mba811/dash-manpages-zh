@@ -1,0 +1,412 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DNSQUERY</TITLE>
+</HEAD><BODY>
+<H1>DNSQUERY</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+<BR>BSD mandoc<BR>
+BSD 4
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+<B>dnsquery</B>
+
+ - 使用解析程序查询域名服务器
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>dnsquery</B>
+
+[-<B>n </B><I>nameserver</I>
+
+
+
+]
+
+[-<B>t </B><I>type</I>
+
+
+
+]
+
+[-<B>c </B><I>class</I>
+
+
+
+]
+
+[-<B>r </B><I>retry</I>
+
+
+
+]
+
+[-<B>p </B><I>period</I>
+
+
+
+]
+
+[-<B>d</B>
+
+]
+
+[-<B>s</B>
+
+]
+
+[-<B>v</B>
+
+]
+
+<I>host</I>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<B>dnsquery</B>
+
+程序是一个通过BIND解析程序库调用到域名服务器的通用接口.
+该程序支持使用一些查询操作码来查询域名服务器.
+该程序意在作为程序如nstest,nsquery和nslookup的替换或补充.
+所有参数,除了
+<I>host</I>
+
+和
+<I>nameserver</I>
+
+之外都是不区分大小写的.
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS(选项)</H2>
+
+<DL COMPACT>
+<P>
+
+<DT><B>-n </B><I>nameserver</I>
+
+
+
+
+<DD>
+查询中使用的域名服务器.域名服务器可以表示为
+Internet地址格式
+<I>w.x.y.z </I>
+
+也可以表示为域名的形式.
+(默认情况:取
+/etc/resolv.conf
+
+中指定的.)
+<DT><B>-t </B><I>type</I>
+
+
+
+
+<DD>
+所关心的资源记录的类型.类型包括:
+<DL COMPACT>
+<P>
+
+<DT><B></B><I>A</I>
+
+
+<DD>
+地址
+<DT><B></B><I>NS</I>
+
+
+<DD>
+域名服务器
+<DT><B></B><I>CNAME</I>
+
+
+<DD>
+标准名
+<DT><B></B><I>SOA</I>
+
+
+<DD>
+起始授权记录
+<DT><B></B><I>WKS</I>
+
+
+<DD>
+众所周知的服务
+<DT><B></B><I>HINFO</I>
+
+
+<DD>
+主机信息
+<DT><B></B><I>MINFO</I>
+
+
+<DD>
+邮箱信息
+<DT><B></B><I>MX</I>
+
+
+<DD>
+邮件网关
+<DT><B></B><I>RP</I>
+
+
+<DD>
+负责人信息
+<DT><B></B><I>MG</I>
+
+
+<DD>
+邮件组成员信息
+<DT><B></B><I>AFSDB</I>
+
+
+<DD>
+DCE或AFS服务器
+<DT><B></B><I>ANY</I>
+
+
+<DD>
+所有的信息
+</DL>
+<P>
+
+<P>
+
+注意可以使用任意大小写形式.(默认情况:
+<I>ANY .</I>
+
+ 
+<DT><B>-c </B><I>class</I>
+
+
+
+
+<DD>
+所关心的资源纪录的等级.
+等级包括:
+<DL COMPACT>
+<P>
+
+<DT><B></B><I>IN</I>
+
+
+<DD>
+Internet等级
+<DT><B></B><I>HS</I>
+
+
+<DD>
+Hesiod等级
+<DT><B></B><I>CHAOS</I>
+
+
+<DD>
+Chaos等级
+<DT><B></B><I>ANY</I>
+
+
+<DD>
+所有的等级
+</DL>
+<P>
+
+<P>
+
+注意可以使用任意大小写形式.(默认情况:
+<I>IN .</I>
+
+ 
+<DT><B>-r </B><I>retry</I>
+
+
+
+
+<DD>
+名字服务器无响应下的重试次数.(默认情况: 4.)
+<DT><B>-p </B><I>period</I>
+
+
+
+
+<DD>
+超时等待的时间周期.(默认情况:
+<B>RES_TIMEOUT .</B>
+
+ 
+<DT><B>-d</B>
+
+
+<DD>
+打开调试环境.这会设置
+解析程序的
+Ft options
+
+字段的
+<B>RES_DEBUG</B>
+
+位.(默认情况:不作调试.)
+<DT><B>-s</B>
+
+
+<DD>
+使用
+<I>信息流</I>
+
+而不是信息包的形式.这将对名字服务器使用TCP流连接,而不是
+UDP数据报连接.
+它会设置
+解析程序的
+Ft options
+
+字段的
+<B>RES_USEVC</B>
+
+位.(默认情况:UDP数据报.)
+<DT><B>-v</B>
+
+
+<DD>
+与
+``-<B>s</B>
+
+''
+
+标识同义.
+<DT><B></B><I>host</I>
+
+
+<DD>
+所关心的主机(或域)的名字.
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>FILES(相关文件)</H2>
+
+<DL COMPACT>
+<P>
+
+<DT><B>/etc/resolv.conf 
+
+</B>
+<DD>
+用来获取默认的域名服务器以及搜索列表
+<DT><B>&lt;<A HREF="file:///usr/include/arpa/nameser.h">arpa/nameser.h</A>&gt;
+
+</B>
+<DD>
+可用的RR(资源纪录)的类型和等级的列表
+<DT><B>&lt;<A HREF="file:///usr/include/resolv.h">resolv.h</A>&gt;
+
+</B>
+<DD>
+解析程序标识的列表
+</DL>
+<P>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>DIAGNOSTICS(诊断)</H2>
+
+如果解析程序不能响应查询,并且调试环境又没有打开,那么
+<B>dnsquery</B>
+
+会简单地显示如下信息:
+
+<BLOCKQUOTE><TT>Query failed (rc = 1) : Unknown host</TT></BLOCKQUOTE>
+<P>
+
+返回代码的值由
+Ft h_errno
+
+提供.
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<A HREF="/cgi-bin/man/man2html?8+nslookup">nslookup</A>(8),
+
+
+<A HREF="/cgi-bin/man/man2html?1+nstest">nstest</A>(1),
+
+
+<A HREF="/cgi-bin/man/man2html?1+nsquery">nsquery</A>(1),
+
+
+<A HREF="/cgi-bin/man/man2html?8+named">named</A>(8),
+
+
+<A HREF="/cgi-bin/man/man2html?5+resolver">resolver</A>(5).
+
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>AUTHOR(作者)</H2>
+
+Bryan Beecher
+<A NAME="lbAJ">&nbsp;</A>
+<H2>BUGS</H2>
+
+除了等级
+<I>IN</I>
+
+之外的查询会得到有趣的结果,
+因为通常名字服务器只会有针对等级为
+<I>IN</I>
+
+的资源记录的一组根域名服务器.
+<P>
+
+<B>Dnsquery</B>
+
+通过调用
+Fn inet_addr
+
+来确定针对
+``-<B>n</B>
+
+''
+
+选项的参数是否为有效的
+Internet地址.不幸的是,
+Fn inet_addr
+
+可能会在判别一些(错误的)IP地址(如1.2.3.4.5)时引发segmentation(分段)
+错误.
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2001/7/13
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAE">OPTIONS(选项)</A><DD>
+<DT><A HREF="#lbAF">FILES(相关文件)</A><DD>
+<DT><A HREF="#lbAG">DIAGNOSTICS(诊断)</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAI">AUTHOR(作者)</A><DD>
+<DT><A HREF="#lbAJ">BUGS</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

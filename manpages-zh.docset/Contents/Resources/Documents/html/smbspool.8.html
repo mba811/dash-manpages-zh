@@ -1,0 +1,159 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SMBSPOOL</TITLE>
+</HEAD><BODY>
+<H1>SMBSPOOL</H1>
+Section:  (8)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+smbspool - 将一个打印文件发送到一台SMB打印机
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<P>
+<B>smbspool</B> {job} {user} {title} {copies} {options} [filename]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+<P>
+
+此程序是<B><A HREF="/cgi-bin/man/man2html?7+Samba">Samba</A></B>(7)套件的一部分。 
+<P>
+<P>
+
+smbspool 是个非常小的打印假脱机程序用于向SMB共享打印机发送打印文件的作业。命令行参数的位置是位置无关的，这样做是为了和CUPS(Common UNIX Printing System)兼容，但是你可以在任何打印系统中，在程序或者脚本中使用它。
+<P>
+<P>
+
+<B>DEVICE URI</B>
+<P>
+<P>
+
+smbspool 使用“smb”方法的统一资源标识符(“URI”,Uniform Resource Identifier)来指定操作目标。这种描述有以下这样的形式：
+<P>
+<DL COMPACT>
+<DT>&bull;<DD>
+<A HREF="smb://server/printer">smb://server/printer</A>
+<P>
+<DT>&bull;<DD>
+<A HREF="smb://workgroup/server/printer">smb://workgroup/server/printer</A>
+<P>
+<DT>&bull;<DD>
+<A HREF="smb://username:password@server/printer">smb://username:password@server/printer</A>
+<P>
+<DT>&bull;<DD>
+<A HREF="smb://username:password@workgroup/server/printer">smb://username:password@workgroup/server/printer</A>
+<P>
+</DL>
+<P>
+
+<P>
+<P>
+
+smbspool 会试图从argv[0]参数中得到URI。如果argv[0]包含了程序名的话，它将到<B> DEVICE_URI</B>环境变量中取得URI。
+<P>
+<P>
+
+程序中可以使用<B><A HREF="/cgi-bin/man/man2html?2+exec">exec</A>(2)</B>函数来将URI传递给argv[0]，shell脚本则必须在运行smbspool之前设置<B>DEVICE_URI</B>环境变量。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+<P>
+<DL COMPACT>
+<DT>&bull;<DD>
+job参数(argv[1])包含了作业ID号，smbspool当前还没有用到。
+<P>
+<DT>&bull;<DD>
+user参数(argv[2])包含了打印用户名，smbspool当前还没有用到。 
+<P>
+<DT>&bull;<DD>
+title参数(argv[3])包含了在发送打印作业时作为远程文件名传递的打印作业标题字串。
+<P>
+<DT>&bull;<DD>
+opies参数(argv[4])包含了需要打印文件的份数。如果没有提供文件名，smbspool就不使用这个参数。 
+<P>
+<DT>&bull;<DD>
+options参数(argv[5])包含了打印选项(以一个字串来描述),smbspool当前还没有用到。
+<P>
+<DT>&bull;<DD>
+filename参数(argv[6])包含了要打印的文件名。如果不指定文件名则从标准输入中读取信息作为打印的内容。
+<P>
+</DL>
+<P>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>版本 VERSION</H2>
+
+<P>
+<P>
+
+此手册页是针对samba套件版本3.0的。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<P>
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) 和<B><A HREF="/cgi-bin/man/man2html?7+Samba">Samba</A></B>(7).
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+<P>
+<P>
+
+samba软件和相关工具最初由Andrew Tridgell创建。samba现在由Samba Team 作为开源软件来发展，类似linux内核的开发方式。
+<P>
+<P>
+
+最初的samba手册页是 Karl Auer写的。
+手册页源码已经转换为YODL格式(另一种很好的开源软件，可以在<A HREF="ftp://ftp.ice.rug.nl/pub/unix找到)，由Jeremy">ftp://ftp.ice.rug.nl/pub/unix找到)，由Jeremy</A> Sllison 更新到Samba2.0 版本。
+Gerald Carter 在Samba2.2中将它转化为DocBook 格式。
+Alexander Bokovoy 在Samba 3.0中实现了DocBook XML4.2 格式的转换。
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">版本 VERSION</A><DD>
+<DT><A HREF="#lbAG">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,165 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of socket</TITLE>
+</HEAD><BODY>
+<H1>socket</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+socket - 打开一个 TCP 网络连接
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<P>
+<B>socket </B>?<I>options</I>? <I>host port</I>
+<P>
+<B>socket</B> <B>-server </B><I>command</I> ?<I>options</I>? <I>port</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令打开一个网络套接口并返回将来可被 <B>read</B>、<B>puts</B> 和 <B>flush </B>命令调用使用一个通道标识符。目前只支持 TCP 网络协议；将来的发行可能包括对补充协议的支持。依赖于是否指定了 <B>-server</B> 开关，可以使用 <B>socket</B> 命令来打开客户端或服务器端连接。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>客户端套接口 CLIENT SOCKETS</H2>
+
+<P>
+
+如果未指定 <B>-server</B> 选项，则打开一个的连接的客户端并且命令返回一个可被用于读写的通道标识符。 <I>Port</I> 和 <I>host</I> 指定一个要连接到的端口；必须有一个服务器接受在这个端口上的连接。<I>Port</I> 是一个整数端口号而 <I>host</I> 要么是一个域名式样的名字如 <B><A HREF="http://www.sunlabs.com">www.sunlabs.com</A></B> 要么是一个数值 IP 地址如<B>127.0.0.1</B>。 使用 <I>localhost</I> 来参照在其上调用这个命令的那个主机。
+<P>
+
+在 <I>host</I> 之前可以提供下列选项指定关于连接的补充信息:
+<DL COMPACT>
+<DT><B>-myaddr</B><I> addr</I><DD>
+<I>Addr</I>  给出用于连接的客户端网络接口的域名式样的名字或数值  IP 地址。如果客户端机器有多个网络接口的话这个选项会有用处。如果省略了这个选项，则由系统软件选择客户端接口。
+<DT><B>-myport</B><I> port</I><DD>
+<I>Port</I> 指定用于连接的客户端的一个整数端口号。如果省略了这个选项，则由系统软件随机的选择客户端口号。
+<DT><B>-async</B><DD>
+<B>-async</B> 选项将导致客户端套接口被异步的连接。这意味着这个套接口将被立即建立，但在到<B>socket</B>的调用返回的时候可能仍未连接到服务器上。在连接尝试成功或失败之前调用了   gets  或  flush 的时候，如果套接口在阻塞模式下，则将等待直到连接被完成或失败。如果套接口在非阻塞模式之下，而在连接尝试成功或失败之前调用了 gets 或 flush ，则操作立即返回，并且在套接口上的 <B>fblocked</B> 返回 1。
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>服务器套接口 SERVER SOCKETS</H2>
+
+<P>
+
+如果指定了 <B>-server</B> 选项，则新套接口将是用 <I>port </I>给出的端口的一个服务器。Tcl 将自动接受到这个给定端口的连接。对于每个连接 Tcl 将建立可以用来同客户通信的一个新通道。Tcl 接着调用 <I>command</I> 并加上三个补充参数: 新通道的名字，用网络地址表示的客户的主机地址，和客户的端口号。
+<P>
+
+在 <I>host</I> 之前可以提供下列选项指定关于连接的补充信息:
+<DL COMPACT>
+<DT><B>-myaddr</B><I> addr</I><DD>
+<BR>&nbsp;<I>Addr</I>&nbsp;给出用于连接的服务器端网络接口的域名式样的名字或数值&nbsp;&nbsp;IP&nbsp;地址。如果服务器机器有多个网络接口的话这个选项会有用处。如果省略了这个选项，则服务器套接口被绑定到特殊地址&nbsp;&nbsp;INADDR_ANY&nbsp;上，这样它可以接受来自任何接口的连接。
+</DL>
+<P>
+
+服务器通道不能被用来输入或输出；它们唯一的用处是接受新的客户连接。为每个到来的客户连接建立的通道是为输入和输出而打开的。关闭服务器通道将关断服务器，这样就不能接受新连接了，不影响现存的连接。
+<P>
+
+服务器套接口依赖于 Tcl 事件机制来找出何时打开了新连接。如果应用未进入事件循环，例如通过调用 <B>vwait</B> 命令或调用 C 过程 <B>Tcl_DoOneEvent</B>，则不接受连接。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>配置选项 CONFIGURATION OPTIONS</H2>
+
+可以使用 <B>fconfigure</B> 命令来查询套接口通道的许多只读配置选项:
+
+
+
+
+
+
+
+<DL COMPACT>
+<DT><B>-error</B><DD>
+这个选项得到给定套接口的当前错误状态。在你需要确定一个异步连接操作是否成功的时候这个选项会有用处。如果有一个错误，则返回错误消息。如果没有错误，则返回空串。
+
+
+
+
+
+
+<DT><B>-sockname</B><DD>
+这个选项返回三个元素的一个列表，分别是这个套接口的地址、主机名和端口号。如果不能计算出这个主机名，第二个元素等同与列表的第一个元素地址。
+<DT><B>-peername</B><DD>
+服务器套接口不支持这个选项。对于客户和接受的套接口，这个选项返回三个元素的一个列表；它们是地址、主机名字和对等的套接口所连接或绑定到端口。如果不能计算出这个主机名，第二个元素等同与列表的第一个元素地址。
+</DL>
+<P>
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+flush">flush</A>(n), <A HREF="/cgi-bin/man/man2html?n+open">open</A>(n), <A HREF="/cgi-bin/man/man2html?n+read">read</A>(n)
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+bind, channel, connection, domain name, host, network address, socket, tcp
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/11/10</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">客户端套接口 CLIENT SOCKETS</A><DD>
+<DT><A HREF="#lbAF">服务器套接口 SERVER SOCKETS</A><DD>
+<DT><A HREF="#lbAG">配置选项 CONFIGURATION OPTIONS</A><DD>
+<DT><A HREF="#lbAH">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAI">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

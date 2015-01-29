@@ -1,0 +1,130 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE INDEX</TITLE>
+</HEAD><BODY>
+<H1>CREATE INDEX</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE INDEX - 定义一个新索引
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE [ UNIQUE ] INDEX <I>name</I> ON <I>table</I> [ USING <I>method</I> ]
+    ( { <I>column</I> | ( <I>expression</I> ) } [ <I>opclass</I> ] [, ...] )
+    [ WHERE <I>predicate</I> ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE INDEX</B> 在指定的表上构造一个名为 index_name  的索引。索引主要用来提高数据库性能。但是如果不恰当的使用将导致性能的下降。
+<P>
+
+<BR>&nbsp;索引的键字字段是以字段名的方式声明的，或者是可选的写在一个圆括弧里面的表达式。&nbsp;如果索引方式支持多个字段索引，那么我们也可以声明多个字段。
+<P>
+
+<BR>&nbsp;一个索引字段可以是一个使用表的行的一个或多个字段的数值进行计算的表达式。&nbsp;整个特性可用于获取对基本数据某种变形的快速访问。&nbsp;比如，一个在&nbsp;upper(col)&nbsp;上的函数索引将允许子句&nbsp;WHERE&nbsp;upper(col)&nbsp;=&nbsp;'JIM'&nbsp;使用索引。
+<P>
+
+PostgreSQL  为从索引提供 B-tree，R-tree，hash（散列） 和 GiST 索引方法。 B-tree 索引方法是一个 Lehman-Yao 高并发 B-trees 的实 现。R-tree 索引方法用 Guttman 的二次分裂算法实现了标准的 R-trees。 hash（散列）索引方法是 Litwin 的线性散列的一个实现。 用户也可以定义它们自己的索引方法，但这个工作相当复杂。
+<P>
+
+<BR>&nbsp;如果出现了&nbsp;WHERE&nbsp;子句，则创建一个部分索引。&nbsp;部分索引是一个只包含表的一部分记录的索引，通常是该表中最让人感兴趣的部分。&nbsp;比如，如果你有一个表，里面包含已上账和未上账的定单，&nbsp;未上账的定单只占表的一小部分而且这部分是最常用的部分，&nbsp;那么你就可以通过只在这个部分创建一个索引来改善性能。&nbsp;另外一个可能的用途是用&nbsp;WHERE&nbsp;和&nbsp;UNIQUE&nbsp;强制一个表的某个子集的唯一性。
+<P>
+
+<BR>&nbsp;在&nbsp;WHERE&nbsp;子句里用的表达式只能引用下层表的字段（但是它可以使用所有字段，而不仅仅是被索引的字段）。&nbsp;目前，子查询和聚集表达式也不能出现在WHERE里。
+<P>
+
+<BR>&nbsp;索引定义里的所有函数和操作符都必须是immutable，（不变的）也就是说，&nbsp;它们的结果必须只能依赖于它们的输入参数，而决不能依赖任何外部的影响（比如另外一个表的内容或者当前时间）。&nbsp;这个约束确保该索引的行为是定义完整的。要在一个索引上使用用户定义函数，请记住在你创建它的时候把它标记为immutable的函数。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B>UNIQUE</B><DD>
+<BR>&nbsp;令系统检测当索引创建时（如果数据已经存在）和每次添加数据时表中是否有重复值。&nbsp;如果插入或更新的值会导致重复的记录时将生成一个错误。
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;要创建的索引名。这里不能包含模式名；&nbsp;索引总是在同一个模式中作为其父表创建的。
+<DT><B></B><I>table</I><B></B><DD>
+<BR>&nbsp;要索引的表名（可能有模式修饰）。
+<DT><B></B><I>method</I><B></B><DD>
+<BR>&nbsp;用于索引的方法的名字。可选的名字是&nbsp;btree，&nbsp;hash，rtree，和&nbsp;gist。缺省方法是&nbsp;btree。
+<DT><B></B><I>column</I><B></B><DD>
+<BR>&nbsp;表的列/字段名。
+<DT><B></B><I>expression</I><B></B><DD>
+<BR>&nbsp;一个基于该表的一个或多个字段的表达式。&nbsp;这个表达式通常必须带着圆括弧包围写出，如语法中显示那样。&nbsp;不过，如果表达式有函数调用的形式，那么圆括弧可以省略。
+<DT><B></B><I>opclass</I><B></B><DD>
+<BR>&nbsp;一个关联的操作符表。参阅下文获取细节。
+<DT><B></B><I>predicate</I><B></B><DD>
+<BR>&nbsp;为一个部分索引定义约束表达式。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;参阅&nbsp;``Indexes''&nbsp;获取有关何时使用索引，何时不使用索引，&nbsp;以及哪种情况下是有用的信息。
+<P>
+
+<BR>&nbsp;目前，只有&nbsp;B-tree&nbsp;和&nbsp;gist&nbsp;索引方法支持多字段索引。&nbsp;缺省时最多可以声明&nbsp;32&nbsp;个键字（这个限制可以在制作&nbsp;PostgreSQL&nbsp;时修改）。&nbsp;目前只有&nbsp;B-tree&nbsp;支持唯一索引。
+<P>
+
+<BR>&nbsp;可以为索引的每个列/字段声明一个&nbsp;操作符表。&nbsp;操作符表标识将要被该索引用于该列/字段的操作符。&nbsp;例如，&nbsp;一个四字节整数的&nbsp;B-tree&nbsp;索引将使用&nbsp;int4_ops&nbsp;表；&nbsp;这个操作符表包括四字节整数的比较函数。&nbsp;实际上，该域的数据类型的缺省操作符表一般就足够了。&nbsp;某些数据类型有操作符表的原因是，它们可能有多于一个的有意义的顺序。&nbsp;例如，我们对复数类型排序时有可能以绝对值或者以实部。&nbsp;我们可以通过为该数据类型定义两个操作符表，然后在建立索引的时候选择合适的表来实现。&nbsp;有关操作符表更多的信息在&nbsp;``Operator&nbsp;Classes''&nbsp;和&nbsp;``Interfacing&nbsp;Extensions&nbsp;to&nbsp;Indexes''&nbsp;里。
+<P>
+
+<BR>&nbsp;使用&nbsp;DROP&nbsp;INDEX&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+drop_index">drop_index</A></B>(7)]&nbsp;删除一个索引。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;在表films上的&nbsp;title字段创建一个&nbsp;B-tree&nbsp;索引：
+<P>
+<PRE>
+CREATE UNIQUE INDEX title_idx ON films (title);
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>CREATE INDEX</B> 是 PostgreSQL 语言扩展。 在 SQL 标准中没有 CREATE INDEX 命令。
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

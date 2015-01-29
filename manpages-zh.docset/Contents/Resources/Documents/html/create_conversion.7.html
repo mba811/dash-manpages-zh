@@ -1,0 +1,122 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE CONVERSION</TITLE>
+</HEAD><BODY>
+<H1>CREATE CONVERSION</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE CONVERSION - 定义一个用户定义的码制转换
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE [DEFAULT] CONVERSION <I>name</I>
+    FOR <I>source_encoding</I> TO <I>dest_encoding</I> FROM <I>funcname</I>
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE CONVERSION</B> 定义一种新的编码转换。 转换的名字可以用在 convert 函数内部声明特定的编码转换。 同样，标记为 DEFAULT 的转换可以用于在前端和后端之间的自动编码转换。 出于这个原因，我们必须定义两种转换，从编码 A 到 B 以及从编码 B 到 A。
+<P>
+
+<BR>&nbsp;为了可以创建转换，你必须在函数上有EXECUTE权限并且有在目标模式上的CREATE权限。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B>DEFAULT</B><DD>
+DEFAULT 子句表示这种转换对于从这种源编码到目的编码的情况是缺省的。在一个模式里每个编码对应该只有一个缺省编码。
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;转换的名字。转换名可以用模式修饰。如果没有，那么转换就在当前模式中定义。转换名在一个模式里必须唯一。
+<DT><B></B><I>source_encoding</I><B></B><DD>
+<BR>&nbsp;源编码名。
+<DT><B></B><I>dest_encoding</I><B></B><DD>
+<BR>&nbsp;目的编码名。
+<DT><B></B><I>funcname</I><B></B><DD>
+<BR>&nbsp;用于执行转换的函数。这个函数名可以用模式名修饰。&nbsp;如果没有，那么将从路径中找出这个函数。
+<P>
+<BR>&nbsp;此函数必须有如下的样子：
+<P>
+<PRE>
+conv_proc(
+    integer,  -- 源编码 ID
+    integer,  -- 目的编码 ID
+    cstring,  -- 源字串（空结尾的 C 字串）
+    cstring,  -- 目的字串（空结尾的 C 字串）
+    integer   -- 源字串长度
+) RETURNS void;
+
+</PRE>
+
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;使用&nbsp;DROP&nbsp;CONVERSION&nbsp;删除用户定义的转换。
+<P>
+
+<BR>&nbsp;创建转换所需要的权限可能在未来的版本中改变。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;用&nbsp;myfunc&nbsp;创建一个从编码&nbsp;UNICODE&nbsp;到&nbsp;LATIN1&nbsp;的转换：
+<P>
+<PRE>
+CREATE CONVERSION myconv FOR 'UNICODE' TO 'LATIN1' FROM myfunc;
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>CREATE CONVERSION</B>
+是 PostgreSQL 的扩展。 在 SQL 标准里没有CREATE CONVERSION 语句。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+ALTER CONVERSION [<B><A HREF="/cgi-bin/man/man2html?7+alter_conversion">alter_conversion</A></B>(7)], CREATE FUNCTION [<B><A HREF="/cgi-bin/man/man2html?l+create_function">create_function</A></B>(l)], DROP CONVERSION [<B><A HREF="/cgi-bin/man/man2html?l+drop_conversion">drop_conversion</A></B>(l)]
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

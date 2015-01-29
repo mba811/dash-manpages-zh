@@ -1,0 +1,172 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SYNC</TITLE>
+</HEAD><BODY>
+<H1>SYNC</H1>
+Section: Maintenance Commands (8)<BR>Updated: November 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME 名称</H2>
+
+sync - 同步内存与磁盘的数据
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>sync [--help] [--version]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>sync</B>
+
+把任何在内存中缓冲的数据写到磁盘上。
+这能包括（但不仅限于）修改了的超级块，
+i 节点，和延迟的读写。这必须由内核执行；
+<B>sync</B>
+
+除了执行
+<B><A HREF="/cgi-bin/man/man2html?2+sync">sync</A></B>(2)
+
+系统调用外什么都不做.
+<P>
+
+内核把数据保持在内存里以避免磁盘读写（磁盘相对来说比较慢）
+这能改进性能，但如果计算机跨掉，结果就可能是数据丢失，
+或者文件系统损坏．
+<B>sync</B>
+
+保证任把何在内存里的东西写入磁盘.
+<P>
+
+<B>sync</B>
+
+应该在处理器异常停止前调用
+(例如，在因为调试新的内核代码引起内核恐慌
+（？可能是灾难发生吧）之前)
+一般而言，处理器应该使用
+<B><A HREF="/cgi-bin/man/man2html?8+shutdown">shutdown</A></B>(8)
+
+或者
+<B><A HREF="/cgi-bin/man/man2html?8+reboot">reboot</A></B>(8)
+
+或者
+<B><A HREF="/cgi-bin/man/man2html?8+halt">halt</A></B>(8)
+
+命令来停止, 那会试图，在调用
+<B><A HREF="/cgi-bin/man/man2html?2+sync">sync</A></B>(2)
+
+前让系统处于静止状态．
+(这些命令有好几种不同的实现，
+请参考你的文档，在一些系统上你
+不能直接调用
+<B><A HREF="/cgi-bin/man/man2html?8+reboot">reboot</A></B>(8)
+
+和
+<B><A HREF="/cgi-bin/man/man2html?8+halt">halt</A></B>(8)
+
+)
+<A NAME="lbAE">&nbsp;</A>
+<H2>GNU 标准选项</H2>
+
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+在标准输出上印出用法信息并退出。
+<DT><B>--version</B>
+
+<DD>
+在标准输出上印出版本信息并退出。
+<DT><B>--</B>
+
+<DD>
+结束选项列表
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>环境（变量）</H2>
+
+变量 LANG, LC_ALL, LC_CTYPE 和 LC_MESSAGES 有通常的意义.
+<A NAME="lbAG">&nbsp;</A>
+<H2>遵循</H2>
+
+POSIX 1003.2
+<A NAME="lbAH">&nbsp;</A>
+<H2>注意</H2>
+
+在 Linux 上,
+<B>sync</B>
+
+仅保证安排脏数据块进入等待：
+实际上在真正写入前要花费一点时间．
+<B><A HREF="/cgi-bin/man/man2html?8+reboot">reboot</A></B>(8)
+
+和
+<B><A HREF="/cgi-bin/man/man2html?8+halt">halt</A></B>(8)
+
+在调用
+<B><A HREF="/cgi-bin/man/man2html?2+sync">sync</A></B>(2)
+
+之后会睡眠几秒以考虑这些延时．
+<P>
+
+这份
+<B>sync</B>
+
+的描述可以在
+fileutils-4.0 包你找到;
+其他版本也许有些微的差别.
+把修正和新增邮到 <A HREF="mailto:aeb@cwi.nl">aeb@cwi.nl</A>.
+程序缺陷邮到 <A HREF="mailto:fileutils-bugs@gnu.ai.mit.edu">fileutils-bugs@gnu.ai.mit.edu</A>.
+<A NAME="lbAI">&nbsp;</A>
+<H2>又见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+sync">sync</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?8+halt">halt</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+reboot">reboot</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+update">update</A></B>(8)
+
+<BR>
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Scorpio &lt;<A HREF="mailto:rawk@chinese.com">rawk@chinese.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2000/11/26
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME 名称</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">GNU 标准选项</A><DD>
+<DT><A HREF="#lbAF">环境（变量）</A><DD>
+<DT><A HREF="#lbAG">遵循</A><DD>
+<DT><A HREF="#lbAH">注意</A><DD>
+<DT><A HREF="#lbAI">又见</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

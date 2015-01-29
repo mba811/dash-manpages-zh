@@ -1,0 +1,320 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LOADKEYS</TITLE>
+</HEAD><BODY>
+<H1>LOADKEYS</H1>
+Section: Linux User's Manual (1)<BR>Updated: 09 Oct 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+loadkeys - 调入键盘翻译表
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>loadkeys [</B>
+
+<I>-d --default</I>
+
+<B>] [</B>
+
+<I>-h --help</I>
+
+<B>] [</B>
+
+<I>-q --quiet</I>
+
+<B>] [</B>
+
+<I>-v --verbose</I>
+
+<B>[</B>
+
+<I>-v --verbose</I>
+
+<B>]...] [</B>
+
+<I>-m --mktable</I>
+
+<B>] [</B>
+
+<I>-c --clearcompose</I>
+
+<B>] [</B>
+
+<I>-s --clearstrings</I>
+
+<B>] [ filename... ]</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<P>
+<B>Loadkeys</B>
+
+读取 由
+<I>filename...</I>
+
+指定的 文件 内容.
+它的 主要目的 是 为 控制台 调入 内核键盘映射表(kernel keymap).
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>设为缺省 (RESET TO DEFAULT)</H2>
+
+如果 指定了
+<I>-d</I>
+
+(或
+<I>--default</I>
+
+) 选项,
+<B>loadkeys</B>
+
+调入 缺省的 键盘映射 文件 
+<I>defkeymap.map,</I>
+
+可能 在
+<I>/usr/share/keymaps</I>
+
+或
+<I>/usr/src/linux/drivers/char</I>
+
+目录 下. (前者 可能是 用户定义的, 而 后者 是 针对 PC 机 qwerty 键盘 的 映射 
+- 也许 你 不需要.) 某些情况下, 如果 遇上 奇怪的 键盘映射 (把 减号 '-' 
+弄成了 某种 陌生的 修饰组合), 你 只要 轻松的 键入 `loadkeys defkeymap' 就
+可以了.
+<P>
+(译注: qwerty 是一种常用的 PC 键盘布局, 由 键盘 字母区 左上角 的 连续
+横向 六个 字母键 得名)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>调入内核键盘映射 (KERNEL KEYMAP)</H2>
+
+<B>loadkeys</B>
+
+的 主要作用 是 调入 或 修改 键盘驱动程序 的 翻译表.
+当 指出了 文件名 的 时候, 标准输入 用 短横线(-) 表示. 如果 没有
+指出 文件名, loadkeys 就 从 标准输入 读取 数据.
+<P>
+
+对于 许多 国家 和 各种 键盘类型, 系统 已经 提供了 对应的 键盘映射表,
+只需 用一条 诸如 `loadkeys uk' 的 命令 就可以 满足 需要. 而且 很容易
+设计 自己的 键盘映射表. 用户 必须 识别 哪些 符号 属于 哪些 键.
+可以 用
+<B><A HREF="/cgi-bin/man/man2html?1+showkey">showkey</A></B>(1)
+
+命令 查出 键值(keycode), 手册页
+<B><A HREF="/cgi-bin/man/man2html?5+keymaps">keymaps</A></B>(5)
+
+对 键盘映射表 格式 做了 说明, 也可以 参考
+<B><A HREF="/cgi-bin/man/man2html?1+dumpkeys">dumpkeys</A></B>(1)
+
+命令 输出 的 内容.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>调入内核 ACCENT 表</H2>
+
+如果 输入文件 没有 定义 任何 组合键(compose key), 内核 accent 表 就 
+保持 不变, 除非 使用了
+<I>-c</I>
+
+(或
+<I>--clearcompose</I>
+
+) 选项, 此时 内核 accent 表 被 清空. 如果 输入文件 定义了 组合键,
+那么 清除 原有 定义, 换成 新的 定义. 内核 accent 表 是 一组 表项
+(缺省为 68 项), 用来 描述 区分符(dead diacritical sign) 和 组合键 怎么 工作.
+例如, 这行
+<P>
+
+<DL COMPACT><DT><DD>
+compose ',' 'c' to ccedilla
+</DL>
+
+<P>
+
+表示 &lt;ComposeKey&gt;&lt;,&gt;&lt;c&gt; 组合 产生 &lt;ccedilla&gt;.
+使用 命令 `dumpkeys --compose-only' 能够 查看 当前 accent 表.
+<P>
+(译注: Compose 键 可以 用 dumpkeys 命令 查出, 我的 系统上 是 ctrl+句号,
+因此 相继 按下 'ctrl-.', ',', 'c' 就可以 产生 上述的 'ccedilla'.)
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>调入内核字符串表 (KERNEL STRING TABLE)</H2>
+
+选项
+<I>-s</I>
+
+(或
+<I>--clearstrings</I>
+
+) 用于 清除 内核字符串表. 如果 不使用 这个 选项,
+<B>loadkeys</B>
+
+只会 添加 或 调换 字符串, 而不是 清除 它们.
+(因而 需要 选项 -s 实现 友好定义 状态.)
+内核字符串表 是 一组 命名 字符串, 就象 F31. 例如, 你 可以 使 功能键 F5
+(普通 PC 键盘上 有) 产生 字符串 `Hello!', 使 Shift+F5 产生 `Goodbye!':
+<P>
+
+<DL COMPACT><DT><DD>
+keycode 63 = F70 F71
+<BR>
+
+string F70 = &quot;Hello!&quot;
+<BR>
+
+string F71 = &quot;Goodbye!&quot;
+</DL>
+
+<P>
+
+把 这三行 加进 键盘映射表 即可. 缺省的 功能键 定义 大多是
+来自 VT100 终端 的 转码序列 (escape sequence).
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>创建内核源文件表 (KERNEL SOURCE TABLE)</H2>
+
+如果 给出了
+<I>-m</I>
+
+(或
+<I>--mktable</I>
+
+) 选项, 
+<B>loadkeys</B>
+
+在 标准输出 产生 一个文件, 可以 用做
+<I>/usr/src/linux/drivers/char/defkeymap.c,</I>
+
+它 定义了 内核的 缺省 键盘编联 (但 不影响 当前 键盘映射).
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>选项 (OPTION)</H2>
+
+<DL COMPACT>
+<DT><I>-h --help</I>
+
+<DD>
+在 标准错误 上 显示 版本号 和 简短 的 用法, 然后 结束.
+<P>
+<DT><I>-v --verbose</I>
+
+<DD>
+显示 更新 细节, 用的越多, 细节越细.
+<P>
+<DT><I>-q --quiet</I>
+
+<DD>
+不要 显示 一般信息.
+<P>
+<DT><I>-c --clearcompose</I>
+
+<DD>
+清除 内核的 组合键表 (就是 accent 表). 如果 没有 使用 这个选项, 而且
+输入文件 没有 定义 组合键, 内核组合键表 保持 不变.
+<P>
+<DT><I>-s  --clearstrings</I>
+
+<DD>
+清除 内核的 字符串表. 如果 没有 使用 这个选项,
+<B>loadkeys</B>
+
+将 添加 或 调换 字符串, 而不是 删除 它们.
+<P>
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H2>文件 (FILE)</H2>
+
+<I>/usr/lib/kbd/keymaps/</I>
+
+键盘映射文件 的 缺省目录.
+<P>
+<I>/usr/lib/kbd/keymaps/defkeymap.kmap</I>
+
+用
+<I>-d</I>
+
+选项 调入的 缺省 键盘映射文件.
+(译注: 对于 比较 新的 系统 请查看 /usr/lib/kbd/keymaps/i386/qwerty/, 注意 
+这里 最后面的 两个 目录, 前者 是 系统平台, 后者 是 键盘类型)
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>BUGS</H2>
+
+任何人 只要有 对
+<I>/dev/console</I>
+
+的 读访问权 就能够 运行
+<B>loadkeys ,</B>
+
+从而 改变 键盘布局, 使 它 可能 无法使用. 键盘翻译表 由 所有 虚拟控制台
+共用, 所以 任何 对 键盘编联 的 改变 会 同时 影响 所有的 虚拟控制台.
+<P>
+注意, 由于 改变 能够 影响 所有的 虚拟控制台, 因此 它 比 用户的 会话期 更长.
+这意味着 即使 在 登录 提示 阶段, 键值编联 也会 影响 用户 的 使用.
+<P>
+缺省的 键盘映射 应该 编译在 内核中. (
+<I>/usr/src/linux/drivers/char/defkeymap.c</I>
+
+).
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+dumpkeys">dumpkeys</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+kbd_mode">kbd_mode</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?5+keymaps">keymaps</A></B>(5).
+
+<P>
+<P>
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+第一版
+<A NAME="lbAP">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">设为缺省 (RESET TO DEFAULT)</A><DD>
+<DT><A HREF="#lbAF">调入内核键盘映射 (KERNEL KEYMAP)</A><DD>
+<DT><A HREF="#lbAG">调入内核 ACCENT 表</A><DD>
+<DT><A HREF="#lbAH">调入内核字符串表 (KERNEL STRING TABLE)</A><DD>
+<DT><A HREF="#lbAI">创建内核源文件表 (KERNEL SOURCE TABLE)</A><DD>
+<DT><A HREF="#lbAJ">选项 (OPTION)</A><DD>
+<DT><A HREF="#lbAK">文件 (FILE)</A><DD>
+<DT><A HREF="#lbAL">BUGS</A><DD>
+<DT><A HREF="#lbAM">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAN">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAO">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAP">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

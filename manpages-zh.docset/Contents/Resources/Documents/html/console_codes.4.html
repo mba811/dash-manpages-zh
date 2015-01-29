@@ -1,0 +1,603 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CONSOLE_CODES</TITLE>
+</HEAD><BODY>
+<H1>CONSOLE_CODES</H1>
+Section: Linux Programmer's Manual (4)<BR>Updated: October 31, 1996<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME 名称</H2>
+
+控制终端代码 - Linux 控制终端转义和控制序列
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+Linux控制台实现了VT102和ECMA-48/ISO 6429/ANSI X3.64终端控制的子集,
+这个子集很庞大,当然还有Linux自己私有的控制序列,以改变颜色配置,字符
+集映像,等等.在下面将要给出的表格中,第二列为指定的功能给出了ECMA-48
+或者DEC助记符(如果是后者会在前面加有DEC前缀).没有给出助记符的序列
+既不是ECMA-48也不是VT102字符.
+<P>
+
+在所有标准输出进程执行完毕,并且一个字符流被送到控制台
+驱动程序准备显示出来的时候,所发生的第一件事就是将进程
+使用的代码转换成显示使用的代码.
+<P>
+
+如果控制台工作于 UTF-8 模式,那么输入的字节会首先编码
+成16位的 Unicode 代码.如果不是UTF-8模式,那么每个字节
+会按照当前的字符映射表完成转换(转换成Unicode编码的值).
+参看下面将要讨论的 CHARACTER SETS 一章.
+<P>
+
+在一般情况下,Unicode 代码被转换成为存储在视频存储器中的
+字体索引,这样对应的具体字符(字符存储在视频ROM中)就显示
+在屏幕上了.
+注意使用 Unicode 编码允许我们同时使用 512 种不同的字体(和
+计算机硬件有关).
+<P>
+
+如果当前的 Unicode 代码是一个控制字符,或者系统目前正在处
+理一个转义序列,处理的方式有些特别.它不会被转换成字体索
+引,也不会直接显示在屏幕上.它可能控制光标的移动,或者实现
+其它控制功能.参看下面的 LINUX CONSOLE CONTROLS 一节
+所进行的讨论.
+<P>
+
+一般来说直接在程序中插入终端控制字符并不是很好.Linux 支
+持终端兼容的 
+<B><A HREF="/cgi-bin/man/man2html?5+terminfo">terminfo</A>(5)</B>
+
+数据库.
+除了直接插入控制和转义序列,也可以使用象
+<B><A HREF="/cgi-bin/man/man2html?3+ncurses">ncurses</A>(3),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?1+tput">tput</A>(1),</B>
+
+或者
+<B><A HREF="/cgi-bin/man/man2html?1+reset">reset</A>(1).</B>
+
+这样的显示库或者工具.
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>LINUX CONSOLE CONTROLS Linux终端控制</H2>
+
+<P>
+这一段描述了所有在Linux控制台下使用的调用特殊功能的控制字符
+和转义序列(例如.任何不在当前光标处插入可见字符的序列).
+<A NAME="lbAE">&nbsp;</A>
+<H3>Control characters 控制字符</H3>
+
+当一个字符在通过字符映射表转换之前含有以下14个代码之一的时
+候表明它是一个控制字符.
+00(NUL),07(BEL),08(BS),09(HT),0a(LF),0b(VT),
+0c(FF),0d(CR),0e(SO),0f(SI),18(CAN),1a(SUB),
+1b(ESC),7f(DEL).
+我们可以通过设置 `显示控制字符' 模式(见下文)以允许07,09,0b,
+18,1a,7f 像普通字符一样显示在屏幕上.另一方面,在UTF-8模式下
+所有位于 00-1f之间的代码都被认为是控制字符,而不管是否处于
+`显示控制字符'模式.
+<P>
+一个控制字符会立刻生效,然后被丢弃(即使是在转义序列中间),
+之后转义序列才继续处理下一个字符.
+(在任何情况下,ESC都表示一个新的转义序列的开始,可能导致 
+前一个序列的非正常终止,CAN和SUB 终止任何转义序列.)
+可识别的控制字符是BEL,BS,HT,LF,VT,FF,CR,SO,SI,CAN,
+SUB,ESC,DEL,CSI.他们的功能如下.:
+<DL COMPACT>
+<DT>
+<DD>BEL(0x07,^G)铃声;
+<DT>
+<DD>BS(0x08,^H)后退一格(在行首不起作用);
+<DT>
+<DD>HT(0x09,^I)跳至下一个制表位.如果后面已没有制表位则跳至行尾;
+<DT>
+<DD>LF(0x0A,^J),VT(0x0B,^K),FF(0x0C,^L)三者都表示换行;
+<DT>
+<DD>CR(0x0D,^M)回车并换行;
+<DT>
+<DD>SO(0x0E,^N)激活 G1 字符集,
+如果设置了 LF/NL(新行模式)还要加上回车换行;
+<DT>
+<DD>SI(0x0F,^O)激活 G0 字符集;
+<DT>
+<DD>CAN(0x18,^X),SUB(0x1A,^Z)两者都表示中断转义序列;
+<DT>
+<DD>ESC(0x1B,^[)开始一个新的转义序列;
+<DT>
+<DD>DEL(0x7F)忽略;
+<DT>
+<DD>CSI(0x9B)等同于 ESC [;
+</DL>
+<P>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H3>ESC- but not CSI-sequences 非控制转义序列</H3>
+
+<TABLE>
+<TR VALIGN=top><TD>ESC c</TD><TD>RIS</TD><TD>重绘屏幕.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC D</TD><TD>IND</TD><TD>换行.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC E</TD><TD>NEL</TD><TD>新的一行.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC H</TD><TD>HTS</TD><TD>设置当前列为制表位.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC M</TD><TD>RI</TD><TD>翻转换行(Reverse linefeed).<BR></TD></TR>
+<TR VALIGN=top><TD>ESC Z</TD><TD>DECID</TD><TD>DEC 私有定义.内核将其解释为<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>VT102字符,返回字符ESC [ ? 6 c.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC 7</TD><TD>DECSC</TD><TD>存储当前状态(光标坐标,<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>属性,字符集).<BR></TD></TR>
+<TR VALIGN=top><TD>ESC 8</TD><TD>DECRC</TD><TD>恢复上一次储存的设置<BR></TD></TR>
+<TR VALIGN=top><TD>ESC [</TD><TD>CSI</TD><TD>控制序列介绍<BR></TD></TR>
+<TR VALIGN=top><TD>ESC %</TD><TD></TD><TD>开始一个字符集选择序列<BR></TD></TR>
+<TR VALIGN=top><TD>ESC % @</TD><TD></TD><TD>&nbsp;&nbsp;&nbsp;选择默认字符集(ISO 646 / ISO 8859-1)<BR></TD></TR>
+<TR VALIGN=top><TD>ESC % G</TD><TD></TD><TD>&nbsp;&nbsp;&nbsp;选择 UTF-8<BR></TD></TR>
+<TR VALIGN=top><TD>ESC % 8</TD><TD></TD><TD>&nbsp;&nbsp;&nbsp;选择 UTF-8(已不用)<BR></TD></TR>
+<TR VALIGN=top><TD>ESC # 8</TD><TD>DECALN</TD><TD>DEC 屏幕校准测试 - 以E's填充屏幕.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC(</TD><TD></TD><TD>开始一个 G0 字符集定义序列<BR></TD></TR>
+<TR VALIGN=top><TD>ESC( B</TD><TD></TD><TD>&nbsp;&nbsp;&nbsp;选择默认字符集(ISO 8859-1 mapping)<BR></TD></TR>
+<TR VALIGN=top><TD>ESC( 0</TD><TD></TD><TD>&nbsp;&nbsp;&nbsp;选择 vt100 图形映射<BR></TD></TR>
+<TR VALIGN=top><TD>ESC( U</TD><TD></TD><TD>&nbsp;&nbsp;&nbsp;选择空映射 - 直接访问字符ROM<BR></TD></TR>
+<TR VALIGN=top><TD>ESC( K</TD><TD></TD><TD>&nbsp;&nbsp;&nbsp;选择用户映射 -  由程序<B><A HREF="/cgi-bin/man/man2html?8+mapscrn">mapscrn</A></B>(8)<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>&nbsp;&nbsp;&nbsp;加载.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC )</TD><TD></TD><TD>开始一个 G1 字符集定义<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>(后面跟 B,0,U,K,同上).<BR></TD></TR>
+<TR VALIGN=top><TD>ESC &gt;</TD><TD>DECPNM</TD><TD>设置数字小键盘模式<BR></TD></TR>
+<TR VALIGN=top><TD>ESC =</TD><TD>DECPAM</TD><TD>设置程序键盘模式<BR></TD></TR>
+<TR VALIGN=top><TD>ESC ]</TD><TD>OSC</TD><TD>(是perating system command的缩写)<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>ESC ] P <I>nrrggbb</I>: 设置调色板,后面紧跟7个<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>十六进制数,再跟一个 P :-(.<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>这里 <I>n</I> 是颜色(0-16),而 <I>rrggbb</I> 表示<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>红/绿/蓝 值(0-255).<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>ESC ] R: 重置调色板<BR></TD></TR>
+</TABLE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H3>ECMA-48 CSI sequence ECMA-48 CSI 序列</H3>
+
+<P>
+CSI(或者 ESC [)后面跟的参数序列大部分是NPAR(16),
+就是由分号隔开的十进制数.空参数或缺少的参数以0处理.
+可以用一个问号代替参数序列.
+<P>
+在任何情况下,系统读取 CSI [(或者 ESC [ [)后的单个字符,
+而忽略整个序列.(用于忽略回显功能键.)
+<P>
+CSI 序列的动作由其最后一个字符决定.
+<P>
+<TABLE>
+<TR VALIGN=top><TD>@</TD><TD>ICH</TD><TD>用#符号指示空格.<BR></TD></TR>
+<TR VALIGN=top><TD>A</TD><TD>CUU</TD><TD>光标上移到#标识的行.<BR></TD></TR>
+<TR VALIGN=top><TD>B</TD><TD>CUD</TD><TD>光标下移到#标识的行.<BR></TD></TR>
+<TR VALIGN=top><TD>C</TD><TD>CUF</TD><TD>光标右移到#标识的列.<BR></TD></TR>
+<TR VALIGN=top><TD>D</TD><TD>CUB</TD><TD>光标左移到#标识的列.<BR></TD></TR>
+<TR VALIGN=top><TD>E</TD><TD>CNL</TD><TD>将光标下移到#指示的行的第一列.<BR></TD></TR>
+<TR VALIGN=top><TD>F</TD><TD>CPL</TD><TD>将光标上移到#指示的行的第一列.<BR></TD></TR>
+<TR VALIGN=top><TD>G</TD><TD>CHA</TD><TD>光标移动到当前行的指定列.<BR></TD></TR>
+<TR VALIGN=top><TD>H</TD><TD>CUP</TD><TD>光标移动到指定行和列(以1行1列为参照).<BR></TD></TR>
+<TR VALIGN=top><TD>J</TD><TD>ED</TD><TD>删除(默认从当前光标处到行尾的)内容.<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>ESC [ 1 J: 删除从开始到光标处的内容.<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>ESC [ 2 J: 清空整个屏幕.<BR></TD></TR>
+<TR VALIGN=top><TD>K</TD><TD>EL</TD><TD>删除行(默认从当前光标处到结尾).<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>ESC [ 1 K: 删除从行首到当前光标处的内容.<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>ESC [ 2 K: 删除整行.<BR></TD></TR>
+<TR VALIGN=top><TD>L</TD><TD>IL</TD><TD>在空行插入#.<BR></TD></TR>
+<TR VALIGN=top><TD>M</TD><TD>DL</TD><TD>删除#标记的行.<BR></TD></TR>
+<TR VALIGN=top><TD>P</TD><TD>DCH</TD><TD>删除当前行中#标记的字符.<BR></TD></TR>
+<TR VALIGN=top><TD>X</TD><TD>ECH</TD><TD>删除当前行中#标记的单词.<BR></TD></TR>
+<TR VALIGN=top><TD>a</TD><TD>HPR</TD><TD>光标移动到#标记的右边.<BR></TD></TR>
+<TR VALIGN=top><TD>c</TD><TD>DA</TD><TD>以`I am a VT102'应答 ESC [ ? 6 c: <BR></TD></TR>
+<TR VALIGN=top><TD>d</TD><TD>VPA</TD><TD>光标移动到当前列指定行<BR></TD></TR>
+<TR VALIGN=top><TD>e</TD><TD>VPR</TD><TD>光标移动到#标记的下一行.<BR></TD></TR>
+<TR VALIGN=top><TD>f</TD><TD>HVP</TD><TD>光标移动到指定的行和列.<BR></TD></TR>
+<TR VALIGN=top><TD>g</TD><TD>TBC</TD><TD>没有参数: 清除当前位置的制表站.<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>ESC [ 3 g: 删除所有制表站.<BR></TD></TR>
+<TR VALIGN=top><TD>h</TD><TD>SM</TD><TD>设置模式(见下文).<BR></TD></TR>
+<TR VALIGN=top><TD>l</TD><TD>RM</TD><TD>重置模式(见下文).<BR></TD></TR>
+<TR VALIGN=top><TD>m</TD><TD>SGR</TD><TD>设置属性(见下文).<BR></TD></TR>
+<TR VALIGN=top><TD>n</TD><TD>DSR</TD><TD>状态报告(见下文).<BR></TD></TR>
+<TR VALIGN=top><TD>q</TD><TD>DECLL</TD><TD>设置键盘指示灯.<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>ESC [ 0 q: 熄灭所有指示灯<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>ESC [ 1 q: 点亮 Scroll Lock 灯<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>ESC [ 2 q: 点亮 Num Lock 灯<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>ESC [ 3 q: 点亮 Caps Lock 灯<BR></TD></TR>
+<TR VALIGN=top><TD>r</TD><TD>DECSTBM</TD><TD>设置滚动范围; 参数为首行和末行.<BR></TD></TR>
+<TR VALIGN=top><TD>s</TD><TD>?</TD><TD>存储光标位置.<BR></TD></TR>
+<TR VALIGN=top><TD>u</TD><TD>?</TD><TD>恢复光标位置.<BR></TD></TR>
+<TR VALIGN=top><TD>`</TD><TD>HPA</TD><TD>光标移动到当前行指定列.<BR></TD></TR>
+</TABLE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H3>ECMA-48 Set Graphics Rendition 设置图形属性</H3>
+
+<P>
+ECMA-48 SGR 序列 ESC [ &lt;parameters&gt; m 设置显示属性.
+同样的序列可以设置一个或多个属性.
+<P>
+
+<TABLE>
+<TR VALIGN=top><TD>par</TD><TD>作用<BR></TD></TR>
+<TR VALIGN=top><TD>0</TD><TD>所有属性重设为默认值<BR></TD></TR>
+<TR VALIGN=top><TD>1</TD><TD>设置边框<BR></TD></TR>
+<TR VALIGN=top><TD>2</TD><TD>设置亮度减半(用一种颜色模拟另一种颜色)<BR></TD></TR>
+<TR VALIGN=top><TD>4</TD><TD>设置底纹(用一种颜色模拟另一种颜色)<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD>(用于模拟的颜色由using ESC ] ...设置)<BR></TD></TR>
+<TR VALIGN=top><TD>5</TD><TD>设置闪烁<BR></TD></TR>
+<TR VALIGN=top><TD>7</TD><TD>设置反转视频(reverse video)<BR></TD></TR>
+<TR VALIGN=top><TD>10</TD><TD>重设选定映像,显示控制标记,<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD>反转元素标记.<BR></TD></TR>
+<TR VALIGN=top><TD>11</TD><TD>选择空映像,设置显示控制标记,<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD>重设反转标记.<BR></TD></TR>
+<TR VALIGN=top><TD>12</TD><TD>选择空映像,设置显示控制标记,<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD>重设反转标记.(在完成映像表转<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD>换之前反转标记引起每一字节的<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD>高位反转.)<BR></TD></TR>
+<TR VALIGN=top><TD>21</TD><TD>设置正常亮度(和 ECMA-48 不兼容)<BR></TD></TR>
+<TR VALIGN=top><TD>22</TD><TD>设置正常亮度<BR></TD></TR>
+<TR VALIGN=top><TD>24</TD><TD>关闭下划线<BR></TD></TR>
+<TR VALIGN=top><TD>25</TD><TD>不闪烁<BR></TD></TR>
+<TR VALIGN=top><TD>27</TD><TD>反转视频关闭<BR></TD></TR>
+<TR VALIGN=top><TD>30</TD><TD>黑色背景<BR></TD></TR>
+<TR VALIGN=top><TD>31</TD><TD>红色前景<BR></TD></TR>
+<TR VALIGN=top><TD>32</TD><TD>绿色前景<BR></TD></TR>
+<TR VALIGN=top><TD>33</TD><TD>棕色前景<BR></TD></TR>
+<TR VALIGN=top><TD>34</TD><TD>蓝色前景<BR></TD></TR>
+<TR VALIGN=top><TD>35</TD><TD>品红前景<BR></TD></TR>
+<TR VALIGN=top><TD>36</TD><TD>孔雀蓝前景<BR></TD></TR>
+<TR VALIGN=top><TD>37</TD><TD>白色前景<BR></TD></TR>
+<TR VALIGN=top><TD>38</TD><TD>打开下划线,设置默认前景色<BR></TD></TR>
+<TR VALIGN=top><TD>39</TD><TD>关闭下划线,设置默认前景色<BR></TD></TR>
+<TR VALIGN=top><TD>40</TD><TD>黑色背景<BR></TD></TR>
+<TR VALIGN=top><TD>41</TD><TD>红色背景<BR></TD></TR>
+<TR VALIGN=top><TD>42</TD><TD>绿色背景<BR></TD></TR>
+<TR VALIGN=top><TD>43</TD><TD>棕色背景<BR></TD></TR>
+<TR VALIGN=top><TD>44</TD><TD>蓝色背景<BR></TD></TR>
+<TR VALIGN=top><TD>45</TD><TD>品红背景<BR></TD></TR>
+<TR VALIGN=top><TD>46</TD><TD>孔雀蓝背景<BR></TD></TR>
+<TR VALIGN=top><TD>47</TD><TD>白色背景<BR></TD></TR>
+<TR VALIGN=top><TD>49</TD><TD>设置默认背景色<BR></TD></TR>
+</TABLE>
+
+<A NAME="lbAI">&nbsp;</A>
+<H3>ECMA-48 Mode Switches ECMA-48模式选择</H3>
+
+<DL COMPACT>
+<DT>ESC [ 3 h<DD>
+DECCRM(默认关闭): 显示控制字符.
+<DT>ESC [ 4 h<DD>
+DECIM(默认关闭): 设置插入模式.
+<DT>ESC [ 20 h<DD>
+LF/NL(默认关闭): 自动在CR后加上 LF,VT 或者 FF.
+</DL>
+<P>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H3>ECMA-48 状态报告命令.</H3>
+
+<DL COMPACT>
+<DT>ESC [ 5 n<DD>
+设备状态报告(DSR): 以 ESC [ 0 n 应答(终端准备好).
+<DT>ESC [ 6 n<DD>
+光标位置报告(CPR): 以ESC [ <I>y</I> ; <I>x</I> R 应答,
+这里 <I>x,y</I> 指光标位置.
+<P>
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H3>DEC Private Mode(DECSET/DECRST)sequences DEC私有模式序列.</H3>
+
+<P>
+这里给出的序列在 ECMA-48中没有描述.我们列出了设置模式序列;
+用l替换最后一个h就是重设模式序列.
+<DL COMPACT>
+<DT>ESC [ ? 1 h<DD>
+DECCKM(默认关闭): 打开时光标键送出 ESC O 前缀,
+而不是 ESC [.
+<DT>ESC [ ? 3 h<DD>
+DECCOLM(默认 = 80 行): 交替选择 80/132 行模式.当原显示
+模式不足以满足要求的时候,象
+<B><A HREF="/cgi-bin/man/man2html?8+resizecons">resizecons</A>(8)</B>
+
+这样的用户程序会改变终端显示卡的硬件注册.
+<DT>ESC [ ? 5 h<DD>
+DECSCNM(默认关闭): 设置视频反转模式.
+<DT>ESC [ ? 6 h<DD>
+DECOM(默认关闭): 打开时,光标位置用相对于滚动条左上角
+的位置表示.
+<DT>ESC [ ? 7 h<DD>
+DECAWM(默认关闭): 打开自动换行.在这种模式下,一行中
+超过80列的字符将自动换行(在DECCOLM打开时是132列).
+<DT>ESC [ ? 8 h<DD>
+DECARM(默认关闭): 打开键盘自动重复.
+<DT>ESC [ ? 9 h<DD>
+X10 鼠标报告(默认关闭): 设置报告模式 1(或者重设为
+0)- 见下文.
+<DT>ESC [ ? 25 h<DD>
+DECCM(默认打开): 设置光标可见.
+<DT>ESC [ ? 1000 h<DD>
+X11 鼠标报告(默认关闭): 设置报告模式 2(或者重设为
+0)- 见下文.
+<P>
+</DL>
+<A NAME="lbAL">&nbsp;</A>
+<H3>Linux Console Private CSI Sequences Linux控制台私有控制序列</H3>
+
+<P>
+下面的序列既不属于 ECMA-48 字符也不属于 VT102.它们只在
+Linux控制台上使用.颜色采用 SGR 参数:
+0 = 黑色,1 = 红色,2 = 绿色,3 =褐色 ,4 = 蓝色,5 = 洋红,6 =
+孔雀蓝,7 = 白色.
+<P>
+<TABLE>
+<TR VALIGN=top><TD>ESC [ 1 ; <I>n</I> ]</TD><TD>设置下划线颜色为 <I>n</I><BR></TD></TR>
+<TR VALIGN=top><TD>ESC [ 2 ; <I>n</I> ]</TD><TD>设置暗色为 <I>n</I><BR></TD></TR>
+<TR VALIGN=top><TD>ESC [ 8 ]       </TD><TD>设置当前颜色对为默认属性.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC [ 9 ; <I>n</I> ]</TD><TD>设置屏幕空白超时为 <I>n</I> 分钟.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC [ 10 ; <I>n</I> ]</TD><TD>设置机箱喇叭鸣叫频率,单位: Hz.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC [ 11 ; <I>n</I> ]</TD><TD>设置机箱喇叭鸣叫持续时间,单位:微秒.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC [ 12 ; <I>n</I> ]</TD><TD>设置指定控制台前台运行.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC [ 13 ]      </TD><TD>设置指定控制台黑色<BR></TD></TR>
+<TR VALIGN=top><TD>ESC [ 14 ; <I>n</I> ]   </TD><TD>设置 VESA 关闭间隔,单位: 分钟.<BR></TD></TR>
+</TABLE>
+
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>CHARACTER SETS 字符集</H2>
+
+<P>
+内核可以完成以下四种字符转换,使字符能在屏幕上显示.
+a)Latin1 -&gt; PC,b)VT100 graphics -&gt; PC,c)PC -&gt; PC,
+d)user-defined(用户自定义).
+<P>
+有两种字符集设置,以 G0 和 G1定义,当前字符集必定是其中之一.(初
+始化为G0.)键入 ^N 使 G1 成为当前字符集,键入 ^O 使 G0 成为当前设置.
+<P>
+变量 G0 and G1 指向字符映射关系表,并且这种指向关系可以由用户改变.
+系统初始化时它们分别指向表 a)and b).
+序列 ESC( B ,ESC( 0 ,ESC( U 和 ESC( K 分别使 G0 指向字符映射表
+<BR>&nbsp;a),b),c)和&nbsp;d).
+序列 ESC )B ,ESC )0 ,ESC )U 和 ESC )K 分别使 G1 指向字符映射表
+a),b),c)和 d).
+<P>
+序列 ESC c 重置一个终端,当屏幕显示出现混乱时可以使用这个序列.
+另一个序列 &quot;echo ^V^O&quot; 仅仅将G0设为当前字符集,但并不保证 G0 指
+向映射表 a).
+有的Linux发行版中提供一个叫做
+<B><A HREF="/cgi-bin/man/man2html?1+reset">reset</A>(1)</B>
+
+的程序用来送出序列 &quot;echo ^[c&quot;.
+如果你的系统终端变量没有错误( rs1=\Ec),
+那么使用&quot;tput reset&quot;也可以达到同样效果.
+<P>
+用户自定义映射表可以用程序
+<B><A HREF="/cgi-bin/man/man2html?8+mapscrn">mapscrn</A>(8).</B>
+
+定义.这个程序工作时会将送入的字符c通过关系式s=map[c]映射到
+字符s然后送入显存.字符s所对应的位图放在字符ROM里面,可以使
+用程序
+<B><A HREF="/cgi-bin/man/man2html?8+setfont">setfont</A>(8).</B>
+
+<P>
+来改变.
+<P>
+<A NAME="lbAN">&nbsp;</A>
+<H2>MOUSE TRACKING 鼠标轨迹</H2>
+
+<P>
+鼠标轨迹工具可以返回与 xterm 兼容的鼠标状态报告.因为控制台
+驱动没有办法知道鼠标类型,只有当虚拟终端驱动接收到鼠标输入
+输出消息更新时才会将这些报告返回给控制台输入流..这些鼠标
+输入输出消息由 <B><A HREF="/cgi-bin/man/man2html?8+gpm">gpm</A>(8)</B> 守护进程产生.
+<P>
+所有鼠标轨迹转义序列参数由<I>xterm</I> 编码成象<I>value</I>+040
+这样的单一字符形式的数字参数.比如,`!' 编码成 1.屏幕坐标系统
+以'1'为基准.
+<P>
+X10 兼容模式在鼠标键按下时将按下的键和鼠标位置编码后送出.
+ESC [ ? 9 h 允许这一动作,ESC [ ? 9 l禁止这一动作.
+有键按下时,<I>xterm</I> 送出ESC [ M <I>bxy</I>(6 个字符).这里 
+<I>b</I> 代表 键-1,而 <I>x</I> 和 <I>y</I> 是鼠标的 x 和 y 坐标.这和
+内核产生的序列相同.
+<P>
+常规的轨迹模式(Linux 2.0.24不再支持)在左右两键同时按下然后
+释放时送出转义序列.组合键编码也被送出.ESC [ ? 1000 h 允许这
+个动作而ESC [ 1000 l 禁止这个动作.当有键按下或者释放时,
+<I>xterm</I> 送出 ESC [ M <I>bxy</I>.<I>b</I> 的低两位对按键信息编码:
+0=鼠标键1按下,1=鼠标键2 按下,2=鼠标键3 按下,3=释放.
+高位编码代表组合键,和上述编码一起送出:
+4=Shift,8=Meta(Alt),16=Control(Ctrl).<I>x</I> 和<I>y</I>为发生鼠标事
+件的x和y坐标.以左上角为(1,1).
+<P>
+<A NAME="lbAO">&nbsp;</A>
+<H2>和其它终端的比较</H2>
+
+<P>
+我们已经讨论了几种终端类型,比如Linux 控制台.这类终端称为
+&quot;VT100兼容&quot;的终端.这里我们再介绍其他两种重要的终端类型:
+DEC VT102 和
+<B><A HREF="/cgi-bin/man/man2html?1+xterm">xterm</A>(1)</B>
+
+以及他们和Linux控制终端的区别.
+<P>
+<A NAME="lbAP">&nbsp;</A>
+<H3>Control-character handling 控制字符处理</H3>
+
+vt102 也使用以下控制序列:
+<DL COMPACT>
+<DT>
+<DD>NUL(0x00)忽略;
+<DT>
+<DD>ENQ(0x05)触发应答消息;
+<DT>
+<DD>DC1(0x11,^Q,XON)继续传送;
+<DT>
+<DD>DC3(0x13,^S,XOFF)使 vt100 忽略(并停止传送)
+除 XOFF and XON 以外的一切字符.
+</DL>
+<P>
+
+VT100-like DC1/DC3 进程可以由 tty 驱动激活.
+<P>
+
+程序
+<I>xterm</I>
+
+(在 vt100 模式 中)使用控制序列 
+BEL,BS,HT,LF,VT,FF,CR,SO,SI,ESC.
+<P>
+<A NAME="lbAQ">&nbsp;</A>
+<H3>Escape sequences 转义序列</H3>
+
+VT100  控制台序列不完全支持Linux控制台序列:
+<P>
+
+<TABLE>
+<TR VALIGN=top><TD>ESC N</TD><TD>SS2</TD><TD>仅仅为下一个字符选择 G2 字符集<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>(Single shift 2).<BR></TD></TR>
+<TR VALIGN=top><TD>ESC O</TD><TD>SS3</TD><TD>仅仅为下一个字符选择 G2 字符集<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>(Single shift 2).<BR></TD></TR>
+<TR VALIGN=top><TD>ESC P</TD><TD>DCS</TD><TD>设备控制字符,由ESC \ 终止<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>(Device control string).<BR></TD></TR>
+<TR VALIGN=top><TD>ESC X</TD><TD>SOS</TD><TD>字符串开始.<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>(Start of string)<BR></TD></TR>
+<TR VALIGN=top><TD>ESC ^</TD><TD>PM</TD><TD>私有消息,由 ESC \ 终结<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>(Privacy message)<BR></TD></TR>
+<TR VALIGN=top><TD>ESC \</TD><TD>ST</TD><TD>字符串终结<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>(String terminator)<BR></TD></TR>
+<TR VALIGN=top><TD>ESC * ...</TD><TD></TD><TD>指定 G2 字符集<BR></TD></TR>
+<TR VALIGN=top><TD>ESC + ...</TD><TD></TD><TD>指定 G3 字符集<BR></TD></TR>
+</TABLE>
+
+<P>
+程序
+<I>xterm</I>
+
+(vt100 模式)承认 ESC c,ESC # 8,ESC &gt;,ESC =,
+ESC D,ESC E,ESC H,ESC M,ESC N,ESC O,ESC P ...ESC ,
+ESC Z(以 [ ? 1 ; 2 c,`I am a vt100 with advanced video option'回应)
+以及 ESC ^ ...ESC ,意义同上.
+接受 ESC(,ESC ),ESC *,ESC + 后跟 0,A,B 的字符序列,分别
+代表的DEC 特殊字符,画线设置,UK 和 US ASCII码.
+接受 ESC ] 作为特定资源设置:
+<P>
+
+<TABLE>
+<TR VALIGN=top><TD>ESC ] 0 ; txt BEL</TD><TD>将图标名和窗口标题设为文本.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC ] 1 ; txt BEL</TD><TD>将图标名设为文本.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC ] 2 ; txt BEL</TD><TD>将窗口名设为文本.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC ] 4 6 ; name BEL</TD><TD>改变日志文件名(一般<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD>由编译时选项禁止)<BR></TD></TR>
+<TR VALIGN=top><TD>ESC ] 5 0 ; fn BEL</TD><TD>字体设置为 fn.<BR></TD></TR>
+</TABLE>
+
+<P>
+以下字符的含义略有不同::
+<P>
+
+<TABLE>
+<TR VALIGN=top><TD>ESC 7  DECSC</TD><TD>存储光标位置</TD><TD><BR></TD></TR>
+<TR VALIGN=top><TD>ESC 8  DECRC</TD><TD>恢复光标位置</TD><TD><BR></TD></TR>
+</TABLE>
+
+<P>
+它还接受以下序列:
+<P>
+
+<TABLE>
+<TR VALIGN=top><TD>ESC F</TD><TD></TD><TD>光标移动到屏幕左下角(由<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>hpLowerleftBugCompat 打开这项设置)<BR></TD></TR>
+<TR VALIGN=top><TD>ESC l</TD><TD></TD><TD>内存锁定(对于 HP 终端).<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>锁定光标以上的内存.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC m</TD><TD></TD><TD>内存解锁(对于 HP 终端).<BR></TD></TR>
+<TR VALIGN=top><TD>ESC n</TD><TD>LS2</TD><TD>调用 G2 字符集.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC o</TD><TD>LS3</TD><TD>调用 G3 字符集.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC |</TD><TD>LS3R</TD><TD>以GR调用 G3 字符集.<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>在xterm上看不到效果.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC }</TD><TD>LS2R</TD><TD>以GR调用 G3 字符集.<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>在xterm上看不到效果.<BR></TD></TR>
+<TR VALIGN=top><TD>ESC ~</TD><TD>LS1R</TD><TD>以GR调用 G3 字符集.<BR></TD></TR>
+<TR VALIGN=top><TD></TD><TD></TD><TD>在xterm上看不到效果.<BR></TD></TR>
+</TABLE>
+
+<P>
+它不识别 ESC % ...
+<P>
+<A NAME="lbAR">&nbsp;</A>
+<H3>CSI Sequences CSI 序列</H3>
+
+程序
+<I>xterm</I>
+
+(直到 XFree86 3.1.2G)不能识别闪烁或者不可见模式的 
+SGR值.X11R6 也不能识别以 SGRs 为参数设置的色彩.
+<I>xterm</I>
+
+可以识别其他的 ECMA-48 CSI 序列,只要Linux可以识别.
+反之亦然.
+<P>
+<I>xterm</I>
+
+可以识别以上列出的所有 DEC 私有序列,但是不包括 Linux 私有模式序列.
+在
+<I>Xterm Control Sequences</I>
+
+中有关于
+<I>xterm</I>
+
+的私有模式序列的讨论.
+<P>
+document by Edward Moy and Stephen Gildea,available with the X 
+distribution.
+<P>
+<A NAME="lbAS">&nbsp;</A>
+<H2>BUGS</H2>
+
+<P>
+在版本为 2.0.23 的内核中,CSI 序列的识别有些问题: 不能识别转义序列中的NUL.
+<P>
+<A NAME="lbAT">&nbsp;</A>
+<H2>参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?4+console">console</A>(4),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?4+console_ioctl">console_ioctl</A>(4),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?7+charsets">charsets</A>(7)</B>
+
+<P>
+<P>
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME 名称</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAD">LINUX CONSOLE CONTROLS Linux终端控制</A><DD>
+<DL>
+<DT><A HREF="#lbAE">Control characters 控制字符</A><DD>
+<DT><A HREF="#lbAF">ESC- but not CSI-sequences 非控制转义序列</A><DD>
+<DT><A HREF="#lbAG">ECMA-48 CSI sequence ECMA-48 CSI 序列</A><DD>
+<DT><A HREF="#lbAH">ECMA-48 Set Graphics Rendition 设置图形属性</A><DD>
+<DT><A HREF="#lbAI">ECMA-48 Mode Switches ECMA-48模式选择</A><DD>
+<DT><A HREF="#lbAJ">ECMA-48 状态报告命令.</A><DD>
+<DT><A HREF="#lbAK">DEC Private Mode(DECSET/DECRST)sequences DEC私有模式序列.</A><DD>
+<DT><A HREF="#lbAL">Linux Console Private CSI Sequences Linux控制台私有控制序列</A><DD>
+</DL>
+<DT><A HREF="#lbAM">CHARACTER SETS 字符集</A><DD>
+<DT><A HREF="#lbAN">MOUSE TRACKING 鼠标轨迹</A><DD>
+<DT><A HREF="#lbAO">和其它终端的比较</A><DD>
+<DL>
+<DT><A HREF="#lbAP">Control-character handling 控制字符处理</A><DD>
+<DT><A HREF="#lbAQ">Escape sequences 转义序列</A><DD>
+<DT><A HREF="#lbAR">CSI Sequences CSI 序列</A><DD>
+</DL>
+<DT><A HREF="#lbAS">BUGS</A><DD>
+<DT><A HREF="#lbAT">参见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

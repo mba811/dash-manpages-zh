@@ -1,0 +1,511 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of STTY</TITLE>
+</HEAD><BODY>
+<H1>STTY</H1>
+Section: FSF (1)<BR>Updated: August 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+stty - 改变并打印终端行设置
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>stty</B>
+
+[<I>-F device</I>] [<I>--file=device</I>] [<I>SETTING</I>]...
+<BR>
+
+<B>stty</B>
+
+[<I>-F device</I>] [<I>--file=device</I>] [<I>-a|--all</I>]
+<BR>
+
+<B>stty</B>
+
+[<I>-F device</I>] [<I>--file=device</I>] [<I>-g|--save</I>]
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<P>
+
+
+<P>
+
+打印或改变终端属性.
+<DL COMPACT>
+<DT><B>-a</B>, <B>--all</B><DD>
+以可读的格式打印当前的所有设置
+<DT><B>-g</B>, <B>--save</B><DD>
+以终端可读的格式打印当前的所有设置
+<DT><B>-F</B>, <B>--file</B><DD>
+打开指定的设备,并用此设备作为输入来代替标准输入
+<DT><B>--help</B><DD>
+显示帮助并退出
+<DT><B>--version</B><DD>
+显示版本信息并退出
+</DL>
+<P>
+
+选项-在SETTING之前使用这些选项将被视为无效  星号*表明是非POSIX设置.
+以下是一些系统定义了的可用设置：
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H3>特殊字符</H3>
+
+<P>
+
+* dsusp CHAR    
+CHAR表示输入满时，发一个停止信号给终端
+<DL COMPACT>
+<DT>eof CHAR<DD>
+CHAR表示一个文件结束 (结束输入)
+<DT>eol CHAR<DD>
+CHAR表示当前行结束
+</DL>
+<P>
+
+* eol2 CHAR     
+CHAR是另一个表示结束当前行的字符
+<DL COMPACT>
+<DT>erase CHAR<DD>
+CHAR表示擦除最后一个输入字符
+<DT>intr CHAR<DD>
+CHAR表示发一个中断信号
+<DT>kill CHAR<DD>
+CHAR表示擦除当前行
+</DL>
+<P>
+
+* lnext CHAR    
+CHAR表示输入下一个字符
+<DL COMPACT>
+<DT>quit CHAR<DD>
+CHAR表示发出一个退出信号
+</DL>
+<P>
+
+* rprnt CHAR    
+CHAR表示刷新当前行
+<DL COMPACT>
+<DT>start CHAR<DD>
+CHAR表示在停止输出后重新开始输出
+<DT>stop CHAR<DD>
+CHAR表示停止输出
+<DT>susp CHAR<DD>
+CHAR表示发送一个终端停止信号
+</DL>
+<P>
+
+* swtch CHAR    
+CHAR表示切换到不同的外壳层
+<P>
+
+* werase CHAR   
+CHAR表示擦除已经输入的最后一个单词
+<A NAME="lbAF">&nbsp;</A>
+<H3>特殊设置</H3>
+
+<DL COMPACT>
+<DT>N<DD>
+把输入和输出的波特率设为N
+</DL>
+<P>
+
+* cols N        
+通知内核终端有N列
+<P>
+
+* columns N     
+与cols N 相同
+<DL COMPACT>
+<DT>ispeed N<DD>
+设置输入速度为N
+</DL>
+<P>
+
+* line N        
+用行约束规则N
+<DL COMPACT>
+<DT>min N<DD>
+用 <B>-icanon</B>, 设置一次完整的读操作最小为N个字符
+<DT>ospeed N<DD>
+设置输出速度为N 
+</DL>
+<P>
+
+* rows N        
+通知内核终端有N行
+<P>
+
+* size          
+根据内核打印出终端的行数和列数
+<DL COMPACT>
+<DT>speed<DD>
+打印出终端的速度
+<DT>time N<DD>
+同时用 <B>-icanon</B>, 设置读超时为十分之N秒
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H3>控制设置</H3>
+
+<DL COMPACT>
+<DT>[-]clocal<DD>
+关闭解调器的控制信号
+<DT>[-]cread<DD>
+允许接收输入
+</DL>
+<P>
+
+* [-]crtscts    
+允许 RTS/CTS 的握手
+<DL COMPACT>
+<DT>csN<DD>
+把字符长度设为N, N 为[5..8]
+<DT>[-]cstopb<DD>
+对每字符使用两个停止位 (一个带有 `-')
+<DT>[-]hup<DD>
+当最后一个进程关闭终端后，发一个挂起信号
+<DT>[-]hupcl<DD>
+同 [-]hup
+<DT>[-]parenb<DD>
+在输出中产生奇偶校验位，并要求在输入中也有奇偶校验位
+<DT>[-]parodd<DD>
+设置奇校验 (偶校验用 `-')
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H3>输入设置:</H3>
+
+<DL COMPACT>
+<DT>[-]brkint<DD>
+暂停并产生中断信号
+<DT>[-]icrnl<DD>
+将回车解释为换行
+<DT>[-]ignbrk<DD>
+忽略中断信号
+<DT>[-]igncr<DD>
+忽略回车符
+<DT>[-]ignpar<DD>
+忽略有奇偶校验错的字符
+</DL>
+<P>
+
+* [-]imaxbel    
+对一个字符产生嘟叫，但不刷新已满的输入缓冲区
+<DL COMPACT>
+<DT>[-]inlcr<DD>
+将换行解释为回车
+<DT>[-]inpck<DD>
+打开输入奇偶校验
+<DT>[-]istrip<DD>
+清除输入字符的高位（第8位）
+</DL>
+<P>
+
+* [-]iuclc      
+将大写字符转换成小写字符
+<P>
+
+* [-]ixany      
+使任何字符都重新开始输出（而 不仅仅是重新输出字符能实现此功能）
+<DL COMPACT>
+<DT>[-]ixoff<DD>
+打开发送开始/停止字符的开关
+<DT>[-]ixon<DD>
+打开XON/XOFF的流量控制
+<DT>[-]parmrk<DD>
+标记奇偶校验错误 (使用255-0-character 字符序列)
+<DT>[-]tandem<DD>
+同 [-]ixoff
+</DL>
+<P>
+
+输出设置:
+<P>
+
+* bsN           
+回退延迟, N 为 [0..1]
+<P>
+
+* crN           
+回车延迟, N 为 [0..3]
+<P>
+
+* ffN           
+换页延迟, N 为 [0..1]
+<P>
+
+* nlN           
+换行延迟, N 为 [0..1]
+<P>
+
+* [-]ocrnl      
+将回车解释为换行
+<P>
+
+* [-]ofdel      
+使用删除字符来填充，而不是用空字符填充
+<P>
+
+* [-]ofill      
+使用填充字符，不使用定时延迟
+<P>
+
+* [-]olcuc      
+将小写字符转换成大写
+<P>
+
+* [-]onlcr      
+将换行解释为回车-换行
+<P>
+
+* [-]onlret     
+换行执行一次回车
+<P>
+
+* [-]onocr      
+不在第一列打印回车
+<DL COMPACT>
+<DT>[-]opost<DD>
+postprocess 输出
+</DL>
+<P>
+
+* tabN          
+水平tab键延迟, N 为 [0..3]
+<P>
+
+* tabs          
+同tab0 
+<P>
+
+* <B>-tabs</B>  同tab3
+<P>
+
+* vtN           
+垂直方向tab键延迟。。。, N 为 [0..1]
+<A NAME="lbAI">&nbsp;</A>
+<H3>本地设置:</H3>
+
+<DL COMPACT>
+<DT>[-]crterase<DD>
+将擦除字符显示为：退格-空格-退格
+</DL>
+<P>
+
+* crtkill       
+根据echoprt和echoe的设置去除所有行
+<P>
+
+* <B>-crtkill</B>    
+根据echoctl和echok设置去除所有行
+<P>
+
+* [-]ctlecho    
+在头部符号中显示控制字符'^c')
+<DL COMPACT>
+<DT>[-]echo<DD>
+显示输入字符
+</DL>
+<P>
+
+* [-]echoctl    同 [-]ctlecho 
+<DL COMPACT>
+<DT>[-]echoe<DD>
+同[-]crterase
+<DT>[-]echok<DD>
+在一个杀死字符后显示一个换行
+</DL>
+<P>
+
+* [-]echoke     同 [-]crtkill
+<DL COMPACT>
+<DT>[-]echonl<DD>
+即使不显示其它字符也换行
+</DL>
+<P>
+
+* [-]echoprt    
+向后显示在 '' 和 '/'之间的擦除字符 
+<DL COMPACT>
+<DT>[-]icanon<DD>
+打开 erase, kill, werase, 和 rprnt 这些特殊字符
+<DT>[-]iexten<DD>
+打开 非POSIX 特殊字符
+<DT>[-]isig<DD>
+打开中断，退出和挂起这些特殊字符
+<DT>[-]noflsh<DD>
+在中断和退出这些特殊字符后禁止刷新
+</DL>
+<P>
+
+* [-]prterase   
+同 [-]echoprt 
+<P>
+
+* [-]tostop     
+停止试图写终端的后台作业
+<P>
+
+* [-]xcase      
+与icanon同时使用, 表示用`'退出大写状态
+<P>
+
+综合设置:
+<P>
+
+* [-]LCASE      同 [-]lcase
+<DL COMPACT>
+<DT>cbreak<DD>
+同 <B>-icanon</B>
+<DT><B>-cbreak</B><DD>
+同 icanon
+<DT>cooked<DD>
+同 brkint ignpar istrip icrnl ixon opost isig
+icanon, eof 和 eol 字符被设为默认值
+<DT><B>-cooked</B><DD>
+同 raw
+<DT>crt<DD>
+同 echoe echoctl echoke
+<DT>dec<DD>
+同 echoe echoctl echoke <B>-ixany</B> intr ^c erase 0177
+kill ^u
+</DL>
+<P>
+
+* [-]decctlq    同 [-]ixany
+<DL COMPACT>
+<DT>ek<DD>
+将擦除，杀死字符设为它们的默认值
+<DT>evenp<DD>
+同 parenb <B>-parodd</B> cs7
+<DT><B>-evenp</B><DD>
+同 <B>-parenb</B> cs8
+</DL>
+<P>
+
+* [-]lcase      同 xcase iuclc olcuc
+<DL COMPACT>
+<DT>litout<DD>
+同 fB-parenb <B>-istrip</B> <B>-opost</B> cs8
+<DT><B>-litout</B><DD>
+同 parenb istrip opost cs7
+<DT>nl<DD>
+同 <B>-icrnl</B> <B>-onlcr</B>
+<DT><B>-nl</B><DD>
+同 icrnl <B>-inlcr</B> <B>-igncr</B> onlcr <B>-ocrnl</B> <B>-onlret</B>
+<DT>oddp<DD>
+同 parenb parodd cs7
+<DT><B>-oddp</B><DD>
+同 <B>-parenb</B> cs8
+<DT>[-]parity<DD>
+同 [-]evenp
+<DT>pass8<DD>
+同 <B>-parenb</B> <B>-istrip</B> cs8
+<DT><B>-pass8</B><DD>
+同 parenb istrip cs7
+<DT>raw<DD>
+同 <B>-ignbrk</B> <B>-brkint</B> <B>-ignpar</B> <B>-parmrk</B> <B>-inpck</B> <B>
+-istrip</B>
+<B>-inlcr</B> <B>-igncr</B> <B>-icrnl</B>  <B>-ixon</B>  <B>-ixoff</B>  <B>-iuc
+lc</B>  <B>-ixany</B>
+<B>-imaxbel</B> <B>-opost</B> <B>-isig</B> <B>-icanon</B> <B>-xcase</B> min 1 ti
+me 0
+<DT><B>-raw</B><DD>
+同 cooked
+<DT>sane<DD>
+同 cread <B>-ignbrk</B> brkint <B>-inlcr</B> <B>-igncr</B> icrnl
+<B>-ixoff</B> <B>-iuclc</B> <B>-ixany</B> imaxbel opost <B>-olcuc</B> <B>-ocrnl
+</B> onlcr
+<B>-onocr</B> <B>-onlret</B> <B>-ofill</B> <B>-ofdel</B> nl0 cr0 tab0 bs0 vt0 ff
+0
+isig icanon iexten echo echoe echok <B>-echonl</B> <B>-noflsh</B>
+<B>-xcase</B> <B>-tostop</B> <B>-echoprt</B> echoctl echoke, 所有特殊字符
+使用缺省值.
+</DL>
+<P>
+
+本命令处理连接到标准输入的终端行.如不带参数,则输出波特率, 行的约束规则,以及与健全
+的stty相背离的设置.在设置中, CHAR 是逐字读取的, 或是象 ^c, 0x37, 0177 或127这样的
+编码; 特殊值 ^- 或未定义被用来禁止特殊字符.
+<A NAME="lbAJ">&nbsp;</A>
+<H2>报告臭虫</H2>
+
+报告臭虫向.
+<A NAME="lbAK">&nbsp;</A>
+<H2>参见</H2>
+
+完整的文档
+<B>stty</B>
+
+保持为Texinfo手册.  如果
+<B>info</B>
+
+及
+<B>stty</B>
+
+在你的机器上正确安装的话, 命令
+<DL COMPACT>
+<DT><DD>
+<B>info stty</B>
+
+</DL>
+<P>
+
+会使你能够读取完整的手册.
+<A NAME="lbAL">&nbsp;</A>
+<H2>版权</H2>
+
+Copyright &#169; 1999 Free Software Foundation, Inc.
+<BR>
+
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>hunter77 &lt;email&gt;</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003.11.22</B>
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DL>
+<DT><A HREF="#lbAE">特殊字符</A><DD>
+<DT><A HREF="#lbAF">特殊设置</A><DD>
+<DT><A HREF="#lbAG">控制设置</A><DD>
+<DT><A HREF="#lbAH">输入设置:</A><DD>
+<DT><A HREF="#lbAI">本地设置:</A><DD>
+</DL>
+<DT><A HREF="#lbAJ">报告臭虫</A><DD>
+<DT><A HREF="#lbAK">参见</A><DD>
+<DT><A HREF="#lbAL">版权</A><DD>
+<DT><A HREF="#lbAM">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAN">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAO">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

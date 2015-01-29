@@ -1,0 +1,223 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of NMBD</TITLE>
+</HEAD><BODY>
+<H1>NMBD</H1>
+Section:  (8)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+nmbd - 向客户端提供构造在IP之上的NetBIOS名字服务的NetBIOS名字服务器
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<P>
+<B>nmbd</B> [-D] [-F] [-S] [-a] [-i] [-o] [-h] [-V][-d &lt;debug level&gt;] [-H &lt;lmhosts file&gt;] [-l &lt;log directory&gt;][-n &lt;primary netbios name&gt;] [-p &lt;port number&gt;] [-s &lt;configuration file&gt;]
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+<P>
+
+此程序是 <B><A HREF="/cgi-bin/man/man2html?7+Samba">Samba</A></B>(7) 套件的一部分。
+<P>
+<P>
+
+<B>nmbd</B> 是一个回应构造于IP之上的NetBIOS名字服务请求的服务器，这些请求由SMBD/CIFS
+客户(如Windows 95/98、NT和LanManager客户)产生。当然它也参与构造Windows的&quot;网
+络邻居”查看的浏览协议。
+<P>
+<P>
+
+当SMB/CIFS客户机启动时，会试图查找一个SMB/CIFS服务器。说得更精确些就是它们要知道
+正在使用的主机对应的IP地址。
+<P>
+<P>
+
+在其它的服务中，<B>nmbd</B> 将监听这样的请求，如果客户自身的NetBIOS名字已被指定的话就用正
+在运行的主机IP地址回复它。这个“自身的NetBIOS名字”在默认情况下将是正在运行的主机在
+DNS中的名字，但可以用 <B>-n</B> 参数(查看后面关于OPTIONS的描述)越过它。从而<B>nmbd</B> 将用它自已的名字来回应广播查询。要让 <B>nmbd</B> 回应额外名字的话可以在<B><A HREF="/cgi-bin/man/man2html?5+smb.conf">smb.conf</A></B>(5)配置文件中通过参数来设定。
+<P>
+<P>
+
+<B>nmbd</B> 也可用作一个WINS(Windows互联网名称服务)服务器。它作为WINS数据库服务器运作时，用名字注册请求来建立一个数据库以接收和回应客户对这些名字的查询。
+<P>
+<P>
+
+另外，<B>nmbd</B> 也可以作WINS代理，转发用户不能直接以WINS协议和WINS服务器交谈的广播查询。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+<P>
+<DL COMPACT>
+<DT>-D<DD>
+如果指定这个参数的话，将使 <B>nmbd</B> 作为一个后台守护程序运行。这样，它分配本身的进程在后台运行，并监视适当的端口请求。在默认情况下， <B>nmbd</B> 通常以命令行方式启动，后台运行。 <B>nmbd</B> 也能通过<B>inetd</B> 这个超级守护程序来启动，但不推荐这样做。 
+<P>
+<DT>-F<DD>
+If specified, this parameter causes the main <B>nmbd</B> process to not daemonize, i.e. double-fork and disassociate with the terminal. Child processes are still created as normal to service each connection request, but the main process does not exit. This operation mode is suitable for running <B>nmbd</B> under process supervisors such as <B>supervise</B> and <B>svscan</B> from Daniel J. Bernstein's <B>daemontools</B> package, or the AIX process monitor.
+<P>
+<P>
+<DT>-S<DD>
+If specified, this parameter causes <B>nmbd</B> to log to standard output rather than a file.
+<P>
+<P>
+<DT>-i<DD>
+If this parameter is specified it causes the server to run &quot;interactively&quot;, not as a daemon, even if the server is executed on the command line of a shell. Setting this parameter negates the implicit daemon mode when run from the command line. <B>nmbd</B> also logs to standard output, as if the <B>-S</B> parameter had been given.
+<P>
+<P>
+<DT>-h|--help<DD>
+Print a summary of command line options.
+<P>
+<P>
+<DT>-H &lt;filename&gt;<DD>
+指定NetBIOS的lmhosts文件。  NetBIOS的lmhosts文件是一份NetBIOS名字到IP地址对应关系的列表， nmbd服务器将会通过在<B>smb.conf</B> (5)文件中<I>name resolve order</I>描述的名字解析机制来装入和使用这个文件，以便让服务器解析可能的NetBIOS名字查询。注意到nmbd并<B>不</B>用这个文件的内容来回答可能的名字查询。在这个文件中添加内容只会影响本计算机的NetBIOS名字解析。
+<P>
+这个文件的默认存放路径已被作为编译处理的一部分加入到samba中了。通常默认路径是
+<BR>&nbsp;<I>/usr/local/samba/lib/lmhosts</I>,&nbsp;<I>/usr/samba/lib/lmhosts</I>&nbsp;或是&nbsp;<I>/etc/samba/lmhosts</I>。&nbsp;在<B>lmhosts</B>&nbsp;(5)手册页中查找描述此文件的详细内容。
+<P>
+<DT>-V<DD>
+打印出nmbd的版本信息。
+<P>
+<P>
+<DT>-s &lt;configuration file&gt;<DD>
+The file specified contains the configuration details required by the server. The information in this file includes server-specific information such as what printcap file to use, as well as descriptions of all the services that the server is to provide. See <I>smb.conf</I> for more information. The default configuration file name is determined at compile time.
+<P>
+<P>
+<DT>-d|--debug=debuglevel<DD>
+<I>debuglevel</I> 是一个从0到10的整数。如果没有指定此参数则默认的值是0。
+<P>
+如果这个值越高，越多关于服务器的详细活动信息将被记录到文件中。在0调试级时，只记录紧急错误
+和严重警告。对于日以即日地运行服务，1调试级是个合理的等级，它只产生一定数量的关于执行操作
+的信息。
+<P>
+<P>
+1以上的调试级将产生相当多的记录数据，并且只在研究问题时才有用。3以上的调试级只被设计为让开
+发者使用并会产生极大数量的记录数据，而且其中很多部分非常难以理解。
+<P>
+<P>
+注意在此使用这个参数将越过在<I>smb.conf</I> 文件中的<I>log level</I> 参数。
+<P>
+<DT>-l|--logfile=logbasename<DD>
+用参数-l可以指定一个带路径的文件名作为记录文件，并会在你给出的名称后自动加上
+<B>&quot;.client&quot;</B>的扩展名。The log file is never removed by the client.
+<P>
+<DT>-p &lt;UDP port number&gt;<DD>
+UDP端口号是一个正整数。 这个选项来改变<B>nmbd</B>响应查询的默认UDP端口号(通常它是 137) 。除非你是位这方面的专家，否则请不要用这个选项改变它。
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+<P>
+<DL COMPACT>
+<DT><I>/etc/inetd.conf</I><DD>
+如果你用 <B>inetd</B> 这个超级守护程序来运行nmbd服务器，那么必须在这个文件中包含适当的启动参数和信息。 
+<P>
+<DT><I>/etc/rc</I><DD>
+(也可以是你的系统所用的其它初始化脚本)
+<P>
+如果将nmbd当作服务，在启动时运行，这个文件必须包含合适的服务启动顺序。
+<P>
+<DT><I>/etc/services</I><DD>
+If running the server via the meta-daemon <B>inetd</B>, this file must contain a mapping of service name (e.g., netbios-ssn) to service port (e.g., 139) and protocol type (e.g., tcp).
+<P>
+<DT><I>/usr/local/samba/lib/smb.conf</I><DD>
+这是服务器配置文件 <B><A HREF="/cgi-bin/man/man2html?5+smb.conf">smb.conf</A></B>(5) 默认的存放位置。 系统安装配置文件通常的一些其它位置也可能是 <I>/usr/samba/lib/smb.conf</I> 和 <I>/etc/samba/smb.conf</I>。
+<P>
+当nmbd被用作WINS服务器时(参见 <B><A HREF="/cgi-bin/man/man2html?5+smb.conf">smb.conf</A></B>(5) 手册页中对 <I>wins support</I> 参数的描述)， <B>nmbd</B> 将会把WINS数据库文件<I>wins.dat</I>写到 <I>var/locks</I> 目录下。
+<P>
+如果 <B>nmbd</B> 作为 <B> 主浏览器</B> (参见<B>smb.conf</B> (5)手册页中对<I>local master</I>参数的描述)，<B>nmbd</B>将会把浏览数据库<I>browse.dat </I>写到<I>var/locks</I>目录下。
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>信号 SIGNALS</H2>
+
+<P>
+<P>
+
+我们 <B>不</B> 推荐你使用SIGKILL (-9)来终止<B>nmbd</B>进程除非这是最后的方法，因为这样做可能导致名字数据库不一致。正确的方法是发送SIGTERM (-15)信号并等待程序自行结束。
+<P>
+<P>
+
+<B>nmbd</B> 可以接受SIGHUP信号，这样程序将把名字清单写入位于<I>/usr/local/samba/var/locks</I> (或是<I>var/locks</I>)目录下的<I>namelist.debug</I>文件，同时这个信号也将导致程序把服务器的数据库写入<I>log.nmb</I>文件。
+<P>
+<P>
+
+另外，nmbd程序的调试记录等级也可以通过<B><A HREF="/cgi-bin/man/man2html?1+smbcontrol">smbcontrol</A></B>(1) 调高或者调低。(向程序发送一个SIGUSR1信号(kill -USR1 &lt;nmbd-pid&gt;)或SIGUSR2信号(kill -USR2 &lt;nmbd-pid&gt;)的方法在Samba2.2 中已经不再使用。) 通过使用这样的方法可以诊断一些暂时的问题，同时仍然可以在一个正常的并且较低的记录等级来运行。
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>版本 VERSION</H2>
+
+<P>
+<P>
+
+此手册页是针对samba套件版本3.0的。
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<P>
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?8+inetd">inetd</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?5+smb.conf">smb.conf</A></B>(5), <B><A HREF="/cgi-bin/man/man2html?1+smbclient">smbclient</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+testparm">testparm</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+testprns">testprns</A></B>(1)还有互联网草案 <I>rfc1001.txt</I>, <I>rfc1002.txt</I>. 另外，CIFS (从前的 SMB) 规约可以在 <A HREF="http://samba.org/cifs/网页上找到链接。">http://samba.org/cifs/网页上找到链接。</A>
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+<P>
+<P>
+
+samba软件和相关工具最初由Andrew Tridgell创建。samba现在由Samba Team 作为开源软件来发展，类似linux内核的开发方式。
+<P>
+<P>
+
+最初的samba手册页是 Karl Auer写的。
+手册页源码已经转换为YODL格式(另一种很好的开源软件，可以在<A HREF="ftp://ftp.ice.rug.nl/pub/unix找到)，由Jeremy">ftp://ftp.ice.rug.nl/pub/unix找到)，由Jeremy</A> Sllison 更新到Samba2.0 版本。
+Gerald Carter 在Samba2.2中将它转化为DocBook 格式。
+Alexander Bokovoy 在Samba 3.0中实现了DocBook XML4.2 格式的转换。
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">文件 FILES</A><DD>
+<DT><A HREF="#lbAG">信号 SIGNALS</A><DD>
+<DT><A HREF="#lbAH">版本 VERSION</A><DD>
+<DT><A HREF="#lbAI">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAJ">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

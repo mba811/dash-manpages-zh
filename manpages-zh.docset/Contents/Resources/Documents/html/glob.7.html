@@ -1,0 +1,242 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of GLOB</TITLE>
+</HEAD><BODY>
+<H1>GLOB</H1>
+Section: Linux Programmer's Manual (7)<BR>Updated: 12 June 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+glob - 形成路径名称
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+很久以前 在 UNIX V6 版 中 有一个 程序 
+<I>/etc/glob</I>
+
+用来 展开 通配符模板. 不久以后 它 成为 shell 内建功能.
+现在 人们 开发了 类似的 库函数
+<B><A HREF="/cgi-bin/man/man2html?3+glob">glob</A></B>(3),
+
+让 用户程序 实现 同样的 功能.
+<P>
+此 规则 遵循 (POSIX 1003.2, 3.13). 
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>通配符匹配 (WILDCARD MATCHING)</H2>
+
+包含 '?', '*' 或 '[' 字符的 字符串 称为 通配符模板(wildcard pattern).
+形成路径名(globbing) 指 一种 操作, 把 通配符模板 展开为 匹配 该串的 路径名.
+匹配 定义为:
+<P>
+不在 方括弧中 的 '?' 匹配 任意 单个 字符.
+<P>
+不在 方括弧中 的 '*' 匹配 任意 字符串, 包括 空串.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H3>字符集 (Character classes)</H3>
+
+对于 表达式 `[...]', 如果 在 第一个 '['符 后面 出现的 第一个 字符 不是 '!', 
+则 该 表达式 匹配 任意 一个 在 `[...]'内 出现的 字符. 方括弧内 不能 有 空串,
+因此 ']' 可以 作为 第一个 字符 出现在 方括弧内. (像 这样, '[][!]' 匹配 下列
+三个 字符 中的 任意 一个, '[', ']' 和 '!'.)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H3>范围集 (Ranges)</H3>
+
+字符集 有一个 特例:
+用 '-' 分开的 两个 字符 表示 一个 范围集.
+(像 这样, `[A-Fa-f0-9]' 等于 `[ABCDEFabcdef0123456789]'.)
+把 '-' 放到 方括弧内 的 开头 或 最后 可以 获得 它的 本意.
+(像 这样, `[]-]' 匹配 ']'和'-' 中 任意 一个. 而 `[--/]' 匹配 `-', `.' 和`/'中
+任意 一个.)
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H3>补集 (Complementation)</H3>
+
+表达式 '[!...]' 表示 一个 字符, 该 字符 不匹配 方括弧内 去掉 开头 '!' 后
+的 表达式. (像 这样, `[!]a-]' 匹配 除了 ']', 'a' 和 '-' 的 任意 一个 字符.)
+<P>
+要 去掉 '?', '*' 和 '[' 的 特殊 含义, 可以 通过 前面 加 一个 反斜杠;
+或者 在 shell 命令行 中, 通过 引号 来 引用 这些 字符.
+在 方括弧内 这些 字符 显露出 本意, 所以, '[[?*\]' 匹配 这 四个字符
+中 的 一个: '[', '?', '*', '\'.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>路径名 (PATHNAME)</H2>
+
+形成路径名 功能 应用于 路径 中 的 每一个 成员部分. 路径 中 的 '/' 不能 被
+通配符 '?' 或 '*', 或 范围集 如 '[.-0]' 匹配. 范围集 不能 直接 包含 '/', 
+否则 导致 语法错误.
+<P>
+如果 待匹配的 文件名 以'.'开头, 那么 这个 '.' 字符 必须 直接 给出. (比如说, 
+'rm *' 不会 删除 '.profile' 文件, 'tar c *' 不会 打包 你的 所有 文件; 
+用 'tar c .' 会 更好.)
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>空列表 (EMPTY LISTS)</H2>
+
+上述的 简单优雅 规则, 把 通配符模板 展开为 匹配的 路径名, 来源于 
+最初的 UNIX 定义. 它 允许 展开出 空串, 例如
+<P>
+<BR>
+
+<PRE>
+        xv -wait 0 *.gif *.jpg
+</PRE>
+
+<P>
+这里 可能 没有 *.gif 文件 (而且 不算 错误).
+<P>
+然而, POSIX 要求 句法 错误 或 路径名 列表 为 空 时, 保留 通配符模板 不变.
+(译注: 即 不展开.)
+<P>
+在
+<I>bash</I>
+
+中 可以 通过 设置
+<I>allow_null_glob_expansion=true</I>
+
+把 它 强置为 传统的 风格. (其他 地方 也有 类似的 问题, 例如, 老式的 语句 是
+<BR>
+
+<PRE>
+        rm `find . -name &quot;*~&quot;`
+</PRE>
+
+新的 写法 为
+<BR>
+
+<PRE>
+        rm -f nosuchfile `find . -name &quot;*~&quot;`
+</PRE>
+
+以 避免 由于 空参数调用
+<I>rm</I>
+
+而 产生 错误信息.)
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>注意 (NOTES)</H2>
+
+<A NAME="lbAK">&nbsp;</A>
+<H3>正规表达式 (Regular expressions)</H3>
+
+注意, 通配符模板 不是 正规表达式, 尽管 它们 有点象. 首先, 
+它 匹配 文件名, 而 不是 正文; 其次, 规则 不一样, 例如 正规表达式 里 的 '*'
+代表 零个或多个 前面内容的 重复.
+<P>
+正规表达式 的 方括弧表达式 用 '^' 引导 取反操作, (而不是 '[!...]').
+POSIX 声明, 在 通配符模板 中, '[^...]' 未做 定义.
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H3>字符集 和 国际化 (Character classes and Internationalization )</H3>
+
+当然, 范围集 最初 指 ASCII的 范围, 因此 '[ -%]' 意思是 '[ !&quot;#$%]','[a-z]'
+指所有小写字符.
+<P>
+一些 UNIX实现 把 这个 归纳为: 范围 X-Y 指 X的编码 到 Y的编码 之间的
+编码字符. 可是, 这 要求 用户 知道 他们 本地系统的 字符编码, 此外, 如果
+本地的 字母表顺序 和 字符集顺序 不对应, 那 就 更不方便了.
+<P>
+因此, POSIX 对 通配符模板 和 正规表达式 的 方括弧表达法 作了 重大扩展,
+上面 我们 知道了 方括弧表达式 中 的 三个 类型, 它们是 (i) 取补集
+(ii) 直接列出的 单个字符 和 (iii) 范围集.
+<P>
+POSIX 对 范围集 在 国际化 方面 作了 更有力的 说明, 并且 增加了 三个 类型:
+<P>
+(iii) 范围 X-Y 由 X 和 Y 之间 所有的字符 组成 (包括X和Y), X 和 Y 的 
+当前编码序列 由 当前场合的 LC_COLLATE 分类定义.
+<P>
+(iv) 命名字符集, 象
+<BR>
+
+<PRE>
+[:alnum:]  [:alpha:]  [:blank:]  [:cntrl:]
+[:digit:]  [:graph:]  [:lower:]  [:print:]
+[:punct:]  [:space:]  [:upper:]  [:xdigit:]
+</PRE>
+
+因此 可以 用 '[[:lower:]]' 代替 '[a-z]', 它 在 丹麦语 里 同样 有效, 虽然 
+丹麦的 字母表 里 'z' 后面 还有 三个 字母.
+这些 字符集 由 当前场合的 LC_CTYPE 分类定义.
+<P>
+(v) 符号对映, 象 '[.ch.]' 或 '[.a-acute.]',
+在 '[.' 和 '.]' 之间的 字符串 是 定义 在 当前场合的 对映元素.
+注意 这 可以 是 多字符元素.
+<P>
+(vi) 等类表达式, 象 '[=a=]',
+在 '[=' 和 '=]' 之间的 字符串 是 任意 等类 中 的 对映元素, 它 定义在 当前场合.
+例如, '[[=a=]]' 可以 等同于 `[a徉溻]' (警告: 这里 有 Latin-1 字符),
+也就是 `[a[.a-acute.][.a-grave.][.a-umlaut.][.a-circumflex.]]'.
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+sh">sh</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?3+glob">glob</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+fnmatch">fnmatch</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?7+locale">locale</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?7+regex">regex</A></B>(7)
+
+<P>
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@iname.com">xuming@iname.com</A>&gt;</B>
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/15</B>
+
+第一版
+<BR>
+
+<B>2001/11/17</B>
+
+第一次修订
+<A NAME="lbAP">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAD">通配符匹配 (WILDCARD MATCHING)</A><DD>
+<DL>
+<DT><A HREF="#lbAE">字符集 (Character classes)</A><DD>
+<DT><A HREF="#lbAF">范围集 (Ranges)</A><DD>
+<DT><A HREF="#lbAG">补集 (Complementation)</A><DD>
+</DL>
+<DT><A HREF="#lbAH">路径名 (PATHNAME)</A><DD>
+<DT><A HREF="#lbAI">空列表 (EMPTY LISTS)</A><DD>
+<DT><A HREF="#lbAJ">注意 (NOTES)</A><DD>
+<DL>
+<DT><A HREF="#lbAK">正规表达式 (Regular expressions)</A><DD>
+<DT><A HREF="#lbAL">字符集 和 国际化 (Character classes and Internationalization )</A><DD>
+</DL>
+<DT><A HREF="#lbAM">SEE ALSO</A><DD>
+<DT><A HREF="#lbAN">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAO">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAP">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

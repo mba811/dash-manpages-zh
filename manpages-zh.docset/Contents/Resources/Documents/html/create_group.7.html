@@ -1,0 +1,103 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE GROUP</TITLE>
+</HEAD><BODY>
+<H1>CREATE GROUP</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE GROUP - 定义一个新的用户组
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE GROUP <I>name</I> [ [ WITH ] <I>option</I> [ ... ] ]
+
+where <I>option</I> can be:
+
+     SYSID <I>gid</I>
+   | USER  <I>username</I> [, ...]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE GROUP</B> 将在数据库集群上创建一个新组。 要使用这条命令，你必须是数据库超级用户。
+<P>
+
+<BR>&nbsp;使用&nbsp;ALTER&nbsp;GROUP&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+alter_group">alter_group</A></B>(7)]&nbsp;&nbsp;修改组成员，DROP&nbsp;GROUP&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+drop_group">drop_group</A></B>(7)]&nbsp;删除一个组。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B> <DD>
+组名。
+<DT><B></B><I>gid</I><B></B><DD>
+SYSID 子句可以用于选择 PostgreSQL 里新组的组标识（group ID）。 不过，这样做不是必须的。
+<P>
+<BR>&nbsp;如果没有声明这个，将使用从&nbsp;1&nbsp;开始的，已分配的最高组标识加一作为缺省值。
+<DT><B></B><I>username</I><B></B><DD>
+<BR>&nbsp;包括到组里面的用户列表。用户必须已经存在。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;创建一个空组：
+<P>
+<PRE>
+CREATE GROUP staff;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;创建一个有成员的组：
+<P>
+<PRE>
+CREATE GROUP marketing WITH USER jonathan, david;
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+SQL 标准中没有 CREATE GROUP 。Roles 在概念上与组类似。
+<A NAME="lbAH">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

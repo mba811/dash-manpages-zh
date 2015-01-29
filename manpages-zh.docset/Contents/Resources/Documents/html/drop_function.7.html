@@ -1,0 +1,92 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DROP FUNCTION</TITLE>
+</HEAD><BODY>
+<H1>DROP FUNCTION</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+DROP FUNCTION - 删除一个函数
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+DROP FUNCTION <I>name</I> ( [ <I>type</I> [, ...] ] ) [ CASCADE | RESTRICT ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>DROP FUNCTION</B> 将删除一个现存的函数的引用。 要执行这条命令，用户必须是函数的所有者。 必须声明函数的参数类型，因为几个不同的函数可能会有同样的名字和不同的参数列表。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;现存的函数名称（可以有模式修饰）。
+<DT><B></B><I>type</I><B></B><DD>
+<BR>&nbsp;函数参数的类型。
+<DT><B>CASCADE</B><DD>
+<BR>&nbsp;自动删除依赖于函数的对象（比如操作符或触发器）。
+<DT><B>RESTRICT</B><DD>
+<BR>&nbsp;如果有任何依赖对象存在，则拒绝删除该函数。这个是缺省。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;这条命令删除平方根函数：
+<P>
+<PRE>
+DROP FUNCTION sqrt(integer);
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;在&nbsp;SQL&nbsp;标准里定义了一个&nbsp;DROP&nbsp;FUNCTION&nbsp;语句。&nbsp;但和这条命令不兼容。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+CREATE FUNCTION [<B><A HREF="/cgi-bin/man/man2html?7+create_function">create_function</A></B>(7)], ALTER FUNCTION [<B><A HREF="/cgi-bin/man/man2html?l+alter_function">alter_function</A></B>(l)]
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

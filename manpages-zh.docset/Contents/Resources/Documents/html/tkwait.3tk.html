@@ -1,0 +1,95 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of tkwait</TITLE>
+</HEAD><BODY>
+<H1>tkwait</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tkwait - 等待变量更改或窗口被销毁
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>tkwait variable </B><I>name</I>
+<P>
+<B>tkwait visibility </B><I>name</I>
+<P>
+<B>tkwait window </B><I>name</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>tkwait</B> 
+命令等待多个事情中的一个发生，接着返回而不做其他动作。返回的值总是一个空串。如果第一个参数是 <B>variable</B> (或它的任何简写)则第二个参数是一个全局变量的名字，并且命令等待这个变量被修改。如果第一个参数是<B>visibility</B> (或它的任何简写)则第二个参数是一个窗口的名字，并且 <B>tkwait</B> 命令等待它的可见性状态的变化(由到来的 VisibilityNotify 事件来指示)。这种形式典型的用于等待一个新近建立的窗口在屏幕上显示，此后做一些动作。如果第一个参数是 <B>window</B> (或它的任何简写)则它的第二个参数是一个窗口的名字，并且 <B>tkwait</B> 命令等待这个窗口被销毁。这种形式典型的用于等待用户完成与与对话框的交互，此后使用这次交互的结果。
+<P>
+
+在 <B>tkwait</B> 命令等待期间它以平常的方式处理事件，所以应用可以继续响应用户交互。如果一个事件处理器再次调用 <B>tkwait</B>，在外部调用可以完成之前嵌套的调用必须完成。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+variable, visibility, wait, window
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/12/28</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

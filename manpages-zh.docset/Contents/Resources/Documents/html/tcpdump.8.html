@@ -1,0 +1,1443 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of TCPDUMP</TITLE>
+</HEAD><BODY>
+<H1>TCPDUMP</H1>
+Section: Maintenance Commands (8)<BR>Updated: 30 June 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tcpdump - 转储网络上的数据流
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+
+<B>tcpdump</B>
+
+[
+<B>-adeflnNOpqStvx</B>
+
+] [
+<B>-c</B>
+
+<I>count</I>
+
+] [
+<B>-F</B>
+
+<I>file</I>
+
+]
+<BR>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[
+<B>-i</B>
+
+<I>interface</I>
+
+] [
+<B>-r</B>
+
+<I>file</I>
+
+]
+[
+<B>-s</B>
+
+<I>snaplen</I>
+
+]
+<BR>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[
+<B>-T</B>
+
+<I>type</I>
+
+]
+[
+<B>-w</B>
+
+<I>file</I>
+
+]
+[
+<I>expression</I>
+
+]
+<BR>
+
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<P>
+
+<I>Tcpdump</I> 打印出 在某个 网络界面 上,
+匹配 布尔表达式 <I>expression</I> 的报文 的 报头.
+<P>
+
+<B>对于 SunOS 的 nit 或 bpf 界面:</B>
+
+要 运行
+<I>tcpdump ,</I>
+
+你 必须 有 
+<I>/dev/nit</I>
+
+或
+<I>/dev/bpf*</I>
+
+的 读访问 权限.
+<P>
+<B>对于 Solaris 的 dlpi:</B>
+
+你 必须 有 网络仿真设备 (network pseudo device), 如
+<I>/dev/le</I>
+
+的 读访问 权限.
+<P>
+<B>对于 HP-UX 的 dlpi:</B>
+
+你 必须 是 root, 或者 把它 安装成 root 的 设置uid 程序.
+<P>
+<B>对于 IRIX 的 snoop:</B>
+
+你 必须 是 root, 或者 把它 安装成 root 的 设置uid 程序.
+<P>
+<B>对于 Linux:</B>
+
+你 必须 是 root, 或者 把它 安装成 root 的 设置uid 程序.
+<P>
+<B>对于 Ultrix 和 Digital UNIX:</B>
+
+一旦 超级用户 使用
+<I><A HREF="/cgi-bin/man/man2html?8+pfconfig">pfconfig</A></I>(8)
+
+开放了 promiscuous 操作模式 (promiscuous-mode),
+任何用户 都可以 运行
+<B>tcpdump</B>.
+
+<P>
+<B>对于 BSD:</B>
+
+你 必须 有 
+<I>/dev/bpf*</I>
+
+的 读访问 权限.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+<DL COMPACT>
+<DT><B>-a</B>
+
+<DD>
+试着 把 网络和广播地址 转换成 名称.
+<DT><B>-c</B>
+
+<DD>
+当 收到 <I>count</I> 报文 后 退出.
+<DT><B>-d</B>
+
+<DD>
+把 编译好的 报文匹配代码 (packet-matching code) 翻译成 可读形式,
+传往 标准输出, 然后退出.
+<DT><B>-dd</B>
+
+<DD>
+把 报文匹配代码 (packet-matching code) 以 
+<B>C</B>
+
+程序片断 的 形式 输出.
+<DT><B>-ddd</B>
+
+<DD>
+把 报文匹配代码 (packet-matching code) 以 十进制数 形式 输出 
+(前面 加上 总数).
+<DT><B>-e</B>
+
+<DD>
+显示 链路层报头.
+<DT><B>-f</B>
+
+<DD>
+以 数字形式 显示 '外部的' 互联网地址, 而不是 字符形式 (这个 选项 用来
+绕开 脑壳坏光的 SUN 黄页服务器 的 问题 --- 一般说来 当它 翻译 外部网络
+的 数字地址 时 会长期挂起).
+<DT><B>-F</B>
+
+<DD>
+把 <I>file</I> 的内容 用作 过滤表达式. 忽略 命令行 上 的 表达式.
+<DT><B>-i</B>
+
+<DD>
+监听 <I>interface</I>.
+如果 不指定 接口, <I>tcpdump</I> 在 系统 的 接口 清单 中, 寻找 号码最小,
+已经 配置好的 接口 (loopback 除外). 选中的时候 会 中断 连接.
+<DT><B>-l</B>
+
+<DD>
+行缓冲 标准输出. 可用于 捕捉 数据 的 同时 查看 数据. 例如,
+<BR>
+
+``tcpdump&nbsp;&nbsp;-l&nbsp;&nbsp;|&nbsp;&nbsp;tee dat'' or
+``tcpdump&nbsp;&nbsp;-l &nbsp;&nbsp;&gt; dat&nbsp;&nbsp;&amp;&nbsp;&nbsp;tail&nbsp;&nbsp;-f&nbsp;&nbsp;dat''.
+<DT><B>-n</B>
+
+<DD>
+不要把 地址 转换成 名字 (指的是 主机地址, 端口号等)
+<DT><B>-N</B>
+
+<DD>
+不显示 主机名字 中的 域名 部分. 例如, 如果 使用 这个 选项, 
+<I>tcpdump</I> 只显示 ``nic'', 而不是 ``nic.ddn.mil''.
+<DT><B>-O</B>
+
+<DD>
+禁止运行 报文匹配代码 的 优化器. 这个选项 只有 当你 怀疑 优化器 有 bug 时 
+才有用.
+<DT><B>-p</B>
+
+<DD>
+<I>禁止</I> 把 接口 置成 promiscuous(杂凑) 模式. 注意, 接口 有可能 因 其他原因
+而 处于 promiscuous 模式; 因此, '-p' 不能 作为
+`ether host {local-hw-addr} 或 ether broadcast' 的 简写.
+<DT><B>-q</B>
+
+<DD>
+快速输出. 显示 较少的 协议信息, 输出行 会 短一点点.
+<DT><B>-r</B>
+
+<DD>
+从 <I>file</I> 中 读入 数据报 (文件 是用 -w 选项 创建的).
+如果 <I>file</I> 是 ``-'', 就从 标准输入 读入.
+<DT><B>-s</B>
+
+<DD>
+从每个 报文 中 截取 <I>snaplen</I> 字节的数据, 而不是 缺省的 68 (如果是
+SunOS 的 NIT, 最小值是 96). 68 个字节 适用于 IP, ICMP, TCP 和 UDP, 
+但是 有可能 截掉 名字服务器 和 NFS 报文 的 协议 信息 (见下文).
+输出时 如果指定 ``[|<I>proto</I>]'',  tcpdump 可以 指出 那些 捕捉量过小
+的 数据报, 这里的 <I>proto</I> 是 截断发生处 的 协议层 名称.
+注意, 采用 更大的 捕捉范围 不但 增加了 处理 报文 的 时间, 而且 减少了
+报文的 缓冲 数量, 可能 导致 报文的丢失. 你 应该 把 <I>snaplen</I> 设的
+尽量小, 只要 能够 容纳 你 需要 的 协议信息 就可以了.
+<P>
+<DT><B>-T</B>
+
+<DD>
+把 通过 &quot;<I>expression</I>&quot; 挑选出来的 报文 解释成 指定的 <I>type</I>. 
+目前 已知 的 类型 有:
+<B>rpc</B> (远程过程调用 Remote Procedure Call),
+<B>rtp</B> (实时应用协议 Real-Time Applications protocol),
+<B>rtcp</B> (实时应用控制协议 Real-Time Applications control protocol),
+<B>vat</B> (可视音频工具 Visual Audio Tool),
+和
+<B>wb</B> (分布式白板 distributed White Board).
+<DT><B>-S</B>
+
+<DD>
+显示 绝对的, 而不是 相对的 TCP 流序号.
+<DT><B>-t</B>
+
+<DD>
+<I>禁止</I> 显示 时戳标志.
+<DT><B>-tt</B>
+
+<DD>
+显示 未格式化的 时戳标志.
+<DT><B>-v</B>
+
+<DD>
+(稍微多一点) 繁琐的输出. 例如, 显示 IP 数据报 中的 生存周期 和 服务类型.
+<DT><B>-vv</B>
+
+<DD>
+更繁琐的输出. 例如, 显示 NFS 应答报文 的 附加域.
+<DT><B>-w</B>
+
+<DD>
+把 原始报文 存进 <I>file</I>, 不做 分析 和 显示. 它们 可以 以后 用 -r 
+选项 显示. 如果 <I>file</I> 是 ``-'', 就 写往 标准输出.
+<DT><B>-x</B>
+
+<DD>
+以 16 进制数 形式 显示 每一个 报文 (去掉链路层报头后) .
+可以 显示 较小的 完整 报文, 否则 只 显示
+<I>snaplen</I>
+
+个 字节 .
+<DT><I>expression</I><DD>
+<DL COMPACT><DT><DD>
+用来 选择 要 转储 的 数据报.  如果 没有 指定 <I>expression</I> ,
+就 转储 网络的 全部 报文.  否则, 只转储 相对 <I>expression</I> 为 `true' 
+的 数据报.
+<P>
+
+<I>expression</I> 由 一个或多个
+<I>原语 (primitive) </I>
+
+组成. 原语 通常 由 一个
+<I>标识 </I>
+
+(id, 名称或数字), 和 标识 前面的 一个或多个 修饰子(qualifier) 组成.
+修饰子 有 三种 不同的类型:
+<DL COMPACT>
+<DT><I>type</I><DD>
+类型修饰子 指出 标识名称 或 标识数字 代表 什么 类型的东西.
+可以使用的 类型 有
+<B>host</B>,
+
+<B>net</B>
+
+和
+<B>port</B>.
+
+例如, `host foo', `net 128.3', `port 20'.  如果 不指定 类型修饰子,
+就使用 缺省的
+<B>host .</B>
+
+<P>
+<DT><I>dir</I><DD>
+方向修饰子 指出 相对于 
+<B>标识</B>
+
+的 传输方向 (数据是 传入还是传出 标识).
+可以使用的 方向 有
+<B>src</B>,
+
+<B>dst</B>,
+
+<B>src or dst</B>
+
+和
+<B>src and</B>
+
+<B>dst</B>.
+
+例如, `src foo', `dst net 128.3', `src or dst port ftp-data'.  
+如果 不指定 方向修饰子, 就使用 缺省的
+<B>src or dst .</B>
+
+对于 `null' 链路层 (就是说 象 slip 之类的 点到点 协议), 用
+<B>inbound</B>
+
+和
+<B>outbound</B>
+
+修饰子 指定 所需的 传输方向.
+<DT><I>proto</I><DD>
+协议修饰子 要求 匹配 指定的协议. 可以使用的 协议 有:
+<B>ether</B>,
+
+<B>fddi</B>,
+
+<B>ip</B>,
+
+<B>arp</B>,
+
+<B>rarp</B>,
+
+<B>decnet</B>,
+
+<B>lat</B>,
+
+<B>sca</B>,
+
+<B>moprc</B>,
+
+<B>mopdl</B>,
+
+<B>tcp</B>
+
+和
+<B>udp</B>.
+
+例如, `ether src foo', `arp net 128.3', `tcp port 21'.  如果 不指定
+协议修饰子, 就使用 所有 符合 类型 的 协议. 例如, `src foo' 指 
+`(ip 或 arp 或 rarp) src foo' (注意后者不符合语法), `net bar' 指 `(ip 或
+arp 或 rarp) net bar',  `port 53' 指 `(tcp 或 udp) port 53'.
+</DL>
+<P>
+
+[`fddi' 实际上 是 `ether' 的 别名; 分析器 把 它们 视为
+``用在 指定 网络接口 上的 数据链路层.''  FDDI 报头 包含 类似于 以太协议
+的 源目地址, 而且 通常 包含 类似于 以太协议 的 报文类型, 因此 你 可以
+过滤 FDDI 域, 就象 分析 以太协议 一样. FDDI 报头 也 包含 其他 域, 但是
+你 不能 在 过滤器 表达式 里 显式描述.]
+<P>
+<P>
+
+作为 上述 的 补充, 有一些 特殊的 `原语' 关键字:
+<B>gateway</B>,
+
+<B>broadcast</B>,
+
+<B>less</B>,
+
+<B>greater</B>
+
+和 数学表达式. 
+它们 不同于 上面的模式, 这些 在 后面 有 叙述.
+<P>
+
+更复杂的 过滤器表达式 可以 通过
+<B>and</B>,
+
+<B>or</B>
+
+和
+<B>not</B>
+
+连接 原语 来 组建.  例如, `host foo and not port ftp and not port ftp-data'.
+为了少敲点键, 可以忽略 相同的 修饰子.  例如,
+`tcp dst port ftp or ftp-data or domain' 实际上 就是
+`tcp dst port ftp or tcp dst port ftp-data or tcp dst port domain'.
+<P>
+
+允许的 原语 有:
+<DL COMPACT>
+<DT><B>dst host </B><I>host</I><DD>
+如果 报文中 IP 的 目的地址域 是 <I>host</I>, 则 逻辑 为 真.
+<I>host</I> 既可以 是 地址, 也可以 是 主机名.
+<DT><B>src host </B><I>host</I><DD>
+如果 报文中 IP 的 源地址域 是 <I>host</I>, 则 逻辑 为 真.
+<DT><B>host </B><I>host</I><DD>
+如果 报文中 IP 的 源地址域 或者 目的地址域 是 <I>host</I>, 则 逻辑 为 真.
+上面 所有的 host 表达式 都可以 加上
+<B>ip</B>, <B>arp</B>, 或 <B>rarp</B> 关键字 做 前缀, 就象:
+
+<PRE>
+<B>ip host </B><I>host</I>
+</PRE>
+
+
+它等价于:
+
+<PRE>
+<B>ether proto </B><I>\ip</I><B> and host </B><I>host</I>
+</PRE>
+
+
+如果 <I>host</I> 是 拥有 多个 IP 地址 的 主机名, 它的 每个地址 都会 被查验.
+<P>
+<DT><B>ether dst </B><I>ehost</I><DD>
+如果 报文的 以太目的地址 是 <I>ehost</I>, 则 逻辑 为 真. <I>Ehost</I>
+既可以是 名字 (/etc/ethers 里有), 也可以是 数字 (有关 数字格式 另见
+<I><A HREF="/cgi-bin/man/man2html?3N+ethers">ethers</A></I>(3N)
+
+).
+<DT><B>ether src </B><I>ehost</I><DD>
+如果 报文的 以太源地址 是 <I>ehost</I>, 则 逻辑 为 真.
+<DT><B>ether host </B><I>ehost</I><DD>
+如果 报文的 以太源地址 或 以太目的地址 是 <I>ehost</I>, 则 逻辑 为 真.
+<DT><B>gateway</B> <I>host</I><DD>
+如果 报文 把 <I>host</I> 当做 网关, 则 逻辑 为 真.  也就是说, 报文的
+以太源或目的地址 是 <I>host</I>, 但是 IP 的 源目地址 都不是 <I>host</I>.
+<I>host</I> 必须 是个 主机名, 而且 必须 存在 /etc/hosts 和 /etc/ethers 中.  
+(一个等价的表达式是
+
+<PRE>
+<B>ether host </B><I>ehost </I><B>and not host </B><I>host</I>
+</PRE>
+
+
+对于 <I>host / ehost</I>, 它既可以是 名字, 也可以是 数字.)
+<DT><B>dst net </B><I>net</I><DD>
+如果 报文的 IP 目的地址 属于 网络号 <I>net</I>, 则 逻辑 为 真. <I>net</I> 
+既可以 是 名字 (存在 /etc/networks 中), 也可以是 网络号. 
+(详见 <I><A HREF="/cgi-bin/man/man2html?4+networks">networks</A>(4)</I>).
+<DT><B>src net </B><I>net</I><DD>
+如果 报文的 IP 源地址 属于 网络号 <I>net</I>, 则 逻辑 为 真.
+<DT><B>net </B><I>net</I><DD>
+如果 报文的 IP 源地址 或 目的地址 属于 网络号 <I>net</I>, 则 逻辑 为 真.
+<DT><B>net </B><I>net</I> <B>mask </B><I>mask</I><DD>
+如果 IP 地址 匹配 指定 网络掩码(netmask) 的 <I>net</I>,  则 逻辑 为 真.
+本原语 可以用 <B>src</B> 或 <B>dst</B> 修饰.
+<DT><B>net </B><I>net</I>/<I>len</I><DD>
+如果 IP 地址 匹配 指定 网络掩码 的 <I>net</I>,  则 逻辑 为 真,
+掩码 的 有效位宽 为 <I>len</I>.
+本原语 可以用 <B>src</B> 或 <B>dst</B> 修饰.
+<DT><B>dst port </B><I>port</I><DD>
+如果 报文 是 ip/tcp 或 ip/udp, 并且 目的端口 是 <I>port</I>, 则 逻辑 为 真.
+<I>port</I> 是一个 数字, 也可以是 /etc/services 中 说明过的 名字 (参看
+<I><A HREF="/cgi-bin/man/man2html?4P+tcp">tcp</A></I>(4P)
+
+和
+<I><A HREF="/cgi-bin/man/man2html?4P+udp">udp</A></I>(4P)).
+
+如果 使用 名字, 则 检查 端口号 和 协议. 如果 使用 数字, 或者 有二义的名字,
+则 只检查 端口号 (例如, <B>dst port 513</B> 将显示 tcp/login 的数据 和 udp/who 
+的数据, 而 <B>port domain</B> 将显示 tcp/domain 和 udp/domain 的数据).
+<DT><B>src port </B><I>port</I><DD>
+如果 报文 的 源端口号 是 <I>port</I>, 则 逻辑 为 真.
+<DT><B>port </B><I>port</I><DD>
+如果 报文 的 源端口 或 目的端口 是 <I>port</I>, 则 逻辑 为 真.
+上述的 任意一个 端口表达式 都可以 用 关键字
+<B>tcp</B> 或 <B>udp</B> 做 前缀, 就象:
+
+<PRE>
+<B>tcp src port </B><I>port</I>
+</PRE>
+
+
+它 只匹配 源端口 是 <I>port</I> 的 TCP 报文.
+<DT><B>less </B><I>length</I><DD>
+如果 报文 的 长度 小于等于 <I>length</I>, 则 逻辑 为 真.
+它等同于:
+
+<PRE>
+<B>len &lt;= </B><I>length</I>.
+</PRE>
+
+
+<DT><B>greater </B><I>length</I><DD>
+如果 报文 的 长度 大于等于 <I>length</I>, 则 逻辑 为 真.
+它等同于:
+
+<PRE>
+<B>len &gt;= </B><I>length</I>.
+</PRE>
+
+
+<DT><B>ip proto </B><I>protocol</I><DD>
+如果 报文 是 IP 数据报(参见
+<I><A HREF="/cgi-bin/man/man2html?4P+ip">ip</A></I>(4P))<I>,</I>
+
+其 内容 的 协议类型 是 <I>protocol</I>, 则 逻辑 为 真.
+<I>Protocol</I> 可以是 数字, 也可以是 下列 名称 中的 一个:
+<I>icmp</I>, <I>igrp</I>, <I>udp</I>, <I>nd</I>, 或 <I>tcp</I>.
+注意 这些 标识符 <I>tcp</I>, <I>udp</I>, 和 <I>icmp</I> 也是 关键字,
+所以 必须 用 反斜杠(\) 转义, 在 C-shell 中 应该是 \\ .
+<DT><B>ether broadcast</B><DD>
+如果 报文 是 以太广播报文, 则 逻辑 为 真.
+关键字 <I>ether</I> 是 可选的.
+<DT><B>ip broadcast</B><DD>
+如果 报文 是 IP广播报文, 则 逻辑 为 真. Tcpdump 检查 全0 和 全1 广播约定,
+并且 检查 本地 的 子网掩码.
+<DT><B>ether multicast</B><DD>
+如果 报文 是 以太多目传送报文(multicast), 则 逻辑 为 真.
+关键字 <I>ether</I> 是 可选的. 这实际上 是 `<B>ether[0] &amp; 1 != 0</B>' 的简写.
+<DT><B>ip multicast</B><DD>
+如果 报文 是 IP多目传送报文, 则 逻辑 为 真.
+<DT><B>ether proto </B><I>protocol</I><DD>
+如果 报文协议 属于 以太类型 的 <I>protocol</I>, 则 逻辑 为 真.
+<I>Protocol</I> 可以是 数字, 也可以是 名字, 如
+<I>ip</I>, <I>arp</I>, 或 <I>rarp</I>.
+注意 这些 标识符 也是 关键字, 所以 必须 用 反斜杠(\) 转义.
+[如果是 FDDI (例如, `<B>fddi protocol arp</B>'), 协议 标识 来自 802.2 
+逻辑链路控制(LLC)报头, 它 通常 位于 FDDI 报头 的 顶层. 当 根据 协议标识
+过滤 报文 时, <I>Tcpdump</I> 假设 所有的 FDDI 报文 含有 LLC 报头, 而且
+LLC 报头 用的是 SNAP 格式.]
+<P>
+<DT><B>decnet src </B><I>host</I><DD>
+如果 DECNET 的 源地址 是
+<I>host</I>,
+
+则 逻辑 为 真, 该 主机地址 的 形式 可能 是 ``10.123'', 或者是 DECNET 主机名.
+[只有 配置成 运行 DECNET 的 Ultrix 系统 支持 DECNET 主机名.]
+<DT><B>decnet dst </B><I>host</I><DD>
+如果 DECNET 的 目的地址 是
+<I>host</I>,
+
+则 逻辑 为 真.
+<DT><B>decnet host </B><I>host</I><DD>
+如果 DECNET 的 源地址 或 目的地址 是
+<I>host</I>,
+
+则 逻辑 为 真.
+<DT><B>ip</B>, <B>arp</B>, <B>rarp</B>, <B>decnet</B><DD>
+是:
+
+<PRE>
+<B>ether proto </B><I>p</I>
+</PRE>
+
+
+的 简写 形式, 其中 <I>p</I> 为 上述 协议 的 一种.
+<DT><B>lat</B>, <B>moprc</B>, <B>mopdl</B><DD>
+是:
+
+<PRE>
+<B>ether proto </B><I>p</I>
+</PRE>
+
+
+的 简写 形式, 其中 <I>p</I> 为 上述 协议 的 一种.
+注意
+<I>tcpdump</I> 目前 不知道 如何 分析 这些 协议.
+<DT><B>tcp</B>, <B>udp</B>, <B>icmp</B><DD>
+是:
+
+<PRE>
+<B>ip proto </B><I>p</I>
+</PRE>
+
+
+的 简写 形式, 其中 <I>p</I> 为 上述 协议 的 一种.
+<DT><I>expr relop expr</I><DD>
+如果 这个 关系式 成立, 则 逻辑 为 真, 其中 <I>relop</I> 是 &gt;, &lt;, &gt;=, &lt;=, =, != 
+之一, <I>expr</I> 是 数学表达式, 由 常整数(标准C语法形式), 普通的 二进制运算符
+[+, -, *, /, &amp;, |], 一个 长度运算符, 和 指定的 报文数据访问算符 组成.
+要 访问 报文内 的 数据, 使用 下面的 语法:
+
+<PRE>
+<I>proto</I><B> [ </B><I>expr</I><B> : </B><I>size</I><B> ]</B>
+</PRE>
+
+
+<I>Proto</I> 是 <B>ether, fddi,
+ip, arp, rarp, tcp, udp, </B>or <B>icmp</B> 之一, 同时 也指出了 下标 操作 的
+协议层. <I>expr</I> 给出 字节单位 的 偏移量, 该 偏移量 相对于 指定的 协议层.
+<I>Size</I> 是 可选项, 指出 感兴趣的 字节数; 它可以 是 1, 2, 4, 缺省为 1 字节.
+由 关键字 <B>len</B> 给出的 长度运算符 指明 报文 的 长度.
+<P>
+例如, `<B>ether[0] &amp; 1 != 0</B>' 捕捉 所有的 多目传送 报文.
+表达式 `<B>ip[0] &amp; 0xf != 5</B>' 捕捉 所有 带 可选域 的 IP 报文.
+表达式 `<B>ip[6:2] &amp; 0x1fff = 0</B>' 只捕捉 未分片 和 片偏移为0 的 数据报.
+这种 检查 隐含在 <B>tcp</B> 和 <B>udp</B> 下标操作 中.
+例如, <B>tcp[0]</B> 一定是 TCP <I>报头</I> 的 第一个 字节, 而不是 其中 某个
+IP片 的 第一个 字节.
+</DL>
+<P>
+
+原语 可以 用 下述 方法 结合使用:
+<DL COMPACT>
+<DT><DD>
+园括弧 括起来的 原语 和 操作符 (园括弧 在 Shell 中 有专用, 所以必须转义).
+<DT><DD>
+取反操作 (`<B>!</B>' or `<B>not</B>').
+<DT><DD>
+连结操作 (`<B>&amp;&amp;</B>' or `<B>and</B>').
+<DT><DD>
+或操作 (`<B>||</B>' or `<B>or</B>').
+</DL>
+<P>
+
+取反操作 有 最高优先级.
+或操作 和 连结操作 有 相同的 优先级, 运算时 从左到右 结合.
+注意 连结操作 需要 显式的 <B>and</B> 算符, 而不是 并列放置.
+<P>
+
+如果 给出 标识符, 但没给 关键字, 那么 暗指 最近使用 的 关键字.
+例如,
+
+<PRE>
+<B>not host vs and ace</B>
+</PRE>
+
+
+作为
+
+<PRE>
+<B>not host vs and host ace</B>
+</PRE>
+
+
+的 简写形式, 不应该 和
+
+<PRE>
+<B>not ( host vs or ace )</B>
+</PRE>
+
+
+混淆.
+<P>
+
+表达式参数 可以 作为 单个 参数, 也可以 作为 复合参数 传给 tcpdump,
+后者 更方便 一些.
+一般说来, 如果 表达式 包含 Shell 元字符(metacharacter), 传递 单个 括起来
+的 参数 要 容易 一些. 复合参数 在 被解析前 用 空格 联接 一起.
+<P>
+</DL>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>示例 (EXAMPLES)</H2>
+
+<P>
+
+显示 所有 进出 <I>sundown</I> 的 报文:
+<DL COMPACT><DT><DD>
+<PRE>
+<B>tcpdump host sundown</B>
+</PRE>
+
+</DL>
+
+<P>
+
+显示 <I>helios</I> 和 主机 <I>hot</I>, <I>ace</I> 之间 的 报文 传送:
+<DL COMPACT><DT><DD>
+<PRE>
+<B>tcpdump host helios and \( hot or ace \)</B>
+</PRE>
+
+</DL>
+
+<P>
+
+显示 <I>ace</I> 和 除了 <I>helios</I> 以外的 所有 主机 的 IP报文:
+<DL COMPACT><DT><DD>
+<PRE>
+<B>tcpdump ip host ace and not helios</B>
+</PRE>
+
+</DL>
+
+<P>
+
+显示 本地的主机 和 Berkeley的主机 之间 的 网络数据:
+<DL COMPACT><DT><DD>
+<PRE>
+<B>tcpdump net ucb-ether</B>
+</PRE>
+
+</DL>
+
+<P>
+
+显示 所有 通过 网关 <I>snup</I> 的 ftp 报文
+(注意 这个 表达式 被 单引号 括起, 防止 shell 解释 园括弧):
+<DL COMPACT><DT><DD>
+<PRE>
+<B>tcpdump 'gateway snup and (port ftp or ftp-data)'</B>
+</PRE>
+
+</DL>
+
+<P>
+
+显示 既不是 来自 本地主机, 也不是 传往 本地主机 的 网络数据
+(如果 报文 通过 网关 进入 其他网络, 那么 它 绝不可能 到达 你的 本地网络).
+<DL COMPACT><DT><DD>
+<PRE>
+<B>tcpdump ip and not net </B><I>localnet</I>
+</PRE>
+
+</DL>
+
+<P>
+
+显示 每个 TCP会话 的 起始 和 结束 报文 (SYN 和 FIN 报文), 而且 会话方 中
+有一个 远程主机.
+<DL COMPACT><DT><DD>
+<PRE>
+<B>tcpdump 'tcp[13] &amp; 3 != 0 and not src and dst net </B><I>localnet</I>'
+</PRE>
+
+</DL>
+
+<P>
+
+显示 经过 网关 <I>snup</I> 中 大于 576 字节的 IP 数据报:
+<DL COMPACT><DT><DD>
+<PRE>
+<B>tcpdump 'gateway snup and ip[2:2] &gt; 576'</B>
+</PRE>
+
+</DL>
+
+<P>
+
+显示 IP 广播 或 多目传送 的 数据报, 但这些 报文
+<I>不是</I>
+
+通过 以太广播 或 以太多目传送 形式 传送的:
+<DL COMPACT><DT><DD>
+<PRE>
+<B>tcpdump 'ether[0] &amp; 1 = 0 and ip[16] &gt;= 224'</B>
+</PRE>
+
+</DL>
+
+<P>
+
+显示 所有 不是 回响请求/应答 的 ICMP 报文 (也就是说, 不是 ping 报文):
+<DL COMPACT><DT><DD>
+<PRE>
+<B>tcpdump 'icmp[0] != 8 and icmp[0] != 0&quot;</B>
+</PRE>
+
+</DL>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>输出格式 (OUTPUT FORMAT)</H2>
+
+<P>
+
+<I>tcpdump</I> 的 输出格式 取决于 协议. 下面的 描述 给出 大多数 格式 的
+简要说明 和 范例.
+
+
+<P>
+<B></B>
+
+
+链路层报头 (Link Level Headers)
+<P>
+
+如果 给出 '-e' 选项 就 显示 链路层报头.
+<P>
+在 以太网上, 显示 报文的 源目地址, 协议 和 报文长度.
+<P>
+
+在 FDDI 网络上, '-e' 选项 导致 <I>tcpdump</I> 显示出 `帧控制(frame control)'
+域,  源目地址 和 报文长度. (`帧控制' 域 负责 解释 其余的 报文.
+普通报文 (例如 装载 IP数据报 的 报文) 是 `异步' 报文, 优先级 介于 0 到 7
+(例如, `<B>async4</B>').  那些 被认为 携带了 802.2 逻辑链路控制(LLC) 报文;
+如果 它们 <I>不是</I> ISO 数据报 或者 所谓的 SNAP 报文, 就显示 LLC 报头.
+<P>
+
+<I>(注意: 以下 描述中 假设 你 熟悉 RFC-1144 中说明的 SLIP 压缩算法.)</I>
+<P>
+
+在 SLIP 链路上, <I>tcpdump</I> 显示出 方向指示 (``I'' 指 inbound(进入), 
+``O'' 指 outbound(离开)), 报文类型 和 压缩信息.
+首先显示的 是 报文类型. 有三种 类型 <I>ip</I>, <I>utcp</I> 和 <I>ctcp</I>.
+对于 <I>ip</I> 报文 不再 显示 更多的 链路信息.
+对于 TCP 报文, 在 类型 后面 显示 连接标识.
+如果 报文 是 压缩过的, 就显示出 它的 编码报头.
+这种 特殊情况 以 <B>*S+</B><I>n</I> 和 <B>*SA+</B><I>n</I> 的 形式 显示, 这里的
+<I>n</I> 是 流序号 (或者 流序号 和 ack) 的 变化总量.
+如果 不是 特殊情况, 就显示出 0 或 多个 变化.
+变化 由 U (urgent pointer), W (window), A (ack), S (sequence number) 
+和 I (packet ID) 指明, 后跟 一个 变化量(+n or -n), 或者 是一个 新值(=n).
+最后显示 报文中 的 数据总量, 以及 压缩报头 的 长度.
+<P>
+
+例如, 下面一行 显示了 一个 传出的 压缩的 TCP 报文, 有一个 隐含的 连接标识;
+确认(ack)的 变化量是 6, 流序号 增加 49, 报文ID 增加 6; 有三个字节的数据 和
+六个字节 的 压缩报头:
+<DL COMPACT><DT><DD>
+<PRE>
+<B>O ctcp * A+6 S+49 I+6 3 (6)</B>
+</PRE>
+
+</DL>
+
+
+<P>
+<B></B>
+
+
+ARP/RARP 报文
+<P>
+
+Arp/rarp 报文 的 输出 是 请求类型 及其 参数. 输出格式 大体上 能够 自我解释.
+这里 是一个 简单的例子, 来自 主机 <I>rtsg</I> 到 主机 <I>csam</I> 的 'rlogin' 
+开始 部分:
+<DL COMPACT><DT><DD>
+<PRE>
+
+<TT>arp who-has csam tell rtsg
+arp reply csam is-at CSAM</TT>
+
+</PRE>
+
+</DL>
+
+第一行 说明 rtsg 发出 一个 arp 报文 询问 internet 主机 csam 的 以太网地址.
+Csam 用 它的 以太地址 作应答 (这个例子中, 以太地址 是 大写的, internet 地址
+为 小写).
+<P>
+
+如果 用 <B>tcpdump -n</B> 看 就 清楚一些:
+<DL COMPACT><DT><DD>
+<PRE>
+
+<TT>arp who-has 128.3.254.6 tell 128.3.254.68
+arp reply 128.3.254.6 is-at 02:07:01:00:01:c4</TT>
+</PRE>
+
+</DL>
+
+<P>
+
+如果 用 <B>tcpdump -e</B>, 可以 看到 实际上 第一个 报文 是 广播, 第二个
+报文 是 点到点 的:
+<DL COMPACT><DT><DD>
+<PRE>
+
+<TT>RTSG Broadcast 0806  64: arp who-has csam tell rtsg
+CSAM RTSG 0806  64: arp reply csam is-at CSAM</TT>
+
+</PRE>
+
+</DL>
+
+这里 第一个 报文 指出 以太网源地址是 RTSG, 目的地址 是 以太网广播地址,
+类型域 为 16进制数 0806 (类型 ETHER_ARP), 报文全长 64 字节.
+
+<P>
+<B></B>
+
+
+TCP 报文
+<P>
+
+<I>(注意: 以下的描述中 假设 你 熟悉 RFC-793 中 说明的 TCP 协议, 如果 你
+不了解 这个 协议, 无论是 本文 还是 tcpdump 都对你 用处 不大)</I>
+<P>
+
+一般说来 tcp 协议的 输出格式是:
+<DL COMPACT><DT><DD>
+<PRE>
+
+<I>src &gt; dst: flags data-seqno ack window urgent options</I>
+
+</PRE>
+
+</DL>
+
+<I>Src</I> 和 <I>dst</I> 是 源目IP地址和端口.  <I>Flags</I> 是 S (SYN),
+F (FIN), P (PUSH) 或 R (RST) 或 单独的 `.'(无标志), 或者是 它们的 组合.
+<I>Data-seqno</I> 说明了 本报文中的数据 在 流序号 中的 位置 (见下例).
+<I>Ack</I> 是 在这条连接上 信源机 希望 下一个 接收的 字节的 流序号
+(sequence number).
+<I>Window</I> 是 在这条连接上 信源机 接收缓冲区 的 字节大小.
+<I>Urg</I> 表明 报文内 是 `紧急(urgent)' 数据.
+<I>Options</I> 是 tcp 选项, 用 尖括号 括起 (例如, &lt;mss 1024&gt;).
+<P>
+
+<I>Src, dst</I> 和 <I>flags</I> 肯定 存在.  其他域 依据 报文的 tcp 报头 内容,
+只输出 有必要 的 部分.
+<P>
+
+下面 是 从 主机 <I>rtsg</I> rlogin 到 主机 <I>csam</I> 的 开始部分.
+<DL COMPACT><DT><DD>
+<PRE>
+
+<FONT SIZE="-2"><TT>rtsg.1023 &gt; csam.login: S 768512:768512(0) win 4096 &lt;mss 1024&gt;
+csam.login &gt; rtsg.1023: S 947648:947648(0) ack 768513 win 4096 &lt;mss 1024&gt;
+rtsg.1023 &gt; csam.login: . ack 1 win 4096
+rtsg.1023 &gt; csam.login: P <A HREF="/cgi-bin/man/man2html?1+1:2">1:2</A>(1) ack 1 win 4096
+csam.login &gt; rtsg.1023: . ack 2 win 4096
+rtsg.1023 &gt; csam.login: P 2:21(19) ack 1 win 4096
+csam.login &gt; rtsg.1023: P <A HREF="/cgi-bin/man/man2html?1+1:2">1:2</A>(1) ack 21 win 4077
+csam.login &gt; rtsg.1023: P <A HREF="/cgi-bin/man/man2html?1+2:3">2:3</A>(1) ack 21 win 4077 urg 1
+csam.login &gt; rtsg.1023: P <A HREF="/cgi-bin/man/man2html?1+3:4">3:4</A>(1) ack 21 win 4077 urg 1</TT></FONT>
+
+</PRE>
+
+</DL>
+
+第一行 是说 从 rtsg 的 tcp 端口 1023 向 csam 的 <I>login</I> 端口 发送 报文.
+<B>S</B> 标志 表明 设置了 <I>SYN</I> 标志.
+报文 的 流序号 是 768512, 没有 数据.
+(这个写成 `first:last(nbytes)',  意思是 `从 流序号 <I>first</I> 到 <I>last</I>,
+不包括 <I>last</I>, 有 <I>nbytes</I> 字节的 用户数据'.)
+此时 没有 捎带确认(piggy-backed ack), 有效的 接收窗口 是 4096 字节,
+有一个 最大分段长度(max-segment-size) 的 选项, 请求 设置 mss 为 1024 字节.
+<P>
+
+Csam 用类似的 形式 应答, 只是 增加了 一个 对 rtsg SYN 的 捎带确认.
+然后 Rtsg 确认 csam 的 SYN.  `.' 意味着 没有 设置 标志.
+这个 报文 不包含 数据, 因此 也就 没有 数据的流序号.
+注意这个 确认流序号 是一个 小整数(1).  当 <B>tcpdump</B> 第一次 发现 一个
+tcp 会话时, 它 显示 报文 携带的 流序号. 在 随后收到的 报文里, 它 显示 当前
+报文 和 最初那个 报文 的 流序号 之 差.
+这 意味着 从第一个报文 开始, 以后的 流序号 可以 理解成 数据流 中的 相对位移
+(每个报文 的 第一个 数据字节 从 '1' 计数).
+`-S' 选项 能够 改变 这个 特性, 直接 显示 原始的 流序号.
+<P>
+
+在 第六行, rtsg 传给 csam 19 个字节 的 数据 (字节 2 到 20).
+报文中 设置了 PUSH 标志. 第七行 csam 表明 它 收到了 rtsg 的 数据, 字节序号
+是 21, 但不包括 第21个 字节.
+显然 大多数 数据 在 socket 的 缓冲区内, 因为 csam 的 接收窗口 收到的 数据
+小于 19 个 字节. 同时 csam 向 rtsg 发送了 一个字节 的 数据.
+第八和第九行 显示 csam 发送了 两个字节 的 紧急数据 到 rtsg.
+<P>
+
+如果 捕捉区 设置的 过小, 以至于 <B>tcpdump</B> 不能 捕捉到 完整的 TCP 报头, 
+<B>tcpdump</B> 会 尽可能的 翻译 已捕获的 部分, 然后 显示 ``[|<I>tcp</I>]'',
+表明 无法 翻译 其余 部分. 如果 报头 包含 有问题的 选项 (选项表 长度
+太小 或者 超出 报头范围), tcpdump 显示
+``[<I>bad opt</I>]'' 并且 不再 翻译 其他 选项部分 (因为 它 不可能 判断出
+从哪儿 开始).  如果 报头长度 表明 存在 选项, 但是 IP 数据报 长度 不够,
+不可能 真的 保存 选项, tcpdump 就显示 ``[<I>bad hdr length</I>]''.
+
+<P>
+<B></B>
+
+
+<B>UDP 报文</B>
+
+<P>
+
+UDP 格式 就象 这个 rwho 报文 显示的:
+<DL COMPACT><DT><DD>
+<PRE>
+
+<TT>actinide.who &gt; broadcast.who: udp 84</TT>
+
+</PRE>
+
+</DL>
+
+就是说 把一个 udp 数据报 从 主机 <I>actinide</I> 的 <I>who</I> 端口 发送到
+<I>broadcast</I>, Internet 广播地址 的 <I>who</I> 端口.
+报文 包含 84字节 的 用户数据.
+<P>
+
+某些 UDP 服务 能够 识别出来(从 源目端口号 上), 因而 显示出 更高层的 协议信息.
+特别是 域名服务请求(RFC-1034/1035) 和 NFS 的 RPC 调用(RFC-1050).
+
+<P>
+<B></B>
+
+
+UDP 名字服务请求 (Name Server Requests)
+<P>
+
+<I>(注意: 以下的描述中 假设 你 熟悉 RFC-1035 说明的 域名服务协议. 
+如果你 不熟悉 这个协议, 下面的内容 可能 看起来是 天书.)</I>
+<P>
+
+名字服务请求 的 格式 是
+<DL COMPACT><DT><DD>
+<PRE>
+
+<I>src &gt; dst: id op? flags qtype qclass name (len)</I>
+
+<TT>h2opolo.1538 &gt; helios.domain: 3+ A? ucbvax.berkeley.edu. (37)</TT>
+
+</PRE>
+
+</DL>
+
+主机 <I>h2opolo</I> 访问 <I>helios</I> 上的 域名服务, 询问
+和 <I>ucbvax.berkeley.edu.</I> 关联的 地址记录(qtype=A).
+查询号是 `3'.  `+' 表明 设置了 <I>递归请求</I> 标志.
+查询长度是 37 字节, 不包括 UDP 和 IP 头.  
+查询操作 是 普通的 <I>Query</I> 操作, 因此 op 域 可以 忽略.  
+如果 op 设置成 其他什么东西, 它应该 显示在 `3' 和 `+' 之间.
+类似的, qclass 是 普通的 <I>C_IN</I> 类型, 也被 忽略了.  
+其他类型的 qclass 应该 在 `A' 后面 显示.
+<P>
+
+Tcpdump 会检查 一些 不规则 情况, 相应的 结果 作为 补充域 放在 方括号内: 
+如果 某个 查询 包含 回答, 名字服务 或 管理机构部分,
+就把
+<I>ancount</I>,
+
+<I>nscount</I>,
+
+或
+<I>arcount</I>
+
+显示成 `[<I>n</I>a]', `[<I>n</I>n]' 或  `[<I>n</I>au]',  这里的 <I>n</I>
+代表 相应的 数量.
+如果 在 第二和第三字节 中, 任何一个 回答位(AA, RA 或 rcode) 或 任何一个
+`必须为零' 的位 被 置位, 就显示 `[b2&amp;3=<I>x</I>]',
+这里的 <I>x</I> 是 报头 第二和第三字节 的 16进制数.
+
+<P>
+<B></B>
+
+
+UDP 名字服务回答
+<P>
+
+名字服务回答的 格式 是
+<DL COMPACT><DT><DD>
+<PRE>
+
+<I>src &gt; dst:  id op rcode flags a/n/au type class data (len)</I>
+
+<TT>helios.domain &gt; h2opolo.1538: 3 3/3/7 A 128.32.137.3 (273)
+helios.domain &gt; h2opolo.1537: 2 NXDomain* 0/1/0 (97)</TT>
+
+</PRE>
+
+</DL>
+
+第一个例子里, <I>helios</I> 回答了 <I>h2opolo</I> 发出的 标识为3 的 询问,
+一共是 3 个 回答记录, 3 个 名字服务记录 和 7 个管理结构记录.
+第一个 回答纪录 的 类型是 A (地址), 数据是 internet 地址 128.32.137.3.  
+回答的 全长 为 273 字节, 不包括 UDP 和 IP 报头.  作为 A 记录的 class(C_IN)
+可以 忽略 op (询问) 和 rcode (NoError).
+<P>
+
+在第二个例子里, <I>helios</I> 对 标识为2 的 询问 作出 域名不存在 (NXDomain)
+的 回答, 没有 回答记录, 一个 名字服务记录, 没有 管理结构部分.
+<BR>&nbsp;`*'&nbsp;表明&nbsp;设置了&nbsp;<I>权威回答(authoritative&nbsp;answer)</I>.&nbsp;
+由于 没有 回答记录, 这里就 不显示 type, class 和 data.
+<P>
+
+其他 标志 字符 可以 显示为 `-' (<I>没有</I>设置递归有效(RA)) 和 `|' 
+(设置 消息截短(TC)). 如果 `问题' 部分 没有 有效的 内容, 就 显示 `[<I>n</I>q]'.
+<P>
+
+注意 名字服务的 询问和回答 一般说来 比较大, 68 字节的 <I>snaplen</I> 可能
+无法 捕捉到 足够的 报文内容. 如果 你 的确 在 研究 名字服务 的 情况, 可以
+使用 <B>-s</B> 选项 增大 捕捉缓冲区. `<B>-s 128</B>' 应该 效果 不错了.
+<P>
+
+<P>
+<B></B>
+
+
+NFS 请求和响应
+<P>
+
+Sun NFS (网络文件系统) 的 请求和响应 显示格式 是:
+<DL COMPACT><DT><DD>
+<PRE>
+
+<I>src.xid &gt; dst.nfs: len op args</I>
+<I>src.nfs &gt; dst.xid: reply stat len op results</I>
+
+<TT>
+sushi.6709 &gt; wrl.nfs: 112 readlink fh 21,24/10.73165
+wrl.nfs &gt; sushi.6709: reply ok 40 readlink &quot;../var&quot;
+sushi.201b &gt; wrl.nfs:
+        144 lookup fh 9,74/4096.6878 &quot;xcolors&quot;
+wrl.nfs &gt; sushi.201b:
+        reply ok 128 lookup fh 9,74/4134.3150
+</TT>
+
+</PRE>
+
+</DL>
+
+在第一行, 主机 <I>sushi</I> 向 <I>wrl</I> 发送 号码为 <I>6709</I> 的 交互会话 
+(注意 源主机 后面的 数字 是 交互号, <I>不是</I> 端口).  
+这项请求 长 112 字节, 不包括 UDP 和 IP 报头.  在 文件句柄 (fh) 
+21,24/10.731657119 上执行 <I>readlink</I> (读取 符号连接) 操作.
+(如果 运气 不错, 就象 这种情况, 文件句柄 可以 依次翻译成 主次设备号,
+i 节点号, 和 事件号(generation number). )
+<I>Wrl</I> 回答 `ok' 和 连接的 内容.
+<P>
+
+在第三行, <I>sushi</I> 请求 <I>wrl</I> 在 目录文件 9,74/4096.6878 中 查找
+`<I>xcolors</I>'. 注意 数据的 打印格式 取决于 操作类型.  格式 应该 可以
+自我说明.
+<P>
+
+给出 -v (verbose) 选项 可以 显示 附加信息.
+例如:
+<DL COMPACT><DT><DD>
+<PRE>
+
+<TT>
+sushi.1372a &gt; wrl.nfs:
+        148 read fh 21,11/12.195 8192 bytes @ 24576
+wrl.nfs &gt; sushi.1372a:
+        reply ok 1472 read REG 100664 ids 417/0 sz 29388
+</TT>
+
+</PRE>
+
+</DL>
+
+(-v 同时 使它 显示 IP 报头的 TTL, ID, 和 分片域, 在 这个例子里 把它们
+省略了.)  在第一行, <I>sushi</I> 请求 <I>wrl</I> 从 文件 21,11/12.195
+的 偏移位置 24576 开始, 读取 8192 字节. <I>Wrl</I> 回答 `ok'; 第二行 显示的 
+报文 是 应答的 第一个 分片, 因此 只有 1472 字节 (其余数据 在 后续的 分片中
+传过来, 但由于 这些分片里 没有 NFS 甚至 UDP 报头, 因此 根据 所使用的 
+过滤器表达式, 有可能 不再显示). -v 选项 还会 显示 一些 文件属性 (它们 作为 
+文件数据 的 附带部分 传回来): 文件类型 (普通文件 ``REG''), 存取模式
+(八进制数), uid 和 gid, 以及 文件大小.
+<P>
+
+如果再给一个 -v 选项 (-vv), 还能 显示 更多的细节.
+<P>
+
+注意 NFS 请求 的 数据量 非常大, 除非 增加 <I>snaplen</I>, 否则 很多细节 
+无法显示. 试一试 `<B>-s 192</B>' 选项.
+<P>
+
+NFS 应答报文 没有明确 标明 RPC 操作.  因此 <I>tcpdump</I> 保留有 ``近来的'' 
+请求 记录, 根据 交互号 匹配 应答报文. 如果 应答报文 没有 相应的 请求报文,
+它 就 无法分析.
+
+<P>
+<B></B>
+
+
+KIP Appletalk (UDP 上的 DDP)
+<P>
+
+Appletalk DDP 报文 封装在 UDP 数据报 中, 解包后 按 DDP 报文 转储 
+(也就是说, 忽略 所有的 UDP 报头 信息). 文件
+<I>/etc/atalk.names</I>
+
+用来 把 appletalk 网络和节点号 翻译成 名字. 这个文件 的 行格式 是
+<DL COMPACT><DT><DD>
+<PRE>
+
+<I>number       name</I>
+
+<TT>1.254              ether
+16.1            icsd-net
+1.254.110       ace</TT>
+
+</PRE>
+
+</DL>
+
+前两行 给出了 appletalk 的 网络名称. 第三行 给出 某个主机 的 名字
+(主机和网络 依据 第三组 数字 区分 - 网络号 <I>一定</I> 是 两组数字,
+主机号 <I>一定</I> 是 三组 数字.)  号码 和 名字 用 空白符(空格或tab) 隔开.
+<I>/etc/atalk.names</I>
+
+文件 可以 包含 空行 或 注释行(以`#'开始的行).
+<P>
+
+Appletalk 地址 按 这个格式 显示
+<DL COMPACT><DT><DD>
+<PRE>
+
+<I>net.host.port</I>
+
+<TT>144.1.209.2 &gt; icsd-net.112.220
+office.2 &gt; icsd-net.112.220
+jssmag.149.235 &gt; icsd-net.2</TT>
+
+</PRE>
+
+</DL>
+
+(如果 不存在
+<I>/etc/atalk.names ,</I>
+
+或者 里面 缺少 有效项目, 就以 数字形式 显示 地址.)
+第一个例子里, 网络 144.1 的 209 节点的 NBP (DDP 端口 2) 向 网络 icsd 的 
+112 节点 的 220 端口 发送数据.
+第二行 和 上面 一样, 只是 知道了 源节点 的 全称 (`office').  
+第三行 是从 网络 jssmag 的 149 节点 的 235 端口 向 icsd-net 的 NBP 端口
+广播 (注意 广播地址 (255) 隐含在 无主机号的 网络名字 中 - 所以 在
+/etc/atalk.names 中 区分 节点名 和 网络名 是个 好主意).
+<P>
+
+Tcpdump 可以 翻译 NBP (名字联结协议) 和 ATP (Appletalk 交互协议) 的 报文
+内容. 其他协议 只转储 协议名称 (或号码, 如果 还 没给 这个协议 注册 名称) 
+和 报文大小.
+<P>
+<B>NBP 报文</B> 的 输出格式 就象 下面的 例子:
+<DL COMPACT><DT><DD>
+<PRE>
+
+<FONT SIZE="-2"><TT>icsd-net.112.220 &gt; jssmag.2: nbp-lkup 190: &quot;=:LaserWriter@*&quot;
+jssmag.209.2 &gt; icsd-net.112.220: nbp-reply 190: &quot;RM1140:LaserWriter@*&quot; 250
+techpit.2 &gt; icsd-net.112.220: nbp-reply 190: &quot;techpit:LaserWriter@*&quot; 186</TT></FONT>
+
+</PRE>
+
+</DL>
+
+第一行 是 网络 icsd 的 112 主机 在 网络 jssmag 上的 广播, 对 名字 
+laserwriter 做 名字查询请求. 名字查询请求 的 nbp 标识号 是 190.
+第二行 显示的是 对 这个请求 的 回答 (注意 它们 有 同样的 标识号),
+主机 jssmag.209 表示 在它的 250 端口 注册了 一个 laserwriter 的 资源,
+名字是 &quot;RM1140&quot;. 第三行 是 这个请求 的 其他回答, 主机 techpit 的
+186 端口 有 laserwriter 注册的 &quot;techpit&quot;.
+<P>
+<B>ATP 报文</B> 格式 如 下例 所示:
+<DL COMPACT><DT><DD>
+<PRE>
+
+<FONT SIZE="-2"><TT>jssmag.209.165 &gt; helios.132: atp-req  12266&lt;0-7&gt; 0xae030001
+helios.132 &gt; jssmag.209.165: atp-resp 12266:0 (512) 0xae040000
+helios.132 &gt; jssmag.209.165: atp-resp 12266:1 (512) 0xae040000
+helios.132 &gt; jssmag.209.165: atp-resp 12266:2 (512) 0xae040000
+helios.132 &gt; jssmag.209.165: atp-resp 12266:3 (512) 0xae040000
+helios.132 &gt; jssmag.209.165: atp-resp 12266:4 (512) 0xae040000
+helios.132 &gt; jssmag.209.165: atp-resp 12266:5 (512) 0xae040000
+helios.132 &gt; jssmag.209.165: atp-resp 12266:6 (512) 0xae040000
+helios.132 &gt; jssmag.209.165: atp-resp*12266:7 (512) 0xae040000
+jssmag.209.165 &gt; helios.132: atp-req  12266&lt;3,5&gt; 0xae030001
+helios.132 &gt; jssmag.209.165: atp-resp 12266:3 (512) 0xae040000
+helios.132 &gt; jssmag.209.165: atp-resp 12266:5 (512) 0xae040000
+jssmag.209.165 &gt; helios.132: atp-rel  12266&lt;0-7&gt; 0xae030001
+jssmag.209.133 &gt; helios.132: atp-req* 12267&lt;0-7&gt; 0xae030002</TT></FONT>
+
+</PRE>
+
+</DL>
+
+Jssmag.209 向 主机 helios 发起 12266 号 交互操作, 请求 8 个 报文(`&lt;0-7&gt;'). 
+行尾的 十六进制数 是 请求中 `userdata' 域 的 值.
+<P>
+
+Helios 用 8 个 512字节 的 报文 应答.  跟在 交互号 后面的 `:digit' 
+给出了 交互过程中 报文的 序列号, 括弧内的 数字 是 报文的 数据量,
+不包括 atp 报头.  报文 7 的 `*' 表明 设置了 EOM 位.
+<P>
+
+然后 Jssmag.209 请求 重传 第 3 &amp; 5 报文.  Helios 做了 重传后 jssmag.209 
+结束 这次 交互操作. 最后, jssmag.209 发起 下一次 交互请求.  请求中的 `*' 
+表明 <I>没有</I> 设置 XO (exactly once) 位.
+<P>
+
+<P>
+<B></B>
+
+
+IP 分片
+<P>
+
+分片的 Internet 数据报 显示为
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>(frag </B><I>id</I><B>:</B><I>size</I><B>@</B><I>offset</I><B>+)</B>
+<B>(frag </B><I>id</I><B>:</B><I>size</I><B>@</B><I>offset</I><B>)</B>
+
+</PRE>
+
+</DL>
+
+(第一种 形式 表明 还有 更多的 分片. 第二种 形式 表明 这是 最后 一片.)
+<P>
+
+<I>Id</I> 是 分片 标识号.  <I>Size</I> 是 分片 大小 (字节), 不包括 IP 报头.
+<I>Offset</I> 是 该分片 在 原数据报 中 的 偏移 (单位是字节).
+<P>
+
+每一个 分片 的 信息 都可以 打印出来.  第一个 分片 包含了 高层 协议 报头,
+显示 协议信息 后 显示 分片 的 信息. 第一个 分片 以后的 分片 不再 含有
+高层协议 报头, 所以 在 源目地址 后面 只显示 分片 信息.
+例如, 下面是 从 arizona.edu 到 lbl-rtsg.arpa 的 一部分 ftp 传输, 途经的
+CSNET 看上去 处理不了 576 字节的 数据报:
+<DL COMPACT><DT><DD>
+<PRE>
+
+<FONT SIZE="-2"><TT>arizona.ftp-data &gt; rtsg.1170: . 1024:1332(308) ack 1 win 4096 (frag 595a:328@0+)
+arizona &gt; rtsg: (frag 595a:204@328)
+rtsg.1170 &gt; arizona.ftp-data: . ack 1536 win 2560</TT></FONT>
+
+</PRE>
+
+</DL>
+
+这里 有几点 需要注意:  首先, 第二行的 地址 不包括 端口号.  这是因为 TCP
+协议 信息 全部 装到了 第一个 分片内, 所以 显示 后续分片的 时候 不可能 知道
+端口 或 流序号. 其次, 第一行的 tcp 流序号部分 看上去有 308 字节的 用户数据, 
+实际上 是 512 字节 (第一个 分片的 308 和 第二个 分片的 204 字节).  如果
+你 正在 寻找 流序号中 的 空洞, 或者 试图 匹配 报文 的 确认(ack), 那你上当了.
+<P>
+
+如果 报文的 IP 标有 <I>不要分片</I> 标志, 那么 在尾部 显示 <B>(DF)</B>.
+
+<P>
+<B></B>
+
+
+时戳
+<P>
+
+缺省情况下, 所有 输出行 的 前面 都有 时戳. 时戳 就是 当前时间, 显示格式为
+<DL COMPACT><DT><DD>
+<PRE>
+<I>hh:mm:ss.frac</I>
+</PRE>
+
+</DL>
+
+精度 和 内核时钟 一样. 时戳 反映了 内核 收到 报文 的 时间. 从 以太接口 
+收到 报文 到 内核 响应 '报文就绪' 中断 有一个 滞后, 该 滞后 不被考虑.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<A HREF="/cgi-bin/man/man2html?1C+traffic">traffic</A>(1C), <A HREF="/cgi-bin/man/man2html?4P+nit">nit</A>(4P), <A HREF="/cgi-bin/man/man2html?4+bpf">bpf</A>(4), <A HREF="/cgi-bin/man/man2html?3+pcap">pcap</A>(3)
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>作者 (AUTHORS)</H2>
+
+Van Jacobson,
+Craig Leres and
+Steven McCanne, all of the
+Lawrence Berkeley National Laboratory, University of California, Berkeley, CA.
+<P>
+
+当前 版本 可以 从 匿名ftp 获得:
+<P>
+
+<DL COMPACT><DT><DD>
+<I><A HREF="ftp://ftp.ee.lbl.gov/tcpdump.tar.Z">ftp://ftp.ee.lbl.gov/tcpdump.tar.Z</A></I>
+
+</DL>
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>BUGS</H2>
+
+请把 臭虫 报告 传往 <A HREF="mailto:tcpdump@ee.lbl.gov">tcpdump@ee.lbl.gov</A>.
+<P>
+
+NIT 不允许 监视 你自己的 传出数据, BPF 可以. 我们 建议 你 使用 后者.
+<P>
+
+应该 试着 重组 IP 分片, 至少可以 为 更高层的 协议 计算出 正确的 长度.
+<P>
+
+名字服务逆向询问 转储的 不正确: 打印出 (空的)问题部分, 而实际上 询问 放在了
+回答部分. 有人 认为 这种 逆向询问 本身就是 bug, 应该 修改 产生问题 的 程序, 
+而非 tcpdump.
+<P>
+
+苹果 Ethertalk DDP 的 报文 应该 象 KIP DDP 的 报文 一样 容易 转储, 事实
+却 不是 这样. 即使 我们 有意 作点什么 来 促销 Ethertalk (我们没有), 
+LBL 也不允许 Ethertalk 出现在 它的 任何网络上, 所以 我们 没办法 测试 
+这些代码.
+<P>
+
+如果 报文的 路径上 出现 夏时制时间 变化, 可能 导致 时戳 混乱.
+(这个时间变化将忽略)
+<P>
+
+操作 FDDI 报头的 过滤器表达式 假设 所有的 FDDI 报文 被封装在 以太报文 中.
+这对 IP, ARP 和 DECNET Phase IV 无疑是 正确的, 但对 某些 协议 如 ISO CLNS
+不正确. 因此, 过滤器 有可能会 糊里糊涂的 的 接收 一些 并不真正 匹配
+过滤器表达式 的 报文.
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">示例 (EXAMPLES)</A><DD>
+<DT><A HREF="#lbAG">输出格式 (OUTPUT FORMAT)</A><DD>
+<DT><A HREF="#lbAH">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAI">作者 (AUTHORS)</A><DD>
+<DT><A HREF="#lbAJ">BUGS</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

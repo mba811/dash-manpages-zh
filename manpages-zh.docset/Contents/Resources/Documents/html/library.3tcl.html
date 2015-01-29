@@ -1,0 +1,243 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of library</TITLE>
+</HEAD><BODY>
+<H1>library</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+auto_execok, auto_import, auto_load, auto_mkindex, auto_mkindex_old, auto_qualify, auto_reset, tcl_findLibrary, parray, tcl_endOfWord, tcl_startOfNextWord, tcl_startOfPreviousWord, tcl_wordBreakAfter, tcl_wordBreakBefore - standard library of Tcl procedures
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<PRE>
+<B>auto_execok </B><I>cmd</I>
+<B>auto_import </B><I>pattern</I>
+<B>auto_load </B><I>cmd</I>
+<B>auto_mkindex </B><I>dir pattern pattern ...</I>
+<B>auto_mkindex_old </B><I>dir pattern pattern ...</I>
+<B>auto_qualify </B><I>command namespace</I>
+<B>auto_reset</B>
+<B>tcl_findLibrary </B><I>basename version patch initScript enVarName varName</I>
+<B>parray </B><I>arrayName</I>
+
+<B>tcl_endOfWord </B><I>str start</I>
+<B>tcl_startOfNextWord </B><I>str start</I>
+<B>tcl_startOfPreviousWord </B><I>str start</I>
+<B>tcl_wordBreakAfter </B><I>str start</I>
+<B>tcl_wordBreakBefore </B><I>str start</I>
+
+
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>介绍 INTRODUCTION</H2>
+
+<P>
+
+Tcl 为公共需求的功能包含了一个 Tcl 过程库。在 Tcl 库中定义的过程是适用于多种不同的应用的通用过程。用 <B>info library</B> 命令返回 Tcl 库的位置。除了这个 Tcl 库之外，每个应用通常都有它自己的支持过程库；这个库的位置通常用 <B>$</B><I>app</I><B>_library</B> 全局变量的值给出，这里 <I>app</I> 是应用的名字。例如，Tk 库的位置保持在变量 <B>$tk_library</B> 中。
+<P>
+
+要访问在 Tcl 库中的过程，一个应用应该 source (载入)库中的文件 <B>init.tcl</B>，例如，Tcl 命令
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>source [file join [info library] init.tcl]</B>
+
+</PRE>
+
+</DL>
+
+
+如果在一个应用的 <B>Tcl_AppInit </B>过程中调用了库过程 <B>Tcl_Init</B>，则这(个加载)将自动发生。在 <B>init.tcl</B> 中的代码将定义 <B>unknown</B> 过程和使用下面定义的自动装载机制安排其他过程在需要时装载。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>命令过程 COMMAND PROCEDURES</H2>
+
+<P>
+
+在 Tcl 库中提供了下列过程:
+<DL COMPACT>
+<DT><B>auto_execok </B><I>cmd</I><DD>
+确定是否有一个叫 <I>cmd </I>的一个可执行文件或 shell     内置命令。如果有，它返回要传递给 <B>exec</B>     来执行这个叫 <I>cmd</I><I> </I>的可执行文件或 shell     内置命令的那些参数的一个列表。如果没有，它返回一个空串。这个命令检查在当前查找路径中目录(由     PATH 环境变量给出)，在其中查找叫 <I>cmd</I>     的一个可执行文件。在 Windows     平台上，查找被展开为相同的目录和与 <B>exec</B>     使用相同的文件名扩展。 <B>Auto_exec</B> 在一个叫 <B>auto_execs</B><B>     </B>的数组中记住以前查找的信息；这避免在将来调用相同的     <I>cmd</I> 时进行路径查找。可以使用命令 <B>auto_reset</B>     来强迫 <B>auto_execok</B> 忘掉缓存的信息。
+<DT><B>auto_import </B><I>pattern</I><DD>
+在 <B>namespace import</B> 期间调用 <B>Auto_import</B> 来查看用 <I>pattern</I> 指定的导入命令是否驻留在一个 自动装载的库中。如果是，则装载这个命令，这样要建立导入连接的解释器就可以获得它们。如果这个命令不驻留在自动装载库中，<B>auto_import</B> 什么都不做。
+<DT><B>auto_load </B><I>cmd</I><DD>
+这个命令尝试装载一个叫做 <I>cmd</I> 的 Tcl  命令的定义，它查找一个<B>自动装载路径</B>，它是一个或多个目录的一个列表。如果全局变量     <B>$auto_path</B>     存在的话，则它给出这个自动装载路径。如果没有 <B>$auto_path</B>     变量，则若 TCLLIBPATH     环境变量存在则使用它。否则自动装载路径只包含 Tcl     库目录。在自动装载路径中的每个目录中必须有描述在这个目录中定义的一个或多个命令的一个文件     <B>tclIndex</B>，和要被求值来装载每个命令的一个脚本。应当使用     <B>auto_mkindex</B> 命令来自动生成 <B>tclIndex</B>     文件。如果在一个索引文件中找到 <I>cmd</I>     ，则求值适当的脚本来建立这个命令。如果成功的建立了 <I>cmd</I>，则     <B>auto_load</B> 命令返回 1。如果没有给 <I>cmd</I>     的索引条目或这个脚本实际上定义的不是 <I>cmd</I>(例如，因为索引信息过时了)，这个命令返回     0。如果在处理这个脚本的时候发生了一个错误，则返回这个错误。<B>Auto_load</B>     只读这个索引文件一次并把它保存到数组 <B>auto_index</B><B> </B>中；以后对     <B>auto_load</B> 的调用将在这个数组中检查 <I>cmd</I>     而不是重读索引文件。可以用命令 <B>auto_reset </B>删除缓存的索引信息。这将强制下一个     <B>auto_load</B> 命令从磁盘重新装载索引数据库。
+<DT><B>auto_mkindex </B><I>dir pattern pattern ...</I><DD>
+生成适合于 <B>auto_load </B>使用的一个索引。这个命令在 <I>dir</I>   中查找名字匹配任何 <I>pattern</I> 参数的所有文件(使用 <B>glob</B>  命令进行匹配)，生成在所有匹配的文件的中定义的所有  Tcl 命令过程的一个索引，并且在 <I>dir</I> 中的一个叫 <B>tclIndex </B>的文件中存储索引信息。如果未给出模式，则假定模式是 <B>*.tcl</B>，例如
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>auto_mkindex foo *.tcl</B>
+
+</PRE>
+
+</DL>
+
+
+<P>
+
+将在子目录读 <B>foo</B> 中读取所有 <B>.tcl</B> 文件并生成一个新索引文件 <B>foo/tclIndex</B>。
+<P>
+
+<B>Auto_mkindex</B> 通过把 Tcl 脚本载入(source)到一个从解释器中来分析它们并监视执行的     proc 和 namespace 命令。扩展可以使用(没有文档)     auto_mkindex_parser 包来注册对 auto_load     索引有所贡献的其他命令。你必须阅读 auto.tcl     来查看这是如何工作的。
+<P>
+
+<B>Auto_mkindex_old</B> 在一个相对不复杂的方式分析 Tcl     脚本: 如果任何一行包含字 <B>proc</B>     为它的第一个字，则假定它为一个过程定义并接受这一行的下一个字为这个过程的名字。不是以这种方式出现的过程定义(比如，在     <B>proc </B>前面有空格)将不被编排索引。如果你的脚本包含“危险”代码，比如全局初始化代码或有特殊字符如     <B>$</B>、<B>*</B>、<B>[</B> 或 <B>]</B> 的过程名字，则你使用     auto_mkindex_old 是更安全的。
+</DL>
+
+<DT><B>auto_reset</B><DD>
+销毁被 <B>auto_execok</B> 和 <B>auto_load </B>缓存的所有信息。下次需要这些信息的时候将从磁盘重新读取。<B>Auto_reset</B>     还删除在 auto-load     中列出的所有过程，这样下次使用它们的时候将装载它们的刷新了的复本。
+<DT><B>auto_qualify </B><I>command namespace</I><DD>
+计算 <I>command </I>的完全限定的名字的一个列表。这个列表镜像标准     Tcl 解释器用以查找命令的那个路径:     首先它在当前名字空间中查找这个命令，接着在全局名字空间中。相应的，如果     <I>command</I> 是相对的并且 <I>namespace</I> 不是 <B>::</B>，则返回的这个列表两个元素:     一个是由 <I>namespace</I> 界定范围的<I>command</I>，如同它是一个在     <I>namespace</I> 名字空间中的命令一样；而另一个 <I>command</I>     如同在全局名字空间中的一个命令一样。否则，如果 <I>command</I>     是绝对的(它以 <B>:: </B>为开始)，或者 <I>namespace</I> 是 <B>::</B>，则这个列表只包含一个     <I>command</I>     ，如同它是一个在全局名字空间中的命令一样。
+<DL COMPACT><DT><DD>
+<P>
+
+在 Tcl 中自动装载设施使用 <B>Auto_qualify</B>，用来生成自动装载索引如     <I>pkgIndex.tcl</I>，和用来在运行时进行实际的函数自动装载。
+</DL>
+
+<DT><B>tcl_findLibrary </B><I>basename version patch initScript enVarName varName</I><DD>
+这个命令是扩展在它们的初始化期间使用的一个标准查找过程。扩展调用这个过程来在多个标准路径中查找它们的过程。目录名字的最后的构成部分通常是     <I>basenameversion</I> (例如，tk8.0)，但在建造等级上他可能是“库”。一旦找到就把     <I>initScript</I> 文件 source(加载)到解释器中。把在其中找到文件的那个目录保存到全局变量     <I>varName</I> 中。如果已经定义这个变量(比如，在应用初始化期间用     C 代码)，则不进行查找。否则在以下这些目录中进行查找:     由环境变量 <I>enVarName </I>给出名字的目录；相对于 Tcl     库的目录；相对于(??? relative to)在标准安装 bin 或 bin/<I>arch</I>     中的可执行文件的目录；相对于在当前建造树中的可执行文件的目录；相对于在并行建造树中的可执行文件的目录。
+<DT><B>parray </B><I>arrayName</I><DD>
+把数组 <I>arrayName</I>    中的所有元素的名字和值输出到标准输出上。<B>ArrayName</B>   必须是一个对于 <B>parray </B>的调用者是可以访问的一个数组。它可以是局部的或全局的。
+<DT><B>tcl_endOfWord </B><I>str start</I><DD>
+
+
+
+
+
+
+
+返回字符串 <I>str</I> 中在起始索引 <I>start</I>  之后出现的第一个字结束(end-of-word)位置的的索引。定义字结束位置为在起始点之后跟随在第一个单字字符后面的第一个非字字符。如果在起始点之后没有字结束位置则返回     -1。关于 Tcl  如何确定哪个字符是单字字符的详情参见下面对 <B>tcl_wordchars</B>  和 <B>tcl_nonwordchars</B> 的描述。
+<DT><B>tcl_startOfNextWord </B><I>str start</I><DD>
+返回字符串 <I>str</I> 中在起始索引 <I>start</I>  之后出现的第一个字开始(start-of-word)位置的的索引。定义字开始位置为跟随在一个非字字符后面的第一个单字字符。如果在起始点之后没有字开始位置则返回 -1。
+<DT><B>tcl_startOfPreviousWord </B><I>str start</I><DD>
+返回字符串 <I>str</I> 中在起始索引 <I>start</I>  之前出现的第一个字开始(start-of-word)位置的的索引。如果在起始点之前没有字开始位置则返回  -1。
+<DT><B>tcl_wordBreakAfter </B><I>str start</I><DD>
+返回字符串 <I>str</I> 中在起始索引 <I>start</I>  之后出现的第一个字边界的索引。如果在给定字符串中在起始点之后没有边界则返回  -1。返回的索引参照组成一个边界(字符)对的第二个字符。
+<DT><B>tcl_wordBreakBefore </B><I>str start</I><DD>
+返回字符串 <I>str</I> 中在起始索引 <I>start</I>  之前出现的第一个字边界的索引。如果在给定字符串中在起始点之前没有边界则返回 -1。返回的索引参照组成一个边界(字符)对的第二个字符。
+
+
+
+
+
+
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>变量 VARIABLES</H2>
+
+<P>
+
+在 Tcl 库中的过程定义或使用下列全局变量:
+<DL COMPACT>
+<DT><B>auto_execs</B><DD>
+用它来记录关于特定命令是否存在为可执行文件的信息。
+<DT><B>auto_index</B><DD>
+<B>auto_load</B> 用它来保存从磁盘读来的索引信息。
+<DT><B>auto_noexec</B><DD>
+如果设置了任何值，则 <B>unknown</B>     不尝试自动执行任何命令。
+<DT><B>auto_noload</B><DD>
+如果设置了任何值，则 <B>unknown</B>     不尝试自动装载任何命令。
+<DT><B>auto_path</B><DD>
+如果设置了它，则它必须包含一个有效的 Tcl     列表，给出在自动装载操作中要查找的目录。在启动期间初始化这个变量为依次包含:     在 TCLLIBPATH 环境变量中列出的目录，由 $tcl_library     变量命名的目录，$tcl_library 的父目录，在 $tcl_pkgPath     变量中列出的目录。
+<DT><B>env(TCL_LIBRARY)</B><DD>
+如果设置了它，则它指定包含库脚本的目录的位置(这个变量的值将被赋予     <B>tcl_library</B> 变量并被 <B>info library </B>命令所返回)。如果这个变量未被设置，则使用缺省的值。
+<DT><B>env(TCLLIBPATH)</B><DD>
+如果设置了它，则它必须包含一个有效的 Tcl     列表，给出在自动装载操作期间要查找的目录。必须用 Tcl     格式指定目录，使用“/”作为分隔符而不管是在什么平台上。只在初始化     <B>auto_path</B> 的时候使用这个变量。
+<DT><B>tcl_nonwordchars</B><DD>
+
+
+
+
+
+
+
+这个变量包含一个正则表达式，用于象 <B>tcl_endOfWord</B>     这样的例程来识别一个字符是否是一个字的一部分。如果这个模式匹配一个字符，则把这个字符作为一个非字(non-word)字符对待。在     Windows 平台上，空格、tab、和换行被作为非字字符对待。在     Unix     下，除了数字、字母和下划线之外，所有字符都是非字字符。
+<DT><B>tcl_wordchars</B><DD>
+这个变量包含一个正则表达式，用于象 <B>tcl_endOfWord</B>     这样的例程来识别一个字符是否是一个字的一部分。如果这个模式匹配一个字符，则把这个字符作为一个单字字符对待。在     Windows 平台上，字有任何不是空格、tab、或换行的字符组成。在     Unix 下，字由数字、字母或下划线组成。
+
+
+
+
+
+
+<DT><B>unknown_pending</B><DD>
+<B> unknown</B>     用它来记录正在查找的命令。在 <B>unknown</B>     在自身上无穷递归的地方，使用它来检测错误。在 <B>unknown</B>     返回前删除它的值。
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+info">info</A>(n), <A HREF="/cgi-bin/man/man2html?n+re_syntax">re_syntax</A>(n)
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+auto-exec, auto-load, library, unknown, word, whitespace 
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/12/06</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">介绍 INTRODUCTION</A><DD>
+<DT><A HREF="#lbAE">命令过程 COMMAND PROCEDURES</A><DD>
+<DT><A HREF="#lbAF">变量 VARIABLES</A><DD>
+<DT><A HREF="#lbAG">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

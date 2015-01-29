@@ -1,0 +1,140 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of FFLUSH</TITLE>
+</HEAD><BODY>
+<H1>FFLUSH</H1>
+Section: Linux Programmer's Manual (3)<BR>Updated: 1993-11-29<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+fflush - 刷新一个流
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/stdio.h">stdio.h</A>&gt;</B>
+
+<P>
+<B>int fflush(FILE *</B><I>stream</I><B>);</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+函数
+<B>fflush</B>
+
+强制在所给的输出流或更新流
+<I>stream</I>
+
+上，写入在用户空间缓冲的所有数据，使用流的底层写功能函数。流的打开状态不受影响。
+<P>
+
+如果参数
+<I>stream</I>
+
+是
+<B>NULL</B>,
+
+<B>fflush</B>
+
+刷新
+<I>所有</I>
+
+打开的流。
+<P>
+
+要使用非锁定的对应版本，参见
+<B><A HREF="/cgi-bin/man/man2html?3+unlocked_stdio">unlocked_stdio</A></B>(3)
+
+。
+<A NAME="lbAE">&nbsp;</A>
+<H2>RETURN VALUE 返回值</H2>
+
+成功执行返回 0，否则返回
+<B>EOF</B>
+
+并设置全局变量
+<I>errno</I>
+
+来指示错误发生。
+<A NAME="lbAF">&nbsp;</A>
+<H2>ERRORS</H2>
+
+<DL COMPACT>
+<DT><B>EBADF</B>
+
+<DD>
+<I>Stream</I>
+
+不是一个打开的流，或者不是用于输出。
+</DL>
+<P>
+
+函数
+<B>fflush</B>
+
+也可能失败并置
+<I>errno</I>
+
+为
+<B><A HREF="/cgi-bin/man/man2html?2+write">write</A></B>(2)
+
+指定的值。
+<A NAME="lbAG">&nbsp;</A>
+<H2>NOTES 要点</H2>
+
+注意
+<B>fflush()</B>
+
+仅仅刷新用户空间的由 C 库提供的缓冲。要保证数据被物理地存储到磁盘上，必须也刷新内核缓冲。例如，使用
+<B><A HREF="/cgi-bin/man/man2html?2+sync">sync</A></B>(2)
+
+或
+<B><A HREF="/cgi-bin/man/man2html?2+fsync">fsync</A></B>(2).
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>CONFORMING TO 标准参考</H2>
+
+函数
+<B>fflush()</B>
+
+遵循 ANSI X3.159-1989 (``ANSI C'') 标准。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+fsync">fsync</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+sync">sync</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+write">write</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?3+fclose">fclose</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+fopen">fopen</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+setbuf">setbuf</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+unlocked_stdio">unlocked_stdio</A></B>(3)
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">RETURN VALUE 返回值</A><DD>
+<DT><A HREF="#lbAF">ERRORS</A><DD>
+<DT><A HREF="#lbAG">NOTES 要点</A><DD>
+<DT><A HREF="#lbAH">CONFORMING TO 标准参考</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

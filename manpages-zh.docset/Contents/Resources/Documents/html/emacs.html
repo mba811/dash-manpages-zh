@@ -1,0 +1,683 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of EMACS</TITLE>
+</HEAD><BODY>
+<H1>EMACS</H1>
+Section: User Commands  (1)<BR>Updated: 1995 December 7<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+emacs - GNU Emacs
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>emacs</B>
+
+[
+<I>command-line switches</I>
+
+] [
+<I>files ...</I>
+
+]
+<BR>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<I>GNU Emacs</I>
+
+是
+<I>Emacs</I>
+
+的 一个 版本, 是由 最早的 (PDP-10) 
+<I>Emacs</I>
+
+的 作者
+Richard Stallman 写的.
+<BR>
+
+GNU Emacs 的 主要 文档 都 在 GNU Emacs 手册 里, 可以 通过 Info (Emacs 的 一个
+子系统) 在线 浏览. 请 在那儿 寻找 完整的 最新的 文档. 自愿者们 不定时 的 更新 这个
+文档; 而 Emacs 的 维护者们 就可以 抽出 更多的 时间 来 用在 其它 更有用的 项目上.
+<BR>
+
+对 用户 来讲, 其它
+<I>Emacs </I>
+
+提供的 功能 GNU Emacs 都有, 而且 因为 它的 命令 是 用 Lisp 写的, 所以 扩展性 很好.
+<P>
+
+<I>Emacs</I>
+
+拥有 一个 可扩展的 交互式的 帮助 功能, 但 这 要求 你 知道 怎么 操纵
+<I>Emacs</I>
+
+窗口 和 缓冲区.
+CTRL-h (backspace 或者 CTRL-h) 进入 帮助 系统. 帮助 教程 (CTRL-h t) 是 一个
+交互式的 教程, 可以 在 很短 的 时间内 教会 初学者
+<I>Emacs </I>
+
+的 基本 操作. 帮助 Apropos (CTRL-h a) 帮助 你 根据 其 功能 找到 命令, 帮助 字符
+(CTRL-h c) 描述 一个 指定 的 字符 的 作用, 帮助 功能 (CTRL-h f) 描述 一个 由
+名称 指定 的 Lisp 函数.
+<P>
+
+<I>Emacs</I>
+
+的 能够 撤销 你的 缓冲区 的 很多 层 修改, 所以 它 很 容易 从 编辑 错误 中 恢复.
+<P>
+
+<I>GNU Emacs</I>
+
+的 很多 专门 的 包 能够 收发 邮件 (RMail/Mail), 大纲 编辑 (Outline), 编译
+(Compile), 在
+<I>Emacs</I>
+
+窗口 中 运行 子 shell (Shell), 执行 Lisp 读-估值-显示 (read-eval-print) 循环
+(Lisp-Interaction-Mode), 以及 自动 心理 疗法 (Doctor).
+<P>
+
+这有 一个 可扩展 的 参考 手册, 但是 就算 其它 Emacs 的 用户 没有 这个 手册,
+也能 很快 适应 的. 刚 开始 使用
+<I>Emacs</I>
+
+的 用户 也 能够 通过 它的 自包含 的 文档 功能 学习 教程, 很快 就能 使用 其
+基本 的 特性.
+<P>
+
+<FONT SIZE="-1">Emacs Options</FONT>
+<P>
+
+以下 是 常用 的 选项:
+<DL COMPACT>
+<DT><I>file</I>
+
+<DD>
+编辑
+<I>file.</I>
+
+<DT><B>+</B><I>number</I>
+
+<DD>
+跳到
+<I>number</I>
+
+指定 的 行 (不要 在 &quot;+&quot; 和 number 间 加个 空格).
+<DT><B>-q</B>
+
+<DD>
+不 装载 初始化 文件.
+<DT><B>-u</B><I> user</I>
+
+<DD>
+装载
+<I>user</I>
+
+的 初始化 文件.
+<DT><B>-t</B><I> file</I>
+
+<DD>
+把 指定 的
+<I>file</I>
+
+作为 终端, 而 不是 stdin/stdout.
+这 必须 是 命令行 的 第一个 参数.
+</DL>
+<P>
+
+下面 的 选项 是 面向 lisp 的(这些 选项 根据 先后 顺序 处理):
+<DL COMPACT>
+<DT><B>-f</B><I> function</I>
+
+<DD>
+执行 lisp 函数
+<I>function.</I>
+
+<DT><B>-l</B><I> file</I>
+
+<DD>
+装载 文件
+<I>file</I>
+
+里面 的 lisp 代码.
+</DL>
+<P>
+
+下面 的 选项 在 把
+<I>Emacs</I>
+
+作为 批处理 编辑器 时 很有用:
+<DL COMPACT>
+<DT><B>-batch</B>
+
+<DD>
+当 批处理 模式 编辑. 编辑器 会 把 消息 发送 至 stderr. 这个 选项 必须 是 参数
+列表 中 的 第一个. 你 必须 用 -l 和 -f 来 指定 执行 的 文件 和 调用 的 函数.
+<DT><B>-kill</B>
+
+<DD>
+在 批处理 模式 时 退出
+<I>Emacs.</I>
+
+
+</DL>
+<P>
+
+<FONT SIZE="-1">在 X 下 用 Emacs</FONT>
+<P>
+
+<I>Emacs</I>
+
+已经 被 修改 为 在 X 窗口 系统 下 能 很好的 运行.
+如果 你在 X 下 运行
+<I>Emacs,</I>
+
+它会 创建 它 自己 的 窗口 来 显示. 也许 你想 把 编辑器 作为 后台 进程 运行,
+这样 你 仍然 可以 用 你原来 的 窗口.
+<P>
+
+启动
+<I>Emacs</I>
+
+可以 用 下面 的 X 选项:
+<DL COMPACT>
+<DT><B>-name</B><I> name</I>
+
+<DD>
+指定 初始
+<I>Emacs</I>
+
+窗口 的 名字. 这个 选项 不仅 控制 窗口 标题 也 控制 X 资源 的 查找.
+<DT><B>-title</B><I> name</I>
+
+<DD>
+指定 初始 X 窗口 的 标题.
+<DT><B>-r</B>
+
+<DD>
+用 翻转 影像(reverse video) 显示
+<I>Emacs</I>
+
+窗口.
+<DT><B>-i</B>
+
+<DD>
+当 图标化
+<I>Emacs</I>
+
+窗口 时 用 &quot;kitchen sink&quot; 位图 图标.
+<DT><B>-font</B><I> font, </I><B>-fn</B><I> font</I>
+
+<DD>
+把
+<I>Emacs</I>
+
+窗口 的 字体 设置 成
+<I>font</I>
+
+指定 的 字体.
+你会在
+<I>/usr/lib/X11/fonts</I>
+
+目录 下 找到 许多
+<I>X</I>
+
+字体. 注意
+<I>Emacs</I>
+
+只 接受 固定 宽度 字体.
+根据 X11R4 字体 命名 规定, 所有 字体名 第 7 字段 是 &quot;m&quot; 或者 &quot;c&quot; 的 字体 都是
+固定 宽度 字体. 还有, 字体名 是
+<I>width</I>x<I>height</I>
+
+形式 的 字体 一般 也是 固定 宽度的, 就像
+<I>fixed</I>
+
+字体 一样. 更多 的 信息 参见
+<I><A HREF="/cgi-bin/man/man2html?1+xlsfonts">xlsfonts</A></I>(1).
+
+在 指定 字体 的 时候 请注意 在 选项 和 字体名 中间 加 一个 空格.
+<DT><B>-b</B><I> pixels</I>
+
+<DD>
+Set the
+把
+<I>Emacs</I>
+
+窗口 边框 宽度 设置 成 
+<I>pixels</I>
+
+指定 的 像素. 默认的 是 窗口 每边 都是 一个 像素.
+<DT><B>-ib</B><I> pixels</I>
+
+<DD>
+把 窗口 内边框 宽度 设置 成 
+<I>pixels</I>
+
+指定 的 像素. 默认的 是 窗口 每边 都 填充 一个 像素.
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-geometry</B><I> geometry</I>
+
+<DD>
+设置
+<I>Emacs</I>
+
+窗口 的 宽度, 高度, 以及 位置, 其 格式 是 标准 的 X 格式; 具体 参见
+<I><A HREF="/cgi-bin/man/man2html?1+X">X</A></I>(1)<I>.</I>
+
+宽度 和 高度 是 用 字符 指定的; 默认 的 是 80 乘以 24.
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-fg</B><I> color</I>
+
+<DD>
+如果 是 彩色 显示器, 设置 文本 的 颜色. 在
+<I>/usr/lib/X11/rgb.txt</I>
+
+文件 中 有 可用 的 颜色 名字 列表.
+<DT><B>-bg</B><I> color</I>
+
+<DD>
+如果 是 彩色 显示器, 设置 窗口 背景 颜色.
+<DT><B>-bd</B><I> color</I>
+
+<DD>
+如果 是 彩色 显示器, 设置 窗口 边框 颜色.
+<DT><B>-cr</B><I> color</I>
+
+<DD>
+如果 是 彩色 显示器, 设置 窗口 文本 光标 的 颜色.
+<DT><B>-ms</B><I> color</I>
+
+<DD>
+如果 是 彩色 显示器, 设置 窗口 鼠标 光标 的 颜色.
+<DT><B>-d</B><I> displayname, </I><B>-display</B><I> displayname</I>
+
+<DD>
+在
+<I>displayname</I>
+
+指定 的 显示器 上 创建
+<I>Emacs</I>
+
+窗口. 它 必须 是 命令行 的 第一个 参数.
+<DT><B>-nw</B>
+
+<DD>
+告诉
+<I>Emacs</I>
+
+不要 用 它的 X 界面. 如果 你 在 一个
+<I><A HREF="/cgi-bin/man/man2html?1+xterm">xterm</A></I>(1)
+
+窗口 中 调用
+<I>Emacs</I>
+
+并且 加上了 这个 选项, 会在 这个 窗口 中 显示, 而 不是 新建 一个 X 窗口.
+它 必须 是 命令行 的 第一个 参数.
+</DL>
+<P>
+
+你 可以 在 你的
+<I>.Xresources</I>
+
+文件 里面 为 你的
+<I>Emacs</I>
+
+窗口 设置 其
+<I>X</I>
+
+的 默认 值(见
+<I><A HREF="/cgi-bin/man/man2html?1+xrdb">xrdb</A></I>(1)).
+
+用 如下 的 格式:
+<DL COMPACT>
+<DT><DD>
+emacs.keyword:value
+</DL>
+<P>
+
+<I>value</I>
+
+指定 了
+<I>keyword</I>
+
+的 默认值.
+<I>Emacs</I>
+
+允许 你 设置 如下 关键字 的 默认值:
+<DL COMPACT>
+<DT><B>font (</B>class<B> Font)</B>
+
+<DD>
+设置 窗口 文本 字体.
+<DT><B>reverseVideo (</B>class<B> ReverseVideo)</B>
+
+<DD>
+如果
+<I>reverseVideo</I>
+
+的值 是
+<I>on,</I>
+
+窗口 就会 以 翻转 影像 显示.
+<DT><B>bitmapIcon (</B>class<B> BitmapIcon)</B>
+
+<DD>
+如果
+<I>bitmapIcon's</I>
+
+的值 是
+<I>on,</I>
+
+窗口 就会 图标化 为 &quot;kitchen sink.&quot;
+<DT><B>borderWidth (</B>class<B> BorderWidth)</B>
+
+<DD>
+以 像素 为 单位 设置 窗口 的 边框 宽度.
+<DT><B>internalBorder (</B>class<B> BorderWidth)</B>
+
+<DD>
+以 像素 为 单位 设置 窗口 的 内边框 宽度.
+<DT><B>foreground (</B>class<B> Foreground)</B>
+
+<DD>
+只对 彩色 显示器 有用, 设置 窗口 的 文本 颜色.
+<DT><B>background (</B>class<B> Background)</B>
+
+<DD>
+只对 彩色 显示器 有用, 设置 窗口 的 背景 颜色.
+<DT><B>borderColor (</B>class<B> BorderColor)</B>
+
+<DD>
+只对 彩色 显示器 有用, 设置 窗口 的 边框 颜色.
+<DT><B>cursorColor (</B>class<B> Foreground)</B>
+
+<DD>
+只对 彩色 显示器 有用, 设置 窗口 的 文本 光标 的 颜色.
+<DT><B>pointerColor (</B>class<B> Foreground)</B>
+
+<DD>
+只对 彩色 显示器 有用, 设置 窗口 的 鼠标 光标 的 颜色.
+<DT><B>geometry (</B>class<B> Geometry)</B>
+
+<DD>
+设置
+<I>Emacs</I>
+
+窗口 的 宽度, 高度, 以及 位置 (同 上面 描述 的 一样).
+<DT><B>title (</B>class<B> Title)</B>
+
+<DD>
+设置
+<I>Emacs</I>
+
+窗口 的 标题.
+<DT><B>iconName (</B>class<B> Title)</B>
+
+<DD>
+设置
+<I>Emacs</I>
+
+窗口 图标 的 图标名.
+</DL>
+<P>
+
+如果 你 用的 是 黑白 显示器, 窗口 特性 将会是 下面的 默认值:
+前景 颜色 为 黑色,
+背景 颜色 为 白色,
+边框 颜色 为 灰色,
+文本 和 鼠标 光标 颜色 为 黑色.
+<P>
+
+<FONT SIZE="-1">Using the Mouse </FONT>
+<P>
+
+以下 是 X11 下
+<I>Emacs</I>
+
+的 鼠标键 绑定.
+<P>
+
+
+
+<BR>
+
+鼠标键<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>作用<BR>
+<BR>
+
+<BR>
+
+左键<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>设置点.<BR>
+<BR>
+
+<BR>
+
+中键<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>粘贴 文本.<BR>
+<BR>
+
+<BR>
+
+右键<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>把 文本 剪切 到 X 剪切 缓冲区.<BR>
+<BR>
+
+<BR>
+
+SHIFT-中键<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>把 文本 剪切 到 X 剪切 缓冲区.<BR>
+<BR>
+
+<BR>
+
+SHIFT-右键<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>粘贴 文本.<BR>
+<BR>
+
+<BR>
+
+CTRL-中键<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>把 文本 剪切 到 X 剪切 缓冲区 并且 删除.<BR>
+<BR>
+
+<BR>
+
+CTRL-右键<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>选择 窗口, 然后 分拆 成 2 个 窗口. 同 键入 CTRL-x 2 一样.<BR>
+
+<BR>
+
+<BR>
+
+CTRL-SHIFT-左键<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>X buffer 菜单 -- 保持 按住 按键, 等 菜单 显示 出来, 选择 缓冲区,<BR>
+释放 按键. 要 取消, 把 鼠标 移出 菜单 然后 释放 按键.
+<BR>
+
+<BR>
+
+CTRL-SHIFT-中键<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>X help 菜单 -- 弹处 Emacs 帮助 的 索引 菜单.<BR>
+
+<BR>
+
+<BR>
+
+CTRL-SHIFT-右键<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>用 鼠标 选择 窗口, 关闭 其它 所有 窗口. 同 键入 CTRL-x 1 一样.<BR>
+
+<P>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2> 手册页 (MANUALS)</H2>
+
+你 可以 向 自由 软件 基金会(GNU 软件 的 开发者) 定购 GNU Emacs 手册页 的
+印刷 拷贝. 定购 信息 参见 ORDERS 文件.
+<BR>
+
+你的 本地的 Emacs 维护者 可能 有 拷贝. 象 所有 FSF 的 软件 和 印刷品 一样
+, 所有的 人 都被 准许 制作 或 分发 Emacs 手册页, 同时 Emacs 源文件包 里面
+也 包含 手册页 的 Tex 源文件.
+<P>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>文件 (FILES)</H2>
+
+/usr/local/info - 所有 Info 文档 浏览器(Emacs 的 一个 子系统) 文档 的 所在地.
+现在 不是 许多 Unix 系统 在 这里 都有 文档, 但是 所有 Emacs 手册页 文档 都 以
+一种 树 结构 保存 在 这里.
+<P>
+/usr/local/share/emacs/$VERSION/src - C 源文件 以及 目标文件
+<P>
+/usr/local/share/emacs/$VERSION/lisp - Lisp 源文件 和 一些 定义 常用的 编辑
+命令 的 已经 编译 了的 文件. 有一些 文件 是 预先 装载 了的; 另外 一些 则是
+要用 的 时候 自动 装载.
+<BR>&nbsp;&nbsp;
+/usr/local/share/emacs/$VERSION/etc - GNU Emacs 用到 的 许多 程序, 还有
+一些 包含 常用 信息 的 文件.
+<P>
+/usr/local/share/emacs/$VERSION/etc/DOC.* - 包含 GNU Emacs 的 Lisp primitive
+和 预先 装载 的 Lisp 函数 的 文档 描述 字符串. 这样 可以 减小 Emacs 本身 的
+大小.
+<P>
+/usr/local/share/emacs/$VERSION/etc/OTHER.EMACSES 讨论 GNU Emacs
+vs. 其它 版本 的 Emacs.
+<BR>
+
+/usr/local/share/emacs/$VERSION/etc/SERVICE 向 GNU Emacs 用户 提供 各种 服务
+的人 的 列表, 包括 教育, 疑难 排解, 移植 和 定制 等.
+<BR>
+
+这些 文件 包含 一些 对 那些 想用 Emacs Lisp 扩展 语言(现在 还 没有 这个 语言 的
+完整 的 文档) 写 程序 的人 有用 的 信息.
+<P>
+/usr/local/com/emacs/lock - 为 Emacs 正在 编辑 的 所有 的 文件 的 上锁 文件
+都在 这里, 这些 文件 可以 防止 两个 用户 同时 编辑 同一个 文件.
+<P>
+
+/usr/lib/X11/rgb.txt - 合法 X 颜色 名称 的 列表.
+
+<P>
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>错误 (BUGS)</H2>
+
+在 英特网 上 有一个 邮件 列表 <A HREF="mailto:bug-gnu-emacs@prep.ai.mit.edu">bug-gnu-emacs@prep.ai.mit.edu</A> (在 UUCPnet 上 是
+ucbvax!prep.ai.mit.edu!bug-gnu-emacs), 可以 通过 这个 邮件 列表 报告 Emacs 的
+错误 和 补丁. 但是 在 报告 一个 错误 之前 请 确认 它 的确 是个 错误, 不要 把
+一个 一些 特性 误认为 是 错误. 我们 建议 你 读读 手册页(或者 Info 系统) 末尾
+的 ``报告 Emacs 错误'' 一节, 那里 有 如何 以及 什么 时候 报告 错误 的 一些 描述.
+还有 不要 忘了 在 <I>所有</I> 错误 报告 里 包含 你 运行 的 Emacs 的 版本号.
+<P>
+请 不要 指望 就 错误 报告 获得 个人 回答. 报告 错误 的 目的 是 在 下一个 发行版
+中 清除 错误, 如果 可能. 如果 要 寻求 个人 帮助, 在 SERVICE 文件 (见上) 里 有
+提供 服务 的人 的 名单.
+<P>
+请 不要 发送 任何 与 错误 报告 无关 的 东西 到 这个 邮件 列表 中. 请把 加入 邮件
+列表 的 请求 发送 到 <A HREF="mailto:info-gnu-emacs-request@prep.ai.mit.edu">info-gnu-emacs-request@prep.ai.mit.edu</A> (或者 相 对应 的
+UUCP 地址 里). 在 /usr/local/emacs/etc/MAILINGLISTS 文件 里 有 更多 关于 邮件
+列表 的 信息. 如果 我们 能 找到 导致 错误 的 代码, 那么 错误 多半 都能 被 清除,
+所以 你 应该 尽量 详细 的 报告 错误, 使得 我们 能够 使 错误 重新 发生.
+<P>
+
+我 知道 的 错误 有: 在 一些 版本 的 Unix 中, shell 不能 正常 运行 一些 在 原始
+模式 (Raw mode) 下 运行 的 程序.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>无限制 (UNRESTRICTIONS)</H2>
+
+<P>
+
+<I>Emacs </I>
+
+是 自由 软件; 每个人 都可以 在
+<I>Emacs</I>
+
+通用 公共 许可证 中 申明 的 条款 下 把
+<I>Emacs</I>
+
+发布 给 每个人, 每个
+<I>Emacs</I>
+
+中 都 附带 有 此 条款, 在 手册页 中 也 包含 有 此 条款.
+<P>
+
+<I>Emacs</I>
+
+的 拷贝 可能 被 打包 包含 在 一些 Unix 系统 中, 但是 它 并不在 那些 系统 所用
+的 许可证 的 保护 下. 这种 行为 违背 了 允许 分发 的 条款. 事实上, 通用 公共
+许可证 的 主要 目的 就是 禁止 任何人 在
+<I>Emacs</I>
+
+的 发布 上 加入 其它 任何 的 限制。
+<P>
+
+Richard Stallman 倡导 大家 来 改进 扩展
+<I>Emacs, </I>
+
+并且 鼓励 大家 为 GNU 库 的 扩展 做出 贡献. 事实上 GNU (Gnu's Not Unix) 将会
+成为 Berkeley Unix 的 代替品. 每个人 都可以 自由 的 使用, 拷贝, 学习 以及 改变
+GNU 系统.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+X">X</A>(1), <A HREF="/cgi-bin/man/man2html?1+xlsfonts">xlsfonts</A>(1), <A HREF="/cgi-bin/man/man2html?1+xterm">xterm</A>(1), <A HREF="/cgi-bin/man/man2html?1+xrdb">xrdb</A>(1)
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>作者 (AUTHORS)</H2>
+
+<P>
+
+<I>Emacs</I>
+
+是 Richard Stallman 和自由软件基金会写的。
+Joachim Martillo 和 Robert Krawitz 加入了 X 特性。
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/9/20</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE"> 手册页 (MANUALS)</A><DD>
+<DT><A HREF="#lbAF">文件 (FILES)</A><DD>
+<DT><A HREF="#lbAG">错误 (BUGS)</A><DD>
+<DT><A HREF="#lbAH">无限制 (UNRESTRICTIONS)</A><DD>
+<DT><A HREF="#lbAI">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAJ">作者 (AUTHORS)</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,79 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ULIMIT</TITLE>
+</HEAD><BODY>
+<H1>ULIMIT</H1>
+Section: Linux Programmer's Manual (3)<BR>Updated: 12 June 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ulimit - 获取和改变用户的限制设定
+<A NAME="lbAC">&nbsp;</A>
+<H2>大纲</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/ulimit.h">ulimit.h</A>&gt;</B>
+
+<P>
+<B>long ulimit(int </B><I>cmd</I><B>, long </B><I>newlimit</I><B>);</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+警告: 这个函数已经被废弃. glibc 不再提供这个包含文件. 使用 <A HREF="/cgi-bin/man/man2html?2+getrlimit">getrlimit</A>(2), 
+<A HREF="/cgi-bin/man/man2html?2+setrlimit">setrlimit</A>(2) 和 <A HREF="/cgi-bin/man/man2html?3+sysconf">sysconf</A>(3) 代替这个函数. 相关shell命令
+<B>ulimit</B>,
+
+参见
+<B><A HREF="/cgi-bin/man/man2html?1+bash">bash</A></B>(1).
+
+<P>
+使用
+<B>ulimit</B>
+
+可以获得或改变当前进程的限制设定.
+<I>cmd</I>
+
+参数可以是下列值中的一个:
+<DL COMPACT>
+<DT><B>UL_GETFSIZE </B>
+
+<DD>
+返回文件大小的限制 (以512字节为单位).
+<DT><B>UL_SETFSIZE</B>
+
+<DD>
+设定文件大小的限制.
+<DT><B>3</B>
+
+<DD>
+(Linux不支持)
+返回数据段可以使用的最大地址.
+<DT><B>4</B>
+
+<DD>
+(支持,但没有定义符号常量) 
+返回调用本函数的进程可以打开的最大文件数.
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>返回值</H2>
+
+如果执行成功
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">大纲</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">返回值</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

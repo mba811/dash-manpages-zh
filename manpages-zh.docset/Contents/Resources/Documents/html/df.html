@@ -1,0 +1,177 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DF</TITLE>
+</HEAD><BODY>
+<H1>DF</H1>
+Section: User Commands  (1)<BR>Updated: November 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+df - 报告文件系统磁盘空间的使用情况
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>df [</B><I>OPTION</I><B>]... [FILE]...</B>
+
+<P>
+POSIX 选项:
+<B>[-kP]</B>
+
+<P>
+GNU 选项 (最短方式):
+<B>[-ahHiklmPv]</B>
+
+<B>[-t </B><I>fstype</I><B>]</B>
+
+<B>[-x </B><I>fstype</I><B>]</B>
+
+<B>[--block-size=</B><I>size</I><B>]</B>
+
+<B>[--print-type]</B>
+
+<B>[--no-sync]</B>
+
+<B>[--sync]</B>
+
+<B>[--help] [--version] [--]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+此手册页文档是df的GNU版本.
+df命令列出指定的每一个文件名所在的文件系统上可用磁盘空间的数量。
+如果没有指定文件名,则显示当前所有使用中的文件系统.缺省设置时,
+磁盘空间以1K为一块显示,如果环境变量POSIXLY_CORRECT已设
+置,则采用512字节为一块显示.
+如果参数是一个包含已使用文件系统的磁盘设备名,
+df命令显示出的是该文件系统的可用空间,而非包含设备结点的文件系
+统(只能是根文件系统).此版本的df不能显示未使用文件系统的可用空
+间,这是由于大多数系统在响应这样的请求时必须很清楚该文件系统的
+结构.
+<P>
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>GNU 参数说明</H2>
+
+<P>
+<DL COMPACT>
+<DT><B>-a, --all</B>
+
+<DD>
+列出包括BLOCK为0的文件系统
+<DT><B>--block-size=SIZE use SIZE-byte blocks</B>
+
+<DD>
+指定块的大小
+<DT><B>-h,--huma-readable</B>
+
+<DD>
+用常见的格式显示出大小(例如:1K 234M 2G)
+<DT><B>-H,--si</B>
+
+<DD>
+同上,但是这里的1k等于1000字节而不是1024字节
+<DT><B>-i, --inodes</B>
+
+<DD>
+用信息索引点代替块表示使用状况
+<P>
+<DT><B>-k, --kilobytes</B>
+
+<DD>
+指定块大小等于1024字节来显示使用状况
+<DT><B>-l, --local</B>
+
+<DD>
+只显示本地文件系统使用状况
+<DT><B>-m, --megabytes</B>
+
+<DD>
+以指定块大小等于1048576字节(1M)来显示使用状况
+<DT><B>--no-sync</B>
+
+<DD>
+在取得使用信息前禁止调用同步
+(default)
+<DT><B>-P, --portability</B>
+
+<DD>
+使用POSIX格式输出
+<DT><B>--sync</B>
+
+<DD>
+在取得使用信息前调用同步
+<DT><B>-t, --type=TYPE</B>
+
+<DD>
+只显示指定类型(TYPE)的文件系统
+<DT><B>-T, --print-type</B>
+
+<DD>
+输出每个文件系统的类型
+<DT><B>-x, --exclude-type=TYPE</B>
+
+<DD>
+只显示指定类型(TYPE)之外的文件系统.
+<DT><B>-v (忽略)</B>
+
+<DD>
+<DT><B>--</B>
+
+<DD>
+输出该命令的帮助信息并退出
+<DT><B>--version</B>
+
+<DD>
+输出版本信息并退出
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>作者</H2>
+
+由 Torbjorn Granlund, David MacKenzie, Larry
+McVoy, 和 Paul Eggert 写作．
+<A NAME="lbAG">&nbsp;</A>
+<H2>错误报告</H2>
+
+将错误发到&lt;<A HREF="mailto:bu-fileutils@gnu.org">bu-fileutils@gnu.org</A>&gt;
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>王炎 &lt;<A HREF="mailto:wyd@263.net">wyd@263.net</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/19</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">GNU 参数说明</A><DD>
+<DT><A HREF="#lbAF">作者</A><DD>
+<DT><A HREF="#lbAG">错误报告</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

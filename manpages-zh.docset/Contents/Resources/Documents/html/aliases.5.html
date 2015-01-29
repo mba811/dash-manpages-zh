@@ -1,0 +1,135 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of aliases</TITLE>
+</HEAD><BODY>
+<H1>aliases</H1>
+Section: File Formats (5)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+aliases - sendmail使用的别名文件
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+aliases
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+此文件描述了
+<B>/usr/sbin/sendmail</B>
+
+使用的用户账号别名。它位于
+<B>/etc</B>
+
+并格式化
+成如下形式的一连串的行：
+<P>
+name: name_1, name2, name_3, . . .
+<P>
+
+其中的
+<B>name</B>
+
+是含别名的原名，而
+<B>name_n</B>
+
+就是那个原名的一组别名。以空格起
+首的行是上一行的延续。以`#'起首的行是注释。
+<P>
+
+别名化只发生在本地账号上。不能发生循环现象，因为邮件不会对任何人进行于一
+多次的投递。
+在完成别名化后，本地的和合法的收信人会有一个``.forward''文件存于他们的宿
+主目录，此文件用于把邮件按文件中定义好的用户列表进行转发。
+<P>
+
+此别名文件只包含原始数据；实际的别名化信息存于用程序
+<I><A HREF="/cgi-bin/man/man2html?1+newaliases">newaliases</A>(1)</I>
+
+建立的
+<I>/etc/aliases.db</I>
+
+这个二进制格式的文件中。每次别名文件更改后都要执行
+<I>newaliases</I>
+
+命令来使更改有效。
+<A NAME="lbAE">&nbsp;</A>
+<H2>另见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+newaliases">newaliases</A>(1),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?3+dbopen">dbopen</A>(3),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?3+dbm">dbm</A>(3),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?8+sendmail">sendmail</A>(8)</B>
+
+<B>SENDMAIL 安装和操作指南。</B>
+
+<B>SENDMAIL 互联网络邮件路由器。</B>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>错误</H2>
+
+如果你已经在编译
+<B>sendmail</B>
+
+时用
+<B>DBM</B>
+
+支持替换了
+<B>NEWDB</B>
+
+的话，可能会遇到
+<B><A HREF="/cgi-bin/man/man2html?3+dbm">dbm</A>(3)</B>
+
+限制
+单条别名容量在
+<I>1000</I>
+
+字节信息量左右的问题。你可以用``链''的方法来获得更长的别名；
+那就是，把一个作为延续的虚设名来作为别名串中的最后一个名称。
+<A NAME="lbAG">&nbsp;</A>
+<H2>历史记录</H2>
+
+别名文件格式出现于BSD 4.0
+。
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>mhss</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001.10.01</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A> </B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">另见</A><DD>
+<DT><A HREF="#lbAF">错误</A><DD>
+<DT><A HREF="#lbAG">历史记录</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

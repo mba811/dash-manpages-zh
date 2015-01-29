@@ -1,0 +1,468 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of autorun</TITLE>
+</HEAD><BODY>
+<H1>autorun</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+
+
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<P>
+
+
+
+
+<P>
+
+
+
+
+
+
+autorun - 自动装载/卸载CDROMs并在装载后执行/path/to/cdrom/autorun
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<P>
+
+
+
+
+<P>
+
+
+
+
+
+
+<B>autorun</B> 
+[-lmqv?V] [-a EXEC] [-c CDPLAYER] [-e STRING] [-i MILLISEC] 
+[-n STRING] [-t STRING]
+[--autorun=EXEC] [--cdplayer=CDPLAYER] [--interval=MILLISEC] [--lock]
+[--mountonly] [--notify=STRING] [--notify-insert=STRING] [--notify-eject=STRING] 
+[--quiet] [--verbose] [--help] [--usage]
+[--version] [cdromdevices...]
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<P>
+
+
+
+
+<P>
+
+
+
+
+
+
+autorun自动识别系统上所有可获得的CDROMs，在插入CD时载装它
+们，并执行CD上可能包含的'autorun'可执行文件。要让普通用户
+使用这样的功能，你必须在/etc/fstab中想要使用的CDROMs条目
+上加入选项user,exec。
+<P>
+
+
+
+
+<P>
+
+
+
+
+
+
+你也可以在KDE中使用Autorun.kdelnk。只要把它放到你的
+Autostart文件夹中即可。
+<P>
+
+
+
+
+<P>
+
+
+
+
+
+
+程序分析命令字串并用装载点路径来替换%P%参数。用设备路径来
+替换%D%。然后就用/bin/sh -c &quot;command string&quot;来执行命令字
+串；
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<P>
+
+
+
+
+<P>
+
+
+
+
+
+
+
+
+
+<DL COMPACT>
+<DT><I>-a, --autorun=EXEC</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+如果换CD盘的话执行EXEC。该可执行文件必须位于CD盘上。例如，
+如果你指定&quot;--autorun=myprogram&quot;，而你的CD盘装载到了
+/mnt/cdrom下的话，在换盘后，autorun会尝试运行
+&quot;/mnt/cdrom/myprogram&quot;。
+(缺省为&quot;/autorun&quot;)
+<DT><I>-c, --cdplayer=CDPLAYER</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+如果插入的是唱片的话，运行CDPLAYER
+(缺省为&quot;/usr/bin/kscd&quot;)
+<DT><I>-i, --interval=MILLISEC</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+每次检查之间间隔MILLISEC
+(缺省为1000000)
+<DT><I>-l, --lock</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+锁定装载好的介质(手工卸载)
+<DT><I>-m, --mountonly</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+只进行装载/卸载(不执行任何内容)
+<DT><I>-n, --notify=STRING</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+如果换盘则执行命令STRING
+(缺省为&quot;/usr/bin/kfmclient refreshDesktop&quot;)
+<DT><I>-t, --notify-insert=STRING</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+如果插入盘片则执行命令STRING，就不执行&quot;/autorun&quot;以及用
+--autorun指定了的内容
+(缺省为&quot;/usr/bin/kfmclient openURL %P%&quot;)
+<DT><I>-e, --notify-eject=STRING</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+Command STRING that will executed if a CD was ejected 
+如果取出盘片则执行命令STRING
+(缺省为&quot;&quot;)
+<DT><I>-q, --quiet</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+不产生任何输出
+<DT><I>-v, --verbose</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+产生详细的输出
+<DT><I>-?, --help,</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+列出此帮助信息
+<DT><I>--usage</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+列出一份简要用法信息
+<DT><I>-V, --version</I><DD>
+
+
+
+
+.IP &bull;
+
+.IP n(el.
+
+
+
+
+
+
+
+
+
+
+列出程序版本
+
+
+
+
+
+
+</DL>
+<P>
+
+
+
+
+
+
+长选项所有的强制或可选参数也适合任何相应的短选项。
+<A NAME="lbAF">&nbsp;</A>
+<H2>作者</H2>
+
+<P>
+
+
+
+
+<P>
+
+
+
+
+
+
+
+
+<P>
+
+<PRE>
+主要作者：
+===============
+
+Harald Hoyer    E-Mail:
+                        <A HREF="mailto:Harald.Hoyer@redhat.de">Harald.Hoyer@redhat.de</A>
+                        <A HREF="mailto:autorun@parzelle.de">autorun@parzelle.de</A>
+                HTTP:
+                        <A HREF="http://parzelle.de/">http://parzelle.de/</A>
+ 
+
+</PRE>
+
+
+
+
+<P>
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/03/26</B>
+
+第一版
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》：</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">作者</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国Linux论坛man手册页翻译计划》：</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

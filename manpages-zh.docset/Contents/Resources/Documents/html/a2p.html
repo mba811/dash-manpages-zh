@@ -1,0 +1,265 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of A2P</TITLE>
+</HEAD><BODY>
+<H1>A2P</H1>
+Section: Perl Programmers Reference Guide (1)<BR>Updated: perl 5.005, patch 03<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+a2p - Awk 到 Perl 翻译器
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>a2p [options] filename</B>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<I>A2p</I> 从命令行或标准输入取得一个awk脚本文件，
+并且向标准输出产生一个相同功能的 <I>perl</I> 脚本文件。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+可选选项有:
+<DL COMPACT>
+<DT><B>-D&lt;number&gt;</B><DD>
+设置调试标记。
+<DT><B>-F&lt;character&gt;</B><DD>
+告诉a2p，awk脚本总是带 <B>-F</B> 选项执行。
+<DT><B>-n&lt;fieldlist&gt;</B><DD>
+如果输入不分解为一个数组，你需要指定输入的各字段的名称。
+假如要翻译一个用于处理密码文件的awk脚本，你应当这样:
+<P>
+a2p -7 -nlogin.password.uid.gid.gcos.shell.home
+<P>
+任何定界符都可以用来分隔字段名。
+<DT><B>-&lt;number&gt;</B><DD>
+使得a2p总是假设输入包含那么多字段。
+<DT><B>-o</B><DD>
+告诉a2p使用旧的awk行为。当前，唯一的区别是旧的awk总是有一个
+每行的循环，即使没有对每行的操作；新的awk不是这样。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H3>Considerations</H3>
+
+a2p 不能翻译得像人一样好，但是通常都做得很好。
+在生成的perl脚本中，你应当检查和修改一些东西。这里是
+其中的一些，没有顺序。
+<P>
+
+awk 中有一个习惯，就是将一个字符串表达式放在 <I>int()</I> 函数中
+来使它强制解释为数字，即使参数已经是一个数字。
+这在perl 中是不必要的，但是a2p不知道参数是不是一个数字，所以它
+将它直译了。你也许想删掉它。
+<P>
+
+perl 中数字比较和字符比较是不一样的。对这两种情况，awk只有一个操作符，
+但是会在运行时判断是哪一种。在这一点上a2p不对awk进行彻底的模拟。
+它会猜测哪一种是你想要的。大多数时候它是对的，但是不能保证。
+这样的猜测都以 &quot;&quot;#???&quot;&quot; 注释来标记。你应当
+仔细检查它们，至少用perl的 <B>-w</B> 选项来运行它们一次，这样
+perl会警告你在应当使用eq 的地方使用了＝＝。
+<P>
+
+perl 不会像awk一样将不存在的数组元素创建为引用。如果你想用这种办法
+来在一个for...in 循环中创建空元素，在perl中将不可能实现。
+<P>
+
+如果a2p产生了一个分段的行，用来将一列变量赋值，看上去就
+像这样 (Fld1, Fld2, Fld3...) ，你应当重新用上面提到的 <B>-n</B> 选项
+运行a2p。这样可以让你命名字段。
+如果它又将行分解为一个数组，那么这个脚本中其他地方可能引用了字段的数量。
+<P>
+
+awk中的exit语句不会退出。如果有 <FONT SIZE="-1">END</FONT> 段，它会转到那里。
+在 <FONT SIZE="-1">END</FONT> 段中执行跳过其他程序，转向退出的awk脚本段落在perl 
+中没有必要。你只要删掉 <FONT SIZE="-1">END</FONT> 块中的条件变量，直接退出就可以了。
+<P>
+
+perl 中有两种数组，数字下标的和关联数组。perl中的关联数组叫做
+散列 &quot;hashes&quot;。awk中的数组总是翻译为散列，但是如果你知道
+索引总是数字，你就可以将 {...} 转为 [...]。对散列的遍历用到了
+<I>keys()</I> 函数，但是对数组的散列不会。你需要修改对这样的数组进行遍历
+的循环。
+<P>
+
+awk 默认 <FONT SIZE="-1">OFMT</FONT> 的值是 %.6g，perl默认作用相同的成分
+$# 的值是 %.20g。如果你想使用 <FONT SIZE="-1">OFMT</FONT> 的默认值，你需要
+显式地定义$#。
+<P>
+
+在循环顶部总是会出现分支操作，这是awk脚本中暗含的。很多时候
+你可以将对整个记录的判断移到循环下面，这样可以减少很多分支判断。
+<P>
+
+出于美学原因，你也许想将数组的起始值 $[ 从1转为perl默认的0
+但是要记住将所有数组的下标 <FONT SIZE="-1">AND</FONT> 和 <I>substr()</I> 还有 <I>index()</I>
+函数都进行更改，保证正确。
+<P>
+
+a2p会聪明地在在未处理的脚本中添加注释
+&quot;# Here is a workaround because awk is dumb&quot;
+<P>
+
+awk脚本经常使用在shell脚本中，通过管道接受和输出文本。
+大部分时候这种shell脚本&quot;wrapper&quot;可以和perl合并，
+因为perl可以建立输入输出管道，做其他awk不能做的事情。
+<P>
+
+对<FONT SIZE="-1">RSTART</FONT> 和 <FONT SIZE="-1">RLENGTH</FONT> 变量进行引用的脚本可以简单地
+修改为对变量$`, $&amp; 和 $' 的引用，只要他们是在模式匹配的范围之内。
+<P>
+
+产生的perl脚本可能含有子程序来处理awk的getline和print函数。由于
+a2p通常将正确性放在首位而不是效率，一般可以将子程序重写得更有效率。
+<P>
+
+为了提高效率，你可以将子程序中的return去掉，只要返回值是子程序中的
+最后一个语句。a2p可以处理最简单的情况，但是不能分析嵌入程序块的情况。
+<P>
+
+<FONT SIZE="-1">ARGV</FONT>[0] 翻译为 <TT>$ARGV0</TT>，
+但是 <FONT SIZE="-1">ARGV</FONT>[n] 会翻译为 <TT>$ARGV</TT>[$n]。
+遍历 <FONT SIZE="-1">ARGV</FONT>[0] 的循环将找不到它。
+<A NAME="lbAG">&nbsp;</A>
+<H2>环境 (ENVIRONMENT)</H2>
+
+a2p不使用环境变量
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者 (AUTHORS)</H2>
+
+Larry Wall &lt;<I><A HREF="mailto:larry@wall.org">larry@wall.org</A></I>&gt;
+<A NAME="lbAI">&nbsp;</A>
+<H2>文件 (FILE)</H2>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<P>
+
+perl   perl 编译器和解释器
+<BR>&nbsp;
+s2p    sed 到 perl的翻译工具
+<A NAME="lbAK">&nbsp;</A>
+<H2>诊断 (DIAGNOSTICS)</H2>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>BUGS</H2>
+
+可以在运行时根据操作数来选择字符还是数字操作，从而模拟awk。
+但是这样非常粗野并且无效率。另外，a2p通常都能猜对。
+<P>
+
+当前，awk语法树是静态存储的，空间可能会耗尽。
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+袁乙钧 &lt;<A HREF="mailto:bbbush@163.com">bbbush@163.com</A>&gt;
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/10/25</B>
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》 </H2>
+
+<A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DL>
+<DT><A HREF="#lbAF">Considerations</A><DD>
+</DL>
+<DT><A HREF="#lbAG">环境 (ENVIRONMENT)</A><DD>
+<DT><A HREF="#lbAH">作者 (AUTHORS)</A><DD>
+<DT><A HREF="#lbAI">文件 (FILE)</A><DD>
+<DT><A HREF="#lbAJ">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAK">诊断 (DIAGNOSTICS)</A><DD>
+<DT><A HREF="#lbAL">BUGS</A><DD>
+<DT><A HREF="#lbAM">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAN">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAO">《中国Linux论坛man手册页翻译计划》 </A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

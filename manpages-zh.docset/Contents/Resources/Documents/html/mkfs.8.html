@@ -1,0 +1,219 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MKFS</TITLE>
+</HEAD><BODY>
+<H1>MKFS</H1>
+Section: Maintenance Commands (8)<BR>Updated: Jun 1995<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+mkfs - 创建一个 Linux 文件系统
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>mkfs</B>
+
+[
+<B>-V</B>
+
+]
+[
+<B>-t</B>
+
+<I>文件系统类型</I>
+
+]
+[
+<B>fs-选项</B>
+
+]
+<I>文件系统</I>
+
+[
+<I>块</I>
+
+]
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>mkfs</B>
+
+mkfs 用来在指定设备创建一个 Linux 文件系统，
+通常是在硬盘上。
+<I>文件系统</I>
+
+既可以是设备名，（如：
+<I>/dev/hda1</I>，
+
+<I>/dev/sdb2</I>）
+
+也可以是文件系统的挂载点，（如：
+<I>/</I>，
+
+<I>/usr</I>，
+
+<I>/home</I>）。
+
+<I>块</I>
+
+是指该文件系统用的块数。
+<P>
+
+如果
+<B>mkfs</B>
+
+成功执行时返回值为 0，反之，则是 1。
+<P>
+
+事实上，
+<B>mkfs</B>
+
+是在 Linux 下各文件系统专用程序
+（<B>mkfs</B>.<I>fstype</I>）
+的前端程序。各文件系统专用程序可以在
+<I>/sbin</I>，
+
+<I>/sbin/fs</I>，
+
+<I>/sbin/fs.d</I>，
+
+<I>/etc/fs</I>，
+
+<I>/etc</I>
+
+等目录中找到，
+（精确定义一般都在编译内核时定义，但通常包含有
+<I>/sbin</I>
+
+和
+<I>/sbin/fs</I>），
+
+并最终在环境变量 PATH 列出的目录中．
+如要获取更多关于相应文件系统的创建工具的信息，可参考相应帮助手册。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-V</B>
+
+<DD>
+输出冗长的帮助信息，其中包括执行的各种系统相关的命令．
+一行命令中出现多个此参数可禁止所有系统相关命令的执行。
+这个做法实际上之是在测试时有用。
+<DT><B>-t</B><I>&nbsp;文件系统类型</I>
+
+<DD>
+指定所要创建的文件系统类型。如没有任何指定，
+则使用缺省的文件系统类型（目前是 ext2）。
+<DT><B>fs-选项</B>
+
+<DD>
+要传递给实际的文件系统制作工具的文件系统相关的选项。
+虽然我们不能保证，但是绝大部分文件系统制作工具支持下面的选项。
+<DT><B>-c</B>
+
+<DD>
+在创建文件系统之前进行设备坏块检查。
+<DT><B>-l</B><I>&nbsp;filename</I>
+
+<DD>
+从指定文件
+<I>filename</I>
+
+中读取坏块信息。
+<DT><B>-v</B>
+
+<DD>
+产生冗长输出信息。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>臭虫</H2>
+
+所有通用选项须首先定义并且不能与文件系统相关的
+选项合并。
+一些指定文件系统创建工具不支持
+<I>-v</I>
+
+选项，也不会返回有意义的返回值。
+某些指定文件系统创建工具不会自动侦测磁盘设备的大小，因此需要声明
+<I>blocks</I>
+
+。
+<A NAME="lbAG">&nbsp;</A>
+<H2>开发人员</H2>
+
+<P>
+David Engel (<A HREF="mailto:david@ods.com">david@ods.com</A>)
+<BR>
+
+Fred N. van Kempen (<A HREF="mailto:waltje@uwalt.nl.mugnet.org">waltje@uwalt.nl.mugnet.org</A>)
+<BR>
+
+Ron Sommeling (<A HREF="mailto:sommel@sci.kun.nl">sommel@sci.kun.nl</A>)
+<BR>
+
+这个手册页是无耻地从 Remy Card 为 ext2 文件系统
+写的版本搞过来的。
+<A NAME="lbAH">&nbsp;</A>
+<H2>又见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?5+fs">fs</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?8+badblocks">badblocks</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+fsck">fsck</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+mkdosfs">mkdosfs</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+mke2fs">mke2fs</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+mkfs.ext2">mkfs.ext2</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+mkfs.minix">mkfs.minix</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+mkfs.msdos">mkfs.msdos</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+mkfs.xiafs">mkfs.xiafs</A></B>(8)
+
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>所罗门 &lt;<A HREF="mailto:solomen@email.com.cn">solomen@email.com.cn</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/05/01</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">臭虫</A><DD>
+<DT><A HREF="#lbAG">开发人员</A><DD>
+<DT><A HREF="#lbAH">又见</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国Linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

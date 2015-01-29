@@ -1,0 +1,160 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATEDB</TITLE>
+</HEAD><BODY>
+<H1>CREATEDB</H1>
+Section: PostgreSQL Client Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+createdb - 创建一个新的 PostgreSQL 数据库
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>createdb</B> [ <B></B><I>option</I><B></B>...<B> </B>] [ <B></B><I>dbname</I><B> </B>] [ <B></B><I>description</I><B> </B>]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION  描述</H2>
+
+<P>
+
+<B>createdb</B> 创建一个新的 PostgreSQL 数据库。
+<P>
+
+<BR>&nbsp;通常，执行这个命令的数据库用户成为新数据库的所有者。&nbsp;不过，如果执行用户拥有合适的权限，那么他可以通过&nbsp;<B>-O</B>&nbsp;指定合适的用户。
+<P>
+
+<B>createdb</B> 是一个 SQL 命令 CREATE DATABASE [<B><A HREF="/cgi-bin/man/man2html?7+create_database">create_database</A></B>(7)] 的封装。 因此，用哪种方法创建数据库都没什么特别的。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<B>createdb</B> 接受下列命令行参数：
+<DL COMPACT>
+<DT><B></B><I>dbname</I><B></B><DD>
+<BR>&nbsp;声明要创建的数据库名。该名称应该在本节点的&nbsp;PostgreSQL&nbsp;所有数据库里面是唯一的。&nbsp;缺省是与当前系统用户同名。
+<DT><B></B><I>description</I><B></B><DD>
+<BR>&nbsp;这个选项声明一个与新创建的数据库相关的注解。
+<DT><B>-D </B><I>location</I><B></B><DD>
+<DT><B>--location </B><I>location</I><B></B><DD>
+<BR>&nbsp;声明变更了的数据库集群（节点）的位置。&nbsp;又见&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+initlocation">initlocation</A></B>(1).
+<DT><B>-e</B><DD>
+<DT><B>--echo</B><DD>
+<BR>&nbsp;回显&nbsp;createdb&nbsp;生成的命令并且把它发送到服务器。
+<DT><B>-E </B><I>encoding</I><B></B><DD>
+<DT><B>--encoding </B><I>encoding</I><B></B><DD>
+<BR>&nbsp;声明用于此数据库的字符编码方式。
+<DT><B>-O </B><I>owner</I><B></B><DD>
+<DT><B>--owner </B><I>owner</I><B></B><DD>
+<BR>&nbsp;指定将拥有新数据库的数据库用户。
+<DT><B>-q</B><DD>
+<DT><B>--quiet</B><DD>
+<BR>&nbsp;不显示响应。
+<DT><B>-T </B><I>template</I><B></B><DD>
+<DT><B>--template </B><I>template</I><B></B><DD>
+<BR>&nbsp;声明创建此数据库的模板数据库。
+</DL>
+<P>
+
+<P>
+
+<BR>&nbsp;选项&nbsp;-h，-p，-U，&nbsp;-W，-e&nbsp;是以文本形式传递给&nbsp;psql。&nbsp;选项<B>-O</B>，<B>-D</B>，<B>-T</B>&nbsp;和&nbsp;<B>-E</B>&nbsp;转换为下层的&nbsp;SQL&nbsp;命令&nbsp;CREATE&nbsp;DATABASE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+create_database">create_database</A></B>(7)]&nbsp;&nbsp;的选项；参考该条目获取更多相关信息。
+<P>
+
+<B>createdb</B> 还接受下列命令行参数作为连接参数：
+<DL COMPACT>
+<DT><B>-h </B><I>host</I><B></B><DD>
+<DT><B>--host </B><I>host</I><B></B><DD>
+<BR>&nbsp;声明运行服务器的主机名。&nbsp;如果数值以斜扛开头，则它被用做到&nbsp;Unix&nbsp;域套接字的路径。
+<DT><B>-p </B><I>port</I><B></B><DD>
+<DT><B>--port </B><I>port</I><B></B><DD>
+<BR>&nbsp;声明服务器&nbsp;侦听的等待连接的互联网&nbsp;TCP&nbsp;端口或一个本地&nbsp;Unix&nbsp;域套接字文件扩展（描述符）。
+<DT><B>-U </B><I>username</I><B></B><DD>
+<DT><B>--username </B><I>username</I><B></B><DD>
+<BR>&nbsp;进行联接的用户名。
+<DT><B>-W</B><DD>
+<DT><B>--password</B><DD>
+<BR>&nbsp;强制口令提示符。
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>PGDATABASE</B><DD>
+<BR>&nbsp;如果设置了，那么就是要创建的数据库名字，除非在命令行上覆盖了。
+<DT><B>PGHOST</B><DD>
+<DT><B>PGPORT</B><DD>
+<DT><B>PGUSER</B><DD>
+<BR>&nbsp;缺省连接参数。PGUSER&nbsp;还决定了要创建的数据库名字－－&nbsp;如果我们没有在命令行上声明数据库名字，也没有用&nbsp;<B>PGDATABASE</B>&nbsp;&nbsp;声明的话。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>DIAGNOSTICS 诊断</H2>
+
+<P>
+
+<BR>&nbsp;如果出现错误，将会显示后端错误信息。参阅&nbsp;CREATE&nbsp;DATABASE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+create_database">create_database</A></B>(7)]&nbsp;&nbsp;和&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1)&nbsp;获取可能信息描述。&nbsp;数据库服务器必须在目标服务器上运行。同样，前端库&nbsp;libpq&nbsp;&nbsp;使用的缺省连接设置和环境变量都将适用。
+<A NAME="lbAH">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;用缺省数据库服务器创建一个数据库&nbsp;demo：
+<P>
+<PRE>
+$ <B>createdb demo</B>
+CREATE DATABASE
+
+</PRE>
+
+<BR>&nbsp;响应信息与运行&nbsp;CREATE&nbsp;DATABASE&nbsp;SQL&nbsp;命令时一样。
+<P>
+
+<BR>&nbsp;用在主机eden上的服务器创建数据库&nbsp;demo，&nbsp;端口是&nbsp;5000，使用&nbsp;LATIN1&nbsp;编码方式，并且显示执行的命令：
+<P>
+<PRE>
+$ <B>createdb -p 5000 -h eden -E LATIN1 -e demo</B>
+CREATE DATABASE &quot;demo&quot; WITH ENCODING = 'LATIN1'
+CREATE DATABASE
+
+</PRE>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+dropdb">dropdb</A></B>(1), CREATE DATABASE [<B><A HREF="/cgi-bin/man/man2html?7+create_database">create_database</A></B>(7)]
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION  描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAG">DIAGNOSTICS 诊断</A><DD>
+<DT><A HREF="#lbAH">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

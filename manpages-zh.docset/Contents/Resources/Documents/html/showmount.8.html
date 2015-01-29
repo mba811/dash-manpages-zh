@@ -1,0 +1,140 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SHOWMOUNT</TITLE>
+</HEAD><BODY>
+<H1>SHOWMOUNT</H1>
+Section: Maintenance Commands (8)<BR>Updated: 11 August 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+showmount - 显示关于 NFS 服务器文件系统挂载的信息
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+
+<B>/usr/sbin/showmount</B>
+
+<B>[&nbsp;-adehv&nbsp;]</B>
+
+<B>[&nbsp;--all&nbsp;]</B>
+
+<B>[&nbsp;--directories&nbsp;]</B>
+
+<B>[&nbsp;--exports&nbsp;]</B>
+
+<B>[&nbsp;--help&nbsp;]</B>
+
+<B>[&nbsp;--version&nbsp;]</B>
+
+<B>[&nbsp;host&nbsp;]</B>
+
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>showmount</B>
+
+showmount 在远程主机上查询关于该 NFS 服务器的挂载进程状态。
+如果不使用任何参数，
+<B>showmount</B>
+
+显示所有从该服务器上挂载到本地的客户清单。
+<B>showmount</B>
+
+的输出格式设计成类似于经过 ``sort -u''
+命令格式化后一样。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-a</B>或<B>--all</B>
+
+<DD>
+以 host:dir 这样的格式来显示客户主机名和挂载点目录。
+<DT><B>-d</B>或<B>--directories</B>
+
+<DD>
+仅显示被客户挂载的目录名。
+<DT><B>-e</B>或<B>--exports</B>
+
+<DD>
+显示NFS服务器的输出清单。
+<DT><B>-h</B>或<B>--help</B>
+
+<DD>
+显示帮助信息。
+<DT><B>-v</B>或<B>--version</B>
+
+<DD>
+显示版本信。
+<DT><B>--no-headers</B>
+
+<DD>
+禁止输出描述头部信息。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+rpc.mountd">rpc.mountd</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+rpc.nfsd">rpc.nfsd</A></B>(8)
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>BUGS</H2>
+
+<B>showmount</B>
+
+所显示输出内容的完整性和准确性将视 NFS 实现的好坏而定。
+<P>
+
+由于
+<B>showmount</B>
+
+的输出是唯一的和经过排序的，
+所以无法列出当前挂载点目录是否被挂载一次以上。
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者</H2>
+
+<B>Rick Sladkey &lt;<A HREF="mailto:jrs@world.std.com">jrs@world.std.com</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>所罗门 &lt;<A HREF="mailto:solomen@email.com.cn">solomen@email.com.cn</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/05/01</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">参见</A><DD>
+<DT><A HREF="#lbAG">BUGS</A><DD>
+<DT><A HREF="#lbAH">作者</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国Linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

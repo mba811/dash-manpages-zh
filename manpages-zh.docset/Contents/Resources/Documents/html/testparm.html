@@ -1,0 +1,155 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of TESTPARM</TITLE>
+</HEAD><BODY>
+<H1>TESTPARM</H1>
+Section: User Commands  (1)<BR>Updated: 11 Nov 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+testparm - 检查smb.conf配置文件的内部正确性
+<P>
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<P>
+
+testparm [-s] [-h] [-L servername] [configfilename] [hostname hostIP] 
+<P>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<P>
+
+此程序是samba套件的一部分。 
+<P>
+
+testparm是个非常简单的程序，用于检查smbd配置文件的内部正确性。如果程序报告没有什么
+问题，那么你可以放心地使用这个配置文件，并且smbd也会非常顺利地装入它。
+<P>
+
+注意，这并不保证配置文件中指定的服务可以获得或者如你所愿地那样进行操作。 
+<P>
+
+如果在它的命令上指定可选的主机名和主机IP地址的话，测试程序将通过服务接口运行并报告是否
+指定的主机可以访问每个服务。
+<P>
+
+如果testparm在smb.conf文件中找到一个错误的话，它会向调用程序返回退出代码1，否则返回
+退出代码0。这样shell脚本可以测试testparm的输入。
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 </H2>
+
+<P>
+
+<DL COMPACT>
+<DT><DD>
+<DT><B>-s</B><DD>
+如果不带这个参数，testparm将提示在列出服务名和服务定义项之间打一个回车。 
+<DT><DD>
+<DT><B>-h</B><DD>
+列出用法信息 
+<DT><DD>
+<DT><B>-L servername</B><DD>
+对服务项名字设定%L这样的宏值。对于测试包含这样的宏值的文件非常有用。 
+<DT><DD>
+<DT><B>configfilename</B><DD>
+指定要检查的配置文件名。如果不指定的话，程序对默认的smb.conf文件进行检查。 
+<DT><DD>
+<DT><B>hostname</B><DD>
+如果命令行带有这个参数时，测试程序将检查smb.conf文件中的"hosts
+allow"和"hosts deny"参数用以测试这些IP地址对应的主机名是否可以访
+问smbd服务器。如果用这样的参数时，hostIP参数也必须一并使用。
+<DT><DD>
+<DT><B>hostIP</B><DD>
+这个参数用于指定前面给出的主机名相对应的IP地址。如上说述，主机名参数和这个地址必须一并
+使用。 
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>相关文件</H2>
+
+<P>
+
+smb.conf，通常这是smbd使用的配置文件名。
+<A NAME="lbAG">&nbsp;</A>
+<H2>诊断</H2>
+
+程序运行的结果将给出装入的配置文件是否正确的信息。如果文件没有被装入时可能显示的是错误和警
+告信息。反之，装入文件正确的话，程序会在标准输出上列出所有可知的服务细节。
+<A NAME="lbAH">&nbsp;</A>
+<H2>版本</H2>
+
+<P>
+
+此手册页是针对samba套件版本2.0的。 
+<A NAME="lbAI">&nbsp;</A>
+<H2>另见</H2>
+
+<P>
+
+<B>smb.conf (5)</B>, <B>smbd (8)</B>
+<P>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>作者</H2>
+
+<P>
+
+samba软件和相关工具最初由Andrew Tridgell <A HREF="mailto:samba-bugs@samba.org">samba-bugs@samba.org</A>创建。samba现在由开发
+组作为类似Linux内核开发采用的开放源代码计划方式来发展。 
+<P>
+
+samba手册页最初由Karl Auer撰写。它的源码已被转换成YODL(一种极好的开放源代码软件，可以在
+<A HREF="ftp://ftp.icce.rug.nl/pub/unix/处获得)格式并已由Jeremy">ftp://ftp.icce.rug.nl/pub/unix/处获得)格式并已由Jeremy</A> Allison更新到samba2.0版本。 
+<P>
+
+请参见samba (7)查找如何获得一份完整的维护者列表以及如何提交错误报告及注解等等。
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项 </A><DD>
+<DT><A HREF="#lbAF">相关文件</A><DD>
+<DT><A HREF="#lbAG">诊断</A><DD>
+<DT><A HREF="#lbAH">版本</A><DD>
+<DT><A HREF="#lbAI">另见</A><DD>
+<DT><A HREF="#lbAJ">作者</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

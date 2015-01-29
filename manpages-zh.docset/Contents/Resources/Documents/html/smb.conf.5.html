@@ -1,0 +1,6192 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SMB.CONF</TITLE>
+</HEAD><BODY>
+<H1>SMB.CONF</H1>
+Section:  (5)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+smb.conf - Samba组件的配置文件 
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<P>
+<P>
+
+<I>smb.conf</I>是Samba组件的配置文件,包含Samba程序运行时的配置信
+息.<I>smb.conf</I>被设计成可由<B>swat</B> (8)程序来配置和管理.本文件包含了
+关于smb.conf的文件格式和可能出现的选项的完整描述以供参考.
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>文件格式 FILE FORMAT</H2>
+
+<P>
+<P>
+
+本文件由一系列段和选项构成.一个段由一对方括号中的段名开始,直到下一个段名结束.包含在段中的选项按以下格式定义：
+<P>
+<P>
+
+<I>选项名</I> = <I>选项值</I>
+<P>
+<P>
+
+本文件是基于文本行的.这就是说,每一个以换行符结束的行描述了一个项目(注释,段名,或选项).
+<P>
+<P>
+
+段名和选项名是不区分大小写的.
+<P>
+<P>
+
+只有选项设置中的第一个等号才有意义.第一个等号前后的空格会被忽略.段名和选项名的前后以及中间包含的空格是无关的.选项值前后的空格会被忽略.选项值中包含的空格会原样保留.
+<P>
+<P>
+
+所有以';'和'#'符开头的行都会被忽略,就象只有空格的行那样.
+<P>
+<P>
+
+按照UNIX上的惯例,以''符号结尾的行续下一行.(也就是说：''是续行符,如果一行写不下,可以在行尾以''结束,在下一行继续写--译注) 
+<P>
+<P>
+
+等号后面跟的是字符串(无需引号)或者逻辑值(可以是yes/no,1/0,或者true/false
+来表示).逻辑值是不区分大小写的.字符串值则原样保留了输入的大小写.某些选项
+(例如create modes)的值是数值型的.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>段描述 SECTION DESCRIPTIONS</H2>
+
+<P>
+<P>
+
+配置文件的每一段([global]段除外)描述一项共享资源.段名就是共享名,段内的选项设置确定了该共享资源的属性.
+<P>
+<P>
+
+三个特殊段([global],[homes],[printers])将在后面'special sections'单独说明,以下的内容是普通段的说明.
+<P>
+<P>
+<P>
+<P>
+
+一个共享资源由一个文件目录和用户对此目录的操作权限的说明构成.另外,还列入了一些用于内部管理的选项.
+<P>
+<P>
+
+每一段定义了一项文件服务(客户端可以把它看作其本机文件系统的延伸)或打印服务(客户端可以通过它来使用服务器提供的打印服务).
+<P>
+<P>
+
+段可以定义成<B>guest</B>服务类型,在这种情况下,客户无需口令就可以访问该资源.一个特定的UNIX系统下的<B>guest account</B>通常用来指定这种情况下的客户访问权限.
+<P>
+<P>
+
+除了guest服务类型以外,其他类型的段定义的共享资源都需要口令才能访问.用户名是由客户端提供的.由于某些老的客户端只提供口令,没有用户名,你需要在共享定义中使用&quot;user=&quot;选项来指定一个用户列表,以便根据这个用户列表进行口令验证.对于象Windos95/98和WindowsNT这样的现代客户端程序,这个选项是不需要的.
+<P>
+<P>
+
+注意,对于资源的操作权限还取决于主机系统赋予指定用户或来访者账户的权限.samba提供的服务权限不能超出主机系统指定的权限范围.
+<P>
+<P>
+
+下面的示范段定义了一项文件服务,用户拥有对<I>/home/bar</I>目录进行写操作的权限.这个共享资源是通过共享名&quot;foo&quot;来访问的.
+<P>
+<PRE>
+[foo]
+        path = /home/bar
+        read only = no
+</PRE>
+
+<P>
+<P>
+
+下面示范段定义了一项打印服务,此共享资源是只读的,但是可以进行打印操作.也就是说,唯一允许的写操作只能是打开、写入并关闭一个打印假脱机文件.其中的<I>guest ok</I>选项定义意味着允许以缺省的guest用户(在别处定义的)权限进行访问.
+<P>
+<PRE>
+[aprinter]
+        path = /usr/spool/public
+        read only = yes
+        printable = yes
+        guest ok = yes
+</PRE>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>特殊段 SPECIAL SECTIONS</H2>
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H3>[global] 全局选项段 </H3>
+
+<P>
+<P>
+
+这一段中定义的选项是服务器的全局性设置,如果在其他段中没有再对这些选项进行重新设置的话还可以作为它们的缺省选项.更多的说明请参阅'PARAMETERS'部分的内容.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H3>[homes] 个人目录段</H3>
+
+<P>
+<P>
+
+如果配置文件中包含名为'homes'的段,就可以建立客户到自己在服务器上的个人目录的连接.
+<P>
+<P>
+
+当服务器收到连接请求时,首先在已定义的段中搜索,如果段名与被请求的共享资源名一致,则该段的内容就被采用.如果没有找到匹配的段,则被请求的资源就被当作是一个用户名,同时服务器查看本地的口令文件.如果该用户名在口令文件中存在且用户给出了正确的口令,服务器就会复制[homes]段的内容来生成一个共享资源(供该用户访问).
+<P>
+<P>
+<P>
+
+对新建共享会做以下修改： 
+<P>
+<DL COMPACT>
+<DT>共享名从'homes'改为查到的用户名.<DD>
+<DT>如果没有指定访问路径,则设置为该用户的个人目录.<DD>
+<P>
+</DL>
+<P>
+
+<P>
+<P>
+
+如果要在[homes]段中定义访问路径<B>path=</B>,宏%S也许对你很有用.举例如下：
+<P>
+<P>
+
+<B>path = /data/pchome/%S</B>
+<P>
+<P>
+
+如果你的PC 有与UNIX服务器上个人目录不同的目录,象上面这样的设置会很有用的.
+<P>
+<P>
+
+这是为大量用户提供对他们个人目录的访问的一种快速简洁的办法.
+<P>
+<P>
+
+如果被请求访问的共享资源名就是'homes',那么,除了共享名不被改变为发出请求的用户名外,其他处理过程和前面提到的过程是类似的.这种方式适合于不同用户共享一台终端的情况.
+<P>
+<P>
+
+在[homes]段中可以定义所有普通段中可以使用的选项,可是有些选项更有意义.下面是一个实用的、典型的[homes]段的例子：
+<P>
+<PRE>
+[homes]
+        read only = no
+</PRE>
+
+<P>
+<P>
+
+注意,很重要的一点是：如果在[homes]段中定义了允许以guest账户访问的话,任何人都可以<B>无须口令</B>而访问所有账户的宿主目录.也许在某些特殊情况下,这正是想要的结果,在这种情况下,你最好同时把[homes]段设置成<B>只读</B>.
+<P>
+<P>
+
+注意,自动的宿主目录共享资源的<B>可浏览</B>标志是从[global]段继承来的,而不是[homes]段.这样,当在[homes]段中设置browseable=no时,用户就看不到单独的'homes'共享,但可以看到自动的宿主目录.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H3>[printers] 打印机共享设置段</H3>
+
+<P>
+<P>
+
+这一段很象[homes]段,不过是用于设置共享打印机的.
+<P>
+<P>
+
+如果在本配置文件中存在[printers]段,用户就可以连接到在主机上的printcap文件
+中指定的任一打印机.
+<P>
+<P>
+
+当服务器收到连接请求时,首先在已定义的段中搜索,如果有段名与被请求的共享资源名一致,则该段的内容就被采用.如果没有找到匹配的段,且在配置文件中存在[homes]段,则按照前面所说的方式处理.否则,被请求的资源就被当作是一个打印机名,服务器在适当的printcap文件中查找,检验被请求的共享资源名是否是有效的打印机共享名.如果共享名匹配,服务器就会复制[printers]段的内容来生成一个共享打印服务.
+<P>
+<P>
+
+对新建共享的修改：
+<P>
+<DL COMPACT>
+<DT>共享名被设置为查找到的打印机名.<DD>
+<P>
+<DT>如果未给出打印机名,则把打印机名设为前面查找到的打印机名.<DD>
+<P>
+<DT>如果该共享资源不允许以guest身份进行访问,且没有给出用户名,那么用户名就被设为前面查找到的打印机名.<DD>
+<P>
+</DL>
+<P>
+
+<P>
+<P>
+
+注意,[printers]段必须设置为可打印,如果你不这样设置,服务器会拒绝装载配置文件.
+<P>
+<P>
+
+指定的典型路径应该设为一个公用的可写假脱机目录(spooling)并且设置sticky标志.一个典型的[printers]段如下所示：
+<P>
+<PRE>
+[printers]
+        path = /usr/spool/public
+        guest ok = yes
+        printable = yes 
+</PRE>
+
+<P>
+<P>
+
+上台打印机在printcap文件中列出的所有别名都是服务器相关的有效打印机名.如果你系统的打印子系统的工作方式不是这样,你就必须设置一个伪printcap文件,其中包含一行或多行如下格式的设置：
+<P>
+<PRE>
+别名1|别名2|别名3|别名4... 
+</PRE>
+
+<P>
+<P>
+
+每个别名必须是你的打印子系统可以接受的打印机名.在[global]段中指定这个新文件作为你的printcap文件.这个伪printcap文件可以包含任何你要的别名,而服务器只识别在此文件中列出的名字.这个技术可以很方便的用于限制对本地打印机子集的访问.
+<P>
+<P>
+
+顺便提一下,printcap文件中的别名用每个记录第一项的任何部分来定义.记录由换行进行分隔.如果一条记录中有多个部分,中间用&quot;|&quot;符号分隔.
+<DL COMPACT><DT><DD>
+
+<BR>
+
+
+
+<P>
+
+<B>Note</B>
+<P>
+
+
+<P>
+<P>
+
+注意,在SYSV系统中,用lpstat可以确定系统中安装了什么样的打印机.你可以设置&quot;printcap name = lpstat&quot;来自动获得打印机列表.详情参见&quot;printcap name&quot;选项.
+<P>
+</DL>
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>选项 PARAMETERS</H2>
+
+<P>
+<P>
+
+选项定义了每个段的属性.
+<P>
+<P>
+
+有些选项是在[global]段中设定的(比如有关<B>安全</B>特性的设置),有些可以用在任何段中的(比如<B>建立方式</B> ),剩下的就只能用在普通的段中了.在以下的描述中,[homes]和[printers]段被看作是普通段.标记(<B>G</B>)表示此选项只能在[global]段中使用,标记(<B>S</B>)表示此选项可以在服务定义段中使用.注意,有(<B>S</B>)标记的选项也可以用在[global]段中,在这种情况下,这个选项设置被当作所有其他段的缺省设置.
+<P>
+<P>
+
+选项的详细说明是按照字母顺序排列的,这样也许不是最好的分类方式,但至少保证你可以找得到他们.如果有多个同义词,那么我们只对首选的那个作详细说明,其他的同义词都只指明参阅那个首选的选项名.
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>变量替换 VARIABLE SUBSTITUTIONS</H2>
+
+<P>
+<P>
+
+在配置文件中可以用很多字符串进行替换.例如,当用户以john的名称建立连接后,选项&quot;path = /tmp/%u&quot;就被解释成&quot;path = /tmp/john&quot;.
+<P>
+<P>
+<P>
+
+这些置换会在后面的描述中说明,这里说明一些可以用在任何地方的通用置换.它们是：
+<P>
+<DL COMPACT>
+<DT>%U<DD>
+对话用户名(客户端想要的用户名不一定与取得的一致.)
+<P>
+<P>
+<DT>%G<DD>
+%U的用户组名 
+<P>
+<P>
+<DT>%h<DD>
+运行Samba的主机的internet主机名 
+<P>
+<P>
+<DT>%m<DD>
+客户机的NetBIOS名(非常有用) 
+<P>
+<P>
+<DT>%L<DD>
+服务器的NetBIOS名.这使得你可以根据调用的客户端来改变你的配置,这样你的服务器就可以拥有&quot;双重个性&quot;. 
+<P>
+Note that this parameter is not available when Samba listens on port 445, as clients no longer send this information
+<P>
+<P>
+<DT>%M<DD>
+客户端的internet主机名 
+<P>
+<P>
+<DT>%R<DD>
+协议协商后选择的协议,它可以是CORE,COREPLUS,LANMAN1,LANMAN2或NT1中的一种.
+<P>
+<DT>%d<DD>
+当前samba服务器的进程号.
+<P>
+<P>
+<DT>%a<DD>
+远程主机的结构.现在只能认出来某些类型,并且不是100%可靠.目前支持的有Samba、WfWg、WinNT和Win95.任何其他的都被认作&quot;UNKNOWN&quot;.如果出现错误就给<A HREF="mailto:samba-bugs@samba.org">samba-bugs@samba.org</A>发一个3级的日志以便修复这个bug.
+<P>
+<DT>%I<DD>
+客户机的IP地址.
+<P>
+<P>
+<DT>%T<DD>
+当前的日期和时间.
+<P>
+<P>
+<DT>%D<DD>
+Name of the domain or workgroup of the current user.
+<P>
+<P>
+<DT>%$(<I>envvar</I>)<DD>
+The value of the environment variable <I>envar</I>.
+<P>
+<P>
+</DL>
+<P>
+
+The following substitutes apply only to some configuration options(only those that are used when a connection has been established):
+<P>
+<DL COMPACT>
+<DT>%S<DD>
+当前服务名 
+<P>
+<P>
+<DT>%P<DD>
+当前服务的根目录 
+<P>
+<P>
+<DT>%u<DD>
+当前服务的用户名 
+<P>
+<P>
+<DT>%g<DD>
+%u的用户组名 
+<P>
+<P>
+<DT>%H<DD>
+%u所表示的用户的宿主目录 
+<P>
+<DT>%N<DD>
+tNIS服务器的名字.它从auto.map获得.如果没有用<B>--with-auto-mount</B>选项编译samba,那么它的值和%L相同.
+<P>
+<DT>%p<DD>
+用户宿主目录的路径.它由NIS的auot.map得到.NIS的auot.map入口项被分为&quot;%N:%p&quot;.
+<P>
+</DL>
+<P>
+
+灵活运用这些置换和其他的smb.conf选项可以做出非常有创造性的事情来.
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>NAME</H2>
+
+<P>
+<P>
+
+Samba支持&quot;名称修正&quot;,这样dos和windows客户端就可以使用与8.3格式不一致的文件.也可以用来调整8.3格式文件名的大小写.
+<P>
+<P>
+
+<P>
+有一些选项可以控制名称修正的执行,下面集中列出来.对于缺省情况请看testparm程序的输出结果.
+<P>
+<P>
+
+所有这些选项都可以针对每个服务项单独设置(当然也可以设为全局变量).
+<P>
+<P>
+
+这些选项是: 
+<P>
+<DL COMPACT>
+<DT>mangle case = yes/no<DD>
+作用是控制是否对不符合缺省写法的名称进行修正.例如,如果设为yes,象&quot;Mail&quot;这样的文件名就会被修正.缺省设置是<B>no</B>.
+<P>
+<DT>case sensitive = yes/no<DD>
+控制文件名是否区分大小写.如果不区分的话,Samba就必须在传递名称时查找并匹配文件名.缺省设置是<B>no</B>.
+<P>
+<DT>default case = upper/lower<DD>
+控制新文件名大小写缺省值.缺省设置是<B>小写</B>.
+<P>
+<P>
+<DT>preserve case = yes/no<DD>
+控制建新文件时是否用客户所提供的大小写形式,或强制用缺省形式.缺省为<B>yes</B>.
+<P>
+<P>
+<DT>short preserve case = yes/no<DD>
+控制新建8.3格式的文件名时是全部用大写及合适长度,还是强制用缺省情况.它可以和上面的&quot;preserve case = yes&quot;联用以允许长文件名保持大小写不变,而短文件名为小写.本项的缺省设置是<B>yes</B>.
+<P>
+<P>
+</DL>
+<P>
+
+缺省情况下,Samba3.0与Windows NT相同,就是不区分大小写但保持大小写形式.
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>用户名/口令检验中的注意事项 NOTE ABOUT USERNAME/PASSWORD VALIDATION</H2>
+
+<P>
+<P>
+
+用户有多种连接到服务项的方式.服务器按照下面的步骤来确定是否允许客户对指定服务的连接.如果下面步骤全部失败,则拒绝用户的连接请求.如果某一步通过,余下的检验就不再进行.
+<P>
+<P>
+
+如果被请求的服务项设置为<I>guest only = yes</I>，并且，服务运行在共享级安全模式(<I>security = share</I>) ,则跳过1--5步检查.
+<P>
+<DL COMPACT>
+<DT>第一步：<DD>
+如果客户端提供一对用户名和口令,且这对用户名和口令经unix系统口令程序检验为有效,那么就以该用户名建立连接.注意,这包括用<I>\\server\service%username</I>方式传递用户名.
+<P>
+<DT>第二步：<DD>
+如果客户端事先在系统上注册了一个用户名,并且提供了正确的口令,就允许建立连接.
+<P>
+<DT>第三步：<DD>
+根据提供的口令检查客户端的netbios名及以前用过的用户名,如匹配,就允许以该用户名建立连接.
+<P>
+<DT>第四步：<DD>
+如果客户端以前有合法的用户名和口令,并获得了有效的令牌,就允许以该用户名建立连接.
+<P>
+<DT>第五步：<DD>
+如果在<I>smb.conf</I>里设置了&quot;user = &quot;字段,且客户端提供了一个口令,口令经UNIX系统检验,并与&quot;user=&quot;字段里某一个用户匹配,那么就允许以&quot;user=&quot;里匹配到的用户名建立连接.如果&quot;user=&quot;字段是以@开始,那么该名字会展开为同名组里的用户名列表 .
+<P>
+<DT>第六步：<DD>
+如果这是一个提供给guest用的服务项,那么连接以&quot;guest account =&quot;里给出的用户名建立,而不考虑提供的口令.
+<P>
+</DL>
+<P>
+
+<P>
+<A NAME="lbAN">&nbsp;</A>
+<H2>全局选项完整列表 COMPLETE LIST OF GLOBAL PARAMETERS</H2>
+
+<P>
+<P>
+
+以下列出了所有的全局选项,各选项的详细说明请参看后面的相应段落.注意,有些选项的意义是相同的.
+<P>
+<DL COMPACT>
+<DT>&bull;<DD>
+<I>abort shutdown script</I>
+<P>
+<DT>&bull;<DD>
+<I>add group script</I>
+<P>
+<DT>&bull;<DD>
+<I>add machine script</I>
+<P>
+<DT>&bull;<DD>
+<I>addprinter command</I>
+<P>
+<DT>&bull;<DD>
+<I>add share command</I>
+<P>
+<DT>&bull;<DD>
+<I>add user script</I>
+<P>
+<DT>&bull;<DD>
+<I>add user to group script</I>
+<P>
+<DT>&bull;<DD>
+<I>afs username map</I>
+<P>
+<DT>&bull;<DD>
+<I>algorithmic rid base</I>
+<P>
+<DT>&bull;<DD>
+<I>allow trusted domains</I>
+<P>
+<DT>&bull;<DD>
+<I>announce as</I>
+<P>
+<DT>&bull;<DD>
+<I>announce version</I>
+<P>
+<DT>&bull;<DD>
+<I>auth methods</I>
+<P>
+<DT>&bull;<DD>
+<I>auto services</I>
+<P>
+<DT>&bull;<DD>
+<I>bind interfaces only</I>
+<P>
+<DT>&bull;<DD>
+<I>browse list</I>
+<P>
+<DT>&bull;<DD>
+<I>change notify timeout</I>
+<P>
+<DT>&bull;<DD>
+<I>change share command</I>
+<P>
+<DT>&bull;<DD>
+<I>client lanman auth</I>
+<P>
+<DT>&bull;<DD>
+<I>client ntlmv2 auth</I>
+<P>
+<DT>&bull;<DD>
+<I>client plaintext auth</I>
+<P>
+<DT>&bull;<DD>
+<I>client schannel</I>
+<P>
+<DT>&bull;<DD>
+<I>client signing</I>
+<P>
+<DT>&bull;<DD>
+<I>client use spnego</I>
+<P>
+<DT>&bull;<DD>
+<I>config file</I>
+<P>
+<DT>&bull;<DD>
+<I>deadtime</I>
+<P>
+<DT>&bull;<DD>
+<I>debug hires timestamp</I>
+<P>
+<DT>&bull;<DD>
+<I>debuglevel</I>
+<P>
+<DT>&bull;<DD>
+<I>debug pid</I>
+<P>
+<DT>&bull;<DD>
+<I>debug timestamp</I>
+<P>
+<DT>&bull;<DD>
+<I>debug uid</I>
+<P>
+<DT>&bull;<DD>
+<I>default</I>
+<P>
+<DT>&bull;<DD>
+<I>default service</I>
+<P>
+<DT>&bull;<DD>
+<I>delete group script</I>
+<P>
+<DT>&bull;<DD>
+<I>deleteprinter command</I>
+<P>
+<DT>&bull;<DD>
+<I>delete share command</I>
+<P>
+<DT>&bull;<DD>
+<I>delete user from group script</I>
+<P>
+<DT>&bull;<DD>
+<I>delete user script</I>
+<P>
+<DT>&bull;<DD>
+<I>dfree command</I>
+<P>
+<DT>&bull;<DD>
+<I>disable netbios</I>
+<P>
+<DT>&bull;<DD>
+<I>disable spoolss</I>
+<P>
+<DT>&bull;<DD>
+<I>display charset</I>
+<P>
+<DT>&bull;<DD>
+<I>dns proxy</I>
+<P>
+<DT>&bull;<DD>
+<I>domain logons</I>
+<P>
+<DT>&bull;<DD>
+<I>domain master</I>
+<P>
+<DT>&bull;<DD>
+<I>dos charset</I>
+<P>
+<DT>&bull;<DD>
+<I>enable rid algorithm</I>
+<P>
+<DT>&bull;<DD>
+<I>encrypt passwords</I>
+<P>
+<DT>&bull;<DD>
+<I>enhanced browsing</I>
+<P>
+<DT>&bull;<DD>
+<I>enumports command</I>
+<P>
+<DT>&bull;<DD>
+<I>get quota command</I>
+<P>
+<DT>&bull;<DD>
+<I>getwd cache</I>
+<P>
+<DT>&bull;<DD>
+<I>guest account</I>
+<P>
+<DT>&bull;<DD>
+<I>hide local users</I>
+<P>
+<DT>&bull;<DD>
+<I>homedir map</I>
+<P>
+<DT>&bull;<DD>
+<I>host msdfs</I>
+<P>
+<DT>&bull;<DD>
+<I>hostname lookups</I>
+<P>
+<DT>&bull;<DD>
+<I>hosts equiv</I>
+<P>
+<DT>&bull;<DD>
+<I>idmap backend</I>
+<P>
+<DT>&bull;<DD>
+<I>idmap gid</I>
+<P>
+<DT>&bull;<DD>
+<I>idmap uid</I>
+<P>
+<DT>&bull;<DD>
+<I>include</I>
+<P>
+<DT>&bull;<DD>
+<I>interfaces</I>
+<P>
+<DT>&bull;<DD>
+<I>keepalive</I>
+<P>
+<DT>&bull;<DD>
+<I>kernel change notify</I>
+<P>
+<DT>&bull;<DD>
+<I>kernel oplocks</I>
+<P>
+<DT>&bull;<DD>
+<I>lanman auth</I>
+<P>
+<DT>&bull;<DD>
+<I>large readwrite</I>
+<P>
+<DT>&bull;<DD>
+<I>ldap admin dn</I>
+<P>
+<DT>&bull;<DD>
+<I>ldap delete dn</I>
+<P>
+<DT>&bull;<DD>
+<I>ldap filter</I>
+<P>
+<DT>&bull;<DD>
+<I>ldap group suffix</I>
+<P>
+<DT>&bull;<DD>
+<I>ldap idmap suffix</I>
+<P>
+<DT>&bull;<DD>
+<I>ldap machine suffix</I>
+<P>
+<DT>&bull;<DD>
+<I>ldap passwd sync</I>
+<P>
+<DT>&bull;<DD>
+<I>ldap port</I>
+<P>
+<DT>&bull;<DD>
+<I>ldap server</I>
+<P>
+<DT>&bull;<DD>
+<I>ldap ssl</I>
+<P>
+<DT>&bull;<DD>
+<I>ldap suffix</I>
+<P>
+<DT>&bull;<DD>
+<I>ldap user suffix</I>
+<P>
+<DT>&bull;<DD>
+<I>lm announce</I>
+<P>
+<DT>&bull;<DD>
+<I>lm interval</I>
+<P>
+<DT>&bull;<DD>
+<I>load printers</I>
+<P>
+<DT>&bull;<DD>
+<I>local master</I>
+<P>
+<DT>&bull;<DD>
+<I>lock dir</I>
+<P>
+<DT>&bull;<DD>
+<I>lock directory</I>
+<P>
+<DT>&bull;<DD>
+<I>lock spin count</I>
+<P>
+<DT>&bull;<DD>
+<I>lock spin time</I>
+<P>
+<DT>&bull;<DD>
+<I>log file</I>
+<P>
+<DT>&bull;<DD>
+<I>log level</I>
+<P>
+<DT>&bull;<DD>
+<I>logon drive</I>
+<P>
+<DT>&bull;<DD>
+<I>logon home</I>
+<P>
+<DT>&bull;<DD>
+<I>logon path</I>
+<P>
+<DT>&bull;<DD>
+<I>logon script</I>
+<P>
+<DT>&bull;<DD>
+<I>lpq cache time</I>
+<P>
+<DT>&bull;<DD>
+<I>machine password timeout</I>
+<P>
+<DT>&bull;<DD>
+<I>mangled stack</I>
+<P>
+<DT>&bull;<DD>
+<I>mangle prefix</I>
+<P>
+<DT>&bull;<DD>
+<I>mangling method</I>
+<P>
+<DT>&bull;<DD>
+<I>map to guest</I>
+<P>
+<DT>&bull;<DD>
+<I>max disk size</I>
+<P>
+<DT>&bull;<DD>
+<I>max log size</I>
+<P>
+<DT>&bull;<DD>
+<I>max mux</I>
+<P>
+<DT>&bull;<DD>
+<I>max open files</I>
+<P>
+<DT>&bull;<DD>
+<I>max protocol</I>
+<P>
+<DT>&bull;<DD>
+<I>max smbd processes</I>
+<P>
+<DT>&bull;<DD>
+<I>max ttl</I>
+<P>
+<DT>&bull;<DD>
+<I>max wins ttl</I>
+<P>
+<DT>&bull;<DD>
+<I>max xmit</I>
+<P>
+<DT>&bull;<DD>
+<I>message command</I>
+<P>
+<DT>&bull;<DD>
+<I>min passwd length</I>
+<P>
+<DT>&bull;<DD>
+<I>min password length</I>
+<P>
+<DT>&bull;<DD>
+<I>min protocol</I>
+<P>
+<DT>&bull;<DD>
+<I>min wins ttl</I>
+<P>
+<DT>&bull;<DD>
+<I>name cache timeout</I>
+<P>
+<DT>&bull;<DD>
+<I>name resolve order</I>
+<P>
+<DT>&bull;<DD>
+<I>netbios aliases</I>
+<P>
+<DT>&bull;<DD>
+<I>netbios name</I>
+<P>
+<DT>&bull;<DD>
+<I>netbios scope</I>
+<P>
+<DT>&bull;<DD>
+<I>nis homedir</I>
+<P>
+<DT>&bull;<DD>
+<I>ntlm auth</I>
+<P>
+<DT>&bull;<DD>
+<I>nt pipe support</I>
+<P>
+<DT>&bull;<DD>
+<I>nt status support</I>
+<P>
+<DT>&bull;<DD>
+<I>null passwords</I>
+<P>
+<DT>&bull;<DD>
+<I>obey pam restrictions</I>
+<P>
+<DT>&bull;<DD>
+<I>oplock break wait time</I>
+<P>
+<DT>&bull;<DD>
+<I>os2 driver map</I>
+<P>
+<DT>&bull;<DD>
+<I>os level</I>
+<P>
+<DT>&bull;<DD>
+<I>pam password change</I>
+<P>
+<DT>&bull;<DD>
+<I>panic action</I>
+<P>
+<DT>&bull;<DD>
+<I>paranoid server security</I>
+<P>
+<DT>&bull;<DD>
+<I>passdb backend</I>
+<P>
+<DT>&bull;<DD>
+<I>passwd chat</I>
+<P>
+<DT>&bull;<DD>
+<I>passwd chat debug</I>
+<P>
+<DT>&bull;<DD>
+<I>passwd program</I>
+<P>
+<DT>&bull;<DD>
+<I>password level</I>
+<P>
+<DT>&bull;<DD>
+<I>password server</I>
+<P>
+<DT>&bull;<DD>
+<I>pid directory</I>
+<P>
+<DT>&bull;<DD>
+<I>prefered master</I>
+<P>
+<DT>&bull;<DD>
+<I>preferred master</I>
+<P>
+<DT>&bull;<DD>
+<I>preload</I>
+<P>
+<DT>&bull;<DD>
+<I>preload modules</I>
+<P>
+<DT>&bull;<DD>
+<I>printcap</I>
+<P>
+<DT>&bull;<DD>
+<I>private dir</I>
+<P>
+<DT>&bull;<DD>
+<I>protocol</I>
+<P>
+<DT>&bull;<DD>
+<I>read bmpx</I>
+<P>
+<DT>&bull;<DD>
+<I>read raw</I>
+<P>
+<DT>&bull;<DD>
+<I>read size</I>
+<P>
+<DT>&bull;<DD>
+<I>realm</I>
+<P>
+<DT>&bull;<DD>
+<I>remote announce</I>
+<P>
+<DT>&bull;<DD>
+<I>remote browse sync</I>
+<P>
+<DT>&bull;<DD>
+<I>restrict anonymous</I>
+<P>
+<DT>&bull;<DD>
+<I>root</I>
+<P>
+<DT>&bull;<DD>
+<I>root dir</I>
+<P>
+<DT>&bull;<DD>
+<I>root directory</I>
+<P>
+<DT>&bull;<DD>
+<I>security</I>
+<P>
+<DT>&bull;<DD>
+<I>server schannel</I>
+<P>
+<DT>&bull;<DD>
+<I>server signing</I>
+<P>
+<DT>&bull;<DD>
+<I>server string</I>
+<P>
+<DT>&bull;<DD>
+<I>set primary group script</I>
+<P>
+<DT>&bull;<DD>
+<I>set quota command</I>
+<P>
+<DT>&bull;<DD>
+<I>show add printer wizard</I>
+<P>
+<DT>&bull;<DD>
+<I>shutdown script</I>
+<P>
+<DT>&bull;<DD>
+<I>smb passwd file</I>
+<P>
+<DT>&bull;<DD>
+<I>smb ports</I>
+<P>
+<DT>&bull;<DD>
+<I>socket address</I>
+<P>
+<DT>&bull;<DD>
+<I>socket options</I>
+<P>
+<DT>&bull;<DD>
+<I>source environment</I>
+<P>
+<DT>&bull;<DD>
+<I>stat cache</I>
+<P>
+<DT>&bull;<DD>
+<I>syslog</I>
+<P>
+<DT>&bull;<DD>
+<I>syslog only</I>
+<P>
+<DT>&bull;<DD>
+<I>template homedir</I>
+<P>
+<DT>&bull;<DD>
+<I>template primary group</I>
+<P>
+<DT>&bull;<DD>
+<I>template shell</I>
+<P>
+<DT>&bull;<DD>
+<I>time offset</I>
+<P>
+<DT>&bull;<DD>
+<I>time server</I>
+<P>
+<DT>&bull;<DD>
+<I>timestamp logs</I>
+<P>
+<DT>&bull;<DD>
+<I>unicode</I>
+<P>
+<DT>&bull;<DD>
+<I>unix charset</I>
+<P>
+<DT>&bull;<DD>
+<I>unix extensions</I>
+<P>
+<DT>&bull;<DD>
+<I>unix password sync</I>
+<P>
+<DT>&bull;<DD>
+<I>update encrypted</I>
+<P>
+<DT>&bull;<DD>
+<I>use mmap</I>
+<P>
+<DT>&bull;<DD>
+<I>username level</I>
+<P>
+<DT>&bull;<DD>
+<I>username map</I>
+<P>
+<DT>&bull;<DD>
+<I>use spnego</I>
+<P>
+<DT>&bull;<DD>
+<I>utmp</I>
+<P>
+<DT>&bull;<DD>
+<I>utmp directory</I>
+<P>
+<DT>&bull;<DD>
+<I>winbind cache time</I>
+<P>
+<DT>&bull;<DD>
+<I>winbind enable local accounts</I>
+<P>
+<DT>&bull;<DD>
+<I>winbind enum groups</I>
+<P>
+<DT>&bull;<DD>
+<I>winbind enum users</I>
+<P>
+<DT>&bull;<DD>
+<I>winbind gid</I>
+<P>
+<DT>&bull;<DD>
+<I>winbind separator</I>
+<P>
+<DT>&bull;<DD>
+<I>winbind trusted domains only</I>
+<P>
+<DT>&bull;<DD>
+<I>winbind uid</I>
+<P>
+<DT>&bull;<DD>
+<I>winbind use default domain</I>
+<P>
+<DT>&bull;<DD>
+<I>wins hook</I>
+<P>
+<DT>&bull;<DD>
+<I>wins partners</I>
+<P>
+<DT>&bull;<DD>
+<I>wins proxy</I>
+<P>
+<DT>&bull;<DD>
+<I>wins server</I>
+<P>
+<DT>&bull;<DD>
+<I>wins support</I>
+<P>
+<DT>&bull;<DD>
+<I>workgroup</I>
+<P>
+<DT>&bull;<DD>
+<I>write raw</I>
+<P>
+<DT>&bull;<DD>
+<I>wtmp directory</I>
+<P>
+</DL>
+<P>
+
+<P>
+<A NAME="lbAO">&nbsp;</A>
+<H2>服务选项完整列表 COMPLETE LIST OF SERVICE PARAMETERS</H2>
+
+<P>
+<P>
+
+以下列出了所有关于服务项的选项,各选项的详细说明请参见后面的相应段落.注意,有些选项的意义是相同的.
+<P>
+<DL COMPACT>
+<DT>&bull;<DD>
+<I>acl compatibility</I>
+<P>
+<DT>&bull;<DD>
+<I>admin users</I>
+<P>
+<DT>&bull;<DD>
+<I>afs share</I>
+<P>
+<DT>&bull;<DD>
+<I>allow hosts</I>
+<P>
+<DT>&bull;<DD>
+<I>available</I>
+<P>
+<DT>&bull;<DD>
+<I>blocking locks</I>
+<P>
+<DT>&bull;<DD>
+<I>block size</I>
+<P>
+<DT>&bull;<DD>
+<I>browsable</I>
+<P>
+<DT>&bull;<DD>
+<I>browseable</I>
+<P>
+<DT>&bull;<DD>
+<I>case sensitive</I>
+<P>
+<DT>&bull;<DD>
+<I>casesignames</I>
+<P>
+<DT>&bull;<DD>
+<I>comment</I>
+<P>
+<DT>&bull;<DD>
+<I>copy</I>
+<P>
+<DT>&bull;<DD>
+<I>create mask</I>
+<P>
+<DT>&bull;<DD>
+<I>create mode</I>
+<P>
+<DT>&bull;<DD>
+<I>csc policy</I>
+<P>
+<DT>&bull;<DD>
+<I>default case</I>
+<P>
+<DT>&bull;<DD>
+<I>default devmode</I>
+<P>
+<DT>&bull;<DD>
+<I>delete readonly</I>
+<P>
+<DT>&bull;<DD>
+<I>delete veto files</I>
+<P>
+<DT>&bull;<DD>
+<I>deny hosts</I>
+<P>
+<DT>&bull;<DD>
+<I>directory</I>
+<P>
+<DT>&bull;<DD>
+<I>directory mask</I>
+<P>
+<DT>&bull;<DD>
+<I>directory mode</I>
+<P>
+<DT>&bull;<DD>
+<I>directory security mask</I>
+<P>
+<DT>&bull;<DD>
+<I>dont descend</I>
+<P>
+<DT>&bull;<DD>
+<I>dos filemode</I>
+<P>
+<DT>&bull;<DD>
+<I>dos filetime resolution</I>
+<P>
+<DT>&bull;<DD>
+<I>dos filetimes</I>
+<P>
+<DT>&bull;<DD>
+<I>exec</I>
+<P>
+<DT>&bull;<DD>
+<I>fake directory create times</I>
+<P>
+<DT>&bull;<DD>
+<I>fake oplocks</I>
+<P>
+<DT>&bull;<DD>
+<I>follow symlinks</I>
+<P>
+<DT>&bull;<DD>
+<I>force create mode</I>
+<P>
+<DT>&bull;<DD>
+<I>force directory mode</I>
+<P>
+<DT>&bull;<DD>
+<I>force directory security mode</I>
+<P>
+<DT>&bull;<DD>
+<I>force group</I>
+<P>
+<DT>&bull;<DD>
+<I>force security mode</I>
+<P>
+<DT>&bull;<DD>
+<I>force user</I>
+<P>
+<DT>&bull;<DD>
+<I>fstype</I>
+<P>
+<DT>&bull;<DD>
+<I>group</I>
+<P>
+<DT>&bull;<DD>
+<I>guest account</I>
+<P>
+<DT>&bull;<DD>
+<I>guest ok</I>
+<P>
+<DT>&bull;<DD>
+<I>guest only</I>
+<P>
+<DT>&bull;<DD>
+<I>hide dot files</I>
+<P>
+<DT>&bull;<DD>
+<I>hide files</I>
+<P>
+<DT>&bull;<DD>
+<I>hide special files</I>
+<P>
+<DT>&bull;<DD>
+<I>hide unreadable</I>
+<P>
+<DT>&bull;<DD>
+<I>hide unwriteable files</I>
+<P>
+<DT>&bull;<DD>
+<I>hosts allow</I>
+<P>
+<DT>&bull;<DD>
+<I>hosts deny</I>
+<P>
+<DT>&bull;<DD>
+<I>inherit acls</I>
+<P>
+<DT>&bull;<DD>
+<I>inherit permissions</I>
+<P>
+<DT>&bull;<DD>
+<I>invalid users</I>
+<P>
+<DT>&bull;<DD>
+<I>level2 oplocks</I>
+<P>
+<DT>&bull;<DD>
+<I>locking</I>
+<P>
+<DT>&bull;<DD>
+<I>lppause command</I>
+<P>
+<DT>&bull;<DD>
+<I>lpq command</I>
+<P>
+<DT>&bull;<DD>
+<I>lpresume command</I>
+<P>
+<DT>&bull;<DD>
+<I>lprm command</I>
+<P>
+<DT>&bull;<DD>
+<I>magic output</I>
+<P>
+<DT>&bull;<DD>
+<I>magic script</I>
+<P>
+<DT>&bull;<DD>
+<I>mangle case</I>
+<P>
+<DT>&bull;<DD>
+<I>mangled map</I>
+<P>
+<DT>&bull;<DD>
+<I>mangled names</I>
+<P>
+<DT>&bull;<DD>
+<I>mangling char</I>
+<P>
+<DT>&bull;<DD>
+<I>map acl inherit</I>
+<P>
+<DT>&bull;<DD>
+<I>map archive</I>
+<P>
+<DT>&bull;<DD>
+<I>map hidden</I>
+<P>
+<DT>&bull;<DD>
+<I>map system</I>
+<P>
+<DT>&bull;<DD>
+<I>max connections</I>
+<P>
+<DT>&bull;<DD>
+<I>max print jobs</I>
+<P>
+<DT>&bull;<DD>
+<I>max reported print jobs</I>
+<P>
+<DT>&bull;<DD>
+<I>min print space</I>
+<P>
+<DT>&bull;<DD>
+<I>msdfs proxy</I>
+<P>
+<DT>&bull;<DD>
+<I>msdfs root</I>
+<P>
+<DT>&bull;<DD>
+<I>nt acl support</I>
+<P>
+<DT>&bull;<DD>
+<I>only guest</I>
+<P>
+<DT>&bull;<DD>
+<I>only user</I>
+<P>
+<DT>&bull;<DD>
+<I>oplock contention limit</I>
+<P>
+<DT>&bull;<DD>
+<I>oplocks</I>
+<P>
+<DT>&bull;<DD>
+<I>path</I>
+<P>
+<DT>&bull;<DD>
+<I>posix locking</I>
+<P>
+<DT>&bull;<DD>
+<I>postexec</I>
+<P>
+<DT>&bull;<DD>
+<I>preexec</I>
+<P>
+<DT>&bull;<DD>
+<I>preexec close</I>
+<P>
+<DT>&bull;<DD>
+<I>preserve case</I>
+<P>
+<DT>&bull;<DD>
+<I>printable</I>
+<P>
+<DT>&bull;<DD>
+<I>printcap name</I>
+<P>
+<DT>&bull;<DD>
+<I>print command</I>
+<P>
+<DT>&bull;<DD>
+<I>printer</I>
+<P>
+<DT>&bull;<DD>
+<I>printer admin</I>
+<P>
+<DT>&bull;<DD>
+<I>printer name</I>
+<P>
+<DT>&bull;<DD>
+<I>printing</I>
+<P>
+<DT>&bull;<DD>
+<I>print ok</I>
+<P>
+<DT>&bull;<DD>
+<I>profile acls</I>
+<P>
+<DT>&bull;<DD>
+<I>public</I>
+<P>
+<DT>&bull;<DD>
+<I>queuepause command</I>
+<P>
+<DT>&bull;<DD>
+<I>queueresume command</I>
+<P>
+<DT>&bull;<DD>
+<I>read list</I>
+<P>
+<DT>&bull;<DD>
+<I>read only</I>
+<P>
+<DT>&bull;<DD>
+<I>root postexec</I>
+<P>
+<DT>&bull;<DD>
+<I>root preexec</I>
+<P>
+<DT>&bull;<DD>
+<I>root preexec close</I>
+<P>
+<DT>&bull;<DD>
+<I>security mask</I>
+<P>
+<DT>&bull;<DD>
+<I>set directory</I>
+<P>
+<DT>&bull;<DD>
+<I>share modes</I>
+<P>
+<DT>&bull;<DD>
+<I>short preserve case</I>
+<P>
+<DT>&bull;<DD>
+<I>strict allocate</I>
+<P>
+<DT>&bull;<DD>
+<I>strict locking</I>
+<P>
+<DT>&bull;<DD>
+<I>strict sync</I>
+<P>
+<DT>&bull;<DD>
+<I>sync always</I>
+<P>
+<DT>&bull;<DD>
+<I>use client driver</I>
+<P>
+<DT>&bull;<DD>
+<I>user</I>
+<P>
+<DT>&bull;<DD>
+<I>username</I>
+<P>
+<DT>&bull;<DD>
+<I>users</I>
+<P>
+<DT>&bull;<DD>
+<I>use sendfile</I>
+<P>
+<DT>&bull;<DD>
+<I>-valid</I>
+<P>
+<DT>&bull;<DD>
+<I>valid users</I>
+<P>
+<DT>&bull;<DD>
+<I>veto files</I>
+<P>
+<DT>&bull;<DD>
+<I>veto oplock files</I>
+<P>
+<DT>&bull;<DD>
+<I>vfs object</I>
+<P>
+<DT>&bull;<DD>
+<I>vfs objects</I>
+<P>
+<DT>&bull;<DD>
+<I>volume</I>
+<P>
+<DT>&bull;<DD>
+<I>wide links</I>
+<P>
+<DT>&bull;<DD>
+<I>writable</I>
+<P>
+<DT>&bull;<DD>
+<I>writeable</I>
+<P>
+<DT>&bull;<DD>
+<I>write cache size</I>
+<P>
+<DT>&bull;<DD>
+<I>write list</I>
+<P>
+<DT>&bull;<DD>
+<I>write ok</I>
+<P>
+</DL>
+<P>
+
+<P>
+<A NAME="lbAP">&nbsp;</A>
+<H2>每一个选项的详细解释  EXPLANATION OF EACH PARAMETER</H2>
+
+<P>
+<DL COMPACT>
+<DT>abort shutdown script (G)<DD>
+<B>This parameter only exists in the HEAD cvs branch</B> This a full path name to a script called by <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) that should stop a shutdown procedure issued by the <I>shutdown script</I>.
+<P>
+<P>
+This command will be run as user.
+<P>
+<P>
+缺省设置: <B>None</B>.
+<P>
+<P>
+示例: <B>abort shutdown script = /sbin/shutdown -c</B>
+<P>
+<P>
+<DT>acl compatibility (S)<DD>
+This parameter specifies what OS ACL semantics should be compatible with. Possible values are <B>winnt</B> for Windows NT 4, <B>win2k</B> for Windows 2000 and above and <B>auto</B>. If you specify <B>auto</B>, the value for this parameter will be based upon the version of the client. There should be no reason to change this parameter from the default.
+<P>
+<P>
+缺省设置: <B>acl compatibility = Auto</B>
+<P>
+<P>
+示例: <B>acl compatibility = win2k</B>
+<P>
+<P>
+<DT>add group script (G)<DD>
+This is the full pathname to a script that will be run <B>AS ROOT</B> by <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) when a new group is requested. It will expand any <I>%g</I> to the group name passed. This script is only useful for installations using the Windows NT domain administration tools. The script is free to create a group with an arbitrary name to circumvent unix group name restrictions. In that case the script must print the numeric gid of the created group on stdout.
+<P>
+<P>
+<DT>add machine script (G)<DD>
+This is the full pathname to a script that will be run by <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) when a machine is added to it's domain using the administrator username and password method.
+<P>
+<P>
+This option is only required when using sam back-ends tied to the Unix uid method of RID calculation such as smbpasswd. This option is only available in Samba 3.0.
+<P>
+<P>
+缺省设置: <B>add machine script = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>add machine script = /usr/sbin/adduser -n -g machines -c Machine -d /dev/null -s /bin/false %u</B>
+<P>
+<P>
+<DT>addprinter command (G)<DD>
+With the introduction of MS-RPC based printing support for Windows NT/2000 clients in Samba 2.2, The MS Add Printer Wizard (APW) icon is now also available in the &quot;Printers...&quot; folder displayed a share listing. The APW allows for printers to be add remotely to a Samba or Windows NT/2000 print server.
+<P>
+<P>
+For a Samba host this means that the printer must be physically added to the underlying printing system. The <I>add printer command</I> defines a script to be run which will perform the necessary operations for adding the printer to the print system and to add the appropriate service definition to the <I>smb.conf</I> file in order that it can be shared by <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8).
+<P>
+<P>
+The <I>addprinter command</I> is automatically invoked with the following parameter (in order):
+<P>
+<P>
+<I>printer name</I>
+<P>
+<I>share name</I>
+<P>
+<I>port name</I>
+<P>
+<I>driver name</I>
+<P>
+<I>location</I>
+<P>
+<I>Windows 9x driver location</I>
+<P>
+All parameters are filled in from the PRINTER_INFO_2 structure sent by the Windows NT/2000 client with one exception. The &quot;Windows 9x driver location&quot; parameter is included for backwards compatibility only. The remaining fields in the structure are generated from answers to the APW questions.
+<P>
+<P>
+Once the <I>addprinter command</I> has been executed, <B>smbd</B> will reparse the <I> smb.conf</I> to determine if the share defined by the APW exists. If the sharename is still invalid, then <B>smbd </B> will return an ACCESS_DENIED error to the client.
+<P>
+<P>
+The &quot;add printer command&quot; program can output a single line of text, which Samba will set as the port the new printer is connected to. If this line isn't output, Samba won't reload its printer shares.
+<P>
+<P>
+参见 <I> deleteprinter command</I>, <I>printing</I>, <I>show add printer wizard</I>
+<P>
+<P>
+缺省设置: <B>none</B>
+<P>
+<P>
+示例: <B>addprinter command = /usr/bin/addprinter</B>
+<P>
+<P>
+<DT>add share command (G)<DD>
+Samba 2.2.0 introduced the ability to dynamically add and delete shares via the Windows NT 4.0 Server Manager. The <I>add share command</I> is used to define an external program or script which will add a new service definition to <I>smb.conf</I>. In order to successfully execute the <I>add share command</I>, <B>smbd</B> requires that the administrator be connected using a root account (i.e. uid == 0).
+<P>
+<P>
+When executed, <B>smbd</B> will automatically invoke the <I>add share command</I> with four parameters.
+<P>
+<P>
+<I>configFile</I> - the location of the global <I>smb.conf</I> file.
+<P>
+<I>shareName</I> - the name of the new share.
+<P>
+<I>pathName</I> - path to an **existing** directory on disk.
+<P>
+<I>comment</I> - comment string to associate with the new share.
+<P>
+This parameter is only used for add file shares. To add printer shares, see the <I>addprinter command</I>.
+<P>
+<P>
+参见 <I>change share command</I>, <I>delete share command</I>.
+<P>
+<P>
+缺省设置: <B>none</B>
+<P>
+<P>
+示例: <B>add share command = /usr/local/bin/addshare</B>
+<P>
+<P>
+<DT>add user script (G)<DD>
+这个选项指出一个脚本的完整文件路径,这个脚本将在特定环境下(下面有详细解释)由<B>smbd</B> (8)<B>以root身份</B>执行.
+<P>
+通常,samba服务器需要为所有访问服务器上文件的用户建立UNIX用户账号.但是在使用Windows NT账号数据库作为主用户数据库的站点,建立这些用户并在与NT的主域控制器保持用户列表同步是一件很麻烦的事情.这个选项使smbd可以在用户访问时<B>根据需要</B>自动生成UNIX用户账号.
+<P>
+为了使用这个选项,<B>smbd</B><B>必须</B>被设置成<I>security=server</I>或者<I>security=domain</I>,并且<I>add user script</I>必须设为用<I>%u</I>参数来建立unix帐号的脚本文件的全路径,<I>%u</I>扩展成建立的unix帐号名.
+<P>
+当windows用户尝试访问samba服务器时,在登陆时(建立SMB协议会话),<B>smbd</B>与<I>口令服务器</I>联系,并尝试验证用户名和口令.如果成功,<B>smbd</B>就会根据unix的口令文件试着将这个windows用户映射成一个unix用户.如果查找失败,但设置了<I>add user script </I>,smbd就会以<B>root</B>的身份调用这个脚本,将<I>%u</I>扩展成该要建立的用户账号.
+<P>
+如果这个脚本执行成功,<B>smbd</B>就认为这个用户已经存在.用这种方式,可以动态建立UNIX用户账号并匹配已有的NT账号.
+<P>
+参见 <I> security</I>, <I>password server</I>, <I>delete user script</I>.
+<P>
+<P>
+缺省设置: <B>add user script = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>add user script = /usr/local/samba/bin/add_user %u</B>
+<P>
+<P>
+<DT>add user to group script (G)<DD>
+Full path to the script that will be called when a user is added to a group using the Windows NT domain administration tools. It will be run by <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) <B>AS ROOT</B>. Any <I>%g</I> will be replaced with the group name and any <I>%u</I> will be replaced with the user name.
+<P>
+<P>
+缺省设置: <B>add user to group script = </B>
+<P>
+<P>
+示例: <B>add user to group script = /usr/sbin/adduser %u %g</B>
+<P>
+<P>
+<DT>admin users (S)<DD>
+admin users定义一组对共享有管理特权的用户.就相当于这些用户可以象超级用户那样操作所有的文件.
+<P>
+小心使用该选项,因为在这个名单里的用户可以对共享资源作任何他们想做的事.
+<P>
+缺省设置: <B>没有 admin users</B>
+<P>
+<P>
+示例: <B>admin users = jason</B>
+<P>
+<P>
+<DT>afs share (S)<DD>
+This parameter controls whether special AFS features are enabled for this share. If enabled, it assumes that the directory exported via the <I>path</I> parameter is a local AFS import. The special AFS features include the attempt to hand-craft an AFS token if you enabled --with-fake-kaserver in configure.
+<P>
+<P>
+缺省设置: <B>afs share = no</B>
+<P>
+<P>
+示例: <B>afs share = yes</B>
+<P>
+<P>
+<DT>afs username map (G)<DD>
+If you are using the fake kaserver AFS feature, you might want to hand-craft the usernames you are creating tokens for. For example this is necessary if you have users from several domain in your AFS Protection Database. One possible scheme to code users as DOMAIN+User as it is done by winbind with the + as a separator.
+<P>
+<P>
+The mapped user name must contain the cell name to log into, so without setting this parameter there will be no token.
+<P>
+<P>
+缺省设置: <B>none</B>
+<P>
+<P>
+示例: <B>afs username map = <A HREF="mailto:%u@afs.samba.org">%u@afs.samba.org</A></B>
+<P>
+<P>
+<DT>algorithmic rid base (G)<DD>
+This determines how Samba will use its algorithmic mapping from uids/gid to the RIDs needed to construct NT Security Identifiers.
+<P>
+<P>
+Setting this option to a larger value could be useful to sites transitioning from WinNT and Win2k, as existing user and group rids would otherwise clash with sytem users etc.
+<P>
+<P>
+All UIDs and GIDs must be able to be resolved into SIDs for the correct operation of ACLs on the server. As such the algorithmic mapping can't be 'turned off', but pushing it 'out of the way' should resolve the issues. Users and groups can then be assigned 'low' RIDs in arbitary-rid supporting backends.
+<P>
+<P>
+缺省设置: <B>algorithmic rid base = 1000</B>
+<P>
+<P>
+示例: <B>algorithmic rid base = 100000</B>
+<P>
+<P>
+<DT>allow hosts (S)<DD>
+和<I>hosts allow</I>同义. 
+<P>
+<P>
+<DT>allow trusted domains (G)<DD>
+这个选项只在<I>security</I>选项被设成<B>server</B>或<B>domain</B>模式时才有效果.如果设为no的话,尝试联接到smbd运行的域或工作组以外的资源时会失败,即使那个域是由远程服务器验证为可信的也不行.
+<P>
+<P>
+如果你只需要在域中对成员提供服务资源的话这个选项是非常有用的.举例来说,假设有两个域DOMA和DOMB,DOMA已经向DOMB进行了委托,而samba服务器位于DOMA中.在通常情况下,在DOMB中有账号的用户可以用同样的samba服务器账号名访问UNIX上的资源.而无须他在DOMA上有账号.不过这样就使安全界线更难分清了.
+<P>
+<P>
+缺省设置: <B>allow trusted domains = yes</B>
+<P>
+<P>
+<DT>announce as (G)<DD>
+这个选项定义<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8) 对网络邻居声称的服务器类型.缺省为windows NT.可选项有&quot;NT&quot;,它与&quot;NT Server&quot;同义,&quot;NT Server&quot;,&quot;NT Workstation&quot;,&quot;Win95&quot;或&quot;WfW&quot;,它们分别代表Windows NT Server,Windows NT Workstation,Windows 95和Windows for Workgroups.除非有特殊的需要不想让samba以windows NT的身份出现,一般不要改动这个选项,因为这可能会影响samba作为浏览服务器的正确性.
+<P>
+<P>
+缺省设置: <B>announce as = NT Server</B>
+<P>
+<P>
+示例: <B>announce as = Win95</B>
+<P>
+<P>
+<DT>announce version (G)<DD>
+此选项定义nmbd用于声明服务器版本号的主版本号和次版本号.缺省版本号的是4.9。除非有特殊的必要想将samba设为低版本,一般不要改动这个选项.
+<P>
+缺省设置: <B>announce version = 4.9</B>
+<P>
+<P>
+示例: <B>announce version = 2.0</B>
+<P>
+<P>
+<DT>auth methods (G)<DD>
+This option allows the administrator to chose what authentication methods <B>smbd</B> will use when authenticating a user. This option defaults to sensible values based on <I>security</I>. This should be considered a developer option and used only in rare circumstances. In the majority (if not all) of production servers, the default setting should be adequate.
+<P>
+<P>
+Each entry in the list attempts to authenticate the user in turn, until the user authenticates. In practice only one method will ever actually be able to complete the authentication.
+<P>
+<P>
+Possible options include <B>guest</B> (anonymous access), <B>sam</B> (lookups in local list of accounts based on netbios name or domain name), <B>winbind</B> (relay authentication requests for remote users through winbindd), <B>ntdomain</B> (pre-winbindd method of authentication for remote domain users; deprecated in favour of winbind method), <B>trustdomain</B> (authenticate trusted users by contacting the remote DC directly from smbd; deprecated in favour of winbind method).
+<P>
+<P>
+缺省设置: <B>auth methods = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>auth methods = guest sam winbind</B>
+<P>
+<P>
+<DT>auto services (G)<DD>
+与 <I>preload</I> 同义.
+<P>
+<P>
+<DT>available (S)<DD>
+这个选项可以用来关掉一个服务项.如果<I>available = no</I>,那么<B>所有</B>对该服务的连接都会失败.而这些失败会被记录下来.
+<P>
+缺省设置: <B>available = yes</B>
+<P>
+<P>
+<DT>bind interfaces only (G)<DD>
+这个全局选项允许samba管理员限制一台主机的某一个网络接口用于响应请求.这会对于<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)文件服务和<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8)名字服务造成些许影响.
+<P>
+对于名字服务,它将使<B>nmbd</B> 绑定到'interfaces'选项里列出的网络接口的137和138端口上.为了读取广播消息,<B>nmbd</B>也会绑定到&quot;所有地址&quot;接口(0.0.0.0)的137和138端口上.如果没有设置这个选项,<B>nmbd</B>将在所有的接口上响应名字服务请求.如果设置了&quot;bind interfaces only&quot;,那么<B>nmbd</B>将在广播接口上检查任何分组的源地址,丢弃任何不匹配<I>interfaces</I>选项所列接口之广播地址的分组.当在其它接口上收到单播分组,此选项使nmbd拒绝对任何不是是<I>interfaces</I>选项所列接口来发送分组的主机的服务.IP源地址哄骗可以使这个简单的检查失效,所以不要将<B>nmbd</B>安全功能用于严肃场合.
+<P>
+对于文件服务,该选项使<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)只在'interfaces'选项所列的网络接口上绑定.这就限制<B>smbd</B> 只响应那些接口上发出的分组.注意,不应该在PPP和时断时续的机器上或非广播网络接口上使用这个选项,因为它处理不了非永久连接的接口.
+<P>
+如果设置了<I>bind interfaces only</I>,除非网络地址<B>127.0.0.1</B>被加到<I>interfaces</I>选项的列表中,否则<B><A HREF="/cgi-bin/man/man2html?8+smbpasswd">smbpasswd</A></B>(8)和<B><A HREF="/cgi-bin/man/man2html?8+swat">swat</A></B>(8) 可能不会象我们所期望的那样工作,原因如下:
+<P>
+为了改变用户SMB口令,<B>smbpasswd</B>缺省情况下会以smb客户端的身份连接本地主机地址<B>localhost - 127.0.0.1</B>,发出更改口令请求.如果设置了<I>bind interfaces only</I>,<B>smbpasswd</B>在缺省情况下将会连接失败,除非<B>127.0.0.1</B>已被加入到<I>interfaces</I>选项.另外,可以用<I>-r remote machine</I>选项指定本地主机的主网络接口ip地址,这样<B>smbpasswd</B>就会强制使用本地的主ip地址.
+<P>
+<B>swat</B>的状态页面会在<B>127.0.0.1</B>尝试连接<B>smbd</B>和 <B>nmbd</B>,以确定它们是否正在运行.如果不加入<B>127.0.0.1</B>,将会使<B>smbd</B>和<B>nmbd</B> 总表示没有运行甚至实际情况并不是这样.这就阻止了<B> swat</B>启动/停止/重启动<B>smbd</B> 和<B>nmbd</B>进程.
+<P>
+缺省设置: <B>bind interfaces only = no</B>
+<P>
+<P>
+<DT>blocking locks (S)<DD>
+此项控制在客户为了在打开文件处获得一个字节范围的锁定而发出请求时<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)的动作,同时
+该请求会有一个与之相关的时限.
+<P>
+如果设置了这个选项,锁定范围请求不能立即满足的话,samba将会在内部对请求进行排队,并且周期性地尝试获得锁定,直到超时.
+<P>
+<P>
+如果这个选项设置为<B>no</B>,samba就会同以前版本那样,在锁定范围无法获得时立即使锁定请求失败.
+<P>
+缺省设置: <B>blocking locks = yes</B>
+<P>
+<P>
+<DT>block size (S)<DD>
+This parameter controls the behavior of <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) when reporting disk free sizes. By default, this reports a disk block size of 1024 bytes.
+<P>
+<P>
+Changing this parameter may have some effect on the efficiency of client writes, this is not yet confirmed. This parameter was added to allow advanced administrators to change it (usually to a higher value) and test the effect it has on client write performance without re-compiling the code. As this is an experimental option it may be removed in a future release.
+<P>
+<P>
+Changing this option does not change the disk free reporting size, just the block size unit reported to the client.
+<P>
+<P>
+<DT>browsable (S)<DD>
+与 <I>browseable</I> 同义。
+<P>
+<P>
+<DT>browseable (S)<DD>
+这个选项控制共享资源在可获得共享列表、net view命令及浏览列表里是否可见.
+<P>
+缺省设置: <B>browseable = yes</B>
+<P>
+<P>
+<DT>browse list (G)<DD>
+它控制<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)是否执行一个<B>NetServerEnum</B>调用来为客户提供一个浏览列表.正常情况它被设为<B>yes</B>.这个选项可能永远不需要改动.
+<P>
+缺省设置: <B>browse list = yes</B>
+<P>
+<P>
+<DT>case sensitive (S)<DD>
+参见NAME MANGLING段的讨论.
+<P>
+<P>
+缺省设置: <B>case sensitive = no</B>
+<P>
+<P>
+<DT>casesignames (S)<DD>
+与 <I>case sensitive</I> 同义.
+<P>
+<DT>change notify timeout (G)<DD>
+samba允许客户端告诉服务器监视某个特定目录的任何变化,仅当有变化发生的时候回复SMB请求.这种连续不断的扫描在unix系统上代价很高,因此,<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)只在等待<I>change notify timeout</I>时间后才对每个请求的目录执行一次扫描.
+<P>
+<P>
+缺省设置: <B>change notify timeout = 60</B>
+<P>
+<P>
+示例: <B>change notify timeout = 300</B>
+<P>
+<P>
+这将把扫描时间改为每5分钟一次.
+<P>
+<P>
+<DT>change share command (G)<DD>
+Samba 2.2.0 introduced the ability to dynamically add and delete shares via the Windows NT 4.0 Server Manager. The <I>change share command</I> is used to define an external program or script which will modify an existing service definition in <I>smb.conf</I>. In order to successfully execute the <I>change share command</I>, <B>smbd</B> requires that the administrator be connected using a root account (i.e. uid == 0).
+<P>
+<P>
+When executed, <B>smbd</B> will automatically invoke the <I>change share command</I> with four parameters.
+<P>
+<P>
+<I>configFile</I> - the location of the global <I>smb.conf</I> file.
+<P>
+<I>shareName</I> - the name of the new share.
+<P>
+<I>pathName</I> - path to an **existing** directory on disk.
+<P>
+<I>comment</I> - comment string to associate with the new share.
+<P>
+This parameter is only used modify existing file shares definitions. To modify printer shares, use the &quot;Printers...&quot; folder as seen when browsing the Samba host.
+<P>
+<P>
+参见 <I>add share command</I>, <I>delete share command</I>.
+<P>
+<P>
+缺省设置: <B>none</B>
+<P>
+<P>
+示例: <B>change share command = /usr/local/bin/addshare</B>
+<P>
+<P>
+<DT>client lanman auth (G)<DD>
+This parameter determines whether or not <B><A HREF="/cgi-bin/man/man2html?8+smbclient">smbclient</A></B>(8) and other samba client tools will attempt to authenticate itself to servers using the weaker LANMAN password hash. If disabled, only server which support NT password hashes (e.g. Windows NT/2000, Samba, etc... but not Windows 95/98) will be able to be connected from the Samba client.
+<P>
+<P>
+The LANMAN encrypted response is easily broken, due to it's case-insensitive nature, and the choice of algorithm. Clients without Windows 95/98 servers are advised to disable this option.
+<P>
+<P>
+Disabling this option will also disable the <B>client plaintext auth</B> option
+<P>
+<P>
+Likewise, if the <B>client ntlmv2 auth</B> parameter is enabled, then only NTLMv2 logins will be attempted. Not all servers support NTLMv2, and most will require special configuration to us it.
+<P>
+<P>
+Default : <B>client lanman auth = yes</B>
+<P>
+<P>
+<DT>client ntlmv2 auth (G)<DD>
+This parameter determines whether or not <B><A HREF="/cgi-bin/man/man2html?8+smbclient">smbclient</A></B>(8) will attempt to authenticate itself to servers using the NTLMv2 encrypted password response.
+<P>
+<P>
+If enabled, only an NTLMv2 and LMv2 response (both much more secure than earlier versions) will be sent. Many servers (including NT4 &lt; SP4, Win9x and Samba 2.2) are not compatible with NTLMv2.
+<P>
+<P>
+Similarly, if enabled, NTLMv1, <B>client lanman auth</B> and <B>client plaintext auth</B> authentication will be disabled. This also disables share-level authentication.
+<P>
+<P>
+If disabled, an NTLM response (and possibly a LANMAN response) will be sent by the client, depending on the value of <B>client lanman auth</B>.
+<P>
+<P>
+Note that some sites (particularly those following 'best practice' security polices) only allow NTLMv2 responses, and not the weaker LM or NTLM.
+<P>
+<P>
+Default : <B>client ntlmv2 auth = no</B>
+<P>
+<P>
+<DT>client plaintext auth (G)<DD>
+Specifies whether a client should send a plaintext password if the server does not support encrypted passwords.
+<P>
+<P>
+缺省设置: <B>client plaintext auth = yes</B>
+<P>
+<P>
+<DT>client schannel (G)<DD>
+This controls whether the client offers or even demands the use of the netlogon schannel. <I>client schannel = no</I> does not offer the schannel, <I>server schannel = auto</I> offers the schannel but does not enforce it, and <I>server schannel = yes</I> denies access if the server is not able to speak netlogon schannel.
+<P>
+<P>
+缺省设置: <B>client schannel = auto</B>
+<P>
+<P>
+示例: <B>client schannel = yes</B>
+<P>
+<P>
+<DT>client signing (G)<DD>
+This controls whether the client offers or requires the server it talks to to use SMB signing. Possible values are <B>auto</B>, <B>mandatory</B> and <B>disabled</B>.
+<P>
+<P>
+When set to auto, SMB signing is offered, but not enforced. When set to mandatory, SMB signing is required and if set to disabled, SMB signing is not offered either.
+<P>
+<P>
+缺省设置: <B>client signing = auto</B>
+<P>
+<P>
+<DT>client use spnego (G)<DD>
+This variable controls controls whether samba clients will try to use Simple and Protected NEGOciation (as specified by rfc2478) with WindowsXP and Windows2000 servers to agree upon an authentication mechanism. SPNEGO client support for SMB Signing is currently broken, so you might want to turn this option off when operating with Windows 2003 domain controllers in particular.
+<P>
+<P>
+缺省设置: <B>client use spnego = yes</B>
+<P>
+<P>
+<DT>comment (S)<DD>
+这是一段当客户用<B>网上邻居</B>(<B>net view</B>)察看服务器上共享资源时显示的说明文字.
+<P>
+如果想设置机器名后的说明文字请参考 <I> server string</I> 命令.
+<P>
+<P>
+缺省设置: <B>No comment string</B>
+<P>
+<P>
+示例: <B>comment = Fred's Files</B>
+<P>
+<P>
+<DT>config file (G)<DD>
+这可以使samba使用指定的配置文件来替代缺省的配置文件,(通常是<I>smb.conf</I>).如果设置了这个选项,会出现一个先有鸡还是先有蛋的问题!
+<P>
+<P>
+由于这个原因,如果在加载这个选项的时候发现配置文件名变化了,就会从新的配置文件里重新加载选项.
+<P>
+<P>
+这个选项作为常用的替换非常有用.
+<P>
+如果这个配置文件不存在,那么就不会被加载.(允许你特殊地处理少数客户的配置文件)
+<P>
+<P>
+<P>
+示例: <B>config file = /usr/local/samba/lib/smb.conf.%m</B>
+<P>
+<P>
+<DT>copy (S)<DD>
+这使你可以克隆服务. 指定的服务以当前服务的名字进行简单的复制,当前服务里定义的选项将替代被拷服务里任何相应的选项.
+<P>
+<P>
+这个特性允许建立一个服务的'模版',可以很容易的生成相似的服务.注意,被拷贝的服务在配置文件里必须先于拷贝的服务出现.
+<P>
+缺省设置: <B>no value</B>
+<P>
+<P>
+示例: <B>copy = otherservice</B>
+<P>
+<P>
+<DT>create mask (S)<DD>
+与 <I>create mode</I> 同义.
+<P>
+当生成一个文件的时候,需要知道从dos模式映射到unix下的文件权限.最后的结果用这个参数进行逐位的与运算得到.这个选项可以理解成unix下文件的位掩码.在生成文件的时候,任何<B>没有</B>设置的位将会从创建模式中去掉.
+<P>
+<P>
+这个选项的缺省值是从unix的文件创建模式中去掉组和其他用户的写和执行标志位.
+<P>
+根据这个规则,samba将会把这个选项生成的unix文件创建模式和由<I>force create mode</I>设置的选项进行逐位的或运算,<I>force create mode</I> 的缺省选项是000.
+<P>
+这个选项不会影响目录创建模式.细节参见<I>directory mode </I> .
+<P>
+参考<I>force create mode</I>以进一步了解在创建文件时设置的特殊位.关于创建目录模式参见<I>directory mode</I>选项.参见 <I>inherit permissions</I> parameter.
+<P>
+<P>
+Note that this parameter does not apply to permissions set by Windows NT/2000 ACL editors. If the administrator wishes to enforce a mask on access control lists also, they need to set the <I>security mask</I>.
+<P>
+<P>
+缺省设置: <B>create mask = 0744</B>
+<P>
+<P>
+示例: <B>create mask = 0775</B>
+<P>
+<P>
+<DT>create mode (S)<DD>
+与 <I> create mask</I> 同义.
+<P>
+<P>
+<DT>csc policy (S)<DD>
+This stands for <B>client-side caching policy</B>, and specifies how clients capable of offline caching will cache the files in the share. The valid values are: manual, documents, programs, disable.
+<P>
+<P>
+These values correspond to those used on Windows servers.
+<P>
+<P>
+For example, shares containing roaming profiles can have offline caching disabled using <B>csc policy = disable</B>.
+<P>
+<P>
+缺省设置: <B>csc policy = manual</B>
+<P>
+<P>
+示例: <B>csc policy = programs</B>
+<P>
+<P>
+<DT>deadtime (G)<DD>
+这个值(十进制整数)定义连接发呆超时,单位是分钟.如果一个连接发超过了这个时间就会被断开.如果有文件被打开了,这个时间就不起作用.
+<P>
+这可以保护服务器不被过多的发呆连接耗尽资源.
+<P>
+<P>
+多数客户端有连接断开后的自动重连功能,所以大多数情况下,这个选项对用户应该是透明的
+<P>
+<P>
+对多数系统建议使用较短的发呆超时的选项.
+<P>
+<P>
+发呆超时选项被设为0意味着不会自动断开连接..
+<P>
+<P>
+缺省设置: <B>deadtime = 0</B>
+<P>
+<P>
+示例: <B>deadtime = 15</B>
+<P>
+<P>
+<DT>debug hires timestamp (G)<DD>
+有些时候记录信息需要比秒更高层次的时间标识,用这个布尔量选项可以向时间标识信息头中加入以微秒级的频率.
+<P>
+注意要使用这个选项,必须打开<I> debug timestamp</I>选项.
+<P>
+<P>
+<P>
+缺省设置: <B>debug hires timestamp = no</B>
+<P>
+<P>
+<DT>debuglevel (G)<DD>
+与 <I> log level</I> 同义.
+<P>
+<P>
+<DT>debug pid (G)<DD>
+为很多从<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)fork出来的进程使用同一个记录文件时，很难精确地跟踪信息是哪个进程输出的.用这个布尔量选项向时间标识信息头中自动添加进程号.
+<P>
+注意要使用这个选项,必须打开<I> debug timestamp</I> 选项.
+<P>
+<P>
+缺省设置: <B>debug pid = no</B>
+<P>
+<P>
+<DT>debug timestamp (G)<DD>
+samba缺省会给调试纪录信息加上时间标识.如果运行的是高级别<I>debug level</I>的调试,这个时间标识可以被转移.用这个选项可以将时间标识关闭.
+<P>
+<P>
+缺省设置: <B>debug timestamp = yes</B>
+<P>
+<P>
+<DT>debug uid (G)<DD>
+samba有时以root身份运行,而有时以已联接的用户来运行.使用这个布尔量选项可以向记录文件的时间标识信息头中自动插入当前的euid,egid,uid和gid标识.
+<P>
+Note that the parameter  must be on for this to have an effect.
+注意要使用这个选项,必须打开<I> debug timestamp</I>选项.
+<P>
+缺省设置: <B>debug uid = no</B>
+<P>
+<P>
+<DT>default (G)<DD>
+与 <I> default service</I> 同义.
+<P>
+<P>
+<DT>default case (S)<DD>
+参见&quot;NAME MANGLING&quot;段. 也注意一下<I>short preserve case</I>选项. 
+<P>
+<P>
+缺省设置: <B>default case = lower</B>
+<P>
+<P>
+<DT>default devmode (S)<DD>
+This parameter is only applicable to printable services. When smbd is serving Printer Drivers to Windows NT/2k/XP clients, each printer on the Samba server has a Device Mode which defines things such as paper size and orientation and duplex settings. The device mode can only correctly be generated by the printer driver itself (which can only be executed on a Win32 platform). Because smbd is unable to execute the driver code to generate the device mode, the default behavior is to set this field to NULL.
+<P>
+<P>
+Most problems with serving printer drivers to Windows NT/2k/XP clients can be traced to a problem with the generated device mode. Certain drivers will do things such as crashing the client's Explorer.exe with a NULL devmode. However, other printer drivers can cause the client's spooler service (spoolsv.exe) to die if the devmode was not created by the driver itself (i.e. smbd generates a default devmode).
+<P>
+<P>
+This parameter should be used with care and tested with the printer driver in question. It is better to leave the device mode to NULL and let the Windows client set the correct values. Because drivers do not do this all the time, setting <B>default devmode = yes</B> will instruct smbd to generate a default one.
+<P>
+<P>
+For more information on Windows NT/2k printing and Device Modes, see the MSDN documentation.
+<P>
+<P>
+缺省设置: <B>default devmode = no</B>
+<P>
+<P>
+<DT>default service (G)<DD>
+这个选项定义一个当指定服务找不到时的缺省服务.注意,在选项值里<B>没有</B>方括号(看示例！).
+<P>
+这个选项没有缺省值. 如果没给出这个选项的话,对不存在的服务的请求将返回错误.
+<P>
+缺省服务一般是那些允许<I>guest ok</I>, <I>read-only</I>的服务.
+<P>
+<P>
+外在的服务名可能被替换成请求的服务名,这样就可以用象<I>%S</I>这样的宏来做一个通用的服务.
+<P>
+注意在缺省服务选项指定的服务名里, 字符'_'被映射为'/'. 这样可能会出现有趣的事情.
+<P>
+<P>
+示例:
+<P>
+<PRE>
+[global]
+        default service = pub
+[pub]
+        path = /%S
+</PRE>
+
+<P>
+<DT>delete group script (G)<DD>
+This is the full pathname to a script that will be run <B>AS ROOT</B> <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) when a group is requested to be deleted. It will expand any <I>%g</I> to the group name passed. This script is only useful for installations using the Windows NT domain administration tools.
+<P>
+<P>
+<DT>deleteprinter command (G)<DD>
+With the introduction of MS-RPC based printer support for Windows NT/2000 clients in Samba 2.2, it is now possible to delete printer at run time by issuing the DeletePrinter() RPC call.
+<P>
+<P>
+For a Samba host this means that the printer must be physically deleted from underlying printing system. The <I> deleteprinter command</I> defines a script to be run which will perform the necessary operations for removing the printer from the print system and from <I>smb.conf</I>.
+<P>
+<P>
+The <I>deleteprinter command</I> is automatically called with only one parameter: <I> &quot;printer name&quot;</I>.
+<P>
+<P>
+Once the <I>deleteprinter command</I> has been executed, <B>smbd</B> will reparse the <I> smb.conf</I> to associated printer no longer exists. If the sharename is still valid, then <B>smbd </B> will return an ACCESS_DENIED error to the client.
+<P>
+<P>
+参见 <I> addprinter command</I>, <I>printing</I>, <I>show add printer wizard</I>
+<P>
+<P>
+缺省设置: <B>none</B>
+<P>
+<P>
+示例: <B>deleteprinter command = /usr/bin/removeprinter</B>
+<P>
+<P>
+<DT>delete readonly (S)<DD>
+这个选项允许删除只读文件,这个只读不是通常dos里的含义,而是unix中的.
+<P>
+<P>
+这个选项对于rcs这样的应用很有用,在这种情况下,unix文件的属主不允许改变权限,dos文件只读.
+<P>
+<P>
+缺省设置: <B>delete readonly = no</B>
+<P>
+<P>
+<DT>delete share command (G)<DD>
+Samba 2.2.0 introduced the ability to dynamically add and delete shares via the Windows NT 4.0 Server Manager. The <I>delete share command</I> is used to define an external program or script which will remove an existing service definition from <I>smb.conf</I>. In order to successfully execute the <I>delete share command</I>, <B>smbd</B> requires that the administrator be connected using a root account (i.e. uid == 0).
+<P>
+<P>
+When executed, <B>smbd</B> will automatically invoke the <I>delete share command</I> with two parameters.
+<P>
+<P>
+<I>configFile</I> - the location of the global <I>smb.conf</I> file.
+<P>
+<I>shareName</I> - the name of the existing service.
+<P>
+This parameter is only used to remove file shares. To delete printer shares, see the <I>deleteprinter command</I>.
+<P>
+<P>
+参见 <I>add share command</I>, <I>change share command</I>.
+<P>
+<P>
+缺省设置: <B>none</B>
+<P>
+<P>
+示例: <B>delete share command = /usr/local/bin/delshare</B>
+<P>
+<P>
+<DT>delete user from group script (G)<DD>
+Full path to the script that will be called when a user is removed from a group using the Windows NT domain administration tools. It will be run by <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) <B>AS ROOT</B>. Any <I>%g</I> will be replaced with the group name and any <I>%u</I> will be replaced with the user name.
+<P>
+<P>
+缺省设置: <B>delete user from group script = </B>
+<P>
+<P>
+示例: <B>delete user from group script = /usr/sbin/deluser %u %g</B>
+<P>
+<P>
+<DT>delete user script (G)<DD>
+它定义一个在使用RPC(NT)工具管理用户时，<A HREF="/cgi-bin/man/man2html?8+fBsmbd">fBsmbd</A>(8)以root身份运行的包括路径的一个脚本.
+<P>
+<P>
+当远程客户使用'User Manager for Domains' 或是 <B>rpcclient</B> 从服务器上删除一个用户时执行此操作。
+<P>
+<P>
+这个脚本删除给定的unix用户。
+<P>
+缺省设置: <B>delete user script = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>delete user script = /usr/local/samba/bin/del_user %u</B>
+<P>
+<P>
+<DT>delete veto files (S)<DD>
+这个选项用于samba试图删除一个或多个包含禁止文件的目录的情况(参见<I>veto files</I>选项). 如果这个选项设置为<B>no</B>(缺省情况),那么如果一个禁止目录里包含了任何非禁止的文件或目录,删除就会失败.这通常正是你所希望的.
+<P>
+<P>
+如果这个选项被设为了 <B>yes</B>,Samba将试图递归删除在被禁止目录里的任何文件和目录.这对于整合象NetAtalk这样的文件服务系统很有用,它通常会在目录里生成Dos/windows用户看不见的中间文件(e.g. <I>.AppleDouble</I>).
+<P>
+<P>
+设置<B>delete veto files = yes</B> 使那些有权限的用户可以在删除父目录的时候透明的删除子目录.
+<P>
+<P>
+<P>
+参见 <I>veto files</I> 选项.
+<P>
+<P>
+缺省设置: <B>delete veto files = no</B>
+<P>
+<P>
+<DT>deny hosts (S)<DD>
+与 <I>hosts deny</I> 同义.
+<P>
+<P>
+<DT>dfree command (G)<DD>
+<I>dfree command</I>只需在磁盘空间计算有问题的系统上使用.这个空间计算的问题仅在Ultrix系统上发生过,但在其他的操作系统上也有可能发生.发生这个问题的现象是在每个目录列表最后发生错误并提示&quot;Abort Retry Ignore&quot;.
+<P>
+<P>
+这个设置允许用外部程序代替内部程序来计算总共的磁盘空间和可用的磁盘空间.下面的例子给出了一个能完成这个功能的脚本.
+<P>
+<P>
+这个外部程序的输入是文件系统里一个需要计算的目录,典型的包括<I>./</I>字符串.以ascii码返回两个整数.第一个是总共的磁盘空间(以块为单位),第二个是可用块树.可选的第三个返回值可以以字节为单位给出块的大小.缺省的块的大小是1024字节.
+<P>
+注意:这个脚本应该属主为root,<B>只有</B>root可写,并且<B>不能</B>带有用户标识位和组标识位(setuid or setgid)!
+<P>
+<P>
+缺省设置: <B>缺省用内部程序来计算磁盘容量和可用空间. </B>
+<P>
+<P>
+示例: <B>dfree command = /usr/local/samba/bin/dfree</B>
+<P>
+<P>
+如下这个dfree脚本必须是可执行的.
+<P>
+<P>
+<PRE>
+ 
+#!/bin/sh
+df $1 | tail -1 | awk '{print $2&quot; &quot;$4}'
+</PRE>
+
+<P>
+<P>
+在Sys V一类的系统上可能是:
+<P>
+<PRE>
+ 
+#!/bin/sh
+/usr/bin/df -k $1 | tail -1 | awk '{print $3&quot; &quot;$5}'
+</PRE>
+
+<P>
+<P>
+注意在特定的系统上可能需要给出相应的带有全路径的命令.
+<P>
+<P>
+<DT>directory (S)<DD>
+与 <I>path</I> 同义.
+<P>
+<P>
+<DT>directory mask (S)<DD>
+这个选项是8进制的模式。用来控制在生成UNIX目录时，将其从dos模式转换为unix模式。
+<P>
+当生成一个路径的时候,必须指定的目录权限从dos模式映射到unix模式,然后这个结果和这个选项进行逐位的与运算.这个选项可以理解成unix模式下的位掩码.这个选项里任何<B>没有</B>设置的位在生成unix下的目录时将会被去掉
+<P>
+<P>
+缺省情况下,这个选项把组和其他用户的写权限位去掉,只允许目录的属主对目录进行修改.
+<P>
+Samba将把这个选项和<I>force directory mode</I>的选项进行逐位的或运算,这个选项缺省时设置为000(也就是不加额外的限制).
+<P>
+<P>
+Note that this parameter does not apply to permissions set by Windows NT/2000 ACL editors. If the administrator wishes to enforce a mask on access control lists also, they need to set the <I>directory security mask</I>.
+<P>
+在生成目录时如果需要设置特殊的模式位,参见<I>force directory mode</I>选项.
+<P>
+关于生成文件时的模式位参见<I>create mode </I>选项和<I>directory security mask</I>选项.
+<P>
+<P>
+Also refer to the <I> inherit permissions</I> parameter.
+<P>
+<P>
+缺省设置: <B>directory mask = 0755</B>
+<P>
+<P>
+示例: <B>directory mask = 0775</B>
+<P>
+<P>
+<DT>directory mode (S)<DD>
+与 <I> directory mask</I> 同义。
+<P>
+<P>
+<DT>directory security mask (S)<DD>
+此选项控制了NT客户在他的本地NT安全对话框中操纵unix目录权限时可以修改哪些权限位.
+<P>
+<P>
+这个选项以掩码来实现改变权限位,所以在修改时要防止不在掩码中涉及的那些位.实际上,在这个掩码中的位0可以使用户无法改变任何东东.
+<P>
+如果没有明确设定的话,这个选项会用与directory mask选项同样的值.要允许用户在目录中可以修改所有的user/group/world权限,可以把这个选项设为0777.
+<P>
+<P>
+<B>注意</B>,能访问samba服务器的用户通过其它方法也可以很容易地绕过这个限制,所以对独立工作的系统来说这个选项是最根本最有用的.很多系统管理的管理员都会把它设为默认的<B>0777</B>.
+<P>
+<P>
+参见<I> force directory security mode</I>, <I>security mask</I>, <I>force security mode </I> 选项。
+<P>
+<P>
+缺省设置: <B>directory security mask = 0777</B>
+<P>
+<P>
+示例: <B>directory security mask = 0700</B>
+<P>
+<P>
+<DT>disable netbios (G)<DD>
+Enabling this parameter will disable netbios support in Samba. Netbios is the only available form of browsing in all windows versions except for 2000 and XP.
+<P>
+<P>
+Note that clients that only support netbios won't be able to see your samba server when netbios support is disabled.
+<P>
+缺省设置: <B>disable netbios = no</B>
+<P>
+<P>
+示例: <B>disable netbios = yes</B>
+<P>
+<P>
+<DT>disable spoolss (G)<DD>
+Enabling this parameter will disable Samba's support for the SPOOLSS set of MS-RPC's and will yield identical behavior as Samba 2.0.x. Windows NT/2000 clients will downgrade to using Lanman style printing commands. Windows 9x/ME will be uneffected by the 选项。 However, this will also disable the ability to upload printer drivers to a Samba server via the Windows NT Add Printer Wizard or by using the NT printer properties dialog window. It will also disable the capability of Windows NT/2000 clients to download print drivers from the Samba host upon demand. <B>Be very careful about enabling this 选项。</B>
+<P>
+<P>
+See also use client driver
+<P>
+<P>
+Default : <B>disable spoolss = no</B>
+<P>
+<P>
+<DT>display charset (G)<DD>
+Specifies the charset that samba will use to print messages to stdout and stderr and SWAT will use. Should generally be the same as the <B>unix charset</B>.
+<P>
+<P>
+缺省设置: <B>display charset = ASCII</B>
+<P>
+<P>
+示例: <B>display charset = UTF8</B>
+<P>
+<P>
+<DT>dns proxy (G)<DD>
+指定<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8)象WINS服务器那样寻找没有登记的NetBIOS名,象对待DNS名那样逐字的对待NetBIOS名,向DNS服务器查询该名称所代表的客户端.
+<P>
+<P>
+注意,NetBISO名的最大长度是15个字符,所以DNS名(或DNS别名)同样最多只能有15个字符.
+<P>
+<P>
+<B>nmbd</B> 在做DNS名查询的时候将自身复制一份,因为域名查询是一个阻塞的动作.
+<P>
+<P>
+参见 <I> wins support</I> 。
+<P>
+<P>
+缺省设置: <B>dns proxy = yes</B>
+<P>
+<P>
+<DT>domain logons (G)<DD>
+如果这个选项为<B>yes</B>,Samba服务器将为<I>workgroup</I>提供Windows 95/98 登陆域服务.Samba 2.2只能实现Windows NT 4 域中域控制器的有限功能。有关设置这个功能的更详细信息参见Samba 文档中的Samba-PDC-HOWTO。
+<P>
+<P>
+缺省设置: <B>domain logons = no</B>
+<P>
+<P>
+<DT>domain master (G)<DD>
+这个选项告诉<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)收集广域网内的浏览列表.设置这个选项后,<B>nmbd</B>用一个特定的NetBIOS名向它的<I>工作组</I>标识它自己是一个主控浏览器.在同一<I>工作组</I>不同子网中的本地主控浏览器将把自己的浏览列表传给<B>nmbd</B>,然后向<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) 请求整个网络上浏览列表的完整拷贝.客户端将和他们的本地主控浏览器联系,得到整个域范围内的浏览列表,而不只是子网上的列表.
+<P>
+<P>
+注意,windows NT主域控制器默认情况总是占有这个在<I>工作组</I>中的特殊的NetBIOS名，宣称自己是<I>工作组</I>的主域浏览器(也就是说,没有什么方法可以阻止一个Windows NT主域控制器这样做). 这样如果设置了这个选项,并且<B>nmbd</B> 在Windows NT之前向<I>工作组</I>宣称了这个特殊的名字,那么跨子网的浏览行为会变得奇怪,并且可能会失败.
+<P>
+<P>
+If <B>domain logons = yes</B> , then the default behavior is to enable the <I>domain master</I> 选项。 If <I>domain logons</I> is not enabled (the default setting), then neither will <I>domain master</I> be enabled by default.
+<P>
+<P>
+缺省设置: <B>domain master = auto</B>
+<P>
+
+
+<P>
+<DT>dont descend (S)<DD>
+有些系统上存在某些特殊的路径(比如linux中的<I>/proc</I>),这些目录不需要(也不希望)客户端关心,甚至可能具有无限的层次深度(递归的).这个选项允许你指定一个由逗号分隔的列表,服务器将把列表内包含的目录始终显示成空目录.
+<P>
+<P>
+注意,Samba对'dont descend'选项的输入格式十分挑剔.例如他也许要求你输入<I>./proc</I>而不是仅仅是<I>/proc</I>.实践是最好的策略.
+<P>
+<P>
+缺省设置: <B>none (也就是说,所有目录的内容会正常的传递给客户端)</B>
+<P>
+<P>
+示例: <B>dont descend = /proc,/dev</B>
+<P>
+<P>
+<DT>dos charset (G)<DD>
+DOS SMB clients assume the server has the same charset as they do. This option specifies which charset Samba should talk to DOS clients.
+<P>
+<P>
+The default depends on which charsets you have installed. Samba tries to use charset 850 but falls back to ASCII in case it is not available. Run <B><A HREF="/cgi-bin/man/man2html?1+testparm">testparm</A></B>(1) to check the default on your system.
+<P>
+<P>
+<DT>dos filemode (S)<DD>
+The default behavior in Samba is to provide UNIX-like behavior where only the owner of a file/directory is able to change the permissions on it. However, this behavior is often confusing to DOS/Windows users. Enabling this parameter allows a user who has write access to the file (by whatever means) to modify the permissions on it. Note that a user belonging to the group owning the file will not be allowed to change permissions if the group is only granted read access. Ownership of the file/directory is not changed, only the permissions are modified.
+<P>
+<P>
+缺省设置: <B>dos filemode = no</B>
+<P>
+<P>
+<DT>dos filetime resolution (S)<DD>
+在DOS和Windows FAT文件系统中,时间的计量精度是2秒。对共享资源设置这个选项,可以使得在一个向<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)的查询需要1秒精度时，Samba把报告的时间精度降低到2秒左右。
+<P>
+<P>
+这个选项的主要用于解决Visual C++与Samba的兼容性问题.当共享文件被锁定时(oplocks选项被设置为允许),Visual C++使用两个不同的读取时间的函数调用来检查文件自从最后一次读操作以来是否有改变.其中一个函数使用1秒的时间尺度,而另一个则使用2秒的时间尺度.由于使用基于2秒的方法要舍去任何的奇数秒,当文件的时间记录是奇数秒时,Visual C++的两次函数调用结果就会不一致,Visual C++就会总是认为文件被改变.设置这个选项可以使得两次函数调用的结果一致,Visual C++会很高兴的接受这一切.
+<P>
+<P>
+缺省设置: <B>dos filetime resolution = no</B>
+<P>
+<P>
+<DT>dos filetimes (S)<DD>
+在DOS和Windows操作系统中,如果用户对文件进行写操作,就会改变文件的时间记录.而在POSIX规则中,只有文件的所有者和root才有改变文件时间记录的能力.缺省的,Samba按照POSIX规则运行,如果<B>smbd</B>的用户不是文件的所有者,那么他对文件的操作不会改变文件的时间记录.如果设置这个选项为<B> yes</B>,那么<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)就按照DOS的规则运行,并且按照DOS系统的要求改变文件的时间记录.
+<P>
+<P>
+缺省设置: <B>dos filetimes = no</B>
+<P>
+<P>
+<DT>enable rid algorithm (G)<DD>
+This option is used to control whether or not smbd in Samba 3.0 should fallback to the algorithm used by Samba 2.2 to generate user and group RIDs. The longterm development goal is to remove the algorithmic mappings of RIDs altogether, but this has proved to be difficult. This parameter is mainly provided so that developers can turn the algorithm on and off and see what breaks. This parameter should not be disabled by non-developers because certain features in Samba will fail to work without it.
+<P>
+<P>
+缺省设置: <B>enable rid algorithm = &lt;yes&gt;</B>
+<P>
+<P>
+<DT>encrypt passwords (G)<DD>
+这个布尔型值控制着是否与客户端用加密口令进行交谈.注意,NT4.0 SP3 及以上还有WINDOWS 98在缺省情况下使用加密口令进行交谈,除非改变了注册表的相应健值.想要使用加密口令,清参阅Samba HOWTO Collection中的 &quot;User Database&quot; 章节。
+<P>
+想要使加密口令能正确的工作, <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)必须能访问本地的<B><A HREF="/cgi-bin/man/man2html?5+smbpasswd">smbpasswd</A></B>(5)文件(如何正确设置和维护这个文件,请参阅<B><A HREF="/cgi-bin/man/man2html?8+smbpasswd">smbpasswd</A></B>(8)手册),或者,设置选项security= [server|domain|ads],这样设置将使得<B>smbd</B>依赖其它的服务器来帮它鉴别口令. 
+<P>
+<P>
+缺省设置: <B>encrypt passwords = yes</B>
+<P>
+<P>
+<DT>enhanced browsing (G)<DD>
+This option enables a couple of enhancements to cross-subnet browse propagation that have been added in Samba but which are not standard in Microsoft implementations.
+<P>
+<P>
+The first enhancement to browse propagation consists of a regular wildcard query to a Samba WINS server for all Domain Master Browsers, followed by a browse synchronization with each of the returned DMBs. The second enhancement consists of a regular randomised browse synchronization with all currently known DMBs.
+<P>
+<P>
+You may wish to disable this option if you have a problem with empty workgroups not disappearing from browse lists. Due to the restrictions of the browse protocols these enhancements can cause a empty workgroup to stay around forever which can be annoying.
+<P>
+<P>
+In general you should leave this option enabled as it makes cross-subnet browse propagation much more reliable.
+<P>
+<P>
+缺省设置: <B>enhanced browsing = yes</B>
+<P>
+<P>
+<DT>enumports command (G)<DD>
+The concept of a &quot;port&quot; is fairly foreign to UNIX hosts. Under Windows NT/2000 print servers, a port is associated with a port monitor and generally takes the form of a local port (i.e. LPT1:, COM1:, FILE:) or a remote port (i.e. LPD Port Monitor, etc...). By default, Samba has only one port defined--<B>&quot;Samba Printer Port&quot;</B>. Under Windows NT/2000, all printers must have a valid port name. If you wish to have a list of ports displayed (<B>smbd </B> does not use a port name for anything) other than the default <B>&quot;Samba Printer Port&quot;</B>, you can define <I>enumports command</I> to point to a program which should generate a list of ports, one per line, to standard output. This listing will then be used in response to the level 1 and 2 EnumPorts() RPC.
+<P>
+<P>
+缺省设置: <B>no enumports command</B>
+<P>
+<P>
+示例: <B>enumports command = /usr/bin/listports</B>
+<P>
+<P>
+<DT>exec (S)<DD>
+与 <I>preexec</I> 同义。
+<P>
+<P>
+<DT>fake directory create times (S)<DD>
+NTFS和Windows VFAT文件系统为每一个文件和目录保留一个创建时间. 这个时间和UNIX下的状态改变时间--ctime不同. 所以, 在缺省状态下, Samba将报告UNIX系统所保持的各种时间属性中的最早的那个作为(文件/目录)建立时间. 如果在一个共享中设置了这个选项, 将会使得Samba伪造一个目录生成时间, 这个时间就是1980.01.01的午夜.
+<P>
+<P>
+这个选项的主要用于解决Visual C++与Samba的兼容性问题.Visual C++生成makefiles文件时, 包含目标文件所依赖的目的目录. 包含建立目录的规则. 同样的, 当NMAKE比较时间属性时, 它检查目录建立时间. 目标目录不存在的话, 会建立一个；如果存在,它的建立时间总是比它所包含的目标文件的建立时间早.
+<P>
+UNIX的时间规则意味着只要有文件在共享目录中建立或删除,Samba将更新关于该目录建立时间的报告. NMAKE将发现目录中除了最后建立的文件以外的所有目标文件都过期了(与目录的建立时间相比较), 然后重新编译目标文件.设置这个选项值将保证目录的建立时间早于它里面的文件,NMAKE就能够正常工作. 
+<P>
+<P>
+缺省设置: <B>fake directory create times = no</B>
+<P>
+<P>
+<DT>fake oplocks (S)<DD>
+oplocks是这样一个选项, 它允许SMB客户端在本地缓存对服务器的文件操作. 如果服务器允许oplock(opportunistic lock)操作, 客户端可以简单的认为, 它自己是唯一的文件访问者, 可以随意的缓存文件. 有些oplocks类型甚至允许缓存文件的打开和关闭操作. 这个操作换来性能上的巨大提升.
+<P>
+<P>
+当你设置<B>fake oplocks = yes</B>后,<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)总是允许oplock请求, 而不管到底有多少的客户端在使用这个文件. 
+<P>
+<P>
+在通常情况下, 使用真实的<I>oplocks</I>支持总是比使用这个选项好. 
+<P>
+<P>
+如果你使用这个选项在一些只读的共享上(例如: CDROM共享),或者你知道这个共享只能够被一个客户端所访问(例如: 客户主目录). 你将会注意到性能上的重大提升. 如果你将这个选项用在多个客户端都可以读写的共享上, 由于客户可能同时访问一个共享文件, 这样会造成文件损坏. 请一定小心使用. 
+<P>
+<P>
+缺省设置: <B>fake oplocks = no</B>
+<P>
+<P>
+<DT>follow symlinks (S)<DD>
+这个选项允许Samba管理员禁止某个特殊共享下<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)对符号链接的访问. 将这个选项设置为<B>no</B>将会阻止这个共享下的任何链接形式的文件或目录被查看(用户将会得到一个错误信息).例如: 这个选项将阻止客户将<I>/etc/passwd</I>文件链接到自己的主目录. (我们看到, 这是很有用的). 但是, 它将会使文件名字的查找速度慢一些.
+<P>
+这个选项缺省是允许(也就是, <B>smbd</B>将允许访问符号链接) 
+<P>
+<P>
+缺省设置: <B>follow symlinks = yes</B>
+<P>
+<P>
+<DT>force create mode (S)<DD>
+这个选项设置一组UNIX格式的权限代码, 当Samba建立新文档的时候, <B>总是</B>会使用这个权限设置新文档, 通过将新文档的权限位和这组权限代码做逐位与, 就完成了设置工作.缺省状态下, 这个选项设置为八进制000,在<I>create mask</I>加到新建立的文件的权限位上后, 与这个值进行按位与操作, 就得到文件建立时的权限设置. 
+<P>
+<P>
+参见 <I>create mask</I> 来获得关于建立文件时的掩码的详细资料。
+<P>
+另外也参见 <I>inherit permissions</I> 参数.
+<P>
+<P>
+缺省设置: <B>force create mode = 000</B>
+<P>
+<P>
+示例: <B>force create mode = 0755</B>
+<P>
+这个例子中, 将迫使所有被建立的文档对&quot;同组/其它(用户)&quot;有读和执行权. 对用户自己有读/写/执行权力.
+<P>
+<P>
+<DT>force directory mode (S)<DD>
+这个选项设置一组UNIX格式的权限代码, 当Samba建立新目录的时候, <B>总是</B>会使用这个权限设置新目录, 通过将新目录的权限位和这组权限代码做逐位与, 就完成了设置工作.缺省状态下, 这个选项设置为八进制000,在<I>directory mask</I>加到新建立的目录的权限位上后,与这个值进行按位与操作, 就得到目录建立时的权限设置.
+<P>
+<P>
+参见<I> directory mask</I> 来获得关于建立目录时的掩码的详细资料。
+<P>
+<P>
+另外也参见<I> inherit permissions</I>参数.
+<P>
+<P>
+缺省设置: <B>force directory mode = 000</B>
+<P>
+<P>
+示例: <B>force directory mode = 0755</B>
+<P>
+<P>
+这个例子中, 将迫使所有被建立的目录对&quot;同组/其它(用户)&quot;有读和进入权. 对用户自己有读/写/进入权力.
+<P>
+<DT>force directory security mode (S)<DD>
+此选项控制NT用户通过本地NT安全对话框可以操作哪些目录上的unix权限位.
+<P>
+此选项以掩码('or')来实现权限位的改变,所以它强制了任何掩码中用户可以更改的位.实际上,当在修改目录的安全性时,这个掩码中的一个0位可以作为一组用户已经设为'on'的位来看待.
+<P>
+如果没有明确设定的话,这个选项会用与force directory mode选项同样的值.要允许用户在目录中可以修改所有的user/group/world权限,可以把这个选项设为0000.
+<P>
+<B>注意</B>,能访问samba服务器的用户通过其它方法也可以很容易地绕过这个限制,所以这个参数只对独立工作的应用系统来说有用.很多系统管理的管理员都会把它设为默认的0000.
+<P>
+参见<I> directory security mask</I>, <I>security mask</I>, <I>force security mode </I> 参数。
+<P>
+<P>
+缺省设置: <B>force directory security mode = 0</B>
+<P>
+<P>
+示例: <B>force directory security mode = 700</B>
+<P>
+<P>
+<DT>force group (S)<DD>
+这个选项指定一个UNIX组, 所有连接到服务上的用户都被强迫使用这个组作为&quot;主组&quot;. 所有访问文件的用户都使用这个组的访问权限做权限检查. 因此, 通过分配文件和目录的访问权限给这个用户组, Samba的管理员可以限制或允许对共享文件的访问.
+<P>
+<P>
+在samba 2.0.5及更新的版本中这个选项已经按下面的方法有了一些扩展功能.如果在此列出的组名有一个'+'字符加在名称前的话,当前用户正在访问的共享资源只有初始组被缺省分配到这个组中,而可能的情况是用户已经是其它组成员了.这样,管理员可以决定只有在特殊组里的用户才能以设定的组身份建立文件,更有益于所有权分配管理.例如,设定<I>force group = +sys</I>的话,只有在sys组里的用户才能在访问samba共享资源时拥有缺省的初始组标识.而其它所有用户保留他们原始的组标识.
+<P>
+<P>
+如果又设定了 <I>force user</I>选项的话,<I>force group</I>选项中指定的组将会越过在 <I>force user</I>中指定的初始组.
+If the <I>force user</I> parameter is also set the group specified in <I>force group</I> will override the primary group set in <I>force user</I>.
+<P>
+<P>
+参见 <I>force user</I>选项.
+<P>
+<P>
+缺省设置: <B>no forced group</B>
+<P>
+<P>
+示例: <B>force group = agroup</B>
+<P>
+<P>
+<DT>force security mode (S)<DD>
+此选项控制NT用户通过本地NT安全对话框可以操作哪些目录上的unix权限位.
+<P>
+此选项以掩码('or')来实现权限位的改变,所以它强制了任何掩码中用户可以更改的位.实际上,当在修改目录的安全性时,这个掩码中的一个0位可以作为一组用户已经设为'on'的位来看待.
+<P>
+如果没有明确设定的话,这个选项会用与force create mode选项同样的值.要允许用户在文件上可以修改所有的user/group/world权限,可以把这个选项设为000.
+<P>
+<P>
+<B>注意</B>,能访问samba服务器的用户通过其它方法可以很容易地绕过这个限制,所以这个选项对独立工作的系统来说才有用的.很多系统管理的管理员都会把它设为默认的0000.
+<P>
+参见<I> force directory security mode</I>, <I>directory security mask</I>, <I> security mask</I> 参数。
+<P>
+<P>
+缺省设置: <B>force security mode = 0</B>
+<P>
+<P>
+示例: <B>force security mode = 700</B>
+<P>
+<P>
+<DT>force user (S)<DD>
+这个选项指定一个UNIX用户的名字, 所有连接到服务上的用户的缺省名字就使用这个名字. (由于权限的原因)在共享文件时这个选项是有用的.你必须小心使用这个选项, 它有可能带来安全上的问题. 
+<P>
+<P>
+这个选项只有当一个连接建立起来后才有用. 在建立连接的使用, 用户还是必须有合法的用户名和口令. 一旦连接建立起来, 所有的操作将强迫以这个名字进行, 而不管它是以什么名字登录的.
+<P>
+<P>
+samba 2.0.5和更新的版本中这个选项会导致用户的初始组被作为所有文件操作的初始组.2.0.5以前的初始组被允许作为联接用户的初始组(这是个bug)
+<P>
+<P>
+参见 <I>force group</I> 选项。
+<P>
+<P>
+缺省设置: <B>no forced user</B>
+<P>
+<P>
+示例: <B>force user = auser</B>
+<P>
+<P>
+<DT>fstype (S)<DD>
+这个选项允许管理员设置一个字符串说明共享的文件系统的类型, 当客户端有查询时, <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)将这个字符串作为正在使用的文件系统的类型报告给客户端. 为了和<I>Windows NT</I>兼容缺省值设置是<B>NTFS</B>, 当然,如果必要的话,也可以改变为其它的字符串,例如<B>Samba</B>或<B>FAT</B>.
+<P>
+<P>
+缺省设置: <B>fstype = NTFS</B>
+<P>
+<P>
+示例: <B>fstype = Samba</B>
+<P>
+<P>
+<DT>get quota command (G)<DD>
+The <B>get quota command</B> should only be used whenever there is no operating system API available from the OS that samba can use.
+<P>
+<P>
+This parameter should specify the path to a script that queries the quota information for the specified user/group for the partition that the specified directory is on.
+<P>
+<P>
+Such a script should take 3 arguments:
+<P>
+<P>
+directory
+<P>
+type of query
+<P>
+uid of user or gid of group
+<P>
+The type of query can be one of :
+<P>
+<P>
+1 - user quotas
+<P>
+2 - user default quotas (uid = -1)
+<P>
+3 - group quotas
+<P>
+4 - group default quotas (gid = -1)
+<P>
+This script should print its output according to the following format:
+<P>
+<P>
+Line 1 - quota flags (0 = no quotas, 1 = quotas enabled, 2 = quotas enabled and enforced)
+<P>
+Line 2 - number of currently used blocks
+<P>
+Line 3 - the softlimit number of blocks
+<P>
+Line 4 - the hardlimit number of blocks
+<P>
+Line 5 - currently used number of inodes
+<P>
+Line 6 - the softlimit number of inodes
+<P>
+Line 7 - the hardlimit number of inodes
+<P>
+Line 8(optional) - the number of bytes in a block(default is 1024)
+<P>
+参见 <I>set quota command</I> 选项。
+<P>
+<P>
+缺省设置: <B>get quota command = </B>
+<P>
+<P>
+示例: <B>get quota command = /usr/local/sbin/query_quota</B>
+<P>
+<P>
+<DT>getwd cache (G)<DD>
+这是一个性能调节选项. 当这个选项允许时, 一个高速缓冲算法将被用来减少调用&quot;getwd()&quot;的时间. 这个选项对性能会产生很大的影响, 特别是在<I>wide links</I>选项设为<B>no</B>的时候.
+<P>
+<P>
+缺省设置: <B>getwd cache = yes</B>
+<P>
+<P>
+<DT>group (S)<DD>
+与 <I>force group</I> 同义。
+<P>
+<P>
+<DT>guest account (G,S)<DD>
+这是一个用来访问服务的用户名(作为客户来访账户,区别于系统上的用户), 当然, 被访问的服务必须先设置了选项fI guest ok. 这个账户所拥有的所有权利都会反映到以&quot;访问客户(guest)&quot;身份连接进来的客户身上. 典型的, 这个客户必须在passwd文件中存在, 但是没有有效的登录权限.通常系统中存在着名为&quot;ftp&quot;的账户,把这个账户名使用在这里是个好主意.注意:如果一个服务指定了一个专用的访问用户名,这个专用名将代替这里的用户名.
+<P>
+<P>
+在某些系统上,缺省的访问用户名&quot;nobody&quot;账户可能不能打印.如果遇到这种情况,请使用其它的账户名(例如ftp)。想要测试这种情况,可以试着用来访账户登录(可以用<B>su -</B>命令),然后,使用系统打印命令<B><A HREF="/cgi-bin/man/man2html?1+lpr">lpr</A></B>(1)或<B><A HREF="/cgi-bin/man/man2html?1+lp">lp</A></B>(1).
+<P>
+<P>
+这个参数不接受%宏，因为Samba系统的很多组件要正确工作都需要这个值是一个常量。
+<P>
+<P>
+缺省设置: <B>编译时指定，通常是&quot;nobody&quot;</B>
+<P>
+<P>
+示例: <B>guest account = ftp</B>
+<P>
+<P>
+<DT>guest ok (S)<DD>
+如果一个服务的这个选项的值设为<B>yes</B>, 那末, 连接到这个服务不需要口令, 权限设置为<I> guest account</I>的权限.
+<P>
+这个选项抵消了设置 <I>restrict anonymous</I> = 2 的好处。
+<P>
+<P>
+参见下面的<I> security</I>来获得更多信息。
+<P>
+<P>
+缺省设置: <B>guest ok = no</B>
+<P>
+<P>
+<DT>guest only (S)<DD>
+如果一个服务的这个选项设置为 <B>yes</B>, 那末, 只有客户(guest)访问被允许, 也就是说, 不允许以其他用户的身份访问.如果没有设置<I>guest ok</I>选项, 则此选项无效. 
+<P>
+<P>
+参见下面的<I> security</I> 参数来获得更多信息。
+<P>
+<P>
+缺省设置: <B>guest only = no</B>
+<P>
+<P>
+<DT>hide dot files (S)<DD>
+这是一个布尔值选项. 控制文件名最前面一个字符为&quot;.&quot;的文件是否表现为隐含文件(UNIX文件系统中, 最前面为&quot;.&quot;的文件是隐含文件). 
+<P>
+<P>
+缺省设置: <B>hide dot files = yes</B>
+<P>
+<P>
+<DT>hide files (S)<DD>
+这是一个隐藏文件或目录的列表.这些文件不能被看见但是能被访问.列表中的文件或目录将被赋予DOS下的&quot;隐藏&quot;属性.
+<P>
+<P>
+每个条目必须以&quot;/&quot;分隔以便允许在条目中使用空格.可以使用DOS风格的通配符&quot;*&quot;和&quot;?&quot;匹配多个目录和文件。
+<P>
+<P>
+每一个条目必须使用UNIX格式的路径,而不是DOS格式的路径,同时,不能包含UNIX路径分隔符&quot;/&quot;.
+<P>
+<P>
+注意:大小写敏感的特性也适用于隐含文件.
+<P>
+<P>
+设置这个选项会影响Samba的性能,它会迫使系统检查所有的文件和目录以确定是否与它的所要寻找的项目匹配.
+<P>
+<P>
+参见 <I>hide dot files</I>, <I> veto files</I> 和 <I>case sensitive</I>.
+<P>
+<P>
+缺省设置: <B>没有隐藏文件</B>
+<P>
+<P>
+示例: <B>hide files = /.*/DesktopFolderDB/TrashFor%m/resource.frk/</B>
+<P>
+上面的例子中的文件从Thursby共享出来,给Macintosh的SMB客户端(DAVE),供内部使用,仍然隐藏了&quot;.&quot;打头的文件. 
+<P>
+<P>
+<DT>hide local users (G)<DD>
+This parameter toggles the hiding of local UNIX users (root, wheel, floppy, etc) from remote clients.
+<P>
+<P>
+缺省设置: <B>hide local users = no</B>
+<P>
+<P>
+<DT>hide special files (S)<DD>
+This parameter prevents clients from seeing special files such as sockets, devices and fifo's in directory listings.
+<P>
+<P>
+缺省设置: <B>hide special files = no</B>
+<P>
+<P>
+<DT>hide unreadable (S)<DD>
+This parameter prevents clients from seeing the existance of files that cannot be read. Defaults to off.
+<P>
+<P>
+缺省设置: <B>hide unreadable = no</B>
+<P>
+<P>
+<DT>hide unwriteable files (S)<DD>
+This parameter prevents clients from seeing the existance of files that cannot be written to. Defaults to off. Note that unwriteable directories are shown as usual.
+<P>
+<P>
+缺省设置: <B>hide unwriteable = no</B>
+<P>
+<P>
+<DT>homedir map (G)<DD>
+如果<I>nis homedir </I>选项的值为<B>yes</B>,同时, <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)也作为win95/98的<I>登录服务器</I>,那么,这个选项指明一个NIS(或者YP)映射.指向用户主目录所在的服务器.目前,只认识Sun的auto.home映射格式.映射格式如下:
+<P>
+<P>
+<B>username server:/some/file/system</B>
+<P>
+<P>
+程序从&quot;:&quot;号前取得服务器名字.将来也许会有更好的解释系统来处理不同的映射格式,当然,也包括Amd(另一种自动装载方式)映射.
+<P>
+<P>
+需要系统中有一个运行的NIS客户来使这个选项工作。
+<P>
+参见 <I>nis homedir</I> , <I>domain logons</I> .
+<P>
+<P>
+缺省设置: <B>homedir map = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>homedir map = amd.homedir</B>
+<P>
+<P>
+<DT>host msdfs (G)<DD>
+If set to <B>yes</B>, Samba will act as a Dfs server, and allow Dfs-aware clients to browse Dfs trees hosted on the server.
+<P>
+<P>
+参见 <I> msdfs root</I> share level 选项。 For more information on setting up a Dfs tree on Samba, refer to ???.
+<P>
+<P>
+缺省设置: <B>host msdfs = no</B>
+<P>
+<P>
+<DT>hostname lookups (G)<DD>
+Specifies whether samba should use (expensive) hostname lookups or use the ip addresses instead. An example place where hostname lookups are currently used is when checking the <B>hosts deny</B> and <B>hosts allow</B>.
+<P>
+<P>
+缺省设置: <B>hostname lookups = yes</B>
+<P>
+<P>
+示例: <B>hostname lookups = no</B>
+<P>
+<P>
+<DT>hosts allow (S)<DD>
+与<I>allow hosts</I> 同义.
+<P>
+这个选项是一个由逗号,空格或者tab字符隔开的一组主机名.列入其中的主机才允许访问.
+<P>
+如果该选项出现在[global]段中,它会作用于所有服务而忽略单个服务所作的不同设置.
+<P>
+<P>
+你可以用ip地址或主机名来指定主机.比如,你可以用类似 <B>allow hosts = 150.203.5. </B>来限定只允许访问在这个c类子网中的主机.<I><A HREF="/cgi-bin/man/man2html?5+hosts_access">hosts_access</A>(5)</I>中详细描述了关于这个选项设置的完整语法.注意到你的系统中也许没有这个参考手册,这里也作一个简单的说明.
+<P>
+注意，本机地址127.0.0.1 总是允许连接,除非在<I>hosts deny</I> 选项中加以禁止.
+<P>
+你也可以使用子网号/子网掩码对来指定主机.如果你的网络支持网络组,你还可以用网络组名来指定组内的主机.<B>EXCEPT</B>(除了...)关键字可以在使用了通配符的情况下起到限定作用.
+<P>
+<P>
+Example 1: 允许150.203.*.* 中除了一台机器之外的所有IP访问
+<P>
+<P>
+<B>hosts allow = 150.203. EXCEPT 150.203.6.66</B>
+<P>
+<P>
+Example 2: 允许满足给定的子网号/子网掩码的IP访问
+<P>
+<P>
+<B>hosts allow = 150.203.15.0/255.255.255.0</B>
+<P>
+<P>
+Example 3: 允许一系列主机访问
+<P>
+<P>
+<B>hosts allow = lapland, arvidsjaur</B>
+<P>
+<P>
+Example 4: 允许NIS网络组&quot;foonet&quot;访问,但是禁止其中的一台主机
+<P>
+<P>
+<B>hosts allow = @foonet</B>
+<P>
+<P>
+<B>hosts deny = pirate</B>
+<P>
+<P>
+注意,访问时还是需要有适当的用户级口令.
+<P>
+<P>
+参见<B><A HREF="/cgi-bin/man/man2html?1+testparm">testparm</A></B>(1) 来检测主机是否可以按照你希望的方式被访问.
+<P>
+<P>
+缺省设置: <B>none (也就是说,所有机器都可以访问)</B>
+<P>
+<P>
+示例: <B>allow hosts = 150.203.5. myhost.mynet.edu.au</B>
+<P>
+<P>
+<DT>hosts deny (S)<DD>
+<I>hosts allow</I>选项的反义词.所有被列入这个选项中的主机的服务都<B>不</B>允许被访问,除非这个被访问的服务定义了自己的允许列表.当允许的主机列表和禁止的主机列表发生冲突的时候,<I>allow</I>优先.
+<P>
+<P>
+缺省设置: <B>none (没有禁止访问的主机)</B>
+<P>
+<P>
+示例: <B>hosts deny = 150.203.4. badhost.mynet.edu.au</B>
+<P>
+<P>
+<DT>hosts equiv (G)<DD>
+如果这个选项值不是空字符串,就指定了一个文件名.这个文件中列出了可以不用口令就允许访问的主机和用户的名字.
+<P>
+<P>
+不要把这个选项和<I>hosts allow</I> 搞混了,那是关于控制主机对服务的访问的,用于管理对来访者的服务.而<I> hosts equiv</I>是用于支持那些不对samba提供口令的NT客户的.
+<P>
+<P>
+注意:使用<I>hosts equiv </I> 可能会成为一个很大的安全漏洞.这是因为你相信发起访问的PC提供了正确的用户名.找一台PC来提供一个假的用户名是很容易的.我建议你只有在完全明白你在干什么的情况下才使用<I>hosts equiv</I>选项,或者在你自己的家里(那里有你可以完全信任的配偶和孩子)使用它.仅仅是在你<B>完全</B>可以信任他们的时候才用 :-) 
+<P>
+<P>
+缺省设置: <B>no host equivalences</B>
+<P>
+<P>
+示例: <B>hosts equiv = /etc/hosts.equiv</B>
+<P>
+<P>
+<DT>idmap backend (G)<DD>
+The purpose of the idmap backend parameter is to allow idmap to NOT use the local idmap tdb file to obtain SID to UID / GID mappings, but instead to obtain them from a common LDAP backend. This way all domain members and controllers will have the same UID and GID to SID mappings. This avoids the risk of UID / GID inconsistencies across UNIX / Linux systems that are sharing information over protocols other than SMB/CIFS (ie: NFS).
+<P>
+<P>
+缺省设置: <B>idmap backend = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>idmap backend = ldap:<A HREF="ldap://ldapslave.example.com">ldap://ldapslave.example.com</A></B>
+<P>
+<P>
+<DT>idmap gid (G)<DD>
+The idmap gid parameter specifies the range of group ids that are allocated for the purpose of mapping UNX groups to NT group SIDs. This range of group ids should have no existing local or NIS groups within it as strange conflicts can occur otherwise.
+<P>
+<P>
+The availability of an idmap gid range is essential for correct operation of all group mapping.
+<P>
+<P>
+缺省设置: <B>idmap gid = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>idmap gid = 10000-20000</B>
+<P>
+<P>
+<DT>idmap uid (G)<DD>
+The idmap uid parameter specifies the range of user ids that are allocated for use in mapping UNIX users to NT user SIDs. This range of ids should have no existing local or NIS users within it as strange conflicts can occur otherwise.
+<P>
+<P>
+缺省设置: <B>idmap uid = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>idmap uid = 10000-20000</B>
+<P>
+<P>
+<DT>include (G)<DD>
+这个选项使得你可以把一个配置文件插入到另一个配置文件中去.这只是一种文本替换,就在好像被插入的文件的那个位置直接写入那个插入文件一样.
+<P>
+它支持标准替换,除<I>%u </I>, <I>%P</I> 和 <I>%S</I>以外.
+<P>
+<P>
+缺省设置: <B>没有包含其他文件</B>
+<P>
+<P>
+示例: <B>include = /usr/local/samba/lib/admin_smb.conf</B>
+<P>
+<P>
+<DT>inherit acls (S)<DD>
+This parameter can be used to ensure that if default acls exist on parent directories, they are always honored when creating a subdirectory. The default behavior is to use the mode specified when creating the directory. Enabling this option sets the mode to 0777, thus guaranteeing that default directory acls are propagated.
+<P>
+<P>
+缺省设置: <B>inherit acls = no</B>
+<P>
+<P>
+<DT>inherit permissions (S)<DD>
+The permissions on new files and directories are normally governed by <I> create mask</I>, <I>directory mask</I>, <I>force create mode</I> and <I>force directory mode</I> but the boolean inherit permissions parameter overrides this.
+<P>
+<P>
+New directories inherit the mode of the parent directory, including bits such as setgid.
+<P>
+<P>
+New files inherit their read/write bits from the parent directory. Their execute bits continue to be determined by <I>map archive</I> , <I>map hidden</I> and <I>map system</I> as usual.
+<P>
+<P>
+Note that the setuid bit is <B>never</B> set via inheritance (the code explicitly prohibits this).
+<P>
+<P>
+This can be particularly useful on large systems with many users, perhaps several thousand, to allow a single [homes] share to be used flexibly by each user.
+<P>
+<P>
+参见 <I>create mask </I>, <I> directory mask</I>, <I>force create mode</I> and <I>force directory mode</I> .
+<P>
+<P>
+缺省设置: <B>inherit permissions = no</B>
+<P>
+<P>
+<DT>interfaces (G)<DD>
+这个选项允许你超越默认的Samba用来处理浏览,名字注册和其他NBT网络流量的网络借口列表. 默认情况Samba向内核查询所有活动的接口列表并且使用除了127.0.0.1 之外的接口.
+<P>
+<P>
+这个选项的内容是一个接口字符串的列表, 每个字符串可以是下列任何一种格式:
+<P>
+一个网络接口名(例如eth0).它可以包含象在shell风格的通配符如eth*来匹配任何以子字符品&quot;eth&quot;起始的网络接口.
+<P>
+一个IP地址.这种情况下,网络掩码是从内核中获得的接口列表中检测的.
+<P>
+一个IP/掩码对.
+<P>
+一个广播地址/掩码对.
+<P>
+&quot;mask&quot;选项可以是一个位长度(例如C类网络可以是24)或者是以点分格式出现的完整网络地址掩码.
+<P>
+<P>
+&quot;IP&quot;选项可以是完整点分十六进制IP地址或是按操作系统通常使用的主机名解析机制查找的主机名.
+<P>
+<P>
+例如,下面这一行:
+<P>
+<P>
+<B>interfaces = eth0 192.168.2.10/24 192.168.3.10/255.255.255.0</B>
+<P>
+<P>
+将配置三个网络接口,对应eth0设备以及IP地址192.168.2.10 和192.168.3.10。后两个接口的网络掩码将设置为255.255.255.0。
+<P>
+<P>
+参见<I>bind interfaces only</I>.
+<P>
+<P>
+缺省设置: <B>除了127.0.0.1 之外的所有活动接口 that are broadcast capable</B>
+<P>
+<P>
+<DT>invalid users (S)<DD>
+这是一个不允许在这个服务上登录的用户的名单.这的确是一个非常严格的(<B>paranoid</B>)检查,确保任何可能的不适当的设置都不会破坏你的系统的安全.
+<P>
+<P>
+以@开头的用户名首先被当作NIS网络组名(如果你的系统支持NIS的话),如果在NIS的网络组数据库中找不到这个组,那么这个名字就被当作一个UNIX用户组名来处理.
+<P>
+<P>
+以+开头的用户名仅表示UNIX用户组名,以&amp;开头的用户名仅表示NIX网络组名(这个设置要求你的系统中有NIS在运行).'+'和'&amp;'符号可以以任何顺序出现在用户组名前,因此,你可以指定对这个名称的查找次序,比如<I>+&amp;group</I>表示先在UNIX用户组中查找,再在NIS网络组中查找,而<I>&amp;+group</I>则相反,先在NIX网络组中查找,再到UNIX用户组中查找.(这与使用@前缀的效果相同).
+<P>
+当前的服务名可以用<I>%S</I>来表示,这在[homes]段中是很有用的.
+<P>
+<P>
+参见 <I>valid users </I>.
+<P>
+<P>
+缺省设置: <B>没有非法用户</B>
+<P>
+<P>
+示例: <B>invalid users = root fred admin @wheel</B>
+<P>
+<P>
+<DT>keepalive (G)<DD>
+这个选项是一个整数,它表示用于<I>keepalive</I>包间隔的秒数.如果这个选项是0,那么就不发送保持连接的包.发送保持连接的包使得主机可以确定客户端是否还在响应。
+<P>
+通常,如果用于连接的socket使用了SO_KEEPALIVE属性设置(参见<I>socket options</I>),那么发送保持连接的包是不需要的.基本上,除非你遇到了某些困难,这个选项是用不到的.
+<P>
+<P>
+缺省设置: <B>keepalive = 300</B>
+<P>
+<P>
+示例: <B>keepalive = 600</B>
+<P>
+<P>
+<DT>kernel change notify (G)<DD>
+This parameter specifies whether Samba should ask the kernel for change notifications in directories so that SMB clients can refresh whenever the data on the server changes.
+<P>
+<P>
+This parameter is only usd when your kernel supports change notification to user programs, using the F_NOTIFY fcntl.
+<P>
+<P>
+缺省设置: <B>Yes</B>
+<P>
+<P>
+<DT>kernel oplocks (G)<DD>
+在支持基于内核的 <I>oplocks</I>(opportunistic lock)的UNIX系统上(目前只有IRIX 和Linux2.4内核),这个选项允许打开或关闭对这个特性的利用.
+<P>
+内核机会性锁定操作使得本地UNIX进程或NFS对文件进行操作时可以锁定(冻结)<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)对同一个文件的<I>oplocks </I>操作.这可以保持SMB/CIFS,NFS和本地文件操作之间的数据一致性.(这是一个很cool的特性哦 :-)
+<P>
+<P>
+如果你的系统支持这个设置,缺省设置就是<B>on</B>(打开),如果系统不支持,缺省设置就是<B>Off</B>(关闭).你根本不必去管这个选项.
+<P>
+<P>
+参见 <I>oplocks</I> 和 <I>level2 oplocks </I> 参数.
+<P>
+<P>
+缺省设置: <B>kernel oplocks = yes</B>
+<P>
+<P>
+<DT>lanman auth (G)<DD>
+This parameter determines whether or not <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) will attempt to authenticate users using the LANMAN password hash. If disabled, only clients which support NT password hashes (e.g. Windows NT/2000 clients, smbclient, etc... but not Windows 95/98 or the MS DOS network client) will be able to connect to the Samba host.
+<P>
+<P>
+The LANMAN encrypted response is easily broken, due to it's case-insensitive nature, and the choice of algorithm. Servers without Windows 95/98 or MS DOS clients are advised to disable this option.
+<P>
+<P>
+Unlike the <B>encypt passwords</B> option, this parameter cannot alter client behaviour, and the LANMAN response will still be sent over the network. See the <B>client lanman auth</B> to disable this for Samba's clients (such as smbclient)
+<P>
+<P>
+If this option, and <B>ntlm auth</B> are both disabled, then only NTLMv2 logins will be permited. Not all clients support NTLMv2, and most will require special configuration to us it.
+<P>
+<P>
+Default : <B>lanman auth = yes</B>
+<P>
+<P>
+<DT>large readwrite (G)<DD>
+This parameter determines whether or not <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) supports the new 64k streaming read and write varient SMB requests introduced with Windows 2000. Note that due to Windows 2000 client redirector bugs this requires Samba to be running on a 64-bit capable operating system such as IRIX, Solaris or a Linux 2.4 kernel. Can improve performance by 10% with Windows 2000 clients. Defaults to on. Not as tested as some other Samba code paths.
+<P>
+<P>
+缺省设置: <B>large readwrite = yes</B>
+<P>
+<P>
+<DT>ldap admin dn (G)<DD>
+The <I>ldap admin dn</I> defines the Distinguished Name (DN) name used by Samba to contact the ldap server when retreiving user account information. The <I>ldap admin dn</I> is used in conjunction with the admin dn password stored in the <I>private/secrets.tdb</I> file. See the <B><A HREF="/cgi-bin/man/man2html?8+smbpasswd">smbpasswd</A></B>(8) man page for more information on how to accmplish this.
+<P>
+<P>
+<DT>ldap delete dn (G)<DD>
+This parameter specifies whether a delete operation in the ldapsam deletes the complete entry or only the attributes specific to Samba.
+<P>
+<P>
+缺省设置: <B>ldap delete dn = no</B>
+<P>
+<P>
+<DT>ldap filter (G)<DD>
+这个选项指定了RFC2254兼容的LDAP搜索过滤器。默认对所有匹配<B>sambaAccount</B>对象类的条目进行登录名和 <B>uid</B> 属性之间的匹配。注意这个过滤器只应当返回一个条目.
+<P>
+<P>
+缺省设置: <B>ldap filter = (&amp;(uid=%u)(objectclass=sambaAccount))</B>
+<P>
+<P>
+<DT>ldap group suffix (G)<DD>
+This parameters specifies the suffix that is used for groups when these are added to the LDAP directory. If this parameter is unset, the value of <I>ldap suffix</I> will be used instead.
+<P>
+<P>
+缺省设置: <B>none</B>
+<P>
+<P>
+示例: <B>dc=samba,ou=Groups</B>
+<P>
+<P>
+<DT>ldap idmap suffix (G)<DD>
+This parameters specifies the suffix that is used when storing idmap mappings. If this parameter is unset, the value of <I>ldap suffix</I> will be used instead.
+<P>
+<P>
+缺省设置: <B>none</B>
+<P>
+<P>
+示例: <B>ou=Idmap,dc=samba,dc=org</B>
+<P>
+<P>
+<DT>ldap machine suffix (G)<DD>
+It specifies where machines should be added to the ldap tree.
+<P>
+<P>
+缺省设置: <B>none</B>
+<P>
+<P>
+<DT>ldap passwd sync (G)<DD>
+This option is used to define whether or not Samba should sync the LDAP password with the NT and LM hashes for normal accounts (NOT for workstation, server or domain trusts) on a password change via SAMBA.
+<P>
+<P>
+The <I>ldap passwd sync</I> can be set to one of three values:
+<P>
+<P>
+<I>Yes</I> = Try to update the LDAP, NT and LM passwords and update the pwdLastSet time.
+<P>
+<I>No</I> = Update NT and LM passwords and update the pwdLastSet time.
+<P>
+<I>Only</I> = Only update the LDAP password and let the LDAP server do the rest.
+<P>
+缺省设置: <B>ldap passwd sync = no</B>
+<P>
+<P>
+<DT>ldap port (G)<DD>
+这个选项只有在编译时配置了&quot;--with-ldap&quot;选项的情况下才可用.
+<P>
+这个选项控制用于和LDAP服务器通讯的tcp端口号。默认应用标准的LDAP端口636。
+<P>
+<P>
+参见: ldap ssl
+<P>
+<P>
+Default : <B>ldap port = 636 ; 如果 ldap ssl = on</B>
+<P>
+<P>
+Default : <B>ldap port = 389 ; 如果 ldap ssl = off</B>
+<P>
+<P>
+<DT>ldap server (G)<DD>
+这个选项只有在编译时配置了&quot;--with-ldapsam&quot;选项的情况下才可用.
+<P>
+这个选项应当包含ldap目录服务器的FQDN，用来查询和定位用户帐户信息。
+<P>
+<P>
+Default : <B>ldap server = localhost</B>
+<P>
+<P>
+<DT>ldap ssl (G)<DD>
+This option is used to define whether or not Samba should use SSL when connecting to the ldap server This is <B>NOT</B> related to Samba's previous SSL support which was enabled by specifying the <B>--with-ssl</B> option to the <I>configure</I> script.
+<P>
+<P>
+The <I>ldap ssl</I> can be set to one of three values:
+<P>
+<P>
+<I>Off</I> = Never use SSL when querying the directory.
+<P>
+<I>Start_tls</I> = Use the LDAPv3 StartTLS extended operation (RFC2830) for communicating with the directory server.
+<P>
+<I>On</I> = Use SSL on the ldaps port when contacting the <I>ldap server</I>. Only available when the backwards-compatiblity <B>--with-ldapsam</B> option is specified to configure. See <I>passdb backend</I>
+<P>
+Default : <B>ldap ssl = start_tls</B>
+<P>
+<P>
+<DT>ldap suffix (G)<DD>
+指定用户和机器帐号从哪里加入树中。可以被<B>ldap user suffix</B>和<B>ldap machine suffix</B>选项越过。它也用作所有ldap搜索的base dn。
+<P>
+<P>
+缺省设置: <B>none</B>
+<P>
+<P>
+<DT>ldap user suffix (G)<DD>
+This parameter specifies where users are added to the tree. If this parameter is not specified, the value from <B>ldap suffix</B>.
+<P>
+<P>
+缺省设置: <B>none</B>
+<P>
+<P>
+<DT>level2 oplocks (S)<DD>
+这个参数控制了是否Samba在一个共享上支持第二级(只读)oplocks。
+<P>
+2级,或者只读oplocks允许Windows NT客户在文件中可以保持一个oplocks,一旦第二个用户请求同一文件时可以从读写oplocks级降为只读oplocks(而不是像传统的做法，保持唯一的oplocks，在第二次打开时释放所有的oplocks).这样就可以允许支持2级oplocks的文件打开者缓存用于只读的文件(也就是说,他们的写和锁定请求不可能被缓冲),并且使只读文件的大量访问提升性能(例如.exe文件).
+<P>
+一旦在拥有只读oplocks的客户中有一位对文件进行了写操作,所有的客户都会被通知(不需要回复及等待), told to break their oplocks to &quot;none&quot;,然后删除所有read-ahead caches.
+<P>
+推荐打开这个选项，为共享的可执行程序提高访问速度。
+<P>
+更多关于2级oplocks的讨论请查看CIFS的规约.
+<P>
+当前,如果使用了<I>kernel oplocks</I>的话,就不会认可2级oplocks(即使把那个选项设为<B>yes</B>也没用).还要注意,<I>oplocks</I> 选项必须在共享上被设成<B>yes</B>才有效果.
+<P>
+参见 <I>oplocks</I> 和 <I>kernel oplocks</I> 选项。
+<P>
+<P>
+缺省设置: <B>level2 oplocks = yes</B>
+<P>
+<P>
+<DT>lm announce (G)<DD>
+这个选项决定<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8)是否产生&quot;Lanman宣告广播&quot;,OS/2的客户端需要这个广播用以在它们的浏览列表里看到Samba服务器.这个选项有3个值:<B>yes</B>、<B>no</B>、<B>auto</B>.缺省值是<B>auto</B>.如果这值为<B>no</B>,Samba将不会产生这种广播.如果设置为<B>yes</B>,Samba将以<I>lm interval</I>选项的值为频率产生这种广播.如果设置为<B>auto</B>,Samba并不发出这类广播,但是侦听他们.如果收到这样的广播,它就开始发送这种广播,频率还是以<I>lm interval</I>选项设定的为准.
+<P>
+<P>
+参见 <I>lm interval</I>.
+<P>
+<P>
+缺省设置: <B>lm announce = auto</B>
+<P>
+<P>
+示例: <B>lm announce = yes</B>
+<P>
+<P>
+<DT>lm interval (G)<DD>
+如果Samba设置为产生&quot;Lanman宣告广播（给OS/2客户端使用,参见<I>lm announce</I>选项）.那么,这里的选项设定了以秒为单位的发生频率.如果这个选项设置为&quot;0&quot;,则不管<I>lm announce</I>选项的值,永远不会发出任何&quot;Lanman宣告广播&quot;.
+<P>
+<P>
+参见<I>lm announce</I>.
+<P>
+<P>
+缺省设置: <B>lm interval = 60</B>
+<P>
+<P>
+示例: <B>lm interval = 120</B>
+<P>
+<P>
+<DT>load printers (G)<DD>
+这个布尔值控制是否在&quot;printcap&quot;文件中的所有打印机将会被缺省的安装到Samba环境,并且可以被浏览.参见&quot;printers&quot;段获得更多细节.
+<P>
+<P>
+缺省设置: <B>load printers = yes</B>
+<P>
+<P>
+<DT>local master (G)<DD>
+这个选项允许<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8)试着去成为本地子网的主控浏览器.如果选项值为<B>no</B>,<B> nmbd</B>不会去争取这个权利.在缺省情况下,这个值为<B>yes</B>.设置这个值为<B>yes</B>,并不意味着<B>become</B> 就一定会成为本地的主浏览器,只是意味着<B>become</B> 会参加成为主浏览器的选举.
+<P>
+<P>
+设置这个值为 <B>no</B> 将使 <B>nmbd</B> <B>永远不会</B> 成为主控浏览器。
+<P>
+<P>
+缺省设置: <B>local master = yes</B>
+<P>
+<P>
+<DT>lock dir (G)<DD>
+与 <I> lock directory</I> 同义.
+<P>
+<P>
+<DT>lock directory (G)<DD>
+这个选项指出&quot;加锁文件&quot;放置的目录.加锁文件用以实现最大连接数<I>max connections</I>.
+<P>
+<P>
+缺省设置: <B>lock directory = ${prefix}/var/locks</B>
+<P>
+<P>
+示例: <B>lock directory = /var/run/samba/locks</B>
+<P>
+<P>
+<DT>locking (S)<DD>
+这个选项控制当客户端发出锁定请求时,服务器是否执行&quot;锁定&quot;.
+<P>
+如果 <B>locking = no</B> ,所有的锁定请求和解除锁定请求将表现为成功执行.对锁定的查询将会显示没有锁定.
+<P>
+如果<B>locking = yes</B> 服务器将执行真正的锁定。
+<P>
+这个选项<B>可能</B>对只读文件系统有用,因为它<B>可能</B>不需要锁定（例如:CDROM）.即使在这种情况下,我们也不真正推荐使用<B>no</B>.
+<P>
+要特别小心,不管是全局的关闭这个选项或者在某个服务上关闭这个选项,都有可能由于缺少锁定而导致数据损坏.其实,你根本就不需要设置这个选项.
+<P>
+<P>
+缺省设置: <B>locking = yes</B>
+<P>
+<P>
+<DT>lock spin count (G)<DD>
+This parameter controls the number of times that smbd should attempt to gain a byte range lock on the behalf of a client request. Experiments have shown that Windows 2k servers do not reply with a failure if the lock could not be immediately granted, but try a few more times in case the lock could later be aquired. This behavior is used to support PC database formats such as MS Access and FoxPro.
+<P>
+<P>
+缺省设置: <B>lock spin count = 3</B>
+<P>
+<P>
+<DT>lock spin time (G)<DD>
+The time in microseconds that smbd should pause before attempting to gain a failed lock. See <I>lock spin count</I> for more details.
+<P>
+<P>
+缺省设置: <B>lock spin time = 10</B>
+<P>
+<P>
+<DT>log file (G)<DD>
+这个选项允许设置其它的文件名字来替代Samba日志文件（也就是调试文件).
+<P>
+这个选项支持标准的文件名代换变量,允许方便的为每个用户或者机器设置专用的日志文件.
+<P>
+<P>
+示例: <B>log file = /usr/local/samba/var/log.%m</B>
+<P>
+<P>
+<DT>log level (G)<DD>
+这个值(字符串)允许在<I>smb.conf</I>里定义调试水平(记录水平).This parameter has been extended since the 2.2.x series, now it allow to specify the debug level for multiple debug classes. 这给系统配置带来更大的灵活性.
+<P>
+<P>
+缺省的调试水平将在命令行里定义,如果没有定义,调试水平为零.
+<P>
+<P>
+<P>
+示例: <B>log level = 3 passdb:5 auth:10 winbind:2</B>
+<P>
+<P>
+<DT>logon drive (G)<DD>
+这个选项设置一个本地路径（可以理解为网络映射盘）,当登录时,用户的主目录就连接到这个本地路径(参见<I>logon home</I>).
+<P>
+注意:这个选项只有在Samba是登录服务器时才有用.
+<P>
+<P>
+缺省设置: <B>logon drive = z:</B>
+<P>
+<P>
+示例: <B>logon drive = h:</B>
+<P>
+<P>
+<DT>logon home (G)<DD>
+当Win95/98或Win NT工作站登录到Samba PDC时,它们的主目录的位置.设置了这个选项,就允许在(DOS)提示符下使用形如:
+<P>
+<P>
+C:\&gt; <B>NET USE H: /HOME</B>
+<P>
+这样的命令。
+<P>
+这个选项支持标准的命令选项替换,方便为每个用户或者机器提供登录脚本.
+<P>
+<P>
+This parameter can be used with Win9X workstations to ensure that roaming profiles are stored in a subdirectory of the user's home directory. This is done in the following way:
+<P>
+<P>
+<B>logon home = \%NU<BR>
+rofile</B>
+<P>
+<P>
+This tells Samba to return the above string, with substitutions made when a client requests the info, generally in a NetUserGetInfo request. Win9X clients truncate the info to \\server\share when a user does <B>net use /home</B> but use the whole string when dealing with profiles.
+<P>
+<P>
+Note that in prior versions of Samba, the <I>logon path</I> was returned rather than <I>logon home</I>. This broke <B>net use /home</B> but allowed profiles outside the home directory. The current implementation is correct, and can be used for profiles if you use the above trick.
+<P>
+注意,这个选项只在Samba被设置成为登录服务器logon server时才起作用.
+<P>
+<P>
+缺省设置: <B>logon home = &quot;\%NU&quot;</B>
+<P>
+<P>
+示例: <B>logon home = &quot;\remote_smb_serverU&quot;</B>
+<P>
+<P>
+<DT>logon path (G)<DD>
+这个选项指定了存放roaming profile(WindowsNT的NTuser.dat 等文件)的用户目录.Contrary to previous versions of these manual pages, it has nothing to do with Win 9X roaming profiles. To find out how to handle roaming profiles for Win 9X system, see the <I>logon home</I> parameter.
+<P>
+这个选项支持标准替换,允许你为每一个用户或机器设置不同的登录脚本.它也可以指定那些显示在Windows NT客户端上的&quot;应用程序数据&quot;(<I>桌面</I>,<I>开始菜单</I>,<I>网上邻居</I>和<I>程序</I>等文件夹和他们的内容).
+<P>
+指定的共享资源和路径必须是用户可读的,这样,设定的选项和目录才能被Windows NT客户端装载使用.这个共享资源在用户第一次登录时必须是可写的,这样Windows NT客户端才能建立NTuser.dat文件及其他目录.
+<P>
+然后,这些目录以及其中的任何内容都可以根据需要设置为只读的.把NTuser.dat文件设置成只读是不明智的,你应该把它改名成NTuser.man(一个强制使用(<B>MAN</B>datory)的user.dat)来达到同样的目的.
+<P>
+Windows终端有时候即使没有用户登录也会保持对[homes]共享资源的连接.因此,logon path不能包含对homes共享资源的任何参照(也就是说,把这个选项设置成类似\\%N\HOMES\profile_path会引起问题).
+<P>
+<P>
+这个选项支持标准替换,允许你为不同的机器或用户设置不同的登录脚本.
+<P>
+<P>
+注意,这个选项只有在Samba被设置成为登录服务器logon server的时候才起作用.
+<P>
+<P>
+缺省设置: <B>logon path = \\%N\%U\profile</B>
+<P>
+<P>
+示例: <B>logon path = \\PROFILESERVER\PROFILE\%U</B>
+<P>
+<P>
+<DT>logon script (G)<DD>
+这个选项指明,当一个用户成功的登录后,将会自动下载到本地执行的脚本文件,这个脚本文件可能是一个批处理文件（.bat）或者一个NT命令文件（.cmd）.这个脚本文件必须使用DOS风格的回车/换行（CR/LF）来结束每一行,因此,我们推荐使用DOS风格的文本编辑器来建立这个文件.
+<P>
+<P>
+脚本文件的存放位置必须是相对于[netlogon]服务中指明的目录路径,举例来说,如果[netlogon]服务指定了了一个<I>path</I>是<I>/usr/local/samba/netlogon</I>,而<B>logon script </B> = STARTUP.BAT, 那么将要下载到客户端执行的文件的实际存放位置是:
+<P>
+<P>
+<I>/usr/local/samba/netlogon/STARTUP.BAT</I>
+<P>
+<P>
+登录脚本的内容包含什么,完全由你决定.我们建议包含这个指令:<B>NET TIME \SERVER /SET /YES</B>,它强迫每一台机器的时间和服务器的时间同步（以服务器的时间为准）；另一个建议是映射公共工具盘:<B>NET USE U:\\SERVER\&quot;公共工具目录&quot;</B> 例如:
+<P>
+<PRE>
+NET USE Q:\SERVERISO9001_QA
+</PRE>
+
+<P>
+注意:在一个有安全要求的系统环境中,特别重要的是要记住不要允许客户在[netlogon]上有写的权限,也不要给以客户改写登录脚本文件的权利.如果允许客户随意的修改,安全规则就给撕裂了一个口子.
+<P>
+<P>
+这个选项支持标准的置换规则,允许你为每个不同的用户或机器定制不同的登录脚本.
+<P>
+<P>
+注意,这个选项只有在Samba设置为登录服务器时才起作用.
+<P>
+<P>
+<P>
+缺省设置: <B>no logon script defined</B>
+<P>
+<P>
+示例: <B>logon script = scriptsU.bat</B>
+<P>
+<P>
+<DT>lppause command (S)<DD>
+这个选项指定在服务器上中断指定的打印作业的打印或假脱机打印操作所使用的指令.
+<P>
+<P>
+这个指令应该是一个可以根据打印机名和作业号中断打印作业的程序或脚本.实现这个操作的一个办法是使用作业优先级,优先级别太低的作业不会被发送到打印机上.
+<P>
+<P>
+用<I>%p</I>置换可以取得打印机名,而<I>%j</I>会被打印作业号(一个整数)置换.在HPUX系统中(参见<I>printing=hpux </I>),如果给lpq命令加上<I>-p%p</I>选项,打印作业会显示其执行状态,具体的说,如果作业的优先级低于阻塞级别,它会显示'PAUSED'状态,反之,如果作业的优先级等于或高于阻塞级别,它会显示'SPOOLED'或'PRINTING'状态.
+<P>
+<P>
+注意,在这个设置中使用绝对路径是一个好习惯,因为这个路径有可能不在服务器的PATH环境变量中.
+<P>
+<P>
+参见 <I>printing </I> parameter选项.
+<P>
+<P>
+缺省设置: 目前这个选项没有缺省设置,除非<I>printing</I>选项设置<B>SYSV</B>,在这种情况下,缺省参
+数是:
+<P>
+<P>
+<B>lp -i %p-%j -H hold</B>
+<P>
+<P>
+或者在<I>printing</I>选项设置为<B>softq</B>时,缺省选项是:
+<P>
+<P>
+<B>qstat -s -j%j -h</B>
+<P>
+<P>
+在HPUX系统中的例子: <B>lppause command = /usr/bin/lpalt %p-%j -p0</B>
+<P>
+<P>
+<DT>lpq cache time (G)<DD>
+此选项控制了<B>lpq</B>信息多长时间被缓冲一次,以防止频繁调用<B>lpq</B>命令.每一次系统使用<B>lpq</B>命令会保留一个单独的缓冲,所以如果不同的用户分别使用了不同的<B>lpq</B>命令的话,他们不可能共享缓冲信息.
+<P>
+<P>
+缓冲文件被存放在<I>/tmp/lpq.xxxx</I>文件中,其中的xxxx是正在使用的<B>lpq</B>命令哈希表.
+<P>
+<P>
+这个选项的缺省值是10秒,这就是说以前相同的<B>lpq</B>命令的缓冲内容将在周期为10秒内被使用.如果<B>lpq</B>命令非常慢的话,可以取稍大的值.
+<P>
+<P>
+把这个值设为0就完全禁止了缓冲技术的使用.
+<P>
+<P>
+参见 <I>printing</I> 选项.
+<P>
+<P>
+缺省设置: <B>lpq cache time = 10</B>
+<P>
+<P>
+示例: <B>lpq cache time = 30</B>
+<P>
+<P>
+<DT>lpq command (S)<DD>
+这个选项指定为了获得<B>lpq</B>风格的打印机状态信息而要在服务器上要执行的命令.
+<P>
+<P>
+这个命令应该是一个只以打印机名作为选项并可以输出打印机状态信息的程序或脚本.
+<P>
+<P>
+通常支持九种打印机状态信息:CUPS, BSD,AIX,LPRNG,PLP,SYSV,HPUX,QNX和SOFTQ.而这些正好覆盖了大多数的UNIX系统.你可以用<I>printing =</I>选项来控制到底要用哪种类型.
+<P>
+<P>
+有些客户端(特别是Windows for Workgroups)可能不能正确地向打印机发送联接号以获得状态信息.对此,服务器会向客户报告它所联接的首个打印服务.这样的情况只当联接号发送非法时才会发生.
+<P>
+<P>
+如果使用<I>%p</I>变量的话,系统会在此处放置打印机名.否则在命令后放置打印机名.
+<P>
+<P>
+注意,当服务器不能获得<B>PATH</B>变量的话,以绝对路径来描述<I>lpq command</I>是个好习惯. 当与CUPS库编译连接时，不需要<I>lpq command</I>，因为smbd将使用库调用来获得打印队列列表。
+<P>
+<P>
+参见 <I>printing </I> 选项.
+<P>
+<P>
+缺省设置: <B>依赖于 </B><I> printing</I> 的设置情况
+<P>
+<P>
+示例: <B>lpq command = /usr/bin/lpq -P%p</B>
+<P>
+<P>
+<DT>lpresume command (S)<DD>
+此选项指定为了继续连续打印或假脱机一个指定的打印任务时要在服务器上执行的命令.
+<P>
+<P>
+此命令应该是一个以打印机名和要恢复的打印任务号作为选项的程序或脚本.参见<I>lppause command </I>参数。
+<P>
+<P>
+如果使用<I>%p</I>变量的话,系统会在此处放置打印机名.用<I>%j</I>来代替打印任务号,当然是用整数形
+式罗.
+<P>
+<P>
+注意,当服务器不能获得PATH变量的话,以绝对路径来描述<I>lpresume command</I>是个好习惯
+<P>
+<P>
+参见 <I>printing </I> 选项.
+<P>
+<P>
+缺省设置: 当前没有缺省设置，除非 <I>printing</I> 选项是 <B>SYSV</B>, 此时默认是
+<P>
+<P>
+<B>lp -i %p-%j -H resume</B>
+<P>
+<P>
+或者如果<I>printing</I> 选项是 <B>SOFTQ</B>, 那么默认是:
+<P>
+<P>
+<B>qstat -s -j%j -r</B>
+<P>
+<P>
+HPUX的示例: <B>lpresume command = /usr/bin/lpalt %p-%j -p2</B>
+<P>
+<P>
+<DT>lprm command (S)<DD>
+此选项指定为了要删除一个打印任务而需要在服务器上执行的命令.
+<P>
+<P>
+此命令应该是一个使用打印机名和打印任务号的程序或脚本,并且执行它们可以删掉打印任务.
+<P>
+如果使用<I>%p</I>变量的话,系统会在此处放置打印机名.用<I>%j</I>来代替打印任务号,当然是也用整数形式罗.
+<P>
+注意,当不能从服务器获得PATH变量的话,以绝对路径来描述<I>lprm command</I>是个好习惯.
+<P>
+<P>
+参见<I>printing </I> 选项.
+<P>
+<P>
+缺省设置: <B>依赖于 </B><I>printing </I> 选项设置
+<P>
+<P>
+示例 1: <B>lprm command = /usr/bin/lprm -P%p %j</B>
+<P>
+<P>
+示例 2: <B>lprm command = /usr/bin/cancel %p-%j</B>
+<P>
+<P>
+<DT>machine password timeout (G)<DD>
+如果samba服务器是Windows NT域成员的话(参见<I>security=domain</I>选项),那么运行中的smbd进程会周期性地试着改变储存在叫做<I>private/secrets.tdb</I>的TDB中的MACHINE ACCOUNT PASSWORD.这个参数指定了密码将多久更换一次，以秒为单位。缺省值是一个星期(当然要以秒来表示),这与NT域成员服务器是一样的.
+<P>
+<P>
+参见 <B><A HREF="/cgi-bin/man/man2html?8+smbpasswd">smbpasswd</A></B>(8), 和 <I>security = domain</I> 选项.
+<P>
+<P>
+缺省设置: <B>machine password timeout = 604800</B>
+<P>
+<P>
+<DT>magic output (S)<DD>
+此选项指定了一个用magic脚本输出内容而建立的文件的名称,参见下面对<I>magic script</I>选项的描述.
+<P>
+<P>
+警告:如果两个客户在同样的目录下用相同的<I>magic script</I>,输出文件内容是无法确定的.
+<P>
+<P>
+缺省设置: <B>magic output = &lt;magic script name&gt;.out</B>
+<P>
+<P>
+示例: <B>magic output = myfile.txt</B>
+<P>
+<P>
+<DT>magic script (S)<DD>
+这个选项用来指定将被服务器执行的文件的名字,这个文件如果已经打开,那么,当这个文件关闭后服务器同样也可以运行.这样就允许了一个UNIX脚本可以传送到samba主机,并为所连接的用户运行.
+<P>
+<P>
+以这种方式运行的脚本将会在完成以后被删除,只要权限允许的话.
+<P>
+<P>
+如果脚本产生了输出的话,这些信息就被送到<I>magic  output</I>选项指定的文件中(见以上描述).
+<P>
+<P>
+注意,一些命令解释器不能解释包含CR/LF而不是CR回车换行符的脚本.magic脚本必须是可以被运行的（<B>就象</B>在本地主机运行一样）,而有些脚本在某些主机上或某些shell下可能会在dos客户端进行过滤处理.
+<P>
+<P>
+magic脚本仍处于<B>实验</B>阶段,所以<B>不能</B>对此完全依赖.
+<P>
+<P>
+缺省设置: <B>无。禁止使用magic script.</B>
+<P>
+<P>
+示例: <B>magic script = user.csh</B>
+<P>
+<P>
+<DT>mangle case (S)<DD>
+参见NAME MANGLING部分.
+<P>
+<P>
+缺省设置: <B>mangle case = no</B>
+<P>
+<P>
+<DT>mangled map (S)<DD>
+这个选项是用来直接映射那些不能在Windows/DOS上描述的unix文件名.不过并不经常出现这样的情况,只有一些特殊的扩展名在DOS和UNIX之间才会不同,例如,HTML文件在UNIX下通常都是<I>.html</I>,而在Windows/DOS下通常却是<I>.htm</I>.
+<P>
+<P>
+所以如果要将 <I>html</I> 映射为 <I>htm</I> 你应当这样:
+<P>
+<P>
+<B>mangled map = (*.html *.htm)</B>
+<P>
+<P>
+有一个非常有用的经验是删掉在CDROM光盘上一些文件名后面讨人厌的<I>;1</I>(只有在一些UNIX可以看到它们).为此可以这样映射：(*;1 *;).
+<P>
+<P>
+缺省设置: <I>没有 mangled map</I>
+<P>
+<P>
+示例: <B>mangled map = (*;1 *;)</B>
+<P>
+<P>
+<DT>mangled names (S)<DD>
+这个选项控制是否要把UNIX下的非DOS文件名映射为DOS兼容的形式(&quot;mangled&quot;)并使得它们可以查阅,或者简单地忽略掉这些非DOS文件名.
+<P>
+<P>
+NAME MANGLING部分有更多关于如何控制这类处理的详细信息.
+<P>
+<P>
+如果使用了这种映射,那么其算法就象下面这样：
+<P>
+<P>
+把文件名最后一个点符号前面首五个字母数字字符强制转换成大写,作为要映射名字的首五个字符.
+<P>
+<P>
+在要映射名字的起始部分加上&quot;~&quot;符号,后面跟两个字符的特殊序列字串,而这个序列字串是由原始的文件名而来（也就是：原文件名去掉最后的文件扩展名）.只有当文件的扩展名含有大写字母或长于三个字符时,文件的最后扩展名才被包含在散列计算中.
+<P>
+<P>
+注意,如果你不喜欢'~'的话,可以用<I>mangling char</I>选项来指定你想要的字符.
+<P>
+<P>
+最后,扩展名部分的前三个字符会被保留,强制转换到大写并作为映射后名字的扩展名.最后的扩展名就是原始文件名中最后一个'.'右面的那部分.如果文件名中没有'.',那么映射后的文件名也没有扩展名部分(除非用了&quot;hidden files&quot; - 参见后面的介绍).
+<P>
+unix的文件名如果以点开始,那么好比DOS中的隐藏文件.这些文件映射后的文件名就会拿掉点符号并用&quot;___&quot;来作为它的扩展名,而不管原来的扩展名是什么(&quot;___&quot;是三个下划线).
+<P>
+<P>
+大写字母数字字符组成了两位散列值.
+<P>
+如果目录中的文件与要映射的文件名使用了相同的前五位字符,这样的算法会导致名称冲突,不过发生冲突的可能性是1/1300.
+<P>
+<P>
+名称映射允许当需要保留unix长文件名时在unix目录与Windows/DOS之间拷贝文件.从Windows/DOS中拷过来的unix文件可以更换新的扩展名并保留同样的主文件名.名称映射并不会在转换时更改什么东西.
+<P>
+<P>
+缺省设置: <B>mangled names = yes</B>
+<P>
+<P>
+<DT>mangled stack (G)<DD>
+这个选项控制了映射文件名的数量,以便让Samba服务器<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)对其进行缓存.
+<P>
+<P>
+栈里保存了最近映射的基本文件名(扩展名只有在超过3个字符或者包含大写字符时才会保留).
+<P>
+<P>
+栈值设得稍大一些,对于映射unix的长文件名操作会更顺利一些.但是,它会使目录访问变得更慢；小一些的栈可以保存在服务器的内存中(每个栈元素占256个字节).
+<P>
+<P>
+并不保证在转换长文件名时绝对正确无误,准备好面对可能出现的惊奇.
+<P>
+<P>
+缺省设置: <B>mangled stack = 50</B>
+<P>
+<P>
+示例: <B>mangled stack = 100</B>
+<P>
+<P>
+<DT>mangle prefix (G)<DD>
+controls the number of prefix characters from the original name used when generating the mangled names. A larger value will give a weaker hash and therefore more name collisions. The minimum value is 1 and the maximum value is 6.
+<P>
+<P>
+mangle prefix is effective only when mangling method is hash2.
+<P>
+<P>
+缺省设置: <B>mangle prefix = 1</B>
+<P>
+<P>
+示例: <B>mangle prefix = 4</B>
+<P>
+<P>
+<DT>mangling char (S)<DD>
+这个选项指定在name mangling操作中使用什么样的字符作为<B>magic</B>字符.缺省是用了'~',不过有些软件可能会在使用上受到某些妨碍.可以设定为你想要的字符.
+<P>
+<P>
+缺省设置: <B>mangling char = ~</B>
+<P>
+<P>
+示例: <B>mangling char = ^</B>
+<P>
+<P>
+<DT>mangling method (G)<DD>
+controls the algorithm used for the generating the mangled names. Can take two different values, &quot;hash&quot; and &quot;hash2&quot;. &quot;hash&quot; is the default and is the algorithm that has been used in Samba for many years. &quot;hash2&quot; is a newer and considered a better algorithm (generates less collisions) in the names. However, many Win32 applications store the mangled names and so changing to the new algorithm must not be done lightly as these applications may break unless reinstalled.
+<P>
+<P>
+缺省设置: <B>mangling method = hash2</B>
+<P>
+<P>
+示例: <B>mangling method = hash</B>
+<P>
+<P>
+<DT>map acl inherit (S)<DD>
+This boolean parameter controls whether <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) will attempt to map the 'inherit' and 'protected' access control entry flags stored in Windows ACLs into an extended attribute called user.SAMBA_PAI. This parameter only takes effect if Samba is being run on a platform that supports extended attributes (Linux and IRIX so far) and allows the Windows 2000 ACL editor to correctly use inheritance with the Samba POSIX ACL mapping code.
+<P>
+<P>
+缺省设置: <B>map acl inherit = no</B>
+<P>
+<P>
+<DT>map archive (S)<DD>
+这个选项决定了是否把DOS的归档属性映射为UNIX可执行位.在文件修改后DOS的归档位会被设定到文件上.保持归档位的一个理由是使得Samba或者你的PC在新建任何文件的时候，不会为它们设置UNIX可执行属性。那样对于共享源代码、文档等等非常让人厌烦。
+<P>
+<P>
+注意这个选项需要在<I>create mask</I>��没有排除文件属主的执行权限位(也就是说它必须包含100).参见<I>create mask</I>选项中的描述.
+<P>
+<P>
+缺省设置: <B>map archive = yes</B>
+<P>
+<P>
+<DT>map hidden (S)<DD>
+这个选项决定DOS下的隐藏文件是否要映射为UNIX全局可执行位.
+<P>
+<P>
+注意这个选项需要在<I>create mask</I>中没有排除所有用户的执行权限位(也就是说它必须包含001).参见<I>create mask</I>选项中的描述.
+<P>
+<P>
+缺省设置: <B>map hidden = no</B>
+<P>
+<P>
+<DT>map system (S)<DD>
+这个选项决定DOS下的系统文件是否要映射为UNIX组可执行位.
+<P>
+注意这个选项需要在<I>create mask</I>中没有排除组用户的执行权限位(也就是说它必须包含010).参见<I>create mask</I>选项中的描述.
+<P>
+<P>
+缺省设置: <B>map system = no</B>
+<P>
+<P>
+<DT>map to guest (G)<DD>
+这个选项只在安全模式不是共享级(<I>security=share</I>)时才有用,也就是选用了用户安全级,服务器安全级或者域安全级(<B>user</B>, <B>server</B>, 和<B>domain</B>).
+<P>
+<P>
+这时,选项会有三种不同的值,分别通知<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)在用户以非法身份登录时作何相应处理.
+<P>
+<P>
+这三种设定是:
+<P>
+<P>
+<B>Never</B> - 意思是用户登录时用了个非法口令并且被服务器所拒.这是个缺省值.
+<P>
+<P>
+<B>Bad User</B> - 意思是用户登录时用了非法口令并且被服务器所拒,除非用户名不存在,否则也可以以来宾身份登录并映射到对应的<I>guest account</I><B>账号.
+<P>
+<P>
+Bad Password</B> - 意思是用户登录时即使用了非法口令,但是还会以来宾身份登录并映射到对应的guest账号.可能出现这样的问题,就是用户虽然输错了口令,却非常平静地以"来宾"身份登录到系统上。他们不明白为什么他们不能访问那些他们认为可以访问的资源,因为在登录时没有任何信息提示他们输错了口令。所以应该小心使用它,以避免不必要的麻烦. Helpdesk services will <B>hate</B> you if you set the <I>map to guest</I> parameter this way :-).
+<P>
+<P>
+注意当使用共享级以外的其它安全模式时,要设定这个选项，以使&quot;Guest&quot;共享资源服务发挥作用.因为在这些安全级模式中,用户请求的共享资源名在服务器成功验证用户登录前<B>不会</B>发送到服务器作处理,所以服务器就在不能处理联接验证结果时为联接提供&quot;Guest&quot;共享.
+<P>
+<P>
+对于那些以前的版本,这个选项会映射到编译时所用的local.h文件里定义的<B>GUEST_SESSSETUP</B>变量的值.
+<P>
+<P>
+缺省设置: <B>map to guest = Never</B>
+<P>
+<P>
+示例: <B>map to guest = Bad User</B>
+<P>
+<P>
+<DT>max connections (S)<DD>
+最大联接数就是允许同时联接到一个资源服务的最大数量限制.在<I>max connections</I>大于0的情况下,如果联接数超过了最大联接数设定时,超出的联接将被拒绝.如果设为0的话就没有这样的联接限制了.
+<P>
+<P>
+为了实现这样的功能,系统会使用记录锁定文件.锁定文件存放在<I>lock directory</I>选项指定的目录中.
+<P>
+<P>
+缺省设置: <B>max connections = 0</B>
+<P>
+<P>
+示例: <B>max connections = 10</B>
+<P>
+<P>
+<DT>max disk size (G)<DD>
+控制磁盘使用的上限.如果把它设为100的话,所有的共享资源容量都不会超过100M.
+<P>
+<P>
+注意这个选项并不是限制管理员往磁盘上存放数据的容量.在上面所说的情况中,管理员仍然可以存放超过100M的数据到磁盘上,但如果客户查询剩余磁盘空间或磁盘总空间的话,所得到的结果就只在这个 <I>max disk size</I>指定的容量范围之内.
+<P>
+<P>
+使用这个选项主要是为了对一些疯狂使用磁盘空间的软件进行一定的限制,特别是它们可能会使用超过1G上以的磁盘空间.
+<P>
+<P>
+把这个选项设为0说明没有限制.
+<P>
+<P>
+缺省设置: <B>max disk size = 0</B>
+<P>
+<P>
+示例: <B>max disk size = 1000</B>
+<P>
+<P>
+<DT>max log size (G)<DD>
+这个选项(一个kB为单位的整数)用来指定使用的记录文件最大到多少容量.samba会周期性地检查这个容量,如果超过这个选项值就把老的文件换名成扩展名为<I>.old</I>的文件.
+<P>
+<P>
+把这个选项设为0说明没有限制.
+<P>
+<P>
+缺省设置: <B>max log size = 5000</B>
+<P>
+<P>
+示例: <B>max log size = 1000</B>
+<P>
+<P>
+<DT>max mux (G)<DD>
+这个选项控制了对用户允许的最大SMB并发操作数.你应该不需要设定这个选项的.
+<P>
+<P>
+缺省设置: <B>max mux = 50</B>
+<P>
+<P>
+<DT>max open files (G)<DD>
+这个选项限定了在任意时间客户端用一个 <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)文件服务进程可以打开的最大文件数.缺省的值非常高(10,000),因为对于每个未打开的文件只使用其中的一位.
+<P>
+<P>
+打开文件极限通常用UNIX每进程最大文件描述符数来限制更好,所以你不需要去碰这个选项的.
+<P>
+<P>
+缺省设置: <B>max open files = 10000</B>
+<P>
+<P>
+<DT>max print jobs (S)<DD>
+This parameter limits the maximum number of jobs allowable in a Samba printer queue at any given moment. If this number is exceeded, <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) will remote &quot;Out of Space&quot; to the client. See all <I>total print jobs</I>.
+<P>
+<P>
+缺省设置: <B>max print jobs = 1000</B>
+<P>
+<P>
+示例: <B>max print jobs = 5000</B>
+<P>
+<P>
+<DT>max protocol (G)<DD>
+此项的值是一个字符串,定义了服务器支持的最高协议等级.
+<P>
+可能的值是:
+<P>
+<B>CORE</B>: 早期版本,不接受用户名.
+<P>
+<B>COREPLUS</B>: 在CORE的基础上改进了一些性能.
+<P>
+<B>LANMAN1</B>: 第一个比较流行的协议,支持长文件名.
+<P>
+<B>LANMAN2</B>: 对LANMAN1进行了更新. 
+<P>
+<B>NT1</B>: 目前用于Windows NT,一般称为CIFS.
+<P>
+通常,此选项不必设定,因为在SMB协议中会自动协商并选择合适的协议.
+<P>
+<P>
+参见 <I>min protocol</I>
+<P>
+<P>
+缺省设置: <B>max protocol = NT1</B>
+<P>
+<P>
+示例: <B>max protocol = LANMAN1</B>
+<P>
+<P>
+<DT>max reported print jobs (S)<DD>
+This parameter limits the maximum number of jobs displayed in a port monitor for Samba printer queue at any given moment. If this number is exceeded, the excess jobs will not be shown. A value of zero means there is no limit on the number of print jobs reported. See all <I>total print jobs</I> and <I>max print jobs</I> parameters.
+<P>
+<P>
+缺省设置: <B>max reported print jobs = 0</B>
+<P>
+<P>
+示例: <B>max reported print jobs = 1000</B>
+<P>
+<P>
+<DT>max smbd processes (G)<DD>
+This parameter limits the maximum number of <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) processes concurrently running on a system and is intended as a stopgap to prevent degrading service to clients in the event that the server has insufficient resources to handle more than this number of connections. Remember that under normal operating conditions, each user will have an <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) associated with him or her to handle connections to all shares from a given host.
+<P>
+<P>
+缺省设置: <B>max smbd processes = 0</B> ## no limit
+<P>
+<P>
+示例: <B>max smbd processes = 1000</B>
+<P>
+<P>
+<DT>max ttl (G)<DD>
+这个选项通知<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8) 当它用广播或从WINS服务器请求一个名字时,这个NetBIOS名字的有效时间('time to live', 以秒计)是多长.你不需要去碰这个选项,缺省值是3天.
+<P>
+<P>
+缺省设置: <B>max ttl = 259200</B>
+<P>
+<P>
+<DT>max wins ttl (G)<DD>
+这个选项通知<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)程序当它作为一个WINS服务器时(<I>wins support =true</I>),nmbd承认的最长NetBIOS名字生存时间('time to live',以秒计).你不需要去改变这个选项的,缺省值是6天(518400秒).
+<P>
+<P>
+参见 <I>min wins ttl</I> 选项.
+<P>
+<P>
+缺省设置: <B>max wins ttl = 518400</B>
+<P>
+<P>
+<DT>max xmit (G)<DD>
+这个选项控制通过samba的最大包容量.缺省值是65535,同时这也是最大值.有时你可能用一个较小的值可以得到更好的性能.不过低于2048通常会有一些问题.
+<P>
+<P>
+缺省设置: <B>max xmit = 65535</B>
+<P>
+<P>
+示例: <B>max xmit = 8192</B>
+<P>
+<P>
+<DT>message command (G)<DD>
+当服务器接收到一个WinPopup类似的信息时运行一个指定的命令.
+<P>
+<P>
+通常这个命令所做之事都取决于你的想象.
+<P>
+<P>
+例如:
+<P>
+<B>message command = csh -c 'xedit %s;rm %s' &amp;</B>
+<P>
+这个命令用<B>xedit</B>发出一条信息,然后再删除它.<B>注意很重要的一点是这个命令应该立即返回</B>.这就是为什么在行末用'&amp;'的原因.如果它没有立即返回的话,计算机可能会在发送信息时当掉的(不过一般都会在30秒后恢复).
+<P>
+<P>
+所有信息都被以全局访客用户身份发送.命令可以使用标准的替换符,不过<I>%u</I>将不会有效(在这里用<I>%U</I>可能更好).
+<P>
+<P>
+除了标准替换的部分,还可以应用一些附加的替换,比如:
+<P>
+<P>
+<I>%s</I> =包含消息的文件名
+<P>
+<I>%t</I> = 发送信息的目标(很可能是服务器名).
+<P>
+<I>%f</I> = 信息的来源.
+<P>
+你可以用这个命令来发送邮件或者你想要的内容.如果你有关于发送内容的好主意请通知开发人员.
+<P>
+<P>
+有个例子可以以邮件形式发送信息给root：
+<P>
+<P>
+<B>message command = /bin/mail -s 'message from %f on %m' root &lt; %s; rm %s</B>
+<P>
+<P>
+如果没有指定发送信息所用的命令,那么这个信息并不会被发出,同时Samba向发送者报告出错.不幸的是WfWg(Windows for Workgrups)完全忽略出错代码,提示信息已被发出.
+<P>
+<P>
+如果你想要悄悄地删掉它的话请用：
+<P>
+<P>
+<B>message command = rm %s</B>
+<P>
+<P>
+缺省设置: <B>没有 message command</B>
+<P>
+<P>
+示例: <B>message command = csh -c 'xedit %s; rm %s' &amp;</B>
+<P>
+<P>
+<DT>min passwd length (G)<DD>
+与 <I>min password length</I> 同义.
+<P>
+<P>
+<DT>min password length (G)<DD>
+此项设定当执行变更UNIX口令时<B>smbd</B>接受的明文口令的最小字符长度.
+<P>
+<P>
+参见 <I>unix password sync</I>, <I>passwd program</I>和 <I>passwd chat debug</I> 选项.
+<P>
+<P>
+缺省设置: <B>min password length = 5</B>
+<P>
+<P>
+<DT>min print space (S)<DD>
+此项设定一个用户假脱机打印作业必须的最小剩余磁盘空间.当然是用kB 为单位.缺省设为0,就是说用户总是可以假脱机打印作业.
+<P>
+<P>
+参见 <I>printing </I> 选项。
+<P>
+<P>
+缺省设置: <B>min print space = 0</B>
+<P>
+<P>
+示例: <B>min print space = 2000</B>
+<P>
+<P>
+<DT>min protocol (G)<DD>
+The value of the parameter (a string) is the lowest SMB protocol dialect than Samba will support. Please refer to the <I>max protocol</I> parameter for a list of valid protocol names and a brief description of each. You may also wish to refer to the C source code in <I>source/smbd/negprot.c</I> for a listing of known protocol dialects supported by clients.
+<P>
+<P>
+If you are viewing this parameter as a security measure, you should also refer to the <I>lanman auth</I> 选项。 Otherwise, you should never need to change this 选项。
+<P>
+<P>
+Default : <B>min protocol = CORE</B>
+<P>
+<P>
+Example : <B>min protocol = NT1</B> # disable DOS clients
+<P>
+<P>
+<DT>min wins ttl (G)<DD>
+此项通知<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8)当以WINS服务器的形式(<I>wins support = yes</I>)执行时,它所承认的NetBIOS名字的最小有效时间(以秒为单位).这个选项无需更改,缺省是6小时(21600秒)
+<P>
+<P>
+缺省设置: <B>min wins ttl = 21600</B>
+<P>
+<P>
+<DT>msdfs proxy (S)<DD>
+This parameter indicates that the share is a stand-in for another CIFS share whose location is specified by the value of the 选项。 When clients attempt to connect to this share, they are redirected to the proxied share using the SMB-Dfs protocol.
+<P>
+<P>
+Only Dfs roots can act as proxy shares. Take a look at the <I>msdfs root</I> and <I>host msdfs</I> options to find out how to set up a Dfs root share.
+<P>
+<P>
+示例: <B>msdfs proxy = \\otherserver\someshare</B>
+<P>
+<P>
+<DT>msdfs root (S)<DD>
+If set to <B>yes</B>, Samba treats the share as a Dfs root and allows clients to browse the distributed file system tree rooted at the share directory. Dfs links are specified in the share directory by symbolic links of the form <I>msdfs:serverA\\shareA,serverB\\shareB</I> and so on. For more information on setting up a Dfs tree on Samba, refer to ???.
+<P>
+<P>
+参见 <I>host msdfs</I>
+<P>
+<P>
+缺省设置: <B>msdfs root = no</B>
+<P>
+<P>
+<DT>name cache timeout (G)<DD>
+Specifies the number of seconds it takes before entries in samba's hostname resolve cache time out. If the timeout is set to 0. the caching is disabled.
+<P>
+<P>
+缺省设置: <B>name cache timeout = 660</B>
+<P>
+<P>
+示例: <B>name cache timeout = 0</B>
+<P>
+<P>
+<DT>name resolve order (G)<DD>
+samba套件中的一些程序使用此项来决定使用的名字服务以及解析主机名到IP地址的次序.主要目的是控制netbios名称怎样解析。此选项列出不同的名字解析选项，以空格为分隔符.
+<P>
+<P>
+这些名字解析选项是：&quot;lmhosts&quot;,&quot;host&quot;,&quot;wins&quot;和&quot;bcast&quot;.它们决定了名字解析是以如下方式的：
+<P>
+<P>
+<B>lmhosts</B> : 在samba的lmhosts文件中查找IP地址.如果lmhosts文件的内容行中没有名字类型附加在NetBIOS名上时(参见<B>lmhosts</B> (5)中的详细描述),任何类型的名字都可以匹配这个查询.
+<P>
+<B>host</B> : 执行标准的主机名到IP地址的解析操作,此操作会使用系统的<I>/etc/hosts</I>,NIS或者是DNS来查询.具体方法取决于操作系统,在IRIX和Solaris中解析名字的方法可能是由<I>/etc/nsswitch.conf</I>文件来控制的.注意此方法只适用于对被查询的NetBIOS名字类型为0x20(服务器)或者是0x1c(域控制器)时才有用,其它类型都会被忽略.后一种情况只在活动目录域中有用，返回一个匹配_ldap._tcp.domain 的SRV RR条目的DNS 查询。
+<P>
+<B>wins</B> : 向列在<I>wins server</I>选项中的服务器查询一个名字对应的IP地址.如果没有指定WINS服务器,那么此方法就被略过了.
+<P>
+<B>bcast</B> : 向在<I>interfaces</I>选项中列出的每一个已知本地网络接口进行广播来作查询.这是最不可信的名字解析方法,除非目标主机就在本地子网中.
+<P>
+缺省设置: <B>name resolve order = lmhosts host wins bcast</B>
+<P>
+<P>
+示例: <B>name resolve order = lmhosts bcast host</B>
+<P>
+<P>
+在上例中首先检查本地lmhosts文件,然后尝试广播,接下来就是用通常的系统主机名查询方式了. 
+<P>
+<P>
+When Samba is functioning in ADS security mode (<B>security = ads</B>) it is advised to use following settings for <I>name resolve order</I>:
+<P>
+<P>
+<B>name resolve order = wins bcast</B>
+<P>
+<P>
+DC lookups will still be done via DNS, but fallbacks to netbios names will not inundate your DNS servers with needless querys for DOMAIN&lt;0x1c&gt; lookups.
+<P>
+<P>
+<DT>netbios aliases (G)<DD>
+此项指定一串NetBIOS名字让nmbd作为附加的名字进行宣布.这样就使一个机器在可浏览列表中可以出现多个名字形式.如果主机是浏览服务器或登录服务器, 就不会出现这些附加的别名,而只会使用它的初始名字.
+<P>
+<P>
+参见 <I>netbios name</I> 选项。
+<P>
+<P>
+缺省设置: <B>空字符串 (没有附加的名字)</B>
+<P>
+<P>
+示例: <B>netbios aliases = TEST TEST1 TEST2</B>
+<P>
+<P>
+<DT>netbios name (G)<DD>
+此项对一已知的samba服务器设置它的NetBIOS名.缺省情况下会使用此主机DNS名字的主机名部分.如果这个服务器是作浏览服务器或登录服务器时(或是主机DNS名的第一个成分时),这个服务器名将成为这些服务对外宣布时所用的名字.
+<P>
+参见 <I>netbios aliases</I> 选项
+<P>
+<P>
+缺省设置: <B>machine DNS name</B>
+<P>
+<P>
+示例: <B>netbios name = MYNAME</B>
+<P>
+<P>
+<DT>netbios scope (G)<DD>
+This sets the NetBIOS scope that Samba will operate under. This should not be set unless every machine on your LAN also sets this value.
+<P>
+<P>
+<DT>nis homedir (G)<DD>
+此项从NIS映射表中取得有效共享服务器.对于用自动装载程序的UNIX系统来说,用户的主目录经常根据需要从远程服务器装载到一个需要的工作站上.
+<P>
+<P>
+如果samba登录服务器不是作为真正主目录服务器而是通过NFS来实现,却通知用户以SMB服务器来使用主目录时,用户装载主目录来进行访问需要两个网络跳步(一个以SMB方式,另一个以NFS方式装载).这样的使用方式是非常慢的.
+<P>
+<P>
+此选项允许当Samba在主目录服务器方式运行时让samba反馈目录服务器而非登录服务器上的主共享资源,这样samba用户可以直接从目录服务器上装载目录.当samba把目录共享资源反馈给用户,这时它会参考<I>homedir map</I>选项指定的NIS映射表然后再反馈表中列出的服务.
+<P>
+<P>
+注意要使此项起作用必须有一个运作中的NIS系统,并且samba服务器必须是一个登录服务器。
+<P>
+<P>
+缺省设置: <B>nis homedir = no</B>
+<P>
+<P>
+<DT>nt acl support (S)<DD>
+此布尔量选项控制是否让<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)尝试把UNIX权限映射到NT的访问控制列表.这个参数在2.2.2之前是一个全局选项。
+<P>
+<P>
+缺省设置: <B>nt acl support = yes</B>
+<P>
+<P>
+<DT>ntlm auth (G)<DD>
+This parameter determines whether or not <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) will attempt to authenticate users using the NTLM encrypted password response. If disabled, either the lanman password hash or an NTLMv2 response will need to be sent by the client.
+<P>
+<P>
+If this option, and <B>lanman auth</B> are both disabled, then only NTLMv2 logins will be permited. Not all clients support NTLMv2, and most will require special configuration to us it.
+<P>
+<P>
+Default : <B>ntlm auth = yes</B>
+<P>
+<P>
+<DT>nt pipe support (G)<DD>
+此布尔量选项控制是否让<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)允许Windows NT用户联接到NT的特殊SMB管道<B>IPC$</B>.这通常是开发者所用的调试项,其它用户可以不管.
+<P>
+<P>
+缺省设置: <B>nt pipe support = yes</B>
+<P>
+<P>
+<DT>nt status support (G)<DD>
+This boolean parameter controls whether <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) will negotiate NT specific status support with Windows NT/2k/XP clients. This is a developer debugging option and should be left alone. If this option is set to <B>no</B> then Samba offers exactly the same DOS error codes that versions prior to Samba 2.2.3 reported.
+<P>
+<P>
+You should not need to ever disable this 选项。
+<P>
+<P>
+缺省设置: <B>nt status support = yes</B>
+<P>
+<P>
+<DT>null passwords (G)<DD>
+Allow or disallow client access to accounts that have null passwords.
+允许或禁止用户以空口令使用账号.
+<P>
+参见<B><A HREF="/cgi-bin/man/man2html?5+smbpasswd">smbpasswd</A></B>(5).
+<P>
+<P>
+缺省设置: <B>null passwords = no</B>
+<P>
+<P>
+<DT>obey pam restrictions (G)<DD>
+When Samba 3.0 is configured to enable PAM support (i.e. --with-pam), this parameter will control whether or not Samba should obey PAM's account and session management directives. The default behavior is to use PAM for clear text authentication only and to ignore any account or session management. Note that Samba always ignores PAM for authentication in the case of <I>encrypt passwords = yes</I>. The reason is that PAM modules cannot support the challenge/response authentication mechanism needed in the presence of SMB password encryption.
+<P>
+<P>
+缺省设置: <B>obey pam restrictions = no</B>
+<P>
+<P>
+<DT>only guest (S)<DD>
+与 <I> guest only</I>同义.
+<P>
+<P>
+<DT>only user (S)<DD>
+此布尔量选项控制是否允许当前进行联接所用的用户名没有列在<I>user</I>列表中.缺省情况下此项是被禁止了,这样用户只要提供服务需要的用户名就可以了.设置这个选项将强制服务器使用<I>user</I>列表中的登录用户名，这只在共享级安全中有效。
+<P>
+<P>
+要注意的是上面的说法也表明了samba并不会从服务名而推演出相应的用户名.这样的话对于[homes]段就比较麻烦了.要避免麻烦的话需要用<B>user = %S</B>,这句就表明你的用户列表<I>user</I>正好就是这个服务资源名,这时的主目录名就是用户名.
+<P>
+<P>
+参见 <I>user</I> 选项。
+<P>
+<P>
+缺省设置: <B>only user = no</B>
+<P>
+<P>
+<DT>oplock break wait time (G)<DD>
+此项调整性的选项以适应在Windows 9x和WinNT中可能出现的错误.当用户发起一个会导致oplock暂停请求(oplock break request)的SMB对话时,如果samba对其响应太快的话,客户端将会失败并且不能响应此请求.这个可调整的选项(以毫秒为单位)是一个samba在向这样的客户发送oplock暂停请求前等待的时间量.
+<P>
+<P>
+<B>除非你理解了samba的oplock代码,否则不要改变这个选项！</B>
+<P>
+<P>
+缺省设置: <B>oplock break wait time = 0</B>
+<P>
+<P>
+<DT>oplock contention limit (S)<DD>
+这是个<B>非常</B>高级的<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)调整选项,用以改进在多个用户争夺相同文件时oplocks认可操作的效率.
+<P>
+简单地说，这个选项指定了一个数字,如果争夺相同文件的用户数量超过了此设定极限的话，即使有请求，<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)也不再认可oplock的操作了.这样的话<B>smbd</B>就象Windows NT一样的运行.
+<P>
+<P>
+<B>除非你理解了samba的oplock代码,否则不要改变这个选项! </B>
+<P>
+<P>
+缺省设置: <B>oplock contention limit = 2</B>
+<P>
+<P>
+<DT>oplocks (S)<DD>
+此布尔量通知<B>smbd</B>是否对当前请求的共享资源上的文件打开操作启用oplocks(机会性的锁定操作).oplock代码可以明显改善访问samba服务器文件的速度(approx.30% 甚至更多).它允许本地缓存文件,对于不可信赖的网络环境来说可能需要禁止掉这个选项(在Windows NT服务器上它是缺省打开的).请参考samba <I>docs/</I>目录下的<I>Speed.txt</I>文件.
+<P>
+<P>
+oplocks会有选择性地关闭每一个基本共享资源上的特定文件.参见<I> veto oplock files</I> 选项.在有些系统上会通过最底层的操作系统确认oplocks.这样就可以在所有的访问与oplocked文件中进行数据同步,而不管此访问是通过samba或NFS或者是本地的UNIX进程.参见<I>kernel oplocks</I>选项查看细节.
+<P>
+<P>
+参见 <I>kernel oplocks</I> 以及 <I> level2 oplocks</I> parameters.
+<P>
+<P>
+缺省设置: <B>oplocks = yes</B>
+<P>
+<P>
+<DT>os2 driver map (G)<DD>
+The parameter is used to define the absolute path to a file containing a mapping of Windows NT printer driver names to OS/2 printer driver names. The format is:
+<P>
+<P>
+&lt;nt driver name&gt; = &lt;os2 driver name&gt;.&lt;device name&gt;
+<P>
+<P>
+For example, a valid entry using the HP LaserJet 5 printer driver would appear as <B>HP LaserJet 5L = LASERJET.HP LaserJet 5L</B>.
+<P>
+<P>
+The need for the file is due to the printer driver namespace problem described in ???. For more details on OS/2 clients, please refer to ???.
+<P>
+<P>
+缺省设置: <B>os2 driver map = &lt;空字符串&gt;</B>
+<P>
+<P>
+<DT>os level (G)<DD>
+这个整数值控制在浏览器选举中Samba宣布它本身是什么系统级别. 此选项的值决定了<B>nmbd</B>(8是否有机会成为本地广播区域内工作组<I> WORKGROUP</I>中的主控浏览器.
+<P>
+<B>注意</B>: 默认情况下，Samba将在本地主控浏览器选举中超越所有M$操作系统并且获胜，除非还有Windows NT4.0/2000 域控制器。这意味着Samba主机的错误配置将使一个子网的浏览无效。参见Samba <I>docs/</I> 目录中的<I>BROWSING.txt </I>来获取详细信息。
+<P>
+<P>
+缺省设置: <B>os level = 20</B>
+<P>
+<P>
+示例: <B>os level = 65 </B>
+<P>
+<P>
+<DT>pam password change (G)<DD>
+With the addition of better PAM support in Samba 2.2, this parameter, it is possible to use PAM's password change control flag for Samba. If enabled, then PAM will be used for password changes when requested by an SMB client instead of the program listed in <I>passwd program</I>. It should be possible to enable this without changing your <I>passwd chat</I> parameter for most setups.
+<P>
+<P>
+缺省设置: <B>pam password change = no</B>
+<P>
+<P>
+<DT>panic action (G)<DD>
+此项是一个samba开发者使用的选项以允许当<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)或<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)程序崩溃时可以调用一个系统命令.通常这种功能被用于发出对问题的警告.
+<P>
+<P>
+缺省设置: <B>panic action = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>panic action = &quot;/bin/sleep 90000&quot;</B>
+<P>
+<P>
+<DT>paranoid server security (G)<DD>
+Some version of NT 4.x allow non-guest users with a bad passowrd. When this option is enabled, samba will not use a broken NT 4.x server as password server, but instead complain to the logs and exit.
+<P>
+<P>
+Disabling this option prevents Samba from making this check, which involves deliberatly attempting a bad logon to the remote server.
+<P>
+<P>
+缺省设置: <B>paranoid server security = yes</B>
+<P>
+<P>
+<DT>passdb backend (G)<DD>
+This option allows the administrator to chose which backends to retrieve and store passwords with. This allows (for example) both smbpasswd and tdbsam to be used without a recompile. Multiple backends can be specified, separated by spaces. The backends will be searched in the order they are specified. New users are always added to the first backend specified.
+<P>
+<P>
+This parameter is in two parts, the backend's name, and a 'location' string that has meaning only to that particular backed. These are separated by a : character.
+<P>
+<P>
+Available backends can include: .TP 3 &bull; <B>smbpasswd</B> - The default smbpasswd backend. Takes a path to the smbpasswd file as an optional argument. .TP &bull; <B>tdbsam</B> - The TDB based password storage backend. Takes a path to the TDB as an optional argument (defaults to passdb.tdb in the <I>private dir</I> directory. .TP &bull; <B>ldapsam</B> - The LDAP based passdb backend. Takes an LDAP URL as an optional argument (defaults to <B><A HREF="ldap://localhost">ldap://localhost</A></B>) LDAP connections should be secured where possible. This may be done using either Start-TLS (see <I>ldap ssl</I>) or by specifying <I>ldaps://</I> in the URL argument. .TP &bull; <B>nisplussam</B> - The NIS+ based passdb backend. Takes name NIS domain as an optional argument. Only works with sun NIS+ servers. .TP &bull; <B>mysql</B> - The MySQL based passdb backend. Takes an identifier as argument. Read the Samba HOWTO Collection for configuration details. .LP
+<P>
+<P>
+缺省设置: <B>passdb backend = smbpasswd</B>
+<P>
+<P>
+示例: <B>passdb backend = tdbsam:/etc/samba/private/passdb.tdb smbpasswd:/etc/samba/smbpasswd</B>
+<P>
+<P>
+示例: <B>passdb backend = ldapsam:<A HREF="ldaps://ldap.example.com">ldaps://ldap.example.com</A></B>
+<P>
+<P>
+示例: <B>passdb backend = mysql:my_plugin_args tdbsam</B>
+<P>
+<P>
+<DT>passwd chat (G)<DD>
+这个字串控制在<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)和本地口令更改程序间更用户口令时发生的<B>&quot;chat&quot;</B>对话.字符串描述一个应答接收对的序列,让<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)用于决定对<I>passwd program</I>发送并等待接收哪些具体的内容.如果没有收到预计的输出时不会更改口令.
+<P>
+<P>
+这个chat序列一般发生在特定的主机上，取决于本地口令控制的方法(就象NIS或者别的).
+<P>
+<P>
+注意这个选项仅仅在<I>unix password sync</I>选项设置为<B>yes</B>的时候有用。当smbpasswd文件中的SMB口令被更改时是<B>以root身份</B>运行的，不必输入旧密码文本. 这意味着root必须可以在不知道用户密码时重置他的密码。在NIS/YP 中这意味着passwd程序必须在NIS主控服务器上运行。
+<P>
+<P>
+这个字符串可以包含<I>%n</I>宏，用于替换新密码。chat序列还可以包含标准宏<B>\\n</B>, <B>\\r</B>, <B>\\t</B> 和<B>\\s</B> 来给出换行，回车，tab和空格。chat序列字符串还可以包含'*' 来匹配任何字符序列。双引号用来将带空格的字符串设为一个单独的字符串。
+<P>
+<P>
+如果在对话序列的任何部分发送的字符串为一个句号&quot;.&quot;,那么不会发送任何内容.同样,如果等待接收部分有字符串是一个&quot;.&quot;,那么不等待任何的内容.
+<P>
+<P>
+如果<I>pam password change</I>参数设置为<B>yes</B>，chat可以以任何顺序进行，没有特定的输出，是否成功可以由PAM结果得到。在PAM会话中宏\n被忽略。
+<P>
+<P>
+参见 <I>unix password sync</I>, <I> passwd program</I> , <I>passwd chat debug</I> 和 <I>pam password change</I>.
+<P>
+<P>
+缺省设置: <B>passwd chat = *new*password* %n\n *new*password* %n\n *changed*</B>
+<P>
+<P>
+示例: <B>passwd chat = &quot;*Enter OLD password*&quot; %o\n &quot;*Enter NEW password*&quot; %n\n &quot;*Reenter NEW password*&quot; %n\n &quot;*Password changed*&quot;</B>
+<P>
+<P>
+<DT>passwd chat debug (G)<DD>
+此布尔量指定口令对话脚本选项是否以 <B>debug</B>模式运行.在调试模式下,发送和接收的口令对话字符串会打印到<I>debug level</I>为100时的<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)记录文件中.由于在<B>smbd</B> 记录中允许使用明文口令,所以这是个危险的选项.不过这个选项可以帮助Samba管理员在调用<I>passwd program</I>设好的口令程序时调试其<I>passwd chat</I> 对话脚本,并且应该在完成以后把它关闭.这个选项在设置了<I>pam password change</I>选项时无效。缺省情况下这个选项是关闭的.
+<P>
+<P>
+参见 <I>passwd chat</I> , <I>pam password change</I> , <I>passwd program</I> .
+<P>
+<P>
+缺省设置: <B>passwd chat debug = no</B>
+<P>
+<P>
+<DT>passwd program (G)<DD>
+指定用于设定UNIX用户口令的程序名.出现<I>%u</I>的地方表示以用户名替换.在调用口令更改程序前会先检查用户名是否存在.
+<P>
+<P>
+需要注意的是很多口令程序强调口令要<B>合法</B>,例如应该有最小长度或者是字母与数字的混合.这可能在一些客户端(如WfWg)总将口令转为大写发送时,引起一些问题.
+<P>
+<P>
+<B>注意</B>如果把<I>unix password sync</I>选项设为<B>yes</B>的话,在改变smbpasswd文件中的SMB口令时是<B>以root身份</B>调用改口令程序的.如果口令更改失败的话,<B>smbd</B>对SMB口令的更改也会失败,这是设计时的机制.
+<P>
+<P>
+如果设定了<I>unix password sync</I>选项的话,指定口令程序时<B>必须使用所有</B>程序的绝对路径,必须检查安全问题.缺省的<I>unix password sync</I>选项值是 <B>no</B>.
+<P>
+<P>
+参见 <I>unix password sync</I>.
+<P>
+<P>
+缺省设置: <B>passwd program = /bin/passwd</B>
+<P>
+<P>
+示例: <B>passwd program = /sbin/npasswd %u</B>
+<P>
+<P>
+<DT>password level (G)<DD>
+在一些客户端/服务器群体中使用大小写混合口令存在着困难.其中比较麻烦的一类客户是WfWg,因为它在使用LANMAN1协议时出于某些理由而强调要使用大写口令.不过当使用COREPLUS时不要修改它!
+另外在Windows95/98 操作系统中会出问题: 即使选择了会话中的NTLM0.12协议，这些客户端也会将明文口令转为大写。
+<P>
+<P>
+此选项定义了口令字中大写字母的最大数量.
+<P>
+<P>
+例如,假定给出的口令是&quot;FRED&quot;.如果<I> password level</I>设为1的话,在&quot;FRED&quot;验证失败时会尝试以下的口令组合：
+<P>
+&quot;Fred&quot;, &quot;fred&quot;, &quot;fRed&quot;, &quot;frEd&quot;,&quot;freD&quot;
+<P>
+如果<I>password level</I>设为2的话,就会尝试下面的组合：
+<P>
+&quot;FRed&quot;, &quot;FrEd&quot;, &quot;FreD&quot;, &quot;fREd&quot;, &quot;fReD&quot;, &quot;frED&quot;, ..
+<P>
+等等。
+<P>
+<P>
+把此选项设成的值越高，相对单一大小写口令来说大小写混合的口令越容易匹配。.不过,要小心使用这个选项会降低安全性,同时增加处理新联接所花的时间量.
+<P>
+<P>
+如果把选项设为0时会使处理口令时只作两种尝试 - 先与给出的口令比较,再比较它的全部小写形式.
+<P>
+<P>
+缺省设置: <B>password level = 0</B>
+<P>
+<P>
+示例: <B>password level = 4</B>
+<P>
+<P>
+<DT>password server (G)<DD>
+通过在这里指定其它的SMB服务器或者活动目录域控制器,同时使用<B>security = [ads|domain|server]</B>,能把联接samba的用户名/口令合法性验证交给指定的远程服务器去干.
+<P>
+<P>
+此选项设定上面所说的其它口令服务器的名字或者IP地址. 新的语法允许在连接到ADS realm服务器时指定端口号。要指定默认的LDAP 389端口之外的号码，可以将端口号放在名字或ip后面，中间用一个冒号连接(比如说，192.168.1.100:389)。如果你不指定一个端口，Samba将使用标准的LDAP端口tcp/389. 注意端口号在WindowsNT4.0 域或者netbios连接的服务器上无效
+<P>
+如果参数是一个名称，它将使用 <I>name resolve order</I> 中指定的方式来解析。
+<P>
+<P>
+口令服务器应该是使用&quot;LM1.2X002&quot;或&quot;LM NT 0.12&quot;协议的主机,而且它本身必须使用用户级安全模式.
+<P>
+<P>
+注意：使用口令服务器表明你的UNIX主机(就是运行Samba的那台)就只与你指定的口令服务器具有相同的安全等级了.<B>在没有完全信任的情况下不要选择使用其它的口令服务器</B>.
+<P>
+<P>
+不要把口令服务指向Samba服务器本身,这产生一个循环而去查找你的Samba服务器,导致死锁.
+<P>
+<P>
+在指定口令服务器名时可以使用标准的替换符,而实际能用的可能只是<I>%m</I>这一个,这个替换符说明Samba服务器会用联入的客户作为口令服务器.如果这样用的话说明你非常信任你的客户,同时最好以主机允许策略对他们进行限制！
+<P>
+<P>
+如果把安全级<I>security</I>选项设为<B>domain</B>或者<B>ads</B>的话,指定的其它口令服务器必须是在这个Domain中的一个主域控制器或备份域控制器或者'*'.另外指定字符'*'的话就以samba服务器会在整个域中使用加密验证RPC调用来验证用户登录.使用<B> security = domain</B>的好处是,如果指定了几个<I>password server</I>时,<B>smbd </B>会对每一个进行尝试直到它收到回应,对于初始服务器当机时这就很有用了.
+<P>
+<P>
+如果<I>password server</I>选项设为字符'*'的话,samba将尝试通过查询<B>WORKGROUP&lt;1C&gt;</B>名字来自动查找主或者备份域控制器并联系经过名字解析得到的IP地址列表中的每个服务器来进行用户验证.
+<P>
+<P>
+如果服务器列表包含名字或IP同时也包含'*'时，列表将视为首选域控制器的列表，但是也会添加一个自动的对所有其余DC的查找。Samba不会通过定位最近的DC来优化这张列表。
+<P>
+<P>
+如果<I>security</I>是<B>server</B>的话,会有一些安全级为<B>security = domain</B>时所没有的限制：
+<P>
+<P>
+如果在<I>password server</I>选项中指定了几个口令服务器的话,<B>smbd</B>在联接具体的服务器时会失败,也不能验证任何的用户账号.这是安全级为<B>security = server </B>模式时SMB/CIFS协议的一个限制,并且Samba无法修改.
+<P>
+<P>
+如果把Windows NT服务器作为口令服务器,你必须确保用户可以从Samba服务器上进行登录.当使用<B> security = server</B>模式时,网络登录看起来是从那里处理的,而不是从用户工作站.
+<P>
+参见 <I>security </I> 选项。
+<P>
+<P>
+缺省设置: <B>password server = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>password server = NT-PDC, NT-BDC1, NT-BDC2, *</B>
+<P>
+<P>
+示例: <B>password server = windc.mydomain.com:389 192.168.1.101 *</B>
+<P>
+<P>
+示例: <B>password server = *</B>
+<P>
+<P>
+<DT>path (S)<DD>
+此项指定给出的服务项所用的系统路径.在服务项具有可打印属性时,打印假脱机数据会先存放在这个路径所指的位置中.
+This parameter specifies a directory to which the user of the service is to be given access. In the case of printable services, this is where print data will spool prior to being submitted to the host for printing.
+<P>
+<P>
+对于那些要对访客提供的可打印服务来说,服务项应该设为只读,而且路径应该设为全局可写属性并具有粘性(s)位.这当然不是强制性的,不过不这样做的话可能会无法得到你所希望的结果.
+<P>
+<P>
+路径出现<I>%u</I>的地方将以正处于联接状态的UNIX用户名来替换；同样出现<I>%m</I>的地方将以请求联接的主机NetBIOS名替换.在设定伪主目录时,这种替换项很有用的.
+<P>
+<P>
+所指定的路径都是基于根目录<I>root dir</I>(如果有的话)的.
+<P>
+<P>
+缺省设置: <B>无</B>
+<P>
+<P>
+示例: <B>path = /home/fred</B>
+<P>
+<P>
+<DT>pid directory (G)<DD>
+This option specifies the directory where pid files will be placed.
+<P>
+<P>
+缺省设置: <B>pid directory = ${prefix}/var/locks</B>
+<P>
+<P>
+示例: <B>pid directory = /var/run/</B>
+<P>
+<P>
+<DT>posix locking (S)<DD>
+The <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) daemon maintains an database of file locks obtained by SMB clients. The default behavior is to map this internal database to POSIX locks. This means that file locks obtained by SMB clients are consistent with those seen by POSIX compliant applications accessing the files via a non-SMB method (e.g. NFS or local file access). You should never need to disable this 选项。
+<P>
+<P>
+缺省设置: <B>posix locking = yes</B>
+<P>
+<P>
+<DT>postexec (S)<DD>
+此项指定在断开服务时运行的一个命令.它使用通常的替换项.此命令在一些系统中可能是以root身份来运行的.
+<P>
+<P>
+一个有趣的示例，用于卸载服务器资源：
+<P>
+<P>
+<B>postexec = /etc/umount /cdrom</B>
+<P>
+<P>
+参见 <I>preexec</I>.
+<P>
+<P>
+缺省设置: <B>无 (不执行命令)</B>
+<P>
+<P>
+示例: <B>postexec = echo <P>
+<P>
+<DT>preexec (S)<DD>
+此项指定在联接到服务时运行一个命令.通常这也可以用一些替换项.
+<P>
+<P>
+一个有趣的示例，在用户每一次登录时向对方发送一个欢迎信息：(一条格言？)
+<P>
+<P>
+preexec = csh -c 'echo <P>
+<P>
+当然,一段时间以后这类信息可能就比较讨厌了:-)
+<P>
+<P>
+参见 </B><I>preexec close</I> 和 <I>postexec </I>.
+<P>
+<P>
+缺省设置: <B>无 (不执行命令)</B>
+<P>
+<P>
+示例: <B>preexec = echo <P>
+<P>
+<DT>preexec close (S)<DD>
+此布尔量选项控制是否从</B><I>preexec </I>返回的非零代码会关闭所联接的服务.
+<P>
+<P>
+缺省设置: <B>preexec close = no</B>
+<P>
+<P>
+<DT>prefered master (G)<DD>
+这是为拼写错误准备的。请查看 <I> preferred master</I> :-)
+<P>
+<P>
+<DT>preferred master (G)<DD>
+此布尔量选项控制<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8)是否作为工作组里的首选主浏览器.
+<P>
+<P>
+如果设此选项为<B>yes</B>时,<B>nmbd</B>会在启动时强制进行一次选举,它有一些有利条件来赢得选举.推荐把此选项与<B> domain master = yes</B>联合使用,这样<B>nmbd</B>可以保证成为一个域浏览器.
+<P>
+<P>
+小心使用此项,因为如果在相同的子网内有多个主机(不管是Samba服务器，Windows95还是NT)参加选举的话,他们每个都会周期性不断地尝试成为本地主浏览器,这时会造成不必须的广播交通流量并降低浏览性能.
+<P>
+参见 <I>os level</I>.
+<P>
+<P>
+缺省设置: <B>preferred master = auto</B>
+<P>
+<P>
+<DT>preload (G)<DD>
+此选项定义了要自动加入到浏览列表的服务项清单.这对于homes和printers服务项非常有用,否则这些服务将是不可见的.
+<P>
+注意,如果你想加载printcap里所有的打印机,那么用<I>load printers</I>会更容易.
+<P>
+缺省设置: <B>no preloaded services</B>
+<P>
+<P>
+示例: <B>preload = fred lp colorlp</B>
+<P>
+<P>
+<DT>preload modules (G)<DD>
+This is a list of paths to modules that should be loaded into smbd before a client connects. This improves the speed of smbd when reacting to new connections somewhat.
+<P>
+<P>
+缺省设置: <B>preload modules = </B>
+<P>
+<P>
+示例: <B>preload modules = /usr/lib/samba/passdb/mysql.so+++ </B>
+<P>
+<P>
+<DT>preserve case (S)<DD>
+此项控制建立新的文件时取名是否使用用户传递的大小写,还是强制使用<I>default case </I>.
+<P>
+<P>
+缺省设置: <B>preserve case = yes</B>
+<P>
+<P>
+参见NAME MANGLING段中的完整讨论.
+<P>
+<DT>printable (S)<DD>
+如果此项设为<B>yes</B>,那么用户可以读写并发送打印缓存文件到服务项指定的目录中.
+<P>
+<P>
+注意一个可打印的服务<B>总是</B>允许通过缓存打印数据的方法向服务项路径中执行写操作(需要用户有可写权限).<I>read only</I>选项控制只允许不可打印地访问资源.
+<P>
+<P>
+缺省设置: <B>printable = no</B>
+<P>
+<P>
+<DT>printcap (G)<DD>
+与 <I> printcap name</I> 同义.
+<P>
+<P>
+<DT>printcap name (S)<DD>
+此项用于覆盖掉编译时产生的缺省printcap名(通常是<I>/etc/printcap</I>).参见[printers]段的讨论,它说明了为什么要这样做的理由.
+<P>
+To use the CUPS printing interface set <B>printcap name = cups </B>. This should be supplemented by an addtional setting printing = cups in the [global] section. <B>printcap name = cups</B> will use the &quot;dummy&quot; printcap created by CUPS, as specified in your CUPS configuration file.
+<P>
+<P>
+在可以用<B>lpstat</B>命令列出可用打印机的列表的System V系统上,可以用<B>printcap name = lpstat </B>来自动获得可用打印机列表.这对于配置samba时定义成SYSV的系统(这就包括了很多基于System V的系统)来说是缺省情况.如果在这些系统上设好<I>printcap name</I>为<I>lpstat</I>的话,samba就会执行<B>lpstat -v</B>并尝试分析输出信息以获得一份打印机列表.
+<P>
+通常最小的printcap文件看起来就象下面这样：
+<P>
+<PRE>
+print1|My Printer 1
+print2|My Printer 2
+print3|My Printer 3
+print4|My Printer 4
+print5|My Printer 5
+</PRE>
+
+<P>
+<P>
+我们看到'|'符号用来定义打印机的别名.第二个带有空格的别名其实是提示Samba它是注释.
+<P>
+<P>
+在AIX中默认的printcap文件名是<I>/etc/qconfig</I>. 如果在文件名中找到<I>qconfig</I>字样，Samba将假定文件是AIX 的<I>qconfig</I>格式。
+<P>
+缺省设置: <B>printcap name = /etc/printcap</B>
+<P>
+示例: <B>printcap name = /etc/myprintcap</B>
+<P>
+<P>
+<DT>print command (S)<DD>
+当一个打印作业完全缓冲到了服务项时,此项指定的命令就能过调用<B>system()</B>来处理那些缓存文件.通常我们指定典型的命令来发送缓存文件到主机的打印子系统,不过也不一定要这样.服务器不会删除那些缓存文件,所以你指定的任何命令都应当在处理完以后删除文件,否则的话就需要手工来删除旧的缓存文件了.
+<P>
+打印命令是一个简单的文本字符串。它可以在宏替换之后逐字传递给系统。
+<P>
+<P>
+%s, %f - 缓冲文件名路径
+<P>
+<P>
+%p - 适当的打印机名
+<P>
+<P>
+%J - 客户提交的作业名
+<P>
+<P>
+%c - 缓冲的作业需要打印的页数
+<P>
+%z -缓冲的打印作业的大小(以字节计)
+<P>
+<P>
+打印命令至少<B>必须</B>包含<I>%s</I>或<I>%f</I>替换符中的一个,而<I>%p</I>是个可选项.在提交打印作业时,如果不提供打印机名的话,<I>%p</I>替换符会从打印命令中删掉.
+<P>
+<P>
+如果在[global]段中指定了打印命令,它将被用于任何可打印性的服务项,而不再需要在它们之中单独指定了.
+<P>
+<P>
+如果既没有对可打印性服务项单独指定打印命令又没有指定一个全局的打印命令时,假脱机文件虽然会建立却不会被处理也不会被删除(这很重要哦).
+<P>
+<P>
+注意在某些UNIX上以<B>nobody</B>账号身份进行打印会导致失败.如果发生了这样的情况请建立一个单独的有打印权的访客账号并在[global]段里设置<I>guest account</I>选项.
+<P>
+<P>
+如果你明白命令是直接传递给shell的话，你可以组织非常复杂的打印命令.举例来说,下面的命令会记录一个打印作业,打印这个文件然后删掉它.注意这里的';'是shell脚本命令常用的分隔符.
+<P>
+<P>
+<B>print command = echo Printing %s &gt;&gt; /tmp/print.log; lpr -P %p %s; rm %s</B>
+<P>
+你可能必须根据平时在系统上打印文件的方式来改变这个命令.缺省情况下,此选项会根据<I>printing</I>选项的设定而变化.
+<P>
+缺省设置: 对于 <B>printing = BSD, AIX, QNX, LPRNG 或者 PLP :</B>
+<P>
+<P>
+<B>print command = lpr -r -P%p %s</B>
+<P>
+<P>
+对于 <B>printing = SYSV 或者 HPUX :</B>
+<P>
+<P>
+<B>print command = lp -c -d%p %s; rm %s</B>
+<P>
+<P>
+对于 <B>printing = SOFTQ :</B>
+<P>
+<P>
+<B>print command = lp -d%p -s %s; rm %s</B>
+<P>
+<P>
+对于 <B>printing = CUPS :</B>
+<P>
+如果Samba 编译时加入了libcups, 那么<I>printcap=cups</I>将使用CUPS API来提交作业等等。否则它用-oraw选项，使用SystemV命令来打印，也就是说它会用<B>lp -c -d%p -o raw; rm %s</B>.当<B>printing = cups</B>, 并且Samba编译时加入了libcups时，任何手工设置的打印命令将被忽略。
+<P>
+<P>
+示例: <B>print command = /usr/local/samba/bin/myprintscript %p %s</B>
+<P>
+<P>
+<DT>printer (S)<DD>
+与 <I> printer name</I> 同义。
+<P>
+<P>
+<DT>printer admin (S)<DD>
+This is a list of users that can do anything to printers via the remote administration interfaces offered by MS-RPC (usually using a NT workstation). Note that the root user always has admin rights.
+<P>
+<P>
+缺省设置: <B>printer admin = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>printer admin = admin, @staff</B>
+<P>
+<P>
+<DT>printer name (S)<DD>
+此选项指定可打印性服务项用来打印缓存作业数据的打印机.
+<P>
+如果在[global]段里指定了打印机名称,那么给出的打印机就用于任何可打印性服务项而不需个别的指定打印机名称了.
+<P>
+<P>
+缺省设置: <B>空 (在很多系统中可能是 lp</B> )
+<P>
+<P>
+示例: <B>printer name = laserwriter</B>
+<P>
+<P>
+<DT>printing (S)<DD>
+此选项控制系统上如何解释打印机状态信息,而如果在[global]段中定义，它也会影响<I>print command</I>,<I>lpq command</I>,<I>lppause command</I>,<I>lpresume command</I>和<I>lprm command</I>这些选项的缺省值
+<P>
+通常系统支持九种打印机风格,它们是<B>BSD</B>, <B>AIX</B>, <B>LPRNG</B>, <B>PLP</B>, <B>SYSV</B>, <B>HPUX</B>, <B>QNX</B>, <B>SOFTQ</B>,还有 <B>CUPS</B>
+<P>
+要在系统上查看使用了不同的选项后其它打印命令的缺省值,可以用<B><A HREF="/cgi-bin/man/man2html?1+testparm">testparm</A></B>(1)程序.
+<P>
+此项可以在每一台打印机上分别设置.
+<P>
+<P>
+参见[printers]段的讨论。
+<P>
+<P>
+<DT>print ok (S)<DD>
+与 <I>printable</I> 同义。
+<P>
+<DT>private dir (G)<DD>
+This parameters defines the directory smbd will use for storing such files as <I>smbpasswd</I> and <I>secrets.tdb</I>.
+<P>
+<P>
+Default :<B>private dir = ${prefix}/private</B>
+<P>
+<P>
+<DT>profile acls (S)<DD>
+This boolean parameter controls whether <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) This boolean parameter was added to fix the problems that people have been having with storing user profiles on Samba shares from Windows 2000 or Windows XP clients. New versions of Windows 2000 or Windows XP service packs do security ACL checking on the owner and ability to write of the profile directory stored on a local workstation when copied from a Samba share.
+<P>
+<P>
+When not in domain mode with winbindd then the security info copied onto the local workstation has no meaning to the logged in user (SID) on that workstation so the profile storing fails. Adding this parameter onto a share used for profile storage changes two things about the returned Windows ACL. Firstly it changes the owner and group owner of all reported files and directories to be BUILTIN\\Administrators, BUILTIN\\Users respectively (SIDs S-1-5-32-544, S-1-5-32-545). Secondly it adds an ACE entry of &quot;Full Control&quot; to the SID BUILTIN\\Users to every returned ACL. This will allow any Windows 2000 or XP workstation user to access the profile.
+<P>
+<P>
+Note that if you have multiple users logging on to a workstation then in order to prevent them from being able to access each others profiles you must remove the &quot;Bypass traverse checking&quot; advanced user right. This will prevent access to other users profile directories as the top level profile directory (named after the user) is created by the workstation profile code and has an ACL restricting entry to the directory tree to the owning user.
+<P>
+<P>
+缺省设置: <B>profile acls = no</B>
+<P>
+<P>
+<DT>protocol (G)<DD>
+与 <I>max protocol</I> 同义
+<P>
+<P>
+<DT>public (S)<DD>
+与 <I>guest ok</I> 同义
+<P>
+<P>
+<DT>queuepause command (S)<DD>
+定义服务器暂停打印队列时要执行的命令.
+<P>
+<P>
+此命令应该是个只用打印机名作为选项的程序或脚本,以便用来停止打印队列,使打印作业不再向打印机发送.
+<P>
+<P>
+此命令不支持Windows for Workgroups,但可以在Windows 95和NT的打印机窗口中发送.
+<P>
+此处用替换符<I>%p</I>可以替代打印机名称.否则这个名称将被放置在命令后面.
+<P>
+注意,在命令中使用绝对路径是个好习惯,因为不一定可以获得服务器的PATH变量.
+<P>
+<P>
+缺省设置: <B>依赖于 </B><I>printing</I> 选项的设置
+<P>
+<P>
+示例: <B>queuepause command = disable %p</B>
+<P>
+<P>
+<DT>queueresume command (S)<DD>
+定义服务器恢复暂停了的打印队列时要执行的命令.就是用于恢复因为上面的选项(<I> queuepause command</I>)而导致的结果的.
+<P>
+此命令应该是个只用打印机名作为选项的程序或脚本,以便用来恢复打印队列,使打印作业继续向打印机发送.
+<P>
+<P>
+此命令不支持Windows for Workgroups,但可以在Windows 95和NT的打印机窗口中发送.
+<P>
+此处用替换符<I>%p</I>可以替代打印机名称.否则这个名称将被放置在命令后面.
+<P>
+注意,在命令中使用绝对路径是个好习惯,因为不一定可以获得服务器的PATH变量.
+<P>
+<P>
+缺省设置: <B>依赖于 </B><I>printing</I> 选项的设置
+<P>
+示例: <B>queuepause command = enable %p</B>
+<P>
+<DT>read bmpx (G)<DD>
+此布尔量选项控制是否让<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)支持&quot;多工读块&quot;(Read Block Multiplex)的SMB.现在这种方式已经很少用了,所以缺省是<B>no</B>.一般你不需要设定此选项.
+<P>
+<P>
+缺省设置: <B>read bmpx = no</B>
+<P>
+<P>
+<DT>read list (S)<DD>
+此处给出对服务项有只读权限的用户清单.如果正在联接的用户属于此列表,那么他们将没有写权限,此时是不管<I>read only</I>选项是否设置的.此列表可以包括用在<I> invalid users</I> 选项中描述的语法定义的组名称.
+<P>
+<P>
+参见 <I> write list</I> 和 <I>invalid users</I> 选项。
+<P>
+<P>
+缺省设置: <B>read list = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>read list = mary, @students</B>
+<P>
+<P>
+<DT>read only (S)<DD>
+注意它与 <I>writeable</I> 反义.
+<P>
+如果这个参数是<B>yes</B>, 那么服务的用户不能建立或修改服务目录中的文件。
+<P>
+注意一个可打印的服务(<B>printable = yes</B>) 的目录<B> 总是</B> 可写的(需要用户可写权限)但是只能通过缓冲操作来写.
+<P>
+<P>
+缺省设置: <B>read only = yes</B>
+<P>
+<P>
+<DT>read raw (G)<DD>
+此选项控制着是否让服务器在传送数据到客户端时支持读取原始的SMB请求.
+<P>
+<P>
+如果允许,那么它会以65535 字节为单位来读取一个数据包的65535字节.这会带来较多的性能方面的好处.
+<P>
+<P>
+但是,有些客户端使用不正确的包容量(虽然是可允许的),或者它们不支持大容量包,所以对这些客户端你应该禁止这一选项.
+<P>
+通常将此选项作为一种系统调试工具,而且严格来说不应修改.参见<I>write raw</I>选项.
+<P>
+<P>
+缺省设置: <B>read raw = yes</B>
+<P>
+<P>
+<DT>read size (G)<DD>
+此项影响着磁盘读/写与网络读/写的轮流交替.如果在若干个SMB命令(通常是SMBwrite,SMBwriteX和SMBreadbraw)中传送的数据量超过此项设定的值时,服务器开始就会在从网络接收整个数据包之前进行写操作；在执行SMBreadbraw的情况下,服务器在从磁盘上读出所有数据之前就开始向网络中写数据.
+<P>
+<P>
+在磁盘与网络的访问速度相近时,这种交迭式的工作就会做得非常好,不过当其中一类设备的速度大大高于另一类时,它只会有那么一点点效果.
+<P>
+缺省的值是16384,但没有做过测试最优值的实验。根据已经了解的情况来看,在使用不同的系统时,最优化值的差别很大.一个大于65536的值是没有任何意义的,它只会造成不必要的内存分配.
+<P>
+<P>
+缺省设置: <B>read size = 16384</B>
+<P>
+<P>
+示例: <B>read size = 8192</B>
+<P>
+<P>
+<DT>realm (G)<DD>
+This option specifies the kerberos realm to use. The realm is used as the ADS equivalent of the NT4 <B>domain</B>. It is usually set to the DNS name of the kerberos server.
+<P>
+<P>
+缺省设置: <B>realm = </B>
+<P>
+<P>
+示例: <B>realm = mysambabox.mycompany.com</B>
+<P>
+<P>
+<DT>remote announce (G)<DD>
+此项允许你设置<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8)周期性地向任意工作组的任意IP地址申明自己的存在.
+<P>
+<P>
+如果你要samba服务器处在一个通常浏览传播规则没有正常工作的远程工作组里时,用此项就很有用了.此远程工作组可以位于IP包到得到的任何地方.
+<P>
+<P>
+例如: 
+<P>
+<B>remote announce = 192.168.2.255/SERVERS 192.168.4.255/STAFF</B>
+<P>
+以上这行说明<B>nmbd</B> 对两个给出的使用工作组名的IP地址进行申明.如果你只用了IP地址的话,那么会用<I>workgroup</I>选项里给出的工作组名来替代.
+<P>
+你选用的IP地址通常应该是远程网络的广播地址,不过也可以用配置稳定的网络中的已知主浏览器IP地址.
+<P>
+<P>
+缺省设置: <B>remote announce = &lt;空字符串&gt;</B>
+<P>
+<P>
+<DT>remote browse sync (G)<DD>
+此项允许你设定<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8)周期性地同步位于远程(remote segment)的Samba主浏览器上的浏览列表.同时也允许你收集位于具有交叉路由子网中主浏览器上的浏览列表.这是以一种和其他非Samba的服务器不兼容的方式进行的。
+<P>
+<P>
+This is useful if you want your Samba server and all local clients to appear in a remote workgroup for which the normal browse propagation rules don't work. The remote workgroup can be anywhere that you can send IP packets to.
+<P>
+<P>
+例如: 
+<P>
+<B>remote browse sync = 192.168.2.255 192.168.4.255</B>
+<P>
+<P>
+以上行会使<B>nmbd</B>向位于指定子网或地址中的主浏览器请求同步他们本地服务器中的浏览列表
+<P>
+<P>
+你选用的IP地址通常应该是远程网络的广播地址,不过也可以用配置非常稳定的网络中的已知主浏览器IP地址.如果给出一个主机的IP地址,或者主控浏览器事实上在自己的网段中, samba就<B>不</B>验证远程主机是否有效、是否正在侦听了。
+<P>
+<P>
+缺省设置: <B>remote browse sync = &lt;空字符串&gt;</B>
+<P>
+<P>
+<DT>restrict anonymous (G)<DD>
+这个选项限制了是否在匿名连接中返回用户和组列表信息，仿照了Windows2000 和NT在注册表键值<B>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA\RestrictAnonymous</B> 中的做法。设置为0的时候，任何请求都返回用户和组列表。设置为1的时候，只有认证的用户可以获得用户和组列表。设置为2的时候，只有Windows2000/XP和Samba支持，不允许匿名连接。这样做会阻止需要匿名操作的M$或第三方程序运行。
+<P>
+The security advantage of using restrict anonymous = 1 is dubious, as user and group list information can be obtained using other means.
+<P>
+The security advantage of using restrict anonymous = 2 is removed by setting <I>guest ok</I> = yes on any share.
+<P>
+缺省设置: <B>restrict anonymous = 0</B>
+<P>
+<P>
+<DT>root (G)<DD>
+与 <I>root directory&quot;</I> 同义
+<P>
+<P>
+<DT>root dir (G)<DD>
+与 <I>root directory&quot;</I> 同义.
+<P>
+<P>
+<DT>root directory (G)<DD>
+服务器将在启动时对此项所设之目录进行<B>chroot()</B>(也就是改变根目录) 操作.对于安全操作来说,这并不是十分必要的.如果没有这步操作,服务器会拒绝对服务项以外的文件进行访问.同时也检查并拒绝那些文件系统其它部分的软链接或者尝试在其它目录(取决于选项<I>wide links</I>的设置情况)中使用&quot;..&quot;这些操作.
+<P>
+<P>
+加入一个<I>root directory</I>,注意不是实际的&quot;/&quot;目录,可以增加额外的安全级别,但是代价就高了.这样完全确保了所指定的<I>root directory</I>及所属子目录外的文件都是不能访问的,<B>包括</B>服务器正常运行时所需的一些文件也是如此.因此要想维护服务器整体的可操作性,你需要镜像一些系统文件到所指定的<I>root directory</I>下.特别是要镜像 <I>/etc/passwd</I>文件或此文件的子集,如果需要的话,任何打印操作要用到的二进制文件或配置文件也要镜像.当然,应该由操作系统决定必须被镜像的文件集合.
+<P>
+缺省设置: <B>root directory = /</B>
+<P>
+<P>
+示例: <B>root directory = /homes/smb</B>
+<P>
+<P>
+<DT>root postexec (S)<DD>
+此项与 <I>postexec</I>选项含义相同,只是以root身份来运行命令而已.在一次联接关闭之后对文件系统,特别是光盘驱动器进行卸载是非常有用的.
+<P>
+<P>
+参见 <I> postexec</I>.
+<P>
+<P>
+缺省设置: <B>root postexec = &lt;空字符串&gt;</B>
+<P>
+<P>
+<DT>root preexec (S)<DD>
+此项与 <I>preexec</I>选项含义相同,只是以root身份来运行命令而已.在一次联接稳定建立之后装载文件系统,特别是光盘驱动器是非常有用的.
+<P>
+<P>
+参见 <I> preexec</I> 和 <I>preexec close</I> 选项.
+<P>
+<P>
+缺省设置: <B>root preexec = &lt;空字符串&gt;</B>
+<P>
+<P>
+<DT>root preexec close (S)<DD>
+此项与<I>preexec close </I>选项含义相同,只是以root身份来运行命令而已.
+<P>
+<P>
+参见 <I> preexec</I> 和<I>preexec close</I>.
+<P>
+<P>
+缺省设置: <B>root preexec close = no</B>
+<P>
+<P>
+<DT>security (G)<DD>
+此项是<I>smb.conf</I>文件中最重要的一个设定之一,它影响了客户是如何应答Samba服务器的.
+<P>
+这个选项设置了"安全模式位"用于答复协议协商以使<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) 调整共享安全级是开或者关.客户端根据此位决定是否(以及如何)向服务器传送用户和口令信息.
+<P>
+缺省值是<B>security = user</B>,这也是在Windows 98和Windows NT环境中最常用的设定.
+<P>
+可选的值 <B>security = share</B>, <B>security = server</B> 或者<B>security = domain </B>.
+<P>
+<P>
+<BR>&nbsp;2.0.0版本之前的Samba中,缺省值是&nbsp;<B>security&nbsp;=&nbsp;share</B>&nbsp;主要因为当时只有这一个值可选。
+<P>
+在WfWg里有一个错误,当在使用用户和服务器安全级时,WfWg客户将会完全忽略你在&quot;connect 
+drive&quot;对话框里键入的口令.这就使除了在WfWg里已登录的用户以外的任何人要联接Samba服务项变得非常困难.
+<P>
+<P>
+如果你的主机使用与UNIX主机上相同的用户名时,就应当使用<B>security = user</B>.如果你用的用户名通常在UNIX上不存在时就应该用<B>security = share</B>.
+<P>
+如果你想设置共享而不用口令的话(访客级共享)也应该用<B>security=share</B>.这通常用于提供共享打印的服务器.在<B>security=user</B>里设定guest帐户非常困难,详细的情况请参见<I>map to guest</I>选项.
+<P>
+<B>smbd</B>可能会使用一种<B>混杂模式(hybrid)</B>,这样就可以在不同的<I>NetBIOS aliases</I>下提供用户和共享级的安全特性.
+<P>
+现在解释各个不同的设定.
+<P>
+<P>
+<B>SECURITY = SHARE</B>
+<P>
+当客户联接到一个共享安全级的服务器,在联接共享资源之前无需用一个合法的用户名和口令登录到服务器(虽然现在的客户端象WIN95/95及NT在与<B>security = share </B>的服务器交谈时都会以用户名发送一个登录请求,但却没有带口令).相反,客户端会在每一个共享上发送认证信息(口令)以尝试联接到这个共享项.
+<P>
+注意 <B>smbd</B> <B>总是</B> 用合法的UNIX用户代表客户进行操作, 即使是在 <B>security = share</B> 的时候.
+<P>
+<P>
+因为在共享安全级中,客户无需向服务器发送用户名,所以<B>smbd</B>用一些技术来为客户决定正确的UNIX用户账号.
+<P>
+用于匹配给出客户口令的可能的UNIX用户名列表可以用以下方法建立：
+<P>
+如果设置了<I>guest only</I>选项,则跳过所有其它步骤只检查<I>guest account</I>用户名.
+<P>
+如果通过共享连接请求发送一个用户名,则此用户名(映射后 - 参见<I>username map</I>)被作为潜在用户名加入.
+<P>
+如果客户使用一个先前的 <B>logon </B> 请求(SessionSetup SMB调用)则在SMB中发送的用户名将作为潜在用户名加入.
+<P>
+客户请求的服务项名被作为潜在用户名加入.
+<P>
+客户的NetBIOS名被作为潜在用户名加入到列表中.
+<P>
+在<I>user</I>列表中的任何用户都被作为潜在用户名加入.
+<P>
+如果未设<I>guest only</I>选项,则使用提供的口令来尝试此列表.对于匹配到口令的第一个用户将作为UNIX用户身份使用.
+<P>
+如果设置了<I>guest only</I>选项或未检测到用户名,则如果共享项中标志为可以使用<I>guest account</I>,那么使用此访客用户账号,否则拒绝访问.
+<P>
+注意,在共享安全级中关于哪个UNIX用户名最后将在允许访问中使用<B>非常</B>混淆.
+<P>
+参见NOTE ABOUT USERNAME/PASSWORD VALIDATION段.
+<P>
+<P>
+<B>SECURITY = USER</B>
+这是samba2.0/3.0缺省安全级设置.对于用户安全级,一个客户必须先以合法的用户名和口令(也可以用<I>username map</I>选项进程映射)"登录".在此安全模式中也可使用加密口令(参见<I>encrypted passwords</I>选项).如果设置了如<I>user</I>和<I>guest only</I>这样的选项,则它们会被应用并且在此连接上更改UNIX用户账号,但只能在用户账号被成功验证之后才行.
+<P>
+<B>注意</B>,当服务器成功验证客户身份之前,请求的资源名称是<B>不</B>发送到服务器上的.这就是为什么用户安全级中在没有允许服务器自动把未知用户映射为<I>guest account</I>的情况下,访客共享无法工作.参见<I>map to guest</I>选项获得完成映射的细节.
+<P>
+<P>
+参见NOTE ABOUT USERNAME/PASSWORD VALIDATION段.
+<P>
+<P>
+<B>SECURITY = DOMAIN</B>
+<P>
+<P>
+只有已经用 <B><A HREF="/cgi-bin/man/man2html?8+net">net</A></B>(8)把服务器添加进一个Windows NT的域中,此安全模式才能正常工作.它要求<I>encrypted passwords</I>选项设为<B>yes</B>.在此模式中Samba将试图把用户名/口令传送到一个WindowsNT主域或备份域控制器进行验证像一台真正的WindowsNT服务器那样。
+<P>
+<B>注意</B>,仍然需要存在一个和域控制器上的用户名一致的有效的UNIX用户，来使Samba拥有一个有效的UNIX帐户来映射存取文件操作。
+<P>
+<B>注意</B>,对于客户端来说,<I>security=domain</I>模式与<I>security=user</I>是一样的.它只影响
+服务器处理验证工作的方式.对于客户端无任何影响.
+<P>
+<B>注意</B>,当服务器成功验证客户身份之前,请求的资源名称是不发送到服务器上的.这就是为什么域安全级中在没有允许服务器自动把未知用户映射为<B>guest account</B>的情况下,访客共享无法工作.参见<I>map to guest</I>选项获得完成映射的细节
+<P>
+参见 NOTE ABOUT USERNAME/PASSWORD VALIDATION 段.
+<P>
+<P>
+参见 <I>password server</I> parameter 和 <I>encrypted passwords</I> 选项。
+<P>
+<P>
+<B>SECURITY = SERVER</B>
+<P>
+在此模式中Samba将试图把用户名/口令传送到其它SMB服务器,比如一台NT服务器,进行验证.如果验证失败则回到<B>security = user</B>模式,它需要<I>encrypted passwords</I> 参数设置为<B>yes</B>，除非远端系统不支持它们。但是要注意，如果使用了加密口令的话,samba不会再去检查UNIX系统口令文件的,它必须有一个合法的<I>smbpasswd</I>文件以再次检查用户账号.参见Samba HOWTO Collection 中关于User Database 的章节来获得如何设置的信息。
+<P>
+This mode of operation has significant pitfalls, due to the fact that is activly initiates a man-in-the-middle attack on the remote SMB server. In particular, this mode of operation can cause significant resource consuption on the PDC, as it must maintain an active connection for the duration of the user's session. Furthermore, if this connection is lost, there is no way to reestablish it, and futher authenticaions to the Samba server may fail. (From a single client, till it disconnects).
+<P>
+<B>注意</B>,对于客户端来说,<B>security=server</B>模式与<B>security=user</B>是一样的.它只影响服务器处理验证工作的方式.对于客户端无任何影响.
+<P>
+<B>注意</B>,当服务器成功验证客户身份之前,请求的资源名称是<B>不</B>发送到服务器上的.这就是为什么服务器安全级中在没有允许服务器自动把未知用户映射为<I>guest account</I>的情况下,访客共享无法工作.参见 <I>map to guest</I>选项获得完成映射的细节.
+<P>
+<P>
+参见 NOTE ABOUT USERNAME/PASSWORD VALIDATION 段.
+<P>
+<P>
+参见 <I>password server</I> parameter 和 <I>encrypted passwords</I> 选项。
+<P>
+<P>
+<B>SECURITY = ADS</B>
+<P>
+<P>
+In this mode, Samba will act as a domain member in an ADS realm. To operate in this mode, the machine running Samba will need to have Kerberos installed and configured and Samba will need to be joined to the ADS realm using the net utility.
+<P>
+<P>
+Note that this mode does NOT make Samba operate as a Active Directory Domain Controller.
+<P>
+<P>
+Read the chapter about Domain Membership in the HOWTO for details.
+<P>
+<P>
+参见 <I>ads server </I> parameter, the <I>realm </I> paramter 和<I>encrypted passwords</I> 选项。
+<P>
+<P>
+缺省设置: <B>security = USER</B>
+<P>
+<P>
+示例: <B>security = DOMAIN</B>
+<P>
+<P>
+<DT>security mask (S)<DD>
+此选项控制NT客户用本地NT安全对话框操作UNIX权限时对权限所作的修改情况.
+This parameter controls what UNIX permission bits can be modified when a Windows NT client is manipulating the UNIX permission on a file using the native NT security dialog box.
+<P>
+此选项用掩码值'与'实现对权限位的更改,从而防止修改未出现在此掩码中的任何位.可以将掩码中的0看作用户无权更改的位值.
+This parameter is applied as a mask (AND'ed with) to the changed permission bits, thus preventing any bits not in this mask from being modified. Essentially, zero bits in this mask may be treated as a set of bits the user is not allowed to change.
+<P>
+如未明确设定此选项,则把此选项设为0777，允许用户修改文件的所有user/group/world这些权限.
+<P>
+<B>注意</B>,可通过其它手段访问到Samba服务器的用户可以轻而易举地绕过此限制,所以此选项只对独立的服务器系统有用.多数普通系统的管理员可以将它保留为<B>0777</B>.
+<P>
+参见 <I>force directory security mode</I>, <I>directory security mask</I>, <I>force security mode</I> 选项.
+<P>
+<P>
+缺省设置: <B>security mask = 0777</B>
+<P>
+<P>
+示例: <B>security mask = 0770</B>
+<P>
+<P>
+<DT>server schannel (G)<DD>
+This controls whether the server offers or even demands the use of the netlogon schannel. <I>server schannel = no</I> does not offer the schannel, <I>server schannel = auto</I> offers the schannel but does not enforce it, and <I>server schannel = yes</I> denies access if the client is not able to speak netlogon schannel. This is only the case for Windows NT4 before SP4.
+<P>
+<P>
+Please note that with this set to <I>no</I> you will have to apply the WindowsXP requireSignOrSeal-Registry patch found in the docs/Registry subdirectory.
+<P>
+<P>
+缺省设置: <B>server schannel = auto</B>
+<P>
+<P>
+示例: <B>server schannel = yes</B>
+<P>
+<P>
+<DT>server signing (G)<DD>
+This controls whether the server offers or requires the client it talks to to use SMB signing. Possible values are <B>auto</B>, <B>mandatory</B> and <B>disabled</B>.
+<P>
+<P>
+When set to auto, SMB signing is offered, but not enforced. When set to mandatory, SMB signing is required and if set to disabled, SMB signing is not offered either.
+<P>
+<P>
+缺省设置: <B>client signing = False</B>
+<P>
+<P>
+<DT>server string (G)<DD>
+此选项在打印管理器中的打印机信息对话框以及在<B>net view</B>(网上邻居)的IPC连接中显示的服务器信息.它可以是任何你希望向用户显示的字串.
+<P>
+它还设置显示在浏览列表中主机名后的内容.
+<P>
+<I>%v</I> 将替换为Samba版本号
+<P>
+<P>
+<I>%h</I> 将替换为主机名
+<P>
+<P>
+缺省设置: <B>server string = Samba %v</B>
+<P>
+<P>
+示例: <B>server string = University of GNUs Samba Server</B>
+<P>
+<P>
+<DT>set directory (S)<DD>
+如果 <B>set directory = no</B>，则使用服务的用户不能用setdir命令更变目录.
+<P>
+<B>setdir</B>命令只在Digital Pathworks客户端中实现.参见Pathworks文档的细节.
+<P>
+<P>
+缺省设置: <B>set directory = no</B>
+<P>
+<P>
+<DT>set primary group script (G)<DD>
+Thanks to the Posix subsystem in NT a Windows User has a primary group in addition to the auxiliary groups. This script sets the primary group in the unix userdatase when an administrator sets the primary group from the windows user manager or when fetching a SAM with <B>net rpc vampire</B>. <I>%u</I> will be replaced with the user whose primary group is to be set. <I>%g</I> will be replaced with the group to set.
+<P>
+<P>
+缺省设置: <B>No default value</B>
+<P>
+<P>
+示例: <B>set primary group script = /usr/sbin/usermod -g '%g' '%u'</B>
+<P>
+<P>
+<DT>set quota command (G)<DD>
+The <B>set quota command</B> should only be used whenever there is no operating system API available from the OS that samba can use.
+<P>
+<P>
+This parameter should specify the path to a script that can set quota for the specified arguments.
+<P>
+<P>
+The specified script should take the following arguments:
+<P>
+<P>
+1 - quota type .TP 3 &bull; 1 - user quotas .TP &bull; 2 - user default quotas (uid = -1) .TP &bull; 3 - group quotas .TP &bull; 4 - group default quotas (gid = -1) .LP
+<P>
+2 - id (uid for user, gid for group, -1 if N/A)
+<P>
+3 - quota state (0 = disable, 1 = enable, 2 = enable and enforce)
+<P>
+4 - block softlimit
+<P>
+5 - block hardlimit
+<P>
+6 - inode softlimit
+<P>
+7 - inode hardlimit
+<P>
+8(optional) - block size, defaults to 1024
+<P>
+The script should output at least one line of data.
+<P>
+<P>
+参见 <I>get quota command</I> 选项。
+<P>
+<P>
+缺省设置: <B>set quota command = </B>
+<P>
+<P>
+示例: <B>set quota command = /usr/local/sbin/set_quota</B>
+<P>
+<P>
+<DT>share modes (S)<DD>
+此选项在一个文件打开时允许或禁止<I>share modes</I>.此模式可用于使客户获得对一个文件独占的读或写访问.
+<P>
+这些打开模式UNIX是不直接支持的,所以要用共享内存或在UNIX不支持共享内存时(一般都支持)用锁定文件来模拟.
+<P>
+<P>
+允许共享模式的选项是<B>DENY_DOS</B>, <B>DENY_ALL</B>, <B>DENY_READ</B>,<B>DENY_WRITE</B>, <B>DENY_NONE</B> 和<B>DENY_FCB</B>.
+<P>
+<P>
+缺省情况下此选项提供了完全的共享兼容和许可.
+<P>
+<P>
+你 <B>不应</B> 把此选项关闭因为很多Windows应用会因此停止运行。
+<P>
+<P>
+缺省设置: <B>share modes = yes</B>
+<P>
+<P>
+<DT>short preserve case (S)<DD>
+此布尔值选项控制着如果新文件符合8.3文件名格式(所有字母都为大写且长度适当),则以大写字母建立文件，否则就转换为<I>default case </I>.此选项可与<B>preserve case = yes</B>选项联用,以允许长文件名保留大小写，同时短文件名转换为小写。
+<P>
+参见 NAME MANGLING 段.
+<P>
+<P>
+缺省设置: <B>short preserve case = yes</B>
+<P>
+<P>
+<DT>show add printer wizard (G)<DD>
+With the introduction of MS-RPC based printing support for Windows NT/2000 client in Samba 2.2, a &quot;Printers...&quot; folder will appear on Samba hosts in the share listing. Normally this folder will contain an icon for the MS Add Printer Wizard (APW). However, it is possible to disable this feature regardless of the level of privilege of the connected user.
+<P>
+<P>
+Under normal circumstances, the Windows NT/2000 client will open a handle on the printer server with OpenPrinterEx() asking for Administrator privileges. If the user does not have administrative access on the print server (i.e is not root or a member of the <I>printer admin</I> group), the OpenPrinterEx() call fails and the client makes another open call with a request for a lower privilege level. This should succeed, however the APW icon will not be displayed.
+<P>
+<P>
+Disabling the <I>show add printer wizard</I> parameter will always cause the OpenPrinterEx() on the server to fail. Thus the APW icon will never be displayed. <B> Note :</B>This does not prevent the same user from having administrative privilege on an individual printer.
+<P>
+<P>
+参见 <I>addprinter command</I>, <I>deleteprinter command</I>, <I>printer admin</I>
+<P>
+<P>
+Default :<B>show add printer wizard = yes</B>
+<P>
+<P>
+<DT>shutdown script (G)<DD>
+<B>This parameter only exists in the HEAD cvs branch</B> This a full path name to a script called by <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) that should start a shutdown procedure.
+<P>
+<P>
+This command will be run as the user connected to the server.
+<P>
+<P>
+%m %t %r %f parameters are expanded:
+<P>
+<P>
+<I>%m</I> will be substituted with the shutdown message sent to the server.
+<P>
+<I>%t</I> will be substituted with the number of seconds to wait before effectively starting the shutdown procedure.
+<P>
+<I>%r</I> will be substituted with the switch <B>-r</B>. It means reboot after shutdown for NT.
+<P>
+<I>%f</I> will be substituted with the switch <B>-f</B>. It means force the shutdown even if applications do not respond for NT.
+<P>
+缺省设置: <B>None</B>.
+<P>
+<P>
+示例: <B>shutdown script = /usr/local/samba/sbin/shutdown %m %t %r %f</B>
+<P>
+<P>
+Shutdown script example:
+<PRE>
+
+#!/bin/bash
+                
+$time=0
+let &quot;time/60&quot;
+let &quot;time++&quot;
+
+/sbin/shutdown $3 $4 +$time $1 &amp;
+</PRE>
+
+<P>
+Shutdown does not return so we need to launch it in background.
+<P>
+<P>
+参见 <I>abort shutdown script</I>.
+<P>
+<P>
+<DT>smb passwd file (G)<DD>
+此选项设置加密口令文件smbpasswd的路径.缺省路径在编译samba时指定.
+<P>
+<P>
+缺省设置: <B>smb passwd file = ${prefix}/private/smbpasswd</B>
+<P>
+<P>
+示例: <B>smb passwd file = /etc/samba/smbpasswd</B>
+<P>
+<P>
+<DT>smb ports (G)<DD>
+Specifies which ports the server should listen on for SMB traffic.
+<P>
+<P>
+缺省设置: <B>smb ports = 445 139</B>
+<P>
+<P>
+<DT>socket address (G)<DD>
+此选项允许你控制samba监听连接所用的地址.它用于在一个服务器上支持多个配置不同的虚拟接口.缺省情况下samba会在任何地址上都接受连接请求.
+<P>
+<P>
+By default Samba will accept connections on any address.
+<P>
+<P>
+示例: <B>socket address = 192.168.2.20</B>
+<P>
+<P>
+<DT>socket options (G)<DD>
+此选项设置用于与客户端交谈的套接字选项.
+<P>
+套接字选项是使用在允许调整连接的操作系统的网络层的控制命令.
+<P>
+此选项通常用于在局域网上优化调整samba服务器的性能.因为samba无法知道与你的网络所对应的优化选项,所以你必须自己进行试验并作出选择.我们强烈推荐你先阅读与你的操作系统有关的相应文件(也许<B>man setsockopt</B>会有帮助).
+<P>
+你可能会发现在有些系统上samba会在你使用一个选项时发出&quot;Unknown socket option&quot;的信息.这就说明你没有正确拼写或者需要为操作系统添加一个包含文件到includes.h中.如有后面指出的问题请写信到<A HREF="mailto:samba-bugs@samba.org">samba-bugs@samba.org</A>.
+<P>
+只要操作系统允许,你可以以任何方法组合任何所支持的套接字选项.
+<P>
+当前可用于此选项的可设置套接字选项列表有：
+<P>
+SO_KEEPALIVE
+<P>
+SO_REUSEADDR
+<P>
+SO_BROADCAST
+<P>
+TCP_NODELAY
+<P>
+IPTOS_LOWDELAY
+<P>
+IPTOS_THROUGHPUT
+<P>
+SO_SNDBUF *
+<P>
+SO_RCVBUF *
+<P>
+SO_SNDLOWAT *
+<P>
+SO_RCVLOWAT *
+<P>
+标有<B>'*'</B>的要使用一个整数参数.其它的有时使用1或0代表允许或禁止该选项,如未指定1或0则缺省值都为允许.
+<P>
+要指定一个变量，用&quot;SOME_OPTION=VALUE&quot;格式。比如可以是SO_SNDBUF=8192.注意,在&quot;=&quot;前后不能有任何空格.
+<P>
+如在局域网上,则使用下面这个是比较明智的：
+<P>
+<B>socket options = IPTOS_LOWDELAY</B>
+<P>
+如有一个局域网则可以试一下：
+<P>
+<B>socket options = IPTOS_LOWDELAY TCP_NODELAY</B>
+<P>
+如有一个广域网,则试一下IPTOS_THROUGHPU.
+<P>
+注意有些选项可导致samba服务器完全失效.小心使用它们！
+<P>
+缺省设置: <B>socket options = TCP_NODELAY</B>
+<P>
+示例: <B>socket options = IPTOS_LOWDELAY</B>
+<P>
+<P>
+<DT>source environment (G)<DD>
+This parameter causes Samba to set environment variables as per the content of the file named.
+<P>
+<P>
+If the value of this parameter starts with a &quot;|&quot; character then Samba will treat that value as a pipe command to open and will set the environment variables from the output of the pipe.
+<P>
+<P>
+The contents of the file or the output of the pipe should be formatted as the output of the standard Unix <B><A HREF="/cgi-bin/man/man2html?1+env">env</A>(1)</B> command. This is of the form:
+<P>
+<P>
+Example environment entry:
+<P>
+<P>
+<B>SAMBA_NETBIOS_NAME = myhostname</B>
+<P>
+<P>
+缺省设置: <B>No default value</B>
+<P>
+<P>
+Examples: <B>source environment = |/etc/smb.conf.sh</B>
+<P>
+<P>
+示例: <B>source environment = /usr/local/smb_env_vars</B>
+<P>
+<P>
+<DT>stat cache (G)<DD>
+此选项检测<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)是否使用缓存以提升映射不分大小写名称的速度.你无须更改此选项.
+<P>
+<P>
+缺省设置: <B>stat cache = yes</B>
+<P>
+<P>
+<DT>strict allocate (S)<DD>
+This is a boolean that controls the handling of disk space allocation in the server. When this is set to <B>yes</B> the server will change from UNIX behaviour of not committing real disk storage blocks when a file is extended to the Windows behaviour of actually forcing the disk system to allocate real storage blocks when a file is created or extended to be a given size. In UNIX terminology this means that Samba will stop creating sparse files. This can be slow on some systems.
+<P>
+<P>
+When strict allocate is <B>no</B> the server does sparse disk block allocation when a file is extended.
+<P>
+<P>
+Setting this to <B>yes</B> can help Samba return out of quota messages on systems that are restricting the disk quota of users.
+<P>
+<P>
+缺省设置: <B>strict allocate = no</B>
+<P>
+<P>
+<DT>strict locking (S)<DD>
+此布尔量选项控制服务器对文件锁的处理.当设为<B>yes</B>,则服务器对文件锁检查每次读写访问,并拒绝锁存在时的访问.在有些系统上这可能会很慢.
+<P>
+当禁用strict locking时,服务器只在客户明确要求时才为他们检查文件锁.
+<P>
+循规蹈矩的客户总是在重要的时候要求检查文件锁,所以在多数情况下<B>strict locking = no</B>是可取的.
+<P>
+缺省设置: <B>strict locking = no</B>
+<P>
+<P>
+<DT>strict sync (S)<DD>
+很多Windows应用(包括Windows 98浏览器)都会干扰对刷新缓冲区内容到磁盘的操作.在UNIX下,一次同步调用强制进程挂起,直到内核确保把所有磁盘缓存区中的未完成数据安全地存到固定存储设备中为止.此操作很慢,而且只能很少用到.把此选项设为<B>no</B> (缺省值)说明<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) 忽略Windows应用请求的一次同步调用.这样只有在Samba运行的操作系统崩溃时才可能丢失数据,因此缺省设置危险性很小.另外,它修正人们报告的很多关于Windows98浏览器拷贝文件的性能问题.
+<P>
+参见 <I>sync always</I> 选项。
+<P>
+<P>
+缺省设置: <B>strict sync = no</B>
+<P>
+<P>
+<DT>sync always (S)<DD>
+此布尔量选项控制是否在写操作结束前把所写的内容写到固定存储设备上.如果为<B>no</B>则服务器将在每次写调用中让客户请求来操纵它(客户可以设置一个位码来指出要同步一次特殊的写操作).如果为<B>yes</B>则在每次写操作后调用一次<B>fsync() </B>以确保将数据写到磁盘上.注意必须把<I>strict sync</I>选项设为<B>yes</B>以使本选项产生效果.
+<P>
+<P>
+参见 <I>strict sync</I> 选项。
+<P>
+<P>
+缺省设置: <B>sync always = no</B>
+<P>
+<P>
+<DT>syslog (G)<DD>
+此选项决定samba调试信息号如何映射为系统syslog的记录等级.调试级0映射为syslog的<B>LOG_ERR</B>,调试级1映射为 <B>LOG_WARNING</B>,调试级2映射为<B>LOG_NOTICE</B>,调试级3映射为<B>LOG_INFO</B>.所有更高的级别号映射为<B> LOG_DEBUG</B>.
+<P>
+此选项设置了对syslog发送信息的阈值.只有小于此值的调试级信息号才发给syslog.
+<P>
+<P>
+缺省设置: <B>syslog = 1</B>
+<P>
+<P>
+<DT>syslog only (G)<DD>
+此选项使samba只把调试级别号记录到系统syslog,而不是调试记录文件.
+<P>
+缺省设置: <B>syslog only = no</B>
+<P>
+<P>
+<DT>template homedir (G)<DD>
+When filling out the user information for a Windows NT user, the <B><A HREF="/cgi-bin/man/man2html?8+winbindd">winbindd</A></B>(8) daemon uses this parameter to fill in the home directory for that user. If the string <I>%D</I> is present it is substituted with the user's Windows NT domain name. If the string <I>%U</I> is present it is substituted with the user's Windows NT user name.
+<P>
+<P>
+缺省设置: <B>template homedir = /home/%D/%U</B>
+<P>
+<P>
+<DT>template primary group (G)<DD>
+This option defines the default primary group for each user created by <B><A HREF="/cgi-bin/man/man2html?8+winbindd">winbindd</A></B>(8)'s local account management functions (similar to the 'add user script').
+<P>
+<P>
+缺省设置: <B>template primary group = nobody</B>
+<P>
+<P>
+<DT>template shell (G)<DD>
+When filling out the user information for a Windows NT user, the <B><A HREF="/cgi-bin/man/man2html?8+winbindd">winbindd</A></B>(8) daemon uses this parameter to fill in the login shell for that user.
+<P>
+<P>
+缺省设置: <B>template shell = /bin/false</B>
+<P>
+<P>
+<DT>time offset (G)<DD>
+此选项是个加入到转换标准GMT为当地时间操作的分钟数.如果你向很多有不正确保存时间操作的主机提供服务时这就很有用了.
+<P>
+<P>
+缺省设置: <B>time offset = 0</B>
+<P>
+<P>
+示例: <B>time offset = 60</B>
+<P>
+<P>
+<DT>time server (G)<DD>
+此选项检测<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8) 是否以时间服务器身份向Windows客户通告自身.
+<P>
+缺省设置: <B>time server = no</B>
+<P>
+<P>
+<DT>timestamp logs (G)<DD>
+与 <I> debug timestamp</I> 同义.
+<P>
+<P>
+<DT>unicode (G)<DD>
+Specifies whether Samba should try to use unicode on the wire by default. Note: This does NOT mean that samba will assume that the unix machine uses unicode!
+<P>
+<P>
+缺省设置: <B>unicode = yes</B>
+<P>
+<P>
+<DT>unix charset (G)<DD>
+Specifies the charset the unix machine Samba runs on uses. Samba needs to know this in order to be able to convert text to the charsets other SMB clients use.
+<P>
+<P>
+缺省设置: <B>unix charset = UTF8</B>
+<P>
+<P>
+示例: <B>unix charset = ASCII</B>
+<P>
+<P>
+<DT>unix extensions (G)<DD>
+This boolean parameter controls whether Samba implments the CIFS UNIX extensions, as defined by HP. These extensions enable Samba to better serve UNIX CIFS clients by supporting features such as symbolic links, hard links, etc... These extensions require a similarly enabled client, and are of no current use to Windows clients.
+<P>
+<P>
+缺省设置: <B>unix extensions = yes</B>
+<P>
+<P>
+<DT>unix password sync (G)<DD>
+此布尔量选项控制samba是否在smbpasswd文件中的加密SMB口令被更改时尝试用SMB口令来同步UNIX口令.如设为<B>yes</B>则<B>以root身份</B>调用<I>passwd program</I>选项中指定的程序 - 以允许设置新的UNIX口令而无需访问原UNIX口令(因为更改SMB口令时代码不访问明文的原口令而只涉及新口令).
+<P>
+参见 <I>passwd program</I>, <I> passwd chat</I>.
+<P>
+<P>
+缺省设置: <B>unix password sync = no</B>
+<P>
+<P>
+<DT>update encrypted (G)<DD>
+此布尔量选项使以明文口令登录的用户在登录时自动更新smbpasswd文件中的加密
+(散列计算过的)口令.此选项允许一个站点从明文口令验证方式(以明文口令验证用
+户账号并再次检查UNIX账号数据库)移植到加密口令验证方式(SMB的询问/响应验证
+机制)而无需强制所有用户在移植时通过smbpasswd重新输入他们的口令.这对改变加
+密口令移交要较长周期这种状况来说很方便.一旦所有用户都在smbpasswd文件中拥
+有他们加密过的口令,则此应该把此选项设为<B>no</B>.
+<P>
+为了让此选项正确工作,当它设为<B>yes</B>时必须把 <I>encrypt passwords</I>选项设为<B>no</B> .
+<P>
+注意即使设置了此选项,<B>smbd</B>还是必须验证用户账号,直到输入合法的口令后才能正确连接并更新他们的散列计算(由smbpasswd完成)后的口令字.
+<P>
+<P>
+缺省设置: <B>update encrypted = no</B>
+<P>
+<P>
+<DT>use client driver (S)<DD>
+This parameter applies only to Windows NT/2000 clients. It has no effect on Windows 95/98/ME clients. When serving a printer to Windows NT/2000 clients without first installing a valid printer driver on the Samba host, the client will be required to install a local printer driver. From this point on, the client will treat the print as a local printer and not a network printer connection. This is much the same behavior that will occur when <B>disable spoolss = yes</B>.
+<P>
+<P>
+The differentiating factor is that under normal circumstances, the NT/2000 client will attempt to open the network printer using MS-RPC. The problem is that because the client considers the printer to be local, it will attempt to issue the OpenPrinterEx() call requesting access rights associated with the logged on user. If the user possesses local administator rights but not root privilegde on the Samba host (often the case), the OpenPrinterEx() call will fail. The result is that the client will now display an &quot;Access Denied; Unable to connect&quot; message in the printer queue window (even though jobs may successfully be printed).
+<P>
+<P>
+If this parameter is enabled for a printer, then any attempt to open the printer with the PRINTER_ACCESS_ADMINISTER right is mapped to PRINTER_ACCESS_USE instead. Thus allowing the OpenPrinterEx() call to succeed. <B>This parameter MUST not be able enabled on a print share which has valid print driver installed on the Samba server.</B>
+<P>
+<P>
+参见 <I>disable spoolss</I>
+<P>
+<P>
+缺省设置: <B>use client driver = no</B>
+<P>
+<P>
+<DT>use mmap (G)<DD>
+This global parameter determines if the tdb internals of Samba can depend on mmap working correctly on the running system. Samba requires a coherent mmap/read-write system memory cache. Currently only HPUX does not have such a coherent cache, and so this parameter is set to <B>no</B> by default on HPUX. On all other systems this parameter should be left alone. This parameter is provided to help the Samba developers track down problems with the tdb internal code.
+<P>
+<P>
+缺省设置: <B>use mmap = yes</B>
+<P>
+<P>
+<DT>user (S)<DD>
+与 <I>username</I> 同义
+<P>
+<P>
+<DT>username (S)<DD>
+在逗号分隔的列表中指定多个用户以用于轮流(从左到右)测试所提供的口令.
+<P>
+只有当主机无法提供它自己的用户名时才需要<I>username</I>选项。当用COREPLUS
+协议或你的用户拥有与UNIX用户名不同的WfWg用户名时就会有这样的情况.在这两种
+情况下,用\\server\share%user语句代替会更好的.
+<P>
+在大多数情况下<I>username</I>选项并不是最好的解决方案,因为它意味着Samba会
+尝试对<I>username</I>选项行中的每个用户名轮流作测试.这样做是很慢的,而且万
+一很多用户重复口令的话这就是个坏主意了.错误使用此选项可能会带来超时或安全
+缺陷.
+<P>
+samba依靠底层的UNIX安全.此选项不限制登录者,它只对Samba服务器提供响应所提
+供口令的用户名的线索.任何喜欢的人都可以登录,而且如果他们只是启动一次
+telnet对话的话不会造成破坏.进程以登录的用户身份运行,所以他们无法做任何他
+们不能做的事儿.
+<P>
+要对一组特殊的用户限制一个服务的话可以用 <I>valid users </I> 选项.
+<P>
+如果任何用户名以'@'字符开始则此用户名将首先在NIS网络组列表(如果Samba编译
+时加入了网络组支持的话)中进行查找,然后在UNIX用户组数据库中查找并展开成属
+于以此名为组的所有用户的列表.
+<P>
+如果任何用户名以'+'字符开始则此用户名只在UNIX用户组数据库中进行查找并展开成属于以此名为组的所有用户的列表.
+<P>
+如果任何用户名以'&amp;'字符开始则此用户名只在NIS网络组列表(如果Samba编译时加入了网络组支持的话)中进行查找并展开成属于以此名为组的所有用户的列表.
+<P>
+注意通过用户组数据库进行查找要花很长时间,在此期间有些客户可能会超时.
+<P>
+<P>
+查看 NOTE ABOUT USERNAME/PASSWORD VALIDATION 段来获得这个选项如何决定访问服务方面的信息。
+<P>
+<P>
+缺省设置: <B>如果是guest服务就是guest帐号,否则是空字符串.</B>
+<P>
+<P>
+示例:<B>username = fred, mary, jack, jane, @users, @pcgroup</B>
+<P>
+<P>
+<DT>username level (G)<DD>
+此选项在很多DOS客户发送全大写的用户名时,帮助samba尝试和"猜测"实际
+UNIX用户名.对于缺省情况,Samba尝试所有小写形式,然后是首字母大写形式,如果该
+用户名在UNIX主机上没有找到则失败.
+<P>
+如果把此选项设为非0,则情况就改变了.此选项指定的是用于尝试同时检测UNIX用户名的大写字母的组合数.数字越高,则尝试的组合数越多,但用户名的发现也越慢.当在你的UNIX主机上有奇特的用户名如<B>AstrangeUser </B>时使用此选项.
+<P>
+缺省设置: <B>username level = 0</B>
+<P>
+<P>
+示例: <B>username level = 5</B>
+<P>
+<P>
+<DT>username map (G)<DD>
+此选项允许你指定一个包含对客户机到服务器上的用户名映射的文件.它可用于几个目的.最常见的是把用DOS或Windows主机的用户的名称映射到UNIX主机上的用户.其它还有把多个用户映射到单个用户名上以使他们可以更简单地共享文件.
+<P>
+映射文件被逐行解析.每个行都应该在'='号左边包含一个UNIX用户名,而在右边跟上一列用户名.右边的用户名列表可以包含@group形式的名称,它表示匹配任何组中的UNIX用户名.特殊客户名'*'是一个通配符用于匹配任何名称.映射文件的每个行可以达到1023个字符的长度.
+<P>
+对文件的处理是在每个行上取得提供的用户名并把它与'='号右边的每个用户名进行比较.如果提供的名称匹配右边的任何名称则用左边的名称替换右边的.然后继续处理下一行.
+<P>
+忽略以'#' 或 ';'号开始的行.
+<P>
+当在行中发现了匹配,则在以'!'开始的行后中止处理,否则继续处理每一行的映射.当你在文件中用了通配映射的话'!'就很有用了.
+<P>
+例如把名称<B>admin</B> 或 <B>administrator</B>映射为UNIX名<B> root</B>,你可以这样：
+<P>
+<B>root = admin administrator</B>
+<P>
+或把UNIX组 <B>system</B>中的任何人映射为UNIX名<B>sys</B>就可以这样：
+<P>
+<B>sys = @system</B>
+<P>
+可以在一个用户名映射文件中包含很多映射关系.
+<P>
+如果你的系统支持NIS NETGROUP选项,则在使用<I>/etc/group </I>匹配组之前先检查网络组数据库.
+<P>
+你可以通过在名称上使用双引号来映射含有空格的Windows用户名.例如：
+<P>
+<B>tridge = &quot;Andrew Tridgell&quot;</B>
+<P>
+将把windows用户名&quot;Andrew Tridgell&quot;映射为unix用户名&quot;tridge&quot;.
+<P>
+以下示例将把mary和fred映射为unix用户sys,然后把其余的映射为guest.注意使用'!'符号可以告诉Samba如果在该行获得一个匹配的话就停止处理.
+<P>
+<PRE>
+!sys = mary fred
+guest = *
+</PRE>
+
+<P>
+注意重映射作用于所有出现用户名的地方.因此如果你连接到\\server\fred而<B> fred</B>已被重映射为 <B>mary</B>,则你实际会连接到\\server\mary&quot;并需要提供<B>mary</B>的口令而不是 <B>fred</B>的.这种情况只有一个例外,那就是用户名是被传到<I> password server</I>(如果你有一个的话)验证的.口令服务器会接收客户提供的未经修改的用户名.
+<P>
+同时要注意反向映射是不会出现的.这主要影响的是打印任务.已经被映射的用户会在删除打印任务时遇到麻烦,因为WfWg上的打印管理器会认为他们不是打印任务的属主.
+<P>
+缺省设置: <B>no username map</B>
+<P>
+<P>
+示例: <B>username map = /usr/local/samba/lib/users.map</B>
+<P>
+<P>
+<DT>users (S)<DD>
+与 <I> username</I> 同义.
+<P>
+<P>
+<DT>use sendfile (S)<DD>
+If this parameter is <B>yes</B>, and Samba was built with the --with-sendfile-support option, and the underlying operating system supports sendfile system call, then some SMB read calls (mainly ReadAndX and ReadRaw) will use the more efficient sendfile system call for files that are exclusively oplocked. This may make more efficient use of the system CPU's and cause Samba to be faster. This is off by default as it's effects are unknown as yet.
+<P>
+<P>
+缺省设置: <B>use sendfile = no</B>
+<P>
+<P>
+<DT>use spnego (G)<DD>
+This variable controls controls whether samba will try to use Simple and Protected NEGOciation (as specified by rfc2478) with WindowsXP and Windows2000 clients to agree upon an authentication mechanism. Unless further issues are discovered with our SPNEGO implementation, there is no reason this should ever be disabled.
+<P>
+<P>
+缺省设置: <B>use spnego = yes</B>
+<P>
+<P>
+<DT>utmp (G)<DD>
+This boolean parameter is only available if Samba has been configured and compiled with the option <B> --with-utmp</B>. If set to <B>yes</B> then Samba will attempt to add utmp or utmpx records (depending on the UNIX system) whenever a connection is made to a Samba server. Sites may use this to record the user connecting to a Samba share.
+<P>
+<P>
+Due to the requirements of the utmp record, we are required to create a unique identifier for the incoming user. Enabling this option creates an n^2 algorithm to find this number. This may impede performance on large installations.
+<P>
+<P>
+参见 <I> utmp directory</I> 选项。
+<P>
+<P>
+缺省设置: <B>utmp = no</B>
+<P>
+<P>
+<DT>utmp directory (G)<DD>
+This parameter is only available if Samba has been configured and compiled with the option <B> --with-utmp</B>. It specifies a directory pathname that is used to store the utmp or utmpx files (depending on the UNIX system) that record user connections to a Samba server. 参见 <I>utmp</I> 选项。 By default this is not set, meaning the system will use whatever utmp file the native system is set to use (usually <I>/var/run/utmp</I> on Linux).
+<P>
+<P>
+缺省设置: <B>no utmp directory</B>
+<P>
+<P>
+示例: <B>utmp directory = /var/run/utmp</B>
+<P>
+<P>
+<DT>-valid (S)<DD>
+This parameter indicates whether a share is valid and thus can be used. When this parameter is set to false, the share will be in no way visible nor accessible.
+<P>
+<P>
+This option should not be used by regular users but might be of help to developers. Samba uses this option internally to mark shares as deleted.
+<P>
+<P>
+缺省设置: <B>True</B>
+<P>
+<P>
+<DT>valid users (S)<DD>
+这是一份允许登录服务项的用户列表.以'@','+'和'&amp;'开始的名称用<I>invalid users</I> 选项中的规则进行解析.
+<P>
+如果此项为空(缺省)则任何用户都可以登录.如果一个用户名同时存在于此列表及<I>invalid users</I>列表,则拒绝此用户访问.
+<P>
+<P>
+<I>%S </I>替换为当前服务名. 这在[homes]段里非常有用.
+<P>
+参见 <I>invalid users </I>
+<P>
+<P>
+缺省设置: <B>空 (任何人都不会被拒绝) </B>
+<P>
+<P>
+示例: <B>valid users = greg, @pcusers</B>
+<P>
+<P>
+<DT>veto files (S)<DD>
+这是一份既不可见又不可访问的文件及目录的列表.在列表中的每一项必须用'/'进行分隔,项目中允许有空格.可以用DOS通配符'*'和'?'来指定多个文件或目录.
+<P>
+每项必须是一个UNIX路径,而非一个DOS路径,同时<B>必须不含</B> UNIX目录分隔符'/'.
+<P>
+注意<I>case sensitive</I>选项适用于对文件的禁止目的.
+<P>
+需要明白这个选项的很重要的一个特点: 在Samba删除一个目录时的行为。如果一个目录除了veto files之外不包含任何内容，删除操作将<B>失败</B>，除非设置了<I>delete veto files</I> 是<I>yes</I>.
+<P>
+设置此选项会影响Samba的性能,因为它将强制在扫描所有文件和目录时检查是否匹配.
+<P>
+参见 <I>hide files </I> 和 <I> case sensitive</I>.
+<P>
+<P>
+缺省设置: <B>没有隐藏任何文件. </B>
+<P>
+<P>
+示例:
+<P>
+<PRE>
+; 隐藏任何文件名带有'Security'的文件，
+; 任何扩展名是.tmp的文件,任何文件名带有'root'的文件
+veto files = /*Security*/*.tmp/*root*/
+
+; 隐藏NetAtalk服务器创建的Apple专用的文件
+veto files = /.AppleDouble/.bin/.AppleDesktop/Network Trash Folder/
+</PRE>
+
+<P>
+<P>
+<DT>veto oplock files (S)<DD>
+此选项只在对一个共享打开了<I>oplocks</I>选项时才有效.它允许Samba管理员在所选文件上选择性地关闭允许oplocks,这些文件可以用通配符列表来匹配,类拟于在<I>veto files</I> 选项中所用的通配符列表.
+<P>
+缺省设置: <B>没有隐藏oplocks许可</B>
+<P>
+你可能想在已知客户会猛烈争夺的文件上使用此项.在NetBench SMB基准程序下面就是个好例子,它导致客户猛烈地对以<I>.SEM</I>后缀的文件进行连接.为使Samba不在这些文件上允许oplocks,你可以在[global]段或特定的NetBench共享中使用此行：
+<P>
+示例: <B>veto oplock files = /*.SEM/</B>
+<P>
+<P>
+<DT>vfs object (S)<DD>
+与 <I>vfs objects</I> 同义.
+<P>
+<P>
+<DT>vfs objects (S)<DD>
+This parameter specifies the backend names which are used for Samba VFS I/O operations. By default, normal disk I/O operations are used but these can be overloaded with one or more VFS objects.
+<P>
+<P>
+缺省设置: <B>no value</B>
+<P>
+<P>
+示例: <B>vfs objects = extd_audit recycle</B>
+<P>
+<P>
+<DT>volume (S)<DD>
+此选项允许你忽略共享项提供的卷标.这对于那些坚持要使用一个特殊卷标的安装程序光盘来说很有用.缺省就是共享项的卷标.
+<P>
+缺省设置: <B>共享的名称</B>
+<P>
+<DT>wide links (S)<DD>
+此选项控制服务器是否跟踪UNIX文件系统中的符号链接.指向服务器导出的目录树的链接总是被允许的；此选项只是控制对导出目录树以外的区域的访问情况.
+<P>
+注意设置此选项可对服务器性能产生负面影响,因为samba必须做一些额外的系统调用以检查那些链接.
+<P>
+缺省设置: <B>wide links = yes</B>
+<P>
+<P>
+<DT>winbind cache time (G)<DD>
+This parameter specifies the number of seconds the <B><A HREF="/cgi-bin/man/man2html?8+winbindd">winbindd</A></B>(8) daemon will cache user and group information before querying a Windows NT server again.
+<P>
+<P>
+缺省设置: <B>winbind cache type = 300</B>
+<P>
+<P>
+<DT>winbind enable local accounts (G)<DD>
+This parameter controls whether or not winbindd will act as a stand in replacement for the various account management hooks in smb.conf (e.g. 'add user script'). If enabled, winbindd will support the creation of local users and groups as another source of UNIX account information available via getpwnam() or getgrgid(), etc...
+<P>
+<P>
+缺省设置: <B>winbind enable local accounts = yes</B>
+<P>
+<P>
+<DT>winbind enum groups (G)<DD>
+On large installations using <B><A HREF="/cgi-bin/man/man2html?8+winbindd">winbindd</A></B>(8) it may be necessary to suppress the enumeration of groups through the <B>setgrent()</B>, <B>getgrent()</B> and <B>endgrent()</B> group of system calls. If the <I>winbind enum groups</I> parameter is <B>no</B>, calls to the <B>getgrent()</B> system call will not return any data.
+<P>
+<P>
+<B>Warning:</B> Turning off group enumeration may cause some programs to behave oddly.
+<P>
+<P>
+缺省设置: <B>winbind enum groups = yes </B>
+<P>
+<P>
+<DT>winbind enum users (G)<DD>
+On large installations using <B><A HREF="/cgi-bin/man/man2html?8+winbindd">winbindd</A></B>(8) it may be necessary to suppress the enumeration of users through the <B>setpwent()</B>, <B>getpwent()</B> and <B>endpwent()</B> group of system calls. If the <I>winbind enum users</I> parameter is <B>no</B>, calls to the <B>getpwent</B> system call will not return any data.
+<P>
+<P>
+<B>Warning:</B> Turning off user enumeration may cause some programs to behave oddly. For example, the finger program relies on having access to the full user list when searching for matching usernames.
+<P>
+<P>
+缺省设置: <B>winbind enum users = yes </B>
+<P>
+<P>
+<DT>winbind gid (G)<DD>
+This parameter is now an alias for <B>idmap gid</B>
+<P>
+<P>
+The winbind gid parameter specifies the range of group ids that are allocated by the <B><A HREF="/cgi-bin/man/man2html?8+winbindd">winbindd</A></B>(8) daemon. This range of group ids should have no existing local or NIS groups within it as strange conflicts can occur otherwise.
+<P>
+<P>
+缺省设置: <B>winbind gid = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>winbind gid = 10000-20000</B>
+<P>
+<P>
+<DT>winbind separator (G)<DD>
+This parameter allows an admin to define the character used when listing a username of the form of <I>DOMAIN </I>\<I>user</I>. This parameter is only applicable when using the <I>pam_winbind.so</I> and <I>nss_winbind.so</I> modules for UNIX services.
+<P>
+<P>
+Please note that setting this parameter to + causes problems with group membership at least on glibc systems, as the character + is used as a special character for NIS in /etc/group.
+<P>
+<P>
+缺省设置: <B>winbind separator = ''</B>
+<P>
+<P>
+示例: <B>winbind separator = +</B>
+<P>
+<P>
+<DT>winbind trusted domains only (G)<DD>
+This parameter is designed to allow Samba servers that are members of a Samba controlled domain to use UNIX accounts distributed vi NIS, rsync, or LDAP as the uid's for winbindd users in the hosts primary domain. Therefore, the user 'SAMBA\user1' would be mapped to the account 'user1' in /etc/passwd instead of allocating a new uid for him or her.
+<P>
+<P>
+缺省设置: <B>winbind trusted domains only = &lt;no&gt;</B>
+<P>
+<P>
+<DT>winbind uid (G)<DD>
+This parameter is now an alias for <B>idmap uid</B>
+<P>
+<P>
+The winbind gid parameter specifies the range of user ids that are allocated by the <B><A HREF="/cgi-bin/man/man2html?8+winbindd">winbindd</A></B>(8) daemon. This range of ids should have no existing local or NIS users within it as strange conflicts can occur otherwise.
+<P>
+<P>
+缺省设置: <B>winbind uid = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>winbind uid = 10000-20000</B>
+<P>
+<P>
+<DT>winbind use default domain (G)<DD>
+This parameter specifies whether the <B><A HREF="/cgi-bin/man/man2html?8+winbindd">winbindd</A></B>(8) daemon should operate on users without domain component in their username. Users without a domain component are treated as is part of the winbindd server's own domain. While this does not benifit Windows users, it makes SSH, FTP and e-mail function in a way much closer to the way they would in a native unix system.
+<P>
+<P>
+缺省设置: <B>winbind use default domain = &lt;no&gt;</B>
+<P>
+<P>
+示例: <B>winbind use default domain = yes</B>
+<P>
+<P>
+<DT>wins hook (G)<DD>
+当把Samba作为一台WINS服务器运行时,此选项允许你调用一个外部程序更改WINS数据库.此项主要用于动态更新外部名字解析数据库,如动态DNS.
+<P>
+此选项以如下形式指定要调用的一个脚本名或可执行程序：
+<P>
+<P>
+<B>wins_hook operation name nametype ttl IP_list</B>
+<P>
+第一部分参数是opration(操作符),它有三种：&quot;add&quot;、&quot;delete&quot;和&quot;refresh&quot;.在很多情况下该操作符可以忽略,因为其它选项可提供足够的信息.注意当有名称以前没有加入过,则有时会用到&quot;refresh&quot;,在这种情况下,它应该和&quot;add&quot;有同样含义.
+<P>
+第二部分参数是netbios名.如果该名称不是合法名的话,该功能就不运行.合法的名称应只包含字母,数字,减号,下划线和句点.
+<P>
+第三部分参数是用2位十六进制数字表示的netbios名称类型.
+<P>
+第四部分参数是以秒计算的名称有效时间TTL (time to live).
+<P>
+第五部分是当前该名称所注册的IP地址表.如果表为空则该名称被删除.
+<P>
+一个调用BIND动态DNS更新程序<B>nsupdate</B>的脚本示例在samba源代码的示例目录可以找到.
+<P>
+<DT>wins partners (G)<DD>
+A space separated list of partners' IP addresses for WINS replication. WINS partners are always defined as push/pull partners as defining only one way WINS replication is unreliable. WINS replication is currently experimental and unreliable between samba servers.
+<P>
+<P>
+缺省设置: <B>wins partners = </B>
+<P>
+<P>
+示例: <B>wins partners = 192.168.0.1 172.16.1.2</B>
+<P>
+<P>
+<DT>wins proxy (G)<DD>
+此布尔量选项控制<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8) 是否代替其它主机响应广播名字查询.对一些旧版本客户就可能需要把它设为<B>yes</B> .
+<P>
+缺省设置: <B>wins proxy = no</B>
+<P>
+<P>
+<DT>wins server (G)<DD>
+此选项指定nmbd要注册的WINS服务器的IP地址(或DNS域名：IP地址优先(for preference)).如果在你的网络上有一台WINS服务器,就应该把此项设为该服务器的IP地址.
+<P>
+如果你有多个子网的话,应该指定向你的WINS服务器
+<P>
+If you want to work in multiple namespaces, you can give every wins server a 'tag'. For each tag, only one (working) server will be queried for a name. The tag should be seperated from the ip address by a colon.
+<P>
+注意,如有多子网并希望跨子网浏览工作正常的话,应该设置Samba指向一台WINS服务器.
+<P>
+<P>
+缺省设置: <B>未启用</B>
+<P>
+<P>
+示例: <B>wins server = mary:192.9.200.1 fred:192.168.3.199 mary:192.168.2.61</B>
+<P>
+<P>
+For this example when querying a certain name, 192.19.200.1 will be asked first and if that doesn't respond 192.168.2.61 . If either of those doesn't know the name 192.168.3.199 will be queried.
+<P>
+示例: <B>wins server = 192.9.200.1 192.168.2.61</B>
+<P>
+<P>
+<DT>wins support (G)<DD>
+此布尔量选项控制<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8)进程是否作为WINS服务器.你不应该把它设为<B>yes</B>,除非有多子网或希望特定的<B>nmbd</B>作为你的WINS服务器.注意在网络上有多台WINS服务器时<B>不</B>应把它设为<B>yes</B>.
+<P>
+缺省设置: <B>wins support = no</B>
+<P>
+<P>
+<DT>workgroup (G)<DD>
+此选项规定Samba所在的工作组以便让客户查询.注意它也规定在使用<B>security = domain</B>时所用的域名.
+<P>
+缺省设置: <B>编译时设置为 WORKGROUP</B>
+<P>
+<P>
+示例: <B>workgroup = MYGROUP</B>
+<P>
+<P>
+<DT>writable (S)<DD>
+与 <I> writeable</I> 相同，是为拼写错误者准备的 :-)
+<P>
+<P>
+<DT>writeable (S)<DD>
+注意它与 <I>read only</I> 反义.
+<P>
+<P>
+<DT>write cache size (S)<DD>
+If this integer parameter is set to non-zero value, Samba will create an in-memory cache for each oplocked file (it does <B>not</B> do this for non-oplocked files). All writes that the client does not request to be flushed directly to disk will be stored in this cache if possible. The cache is flushed onto disk when a write comes in whose offset would not fit into the cache or when the file is closed by the client. Reads for the file are also served from this cache if the data is stored within it.
+<P>
+<P>
+This cache allows Samba to batch client writes into a more efficient write size for RAID disks (i.e. writes may be tuned to be the RAID stripe size) and can improve performance on systems where the disk subsystem is a bottleneck but there is free memory for userspace programs.
+<P>
+<P>
+The integer parameter specifies the size of this cache (per oplocked file) in bytes.
+<P>
+<P>
+缺省设置: <B>write cache size = 0</B>
+<P>
+<P>
+示例: <B>write cache size = 262144</B>
+<P>
+<P>
+for a 256k cache size per file.
+<P>
+<P>
+<DT>write list (S)<DD>
+此选项设置对服务项有读写权的用户列表.如果正在连接的用户属于此列表,那他们就可以有写入权,而不管<I>read only</I>为何值.此列表可以用@group形式描述组名.
+<P>
+注意如果一个用户同时属于读列表和写列表则拥有写入权.
+<P>
+参见 <I>read list </I> 选项。
+<P>
+缺省设置: <B>write list = &lt;空字符串&gt;</B>
+<P>
+<P>
+示例: <B>write list = admin, root, @staff</B>
+<P>
+<P>
+<DT>write ok (S)<DD>
+注意它与 <I>read only</I> 反义.
+<P>
+<P>
+<DT>write raw (G)<DD>
+此选项规定服务器是否在从客户端传输数据时支持原始方式写SMB消息块.你不应该更改它.
+<P>
+<P>
+缺省设置: <B>write raw = yes</B>
+<P>
+<P>
+<DT>wtmp directory (G)<DD>
+This parameter is only available if Samba has been configured and compiled with the option <B> --with-utmp</B>. It specifies a directory pathname that is used to store the wtmp or wtmpx files (depending on the UNIX system) that record user connections to a Samba server. The difference with the utmp directory is the fact that user info is kept after a user has logged out.
+<P>
+<P>
+参见 <I>utmp</I> 选项。 By default this is not set, meaning the system will use whatever utmp file the native system is set to use (usually <I>/var/run/wtmp</I> on Linux).
+<P>
+<P>
+缺省设置: <B>no wtmp directory</B>
+<P>
+<P>
+示例: <B>wtmp directory = /var/log/wtmp</B>
+<P>
+<P>
+</DL>
+<A NAME="lbAQ">&nbsp;</A>
+<H2>警告 WARNINGS</H2>
+
+<P>
+<P>
+
+虽然配置文件允许服务项名包含空格,但你的客户端软件就不一定了.因为在比较中总是忽略空格,所以这不成问题 - 但应该认识到其它可能性.
+<P>
+<P>
+
+有一条类似提示,很多客户特别是DOS客户,会限制服务项名为8个字符.虽然 <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)没有这样的限制,但如果这样的客户截去部分服务项名的话,他们的连接尝试会失败.为此你可能要保持你的服务项名在8个字符以内.
+<P>
+<P>
+
+对于管理员来说[homes] 和 [printers]特殊段的使用很容易,但对缺省属性的多样组合应该小心.当设计这些段时要特别仔细.特别是要确保假脱机目录权限的正确性.
+<P>
+<A NAME="lbAR">&nbsp;</A>
+<H2>版本 VERSION</H2>
+
+<P>
+<P>
+
+此手册页是针对samba套件版本3.0的。
+<P>
+<A NAME="lbAS">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<P>
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?7+samba">samba</A></B>(7), <B><A HREF="/cgi-bin/man/man2html?8+smbpasswd">smbpasswd</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?8+swat">swat</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?1+smbclient">smbclient</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+nmblookup">nmblookup</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+testparm">testparm</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+testprns">testprns</A></B>(1).
+<P>
+<A NAME="lbAT">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+<P>
+<P>
+
+samba软件和相关工具最初由Andrew Tridgell创建。samba现在由Samba Team 作为开源软件来发展，类似linux内核的开发方式。
+<P>
+<P>
+
+最初的samba手册页是 Karl Auer写的。
+手册页源码已经转换为YODL格式(另一种很好的开源软件，可以在<A HREF="ftp://ftp.ice.rug.nl/pub/unix找到)，由Jeremy">ftp://ftp.ice.rug.nl/pub/unix找到)，由Jeremy</A> Sllison 更新到Samba2.0 版本。
+Gerald Carter 在Samba2.2中将它转化为DocBook 格式。
+Alexander Bokovoy 在Samba 3.0中实现了DocBook XML4.2 格式的转换。
+<P>
+<P>
+<P>
+<A NAME="lbAU">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAV">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<A NAME="lbAW">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">文件格式 FILE FORMAT</A><DD>
+<DT><A HREF="#lbAE">段描述 SECTION DESCRIPTIONS</A><DD>
+<DT><A HREF="#lbAF">特殊段 SPECIAL SECTIONS</A><DD>
+<DL>
+<DT><A HREF="#lbAG">[global] 全局选项段 </A><DD>
+<DT><A HREF="#lbAH">[homes] 个人目录段</A><DD>
+<DT><A HREF="#lbAI">[printers] 打印机共享设置段</A><DD>
+</DL>
+<DT><A HREF="#lbAJ">选项 PARAMETERS</A><DD>
+<DT><A HREF="#lbAK">变量替换 VARIABLE SUBSTITUTIONS</A><DD>
+<DT><A HREF="#lbAL">NAME</A><DD>
+<DT><A HREF="#lbAM">用户名/口令检验中的注意事项 NOTE ABOUT USERNAME/PASSWORD VALIDATION</A><DD>
+<DT><A HREF="#lbAN">全局选项完整列表 COMPLETE LIST OF GLOBAL PARAMETERS</A><DD>
+<DT><A HREF="#lbAO">服务选项完整列表 COMPLETE LIST OF SERVICE PARAMETERS</A><DD>
+<DT><A HREF="#lbAP">每一个选项的详细解释  EXPLANATION OF EACH PARAMETER</A><DD>
+<DT><A HREF="#lbAQ">警告 WARNINGS</A><DD>
+<DT><A HREF="#lbAR">版本 VERSION</A><DD>
+<DT><A HREF="#lbAS">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAT">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAU">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAV">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAW">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

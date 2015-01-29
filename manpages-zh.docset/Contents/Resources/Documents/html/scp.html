@@ -1,0 +1,404 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SCP</TITLE>
+</HEAD><BODY>
+<H1>SCP</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+<BR>BSD mandoc<BR>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+
+
+<B>scp</B>
+
+ - 安全复制(远程文件复制程序)
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>scp</B>
+
+-words
+
+[-<B>pqrvBC1246</B>
+
+]
+
+[-<B>F </B><I>ssh_config</I>
+
+
+
+]
+
+[-<B>S </B><I>program</I>
+
+
+
+]
+
+[-<B>P </B><I>port</I>
+
+
+
+]
+
+[-<B>c </B><I>cipher</I>
+
+
+
+]
+
+[-<B>i </B><I>identity_file</I>
+
+
+
+]
+
+[-<B>l </B><I>limit</I>
+
+
+
+]
+
+[-<B>o </B><I>ssh_option</I>
+
+
+
+]
+
+
+[[<I>user@</I>
+
+]
+
+
+<I>host1 </I><B>:</B>
+
+
+
+<B></B><I>file1</I>
+
+
+
+]
+
+[<I>...</I>
+
+]
+
+
+[[<I>user@</I>
+
+]
+
+
+<I>host2 </I><B>:</B>
+
+
+
+<I>file2</I>
+
+]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+
+
+<B></B>
+
+
+在网络中的主机间进行文件复制。
+它用
+<A HREF="/cgi-bin/man/man2html?1+ssh">ssh</A>(1)
+
+
+来传输及验证数据，提供与
+<A HREF="/cgi-bin/man/man2html?1+ssh">ssh</A>(1)相同的安全保护。
+
+
+它不象
+<A HREF="/cgi-bin/man/man2html?1+rcp">rcp</A>(1),
+
+
+<B></B>
+
+
+会根据需要询问口令。
+<P>
+
+在任何文件名中都可以包含主机名和用户名，用来指定从/向该主机复制此文件。
+Copies between two remote hosts are permitted.
+<P>
+
+The options are as follows:
+<DL COMPACT>
+<P>
+
+<DT><B>-c </B><I>cipher</I>
+
+
+
+
+<DD>
+Selects the cipher to use for encrypting the data transfer.
+This option is directly passed to
+<A HREF="/cgi-bin/man/man2html?1+ssh">ssh</A>(1).
+
+
+<DT><B>-i </B><I>identity_file</I>
+
+
+
+
+<DD>
+Selects the file from which the identity (private key) for RSA
+authentication is read.
+This option is directly passed to
+<A HREF="/cgi-bin/man/man2html?1+ssh">ssh</A>(1).
+
+
+<DT><B>-l </B><I>limit</I>
+
+
+
+
+<DD>
+Limits the used bandwidth, specified in Kbit/s.
+<DT><B>-p</B>
+
+
+<DD>
+Preserves modification times, access times, and modes from the
+original file.
+<DT><B>-r</B>
+
+
+<DD>
+递归复制整个目录。
+<DT><B>-v</B>
+
+
+<DD>
+详细模式。该选项使
+<B></B>
+
+
+和
+<A HREF="/cgi-bin/man/man2html?1+ssh">ssh</A>(1)
+
+
+打印出关于运行情况的调试信息。在进行调试连接、验证和配置问题时，这会很有用的
+<DT><B>-B</B>
+
+
+<DD>
+用批模式(避免重复询问口令)。
+<DT><B>-q</B>
+
+
+<DD>
+Disables the progress meter.
+<DT><B>-C</B>
+
+
+<DD>
+允许压缩。向
+<A HREF="/cgi-bin/man/man2html?1+ssh">ssh</A>(1)
+
+
+传递
+-<B>C</B>
+
+标志以允许压缩。
+<DT><B>-F </B><I>ssh_config</I>
+
+
+
+
+<DD>
+Specifies an alternative
+per-user configuration file for
+<B>ssh</B>
+
+ 
+This option is directly passed to
+<A HREF="/cgi-bin/man/man2html?1+ssh">ssh</A>(1).
+
+
+<DT><B>-P </B><I>port</I>
+
+
+
+
+<DD>
+Specifies the port to connect to on the remote host.
+Note that this option is written with a capital
+`P'
+
+ 
+because
+-<B>p</B>
+
+is already reserved for preserving the times and modes of the file in
+<A HREF="/cgi-bin/man/man2html?1+rcp">rcp</A>(1).
+
+
+<DT><B>-S </B><I>program</I>
+
+
+
+
+<DD>
+Name of
+<I>program</I>
+
+to use for the encrypted connection.
+The program must understand
+<A HREF="/cgi-bin/man/man2html?1+ssh">ssh</A>(1)
+
+
+options.
+<DT><B>-o </B><I>ssh_option</I>
+
+
+
+
+<DD>
+Can be used to pass options to
+<B>ssh</B>
+
+in the format used in
+ssh_config5.
+
+
+This is useful for specifying options
+for which there is no separate
+<B>scp</B>
+
+command-line flag.
+<DT><B>-1</B>
+
+
+<DD>
+Forces
+<B></B>
+
+
+to use protocol 1.
+<DT><B>-2</B>
+
+
+<DD>
+Forces
+<B></B>
+
+
+to use protocol 2.
+<DT><B>-4</B>
+
+
+<DD>
+Forces
+<B></B>
+
+
+to use IPv4 addresses only.
+<DT><B>-6</B>
+
+
+<DD>
+Forces
+<B></B>
+
+
+to use IPv6 addresses only.
+</DL>
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>DIAGNOSTICS</H2>
+
+<B></B>
+
+
+exits with 0 on success or &gt;0 if an error occurred.
+<A NAME="lbAF">&nbsp;</A>
+<H2>作者 AUTHORS</H2>
+
+Timo Rinne &lt;<A HREF="mailto:tri@iki.fi">tri@iki.fi</A>&gt; 和 Tatu Ylonen &lt;<A HREF="mailto:ylo@cs.hut.fi">ylo@cs.hut.fi</A>&gt;
+<A NAME="lbAG">&nbsp;</A>
+<H2>历史 HISTORY</H2>
+
+<B></B>
+
+
+基于University of California BSD 的
+<A HREF="/cgi-bin/man/man2html?1+rcp">rcp</A>(1)
+
+
+源代码
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+rcp">rcp</A>(1),
+
+
+<A HREF="/cgi-bin/man/man2html?1+sftp">sftp</A>(1),
+
+
+<A HREF="/cgi-bin/man/man2html?1+ssh">ssh</A>(1),
+
+
+ssh-add1,
+
+
+ssh-agent1,
+
+
+ssh-keygen1,
+
+
+ssh_config5,
+
+
+<A HREF="/cgi-bin/man/man2html?8+sshd">sshd</A>(8)
+
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2000/12/08
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A> 
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">DIAGNOSTICS</A><DD>
+<DT><A HREF="#lbAF">作者 AUTHORS</A><DD>
+<DT><A HREF="#lbAG">历史 HISTORY</A><DD>
+<DT><A HREF="#lbAH">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

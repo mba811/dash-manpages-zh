@@ -1,0 +1,169 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MKNOD</TITLE>
+</HEAD><BODY>
+<H1>MKNOD</H1>
+Section: User Commands  (1)<BR>Updated: November 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+mknod - 建立块专用或字符专用文件
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>mknod [</B><I>options</I><B>] </B><I>name</I><B> {bc} </B><I>major minor</I>
+
+<BR>
+
+<B>mknod [</B><I>options</I><B>] </B><I>name</I><B> p</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>GNU 选项（缩写）：</H2>
+
+<B>[-m </B><I>mode</I><B>] [--help] [--version] [--]</B>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>描述</H2>
+
+mknod 用指定名称产生一个FIFO（命名管道），字符专用或块专用文件。
+<P>
+
+文件系统中的一个专用文件存贮着三种信息（布朗型、整型、整型）。
+布朗型在字符文件与块文件之间作出选择，两个整型是主、次设备号。
+<P>
+
+通常，一个专用文件并不在磁盘上占用空间，仅仅是为操作系统提供
+交流，而不是为数据存贮服务。一般地，专用文件会指向一个硬件设
+备（如：磁盘、磁带、打印机、虚拟控制台）或者操作系统提供的服
+务（如：/dev/null, /dev/random）。
+<P>
+
+块文件通常类似于磁盘设备（在数据可以被访问的地方赋予一个块号，
+意味着同时设定了一个块缓存）。所有其他设备都是字符文件。（以
+前，两种文件类型间是有差别的。比如：字符文件I/O没有缓存，而块
+文件则有。）
+<P>
+
+mknod命令就是用来产生这种类型文件的。
+<P>
+
+以下参数指定了所产生文件的类型：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>p</B>
+
+<DD>
+FIFO型
+<DT><B>b</B>
+
+<DD>
+块文件
+<DT><B>c</B>
+
+<DD>
+字符文件
+</DL>
+</DL>
+
+<P>
+
+GNU版本还允许使用u（'unbufferd'非缓冲化），
+以保持与C语言的一致。
+<P>
+
+当创建一个块文件或字符文件时，主、次设备号必须在
+文件类型参数后给出。（十进制或八进制以0开头；GNU
+版本还允许使用以0x开头的十六进制）缺省地，所产生
+的文件模式为0666（'a+rw'）。
+<A NAME="lbAF">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-m </B><I>mode</I><B>, --mode=</B><I>mode</I>
+
+<DD>
+为新建立的文件设定模式，就象应用命令chmod一样，以后仍然使
+用缺省模式建立新目录。
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>GNU 标准选项</H2>
+
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+在标准输出上显示使用信息并顺利退出。
+<DT><B>--version</B>
+
+<DD>
+在标准输出上显示版本信息并顺利退出
+<DT><B>--</B>
+
+<DD>
+终端选项列表。
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>遵循</H2>
+
+POSIX 认为该命令不能移植而不支持这个命令，它推荐使用
+<A HREF="/cgi-bin/man/man2html?1+mkfifo">mkfifo</A>(1)来建立FIFO文件。SVID有一个命令/etc/mknod有以上
+语法，但没有模式选项。 
+<A NAME="lbAI">&nbsp;</A>
+<H2>注意</H2>
+
+在某些linux系统上（1.3.22或之后的版本）
+/usr/src/linux/Documentation/devices.tex文件包含了一个
+设备列表，包括设备名、类型及主、次设备号。本页对mknod的
+描述可以在fileutils-4.0中找到；其他版本会略有差别。任何
+添加或纠错意见请寄<A HREF="mailto:aeb@cwi.nl">aeb@cwi.nl</A>，程序Bugs请告知：
+<A HREF="mailto:fileutils-bugs@gnu.ai.mit.edu">fileutils-bugs@gnu.ai.mit.edu</A>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>另见</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+chmod">chmod</A>(1), <A HREF="/cgi-bin/man/man2html?1+mkfifo">mkfifo</A>(1),<A HREF="/cgi-bin/man/man2html?2+mknod">mknod</A>(2)
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Alan Yao  &lt;<A HREF="mailto:Alan_Yao@163.net">Alan_Yao@163.net</A>&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/19</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">GNU 选项（缩写）：</A><DD>
+<DT><A HREF="#lbAE">描述</A><DD>
+<DT><A HREF="#lbAF">选项</A><DD>
+<DT><A HREF="#lbAG">GNU 标准选项</A><DD>
+<DT><A HREF="#lbAH">遵循</A><DD>
+<DT><A HREF="#lbAI">注意</A><DD>
+<DT><A HREF="#lbAJ">另见</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

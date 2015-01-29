@@ -1,0 +1,188 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PERLNUMBER</TITLE>
+</HEAD><BODY>
+<H1>PERLNUMBER</H1>
+Section: Perl Programmers Reference Guide (7)<BR>Updated: 2003-11-25<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+perlnumber - Perl 中数字的语义以及算术操作
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<A NAME="ixAAC"></A>
+
+
+<PRE>
+    $n = 1234;              # 十进制数
+    $n = 0b1110011;         # 二进制数
+    $n = 01234;             # 八进制数
+    $n = 0x1234;            # 十六进制数
+    $n = 12.34e-56;         # 指数形式
+    $n = &quot;-12.34e56&quot;;       # 用字符串描述的数
+    $n = &quot;1234&quot;;            # 用字符串描述的数
+
+</PRE>
+
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<A NAME="ixAAD"></A>
+这篇文章描述了Perl内部是怎样处理数的数值的。
+<P>
+
+在这里不会提到Perl的运算符重载机制，运算符重载允许用户自定义对数的操作，例如对任意大的整型数或者任意精度的浮点数进行的操作，或者一些其它的算术类型如求模操作和p-adic操作等等。要想知道运算符重载的细节，请看重载。
+<A NAME="lbAE">&nbsp;</A>
+<H2>Storing numbers 数值存储</H2>
+
+<A NAME="ixAAE"></A>
+Per在内部能用三种方法表示数值：用“Native整型”，“Native浮点型”或是用十进制形式的字符串。其中十进制字符串可以带一个指数描述的部分，就像<TT>&quot;12.34e-56&quot;</TT>。在这里术语<I>Native</I>的含义是用于编译 perl 的 C 编译器所支持的类型。
+<P>
+
+在我们谈及整型时，``native''这个术语所包含的含义比我们谈论浮点数时要少一些。对``native''整型来说，这个术语所的含义仅仅是指整型数的可以有最大值和最小值会是2的某次方，而对``native''浮点数来说，有一条基本的限制就是它只能表示那些能用有限几位二进制小数所表示的实数。举例来说，0.9就不是``native''浮点数，因为0.9用二进制小数表示是有无穷多位的：
+<P>
+
+
+
+<PRE>
+  二进制0.1110011001100...
+
+</PRE>
+
+
+<P>
+
+序列 <TT>1100</TT> 将无休止的循环下去。除了这条限制以外，二进制浮点数在用指数型式表达时也存有限制。在特定的硬件条件下，浮点型的数可以存储最多53位二进制数再加上范围从-1024到1024的指数值(译者：-1024到1024用11位二进制数，加上53等于64，就是说这里用用64位存一个浮点数）转换成十进制也就是说差不多能用16位有效数字和从-304到304的指数值和起来表示一个浮点数。这种表示方法的一种结果就是我们不可能在不损失精度的情况下用浮点型存储像12345678901234567这样的数。
+<P>
+
+类似的，十进制字符串也只能表示有限位数的十进制数.光就字符串来言,它可以是任意长度的,没有什么关于指数或有效数字位数上的限制.(但是请意识到我们正在讨论的存放数值的那些规则.事实是你能用字符串存放很大的数值并不代表相应的数值操作能够把字符串中的所有的数位都用上.欲知详情,请看``数值运算符和数值转换''
+<P>
+
+事实上“Native整型数”存储的数值可以是带符号的，或者是不带符号的。所以很典型的，Perl中“Native整型数”可以表示的整数的范围是-2**31..2**32-1，这个范围对64位的整数来说是比较合适的。但这并不意味着Perl只能处理这个范围内的整数：浮点类型可以存下更大的整数。
+<P>
+
+总而言之，Perl中的数是有限位数的十进制数或者说是足够短的二进制数。
+<A NAME="lbAF">&nbsp;</A>
+<H2>Numeric operators and numeric conversions 数值运算符和数值转换</H2>
+
+<A NAME="ixAAF"></A>
+就像前面说的那样，Perl可以用三种格式中的任意一种存放一个数，但是大多数运算符只能理解这三种格式中的一种。当一个数值作为参数传给一个运算符时，它将会被转换成运算符可以理解的那种格式。
+<P>
+
+可能出现的转换有下面六种：
+<P>
+
+
+
+<PRE>
+  native 整型        --&gt; native 浮点型      (*)
+  native 整型        --&gt; 十进制形式的字符串
+  native 浮点型 --&gt; native 整型              (*)
+  native 浮点型 --&gt; decimal string              (*)
+  十进制的字符串        --&gt; native 整型
+  十进制的字符串        --&gt; native 浮点型       (*)
+
+</PRE>
+
+
+<P>
+
+这些转换按照下列的规则进行：
+<DL COMPACT>
+<DT>&bull;<DD>
+如果原来的数可以用要转换成的格式表述，则其值继续使用，不会改变。
+<DT>&bull;<DD>
+如果原来的数超出了要转换成的格式所能表述的极限，则最接近极限的那个值会被用来做最后的值。（这会有信息上的损失）
+<DT>&bull;<DD>
+如果原来的数在要转换成的格式所能表述的两个相邻的数之间，则这两个数中的一个会被用来做最后的值。（这会有信息上的损失）
+<DT>&bull;<DD>
+在 <TT>&quot;native 浮点型 --&gt; native 整型&quot;</TT> 的转换中，结果的值小于等于原来的值。（因为是直接截取小数位取整的）(<I>``Rounding to zero''.</I>)
+<DT>&bull;<DD>
+如果 <TT>&quot;十进制的字符串 --&gt; native 整型&quot;</TT>  的转换不能在不损失信息的情况下完成，结果将会和下列的转换序列的结果一致：<TT>&quot;十进制的字符串 --&gt; native_浮点型 --&gt; native_整型&quot;</TT>. 特别要指出的是，尽管像 <TT>&quot;0.99999999999999999999&quot;</TT> 这样的数可能会取整成1，取整一般是倾向于0的。
+</DL>
+<P>
+
+<B></B><FONT SIZE="-1"><B>限制</B></FONT><B></B>: 上面标有 <TT>&quot;(*)&quot;</TT> 的转换包含有C编译器的动作步骤。在特殊情况下，C编译器的一些特性或者Bugs可能会导致上述一些规则的不成立。
+<A NAME="lbAG">&nbsp;</A>
+<H2>Flavors of Perl numeric operations 数值操作的特色</H2>
+
+<A NAME="ixAAG"></A>
+Perl 中带有数值参数的操作将按照四种方法处理参数：它们可能会将参数强制转换为整型，浮点型或是字符串型中的一种，或者按照操作数的格式来处理参数。在把一个数的类型强制转换成另一种特定的类型的过程中，原来存储的值不会改变。
+<P>
+
+所有需要整型数作参数的运算符会对参数进行取模的操作。比如说用32位存放整型数时会把数对2的32次方取模 (<TT>&quot;mod 2**32&quot;</TT>)，所以 <TT>&quot;sprintf &quot;%u&quot;, -1&quot;</TT>  的结果和 <TT>&quot;sprintf &quot;%u&quot;, ~0&quot;</TT> 的结果是一样的。
+<DL COMPACT>
+<DT>Arithmetic operators 算术运算符<DD>
+<A NAME="ixAAH"></A>
+二进制运算符 <TT>&quot;+&quot;</TT> <TT>&quot;-&quot;</TT> <TT>&quot;*&quot;</TT> <TT>&quot;/&quot;</TT> <TT>&quot;%&quot;</TT> <TT>&quot;==&quot;</TT> <TT>&quot;!=&quot;</TT> <TT>&quot;&gt;&quot;</TT> <TT>&quot;&lt;&quot;</TT>
+<TT>&quot;&gt;=&quot;</TT> <TT>&quot;&lt;=&quot;</TT> 以及一元运算符 <TT>&quot;-&quot;</TT> <TT>&quot;abs&quot;</TT> and <TT>&quot;--&quot;</TT> 
+总试图将参数转换为整形。如果转换都可以无损精度地进行，并且运算也无损于精度，那么返回整数的结果。否则，参数被转换为浮点数，返回浮点数结果。转换的缓冲过程保证了整数转换不会将浮点数的零头丢掉
+<DT>++<DD>
+<TT>&quot;++&quot;</TT> 的行为与其他操作符类似，但是如果操作数是满足 <TT>&quot;/^[a-zA-Z]*[0-9]*\z/&quot;</TT> 格式的字符串，将进行 perlop 中描述的字符串递增运算。
+<DT>定义了 &quot;use integer&quot; 时的算术运算<DD>
+
+
+<A NAME="ixAAI"></A>
+在 <TT>&quot;use integer;&quot;</TT> 的作用范围内，几乎上面列出的所有操作符都将它们的操作数转换为整数，返回整数的结果，例外情况是 <TT>&quot;abs&quot;</TT>, <TT>&quot;++&quot;</TT> 和 <TT>&quot;--&quot;</TT>，在这种情况下不改变行为。
+<DT>Other mathematical operators 其他数学操作符<DD>
+<A NAME="ixAAJ"></A>
+类似 <TT>&quot;**&quot;</TT>, <TT>&quot;sin&quot;</TT> 和 <TT>&quot;exp&quot;</TT> 的操作符强制参数为浮点格式。
+<DT>Bitwise operators 位操作符<DD>
+<A NAME="ixAAK"></A>
+如果不是字符串，操作数被强制转换为整型
+<DT>定义了 &quot;use integer&quot; 时的位运算<DD>
+
+
+<A NAME="ixAAL"></A>
+强制参数为整型。并且，移位操作在内部使用有符号整型而不是默认的无符号数
+<DT>需要整型操作数的操作符<DD>
+<A NAME="ixAAM"></A>
+强制操作数转换为整型。例如，在函数 <TT>&quot;sysread&quot;</TT> 的第三和第四个参数中，这样做是合适的。
+<DT>需要字符串的操作符<DD>
+<A NAME="ixAAN"></A>
+强制操作数为字符串格式。例如，在 <TT>&quot;printf &quot;%s&quot;, $value&quot;</TT> 中，这样做是合适的。
+</DL>
+<P>
+
+尽管强制转换参数为特定格式不会改变已存储的数字，Perl 会记录转换的结果。特别的，尽管第一次转换会耗费一定时间，重复进行的操作不会需要重新转换。
+<A NAME="lbAH">&nbsp;</A>
+<H2>AUTHOR 作者</H2>
+
+<A NAME="ixAAO"></A>
+Ilya Zakharevich <TT>&quot;<A HREF="mailto:ilya@math.ohio-state.edu">ilya@math.ohio-state.edu</A>&quot;</TT>
+<P>
+
+由 Gurusamy Sarathy &lt;<A HREF="mailto:gsar@ActiveState.com">gsar@ActiveState.com</A>&gt; 编辑
+<P>
+
+由 Nicholas Clark &lt;<A HREF="mailto:nick@ccl4.org">nick@ccl4.org</A>&gt; 更新为 5.8.0 版
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<A NAME="ixAAP"></A>
+overload, perlop
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">Storing numbers 数值存储</A><DD>
+<DT><A HREF="#lbAF">Numeric operators and numeric conversions 数值运算符和数值转换</A><DD>
+<DT><A HREF="#lbAG">Flavors of Perl numeric operations 数值操作的特色</A><DD>
+<DT><A HREF="#lbAH">AUTHOR 作者</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

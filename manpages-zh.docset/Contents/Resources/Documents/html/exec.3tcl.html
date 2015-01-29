@@ -1,0 +1,241 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of exec</TITLE>
+</HEAD><BODY>
+<H1>exec</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.6<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+exec - 调用子进程
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>exec </B>?<I>switches</I>? <I>arg </I>?<I>arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令把它的参数作为对要执行的一个或多个子进程的指定来对待。参数接受标准的 shell 管道的格式(form)，即每个 <I>arg</I> 都变成某个命令的一个字，并且每个不同的命令都变成一个子进程。
+<P>
+
+如果给 <B>exec</B>的初始的参数以 <B>-</B> 开始，则它们被作为命令行开关而不是管道指定的一部分来对待。当前支持下列开关:   
+<DL COMPACT>
+<DT><B>-keepnewline</B><DD>
+在管道的输出中保持尾随的换行符。通常要删除尾随的换行符。          
+<DT><B>--</B><DD>
+标志开关(部分)的结束。此后的参数即使以<B>-</B>开头仍被作为第一个 <I>arg</I> 来对待。        
+</DL>
+<P>
+
+如果一个 <I>arg</I>  (或成对的 <I>arg</I>)有象下面描述的格式个某一种，则<B>exec</B>  用它来控制子进程间的输入和输出流(flow)。将不把这样的参数传递给子进程。在象“&lt; <I>fileName</I>”这样的格式中 <I>fileName</I> 可以要么是一个与“&lt;”分离的参数，要么是在同一个参数中而没有间隔的空格(例如          
+“&lt;<I>fileName</I>”)。           
+<DL COMPACT>
+<DT>|<DD>
+分隔在管道中不同的命令。前面的命令的标准输出将被输送给后面命令的标准输入中。 
+<DT>|&amp;<DD>
+分隔在管道中不同的命令。前面命令的标准输出和标准错误输出都被输送到后面的标准输入中。这种重定向格式取代象 2&gt;  和 &gt;&amp; 这样的格式。     
+<DT>&lt;&nbsp;<I>fileName</I><DD>
+打开由 <I>fileName</I> 指名的文件并作为在管道中的第一个命令的标准输入来使用。       
+<DT>&lt;@&nbsp;<I>fileId</I><DD>
+<I>FileId</I>  必须是一个打开了的文件的标识符，比如是从以前的 <B>open </B>调用的返回值。作为在管道中的第一个命令的标准输入来使用。<I>FileId</I>           
+<BR>&nbsp;必须用读模式来打开。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<DT>&lt;&lt;&nbsp;<I>value</I><DD>
+<I>Value</I>  被传递给第一个命令来作为它的标准输入。       
+<DT>&gt;&nbsp;<I>fileName</I><DD>
+最后的命令的标准输出被重定向到叫 <I>fileName</I><I> </I>的文件中，覆盖它以前的内容。    
+<DT>2&gt;&nbsp;<I>fileName</I><DD>
+把管道中所有命令的标准错误输出重定向到叫 <I>fileName</I> 的文件中，覆盖它以前的内容。          
+<DT>&gt;&amp;&nbsp;<I>fileName</I><DD>
+最后的命令的标准输出和所有命令的标准错误输出都被重定向到叫 <I>fileName</I>的文件中，覆盖它以前的内容。         
+<DT>&gt;&gt;&nbsp;<I>fileName</I><DD>
+最后的命令的标准输出被重定向到叫 <I>fileName</I> 的文件中，对它进行添加而不是覆盖它。      
+<DT>2&gt;&gt;&nbsp;<I>fileName</I><DD>
+在管道中的所有的命令的标准错误输出都被重定向到叫 <I>fileName</I>的文件中，对它进行添加而不是覆盖它。       
+<DT>&gt;&gt;&amp;&nbsp;<I>fileName</I><DD>
+最后的命令的标准输出和所有命令的标准错误输出被重定向到叫 <I>fileName</I> 的文件中，对它进行添加而不是覆盖它。         
+<DT>&gt;@&nbsp;<I>fileId</I><DD>
+<I>FileId</I>  必须是一个打开了的文件的标识符，比如是从以前的 <B>open</B>调用的返回值。最后的命令的标准输出被重定向到 <I>fileId</I>(指定)的文件中。文件必须用读模式来打开。          
+<DT>2&gt;@&nbsp;<I>fileId</I><DD>
+<I>FileId</I> 必须是一个打开了的文件的标识符，比如是从以前的 <B>open</B>调用的返回值。在管道中的所有命令的标准错误输出都被重定向到 <I>fileId</I>(指定)的文件中。文件必须用写模式来打开。          
+<DT>&gt;&amp;@&nbsp;<I>fileId</I><DD>
+<I>FileId</I> 必须是一个打开了的文件的标识符，比如是从以前的 <B>open</B>调用的返回值。最后的命令的标准输出和所有命令的标准错误输出被重定向到 <I>fileId</I>(指定)的文件中。文件必须用写模式来打开。          
+</DL>
+<P>
+
+如果标准输出没有被重定向，则 <B>exec</B>   命令返回在管道中最后的命令的标准输出。如果在管道中的任何命令不正常退出或被杀死或被挂起，则 <B>exec</B>  将返回一个错误和并且错误信息将包含管道的输出和随后的描述不正常终止的错误信息；<B>errorCode</B>   变量将包括关于最近所遭遇的不正常终止的额外的信息。如果任何命令写它的标准错误文件而这个标准错误未被重定向，则 <B>exec</B> 将返回一个错误；错误消息将包含管道的标准输出，跟着是关于不正常终止的信息(如果有的话)，随后是标准错误输出。
+<P>
+
+如果结果或错误信息的最后的字符是一个换行符，则这个换行符通常被从结果或错误信息中删除。这是与其他 Tcl 返回值相一致的，它们通常不用换行(作为)结束。但是，如果指定了 <B>-keepnewline</B>则保持尾随的换行符。
+<P>
+
+如果标准输入未使用 “&lt;” 、“&lt;&lt;” 或 “&lt;@” 来重定向，则把应用的当前的标准输入作为第一个命令的标准输入。
+<P>
+
+如果最后的 <I>arg</I> 是“&amp;”，则管道将在后台执行。在这种情况下 <B>exec</B>命令将返回一个列表，列表的元素是在管道中所有子进程的进程标识符。如果在管道中最后的命令的标准输出未被重定向，则输出到应用的标准输出中，并且如果管道中所有的命令的错误输出未被重定向，则错误输出到应用的标准错误中。
+<P>
+
+每个命令中的第一个字被接受为命令的名字；在它上面进行“~”(tilde)替换，如果结果不包含斜杠，则在 PATH  环境变量中的目录里查找给定名字的可执行文件。如果名字包含斜杠，则它必须参照一个从当前目录可到达的可执行文件。在给命令的参数上不进行通配符 (glob) 扩展或其他的     
+shell 式的替换。           
+<P>
+
+
+
+
+
+
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>移植要点 PORTABILITY ISSUES</H2>
+
+<DL COMPACT>
+<DT><B>Windows</B> (所有版本)<DD>
+从/向一个套接口读或写，使用“<B>@ </B><I>fileId</I>”记号(notation)，不能工作。在从一个套接口读的时候，一个16位 DOS 应用程序将挂起(hang) 而一个32位应用程序将立即返回文件结束(end-of-file)。在任意类型的应用向一个套接口写的时候，如果控制台存在的话，信息转而发送到控制台，否则就丢弃信息。
+<P>
+Tk     
+控制台文本组件不提供真实的标准 IO 功能。在 Tk 下，从标准输入重定向的时候，所有的应用将看到一个立即的文件结束；重定向到标准输出或标准错误输出的信息将被丢弃。
+<P>
+要么是正斜杠要么是反斜杠被接受为给 Tcl 命令的参数的路径分隔符。在执行一个应用的时候，对应用的路径名指定也可以包含正或反斜杠作为路径分隔符。但是必须记住，多数 Windows 应用接受有正斜杠的参数作为选项分界符(delimiter)而反斜杠只在路径中。指定了有正斜杠的一个路径名的给应用的任何参数将不被自动的转换成使用反斜杠字符。如果一个参数包括作为路径分隔符的正斜杠，它可以被识别成路径名，也可以不被识别成路径名，这依赖于(具体)程序。
+<P>
+额外的，在调用一个16位 DOS 或 Windows 3.X 应用时，所有路径名必须使用短的、神秘的(cryptic)的路径格式(例如，使用“applba~1.def”来替代 “applbakery.default”)。
+<P>
+在一个路径中在一行的两个或更多的正或反斜杠参照一个网络路径。例如，根目录<B>c:/</B>  和一个子目录<B>/windows/system</B>的一个简单的连接将产生<B>c://windows/system</B>  (两个斜杠在一起)，这参照的是在叫 <B>windows</B>  的那台机器上的叫 <B>system</B>  的挂装点(而 <B>c:/</B> 被忽略)，这并不等价于 <B>c:/windows/system</B>，它描述的是在当前计算机上的一个目录。应使用 <B>file join</B>  命令来连接路径的成员。
+<DT><B>Windows NT</B><DD>
+在尝试执行一个应用时，<B>exec</B> 首先查找指定的那个名字。接着按 <B>.com</B>、 <B>.exe</B>, 和 <B>.bat</B>  的次序把它们添加到指定的名字的后面并查找这个加长了的名字。如果没有指定一个目录名作为应用(程序)名的一部分，在尝试定位应用(程序)时，依次在下列目录中自动查找:          
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT><DT><DD>
+装载 Tcl 可执行文件的目录。  
+<BR>
+
+当前目录
+<BR>
+
+Windows NT 32位系统目录。          
+<BR>
+
+Windows NT 16位系统目录。
+<BR>
+
+Windows NT 主目录。     
+<BR>
+
+在 path 中列出的目录。          
+</DL>
+
+<P>
+要执行 shell 内置命令象 <B>dir</B> 和 <B>copy</B>, 调用者必须为想用的命令加上“<B>cmd.exe /c </B>”前导 (prepend)。 
+<P>
+</DL>
+
+<DT><B>Windows 95</B><DD>
+在尝试执行一个应用时，<B>exec</B>首先查找指定的那个名字。接着按 <B>.com</B>、 <B>.exe</B>, 和 <B>.bat</B> 的次序把它们添加到指定的名字的后面并查找这个加长了的名字。如果没有指定一个目录名作为应用(程序)名的一部分，在尝试定位应用(程序)时，依次在下列目录中自动查找:         
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT><DT><DD>
+装载 Tcl 可执行文件的目录。
+<BR>
+
+当前目录。 
+<BR>
+
+Windows 95 系统目录。  
+<BR>
+
+Windows 95 主目录。      
+<BR>
+
+在 path 中列出的目录。 
+</DL>
+
+<P>
+要执行 shell 内置命令象 <B>dir</B> 和 <B>copy</B>, 调用者必须为想用的命令加上“<B>command.exe /c </B>”前导(prepend)。
+<P>
+一旦一个 16位 DOS 应用程序从一个控制台读标准输入接着退出，所以后来运行的 16位 DOS 应用程序将看到标准输入已经被关闭了。32位应用程序没有这个问题并将正确运行，即使在一个 16位 DOS 应用程序认为标准输入已经被关闭之后。此时还没有针对这个缺陷的已知的工作项目(workaround)。
+<P>
+NUL: &lt;/B&gt; 设备和一个 16位应用程序之间的重定向不总是工作。在从 <B>NUL: </B>重定向时 一些应用程序可能挂起，另一些将得到永无穷尽(infinite)的“0x01”字节流(stream)，而有一些实际上将正确的得到立即的文件结束；这些行为象是依赖于编译到应用程序自身中的某些东西。在到 <B>NUL:</B>的重定向大于或等于4K 时, 一些应用将挂起(hang)。在32位应用程序中不发生上述问题。
+<P>
+所有 DOS 16位应用程序都是同步运行的。从一个管道到一个 16位 DOS 应用程序的所有标准输入被搜集到一个临时文件中；在这个16位 DOS 应用程序开始执行之前，管道的其他端点(end)必须被关闭。从一个16位 DOS应用程序到一个管道的所有标准输出或错误输出被搜集到一个临时文件中；在临时文件被重定向到管道的下一个阶段之前，这个应用程序必须终止。这源于一个针对 Windows 95在实现管道中的一个缺陷的工作项目，也是标准的 Windows 95 DOS shell  自身处理管道的方式。
+<P>
+特定的应用程序，象 <B>command.com</B> ，不应该交互的执行。不从标准输入读和向标准输出写，而是直接访问控制台窗口的应用程序可能会失败，并挂起Tcl，如果它们自己的私有控制台窗口不可使用甚至可能挂起系统。   
+</DL>
+
+<DT><B>Macintosh</B><DD>
+在 Macintosh 下 <B>exec</B>  命令未被实现而不存在。   
+<DT><B>Unix</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<DD>
+<BR>&nbsp;<B>exec</B>&nbsp;&nbsp;命令是全功能的并象上面描述的那样工作。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+error">error</A>(n), <A HREF="/cgi-bin/man/man2html?n+open">open</A>(n)
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+execute, pipeline, redirection, subprocess
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/07/11       </B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">移植要点 PORTABILITY ISSUES</A><DD>
+<DT><A HREF="#lbAF">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

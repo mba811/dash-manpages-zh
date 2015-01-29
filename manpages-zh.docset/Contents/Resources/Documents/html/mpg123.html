@@ -1,0 +1,512 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of mpg123</TITLE>
+</HEAD><BODY>
+<H1>mpg123</H1>
+Section: User Commands  (1)<BR>Updated: 21 Apr 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>命令名</H2>
+
+mpg123 - 播放 MPEG 1.0/2.0 Layer-1, -2, -3 音频文件
+<A NAME="lbAC">&nbsp;</A>
+<H2>语法</H2>
+
+<B>mpg123</B>
+
+[
+<B>-tscvqy01m24</B>
+
+][
+<B>-b</B><I> size</I>
+
+][
+<B>-k</B><I> num</I>
+
+][
+<B>-n</B><I> num</I>
+
+][
+<B>-f</B><I> factor</I>
+
+][
+<B>-r</B><I> rate</I>
+
+][
+<B>-g</B><I> gain</I>
+
+][
+<B>-a</B><I> dev</I>
+
+][
+<B>-o s</B> | <B>-o h</B> | <B>-o l</B>
+
+][
+<B>-d</B><I> n</I>
+
+][
+<B>-h</B><I> n</I>
+
+][
+<B>-p</B><I> proxy</I>
+
+][
+<B>-@</B><I> file</I>
+
+]
+<I>file</I> ... | <I>URL</I> ... | 
+
+<B>-</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>mpg123</B>
+
+从一个或多个
+<I>文件</I>
+
+或者
+<I>URL</I>
+
+读取MPEG-1/2音频比特流 (如果指定 `-' 选项, 则从标准输入读取),
+然后使用音频设备进行播放(默认), 或将解码结果送 到标准输出上.
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<B>mpg123</B>
+
+接收传统的POSIX风格的单字母选项, 也接收GNU风格的长单词选项. 这两 种选项分别以 `-' 和
+&quot;--&quot; 开头.
+<DL COMPACT>
+<DT><B>-t</B>, <B>--test</B>
+
+<DD>
+测试模式. 对音频流进行解码, 但不输出.
+<DT><B>-s</B>, <B>--stdout</B>
+
+<DD>
+将解码结果送到标准输出上, 而不使用音频设备进行播放. 如果
+<B>mpg123</B>
+
+不支持你的音频硬件, 你就可以试试这一选项, 这时, 
+<B>mpg123</B>
+
+以本机 字节顺序(host byte order)输出16比特的立体声线性PCM(脉冲编码调制)
+音频裸数据(没有数据头).
+<DT><B>-c</B>, <B>--check</B>
+
+<DD>
+对每一帧进行滤波器越界检查, 如发生则报告之.
+<DT><B>-v</B>, <B>--verbose</B>
+
+<DD>
+播放时显示更多信息, 比如显示当前正在解码的帧号. 
+<DT><B>-q</B>, <B>--quiet</B>
+
+<DD>
+安静模式. 不显示诊断信息.
+<DT><B>-y</B>, <B>--resync</B>
+
+<DD>
+如果输入文件发生错误, 则重新进行同步并继续解码. 另外, 对那些文件 头损坏的MPEG文件,
+通常
+<B>mpg123</B>
+
+会拒绝播放并显示 ' Illegal header', 但如果指定本选项, 
+<B>mpg123</B>
+
+会试图从损坏的文件头中恢复并进行播放. 小心:
+损坏的MPEG文件在播放到损坏处时可能出现尖利刺耳的噪声, 如果 音量过大, 可能损坏扬声器.
+<DT><B>-0</B>, <B>--single0</B>; <B>-1</B>, <B>--single1</B>
+
+<DD>
+只对0(左) 声道或者1(右) 声道进行解码. 这两个选项只对立体声的MPEG 音频流有效.
+<DT><B>-m</B>, <B>--singlemix</B>
+
+<DD>
+将两个声道混音. 此选项只对MPEG Layer-3的立体声音频流有效, 并可比
+完全立体声解码节省一些
+CPU时间.
+<DT><B>-2</B>, <B>--2to1</B>; <B>-4</B>, <B>--4to1</B>
+
+<DD>
+将输出流的采样率将低至标准的1/2 (22kHz) 或者1/4 (11kHz). 使用这
+两个选项可以减少一些CPU的负荷, 但是声音质量会下降(至少使用11kHz 采样率时会很难听).
+<DT><B>-b </B><I>size</I>, <B>--buffer </B><I>size<DD>
+用
+size</I>
+
+指定输出缓冲区的大小, 单位为千字节. 使用此选项通常可以避 免由频繁的系统操作造成的
+声音输出时断时续的现象. 
+<I>size</I>
+
+的值小于 300时就没什么意义了, 建议至少取1024(即使用1Mb的缓冲区, 可以缓冲
+相当于6秒钟的音频数据).
+<I>size</I>
+
+的默认值为0, 即不进行输出缓冲.
+<DT><B>-k </B><I>num</I>, <B>--skip </B><I>num<DD>
+跳过前
+num</I>
+
+帧. 不指定此选项时, 默认从第1帧开始解码. 
+<DT><B>-n </B><I>num</I>, <B>--frames </B><I>num<DD>
+只对前
+num</I>
+
+帧进行解码. 不指定此选项时, 默认对整个音频流进行解码.
+<DT><B>-f </B><I>factor</I>, <B>--scale </B><I>factor<DD>
+改变缩放因子
+factor</I>
+
+的值(默认值为32768).
+<DT><B>-r </B><I>rate</I>, <B>--rate </B><I>rate<DD>
+设置采样率
+rate</I>
+
+(默认为自动设置). 使用这一选项后,
+<B>mpg123</B>
+
+会自动 将速率转换成不依赖于MPEG流速率的一个恒定比特率.
+此选项应该和 --stereo 或 --mono 联合起来使用.
+<DT><B>-g </B><I>gain</I>, <B>--gain </B><I>gain<DD>
+设置音频硬件输出增益
+gain</I>
+
+(默认为保持不变).
+<DT><B>-a </B><I>dev</I>, <B>--audiodevice </B><I>dev<DD>
+指定音频设备. 默认的音频设备与系统配置有关(通常是 /dev/audio 或 /dev/dsp ),
+如果系统中有多个音频设备而默认的又不是你想用的那个, 就可使用本选项.
+<DT></I><B>-o s</B>, <B>--speaker</B>
+
+<DD>
+将声音导出到主板上的扬声器上.
+<DT><B>-o h</B>, <B>--headphones</B>
+
+<DD>
+将声音导出到耳机连接器上.
+<DT><B>-o l</B>, <B>--lineout</B>
+
+<DD>
+将声音导出到Line-Out连接器上.
+<DT><B>-d </B><I>n</I>, <B>--doublespeed </B><I>n<DD>
+每
+n</I>
+
+帧播放一帧. 这会使MPEG流的播放速度提高为正常速度的
+<I>n</I>
+
+倍, 从而可以产生特殊的声音效果. 此选项可以和
+<B>--halfspeed</B>
+
+选项组合使 用, 实现类似每4帧播放3帧(译者注: 指定-d 4 -h 3)的效果.
+如果使用 此选项, 不要指望声音质量会很好.
+<DT><B>-h </B><I>n</I>, <B>--halfspeed </B><I>n<DD>
+将每帧都播放
+n</I>
+
+遍. 这会使MPEG流的播放速度降低为正常速度的
+<I>1</I>/<I>n</I>,
+
+从而可以产生特殊的声音效果. 此选项可以和
+<B>--doublespeed</B>
+
+选项组合 使用, 实现类似每3帧播放2帧(译者注: 指定-h 2 -d 3)的效果.
+如果使 用此选项, 不要指望声音质量会很好.
+<DT><B>-p </B><I>URL </I>| <B>none</B>, <B>--proxy </B><I>URL </I>| <B>none<DD>
+指定
+</B><I>proxy</I>
+
+作为HTTP请求的代理. 指定的格式应是一个完整的URL (如&quot;<A HREF="http://host.domain:port/">http://host.domain:port/</A>&quot;),
+但是可以省略前缀&quot;http://&quot;, 端口 号port(默认的端口为80)和末尾的'/'. 
+如果指定为
+<B>none</B>
+
+,则不使用代 理, 直接向服务器请求文件. 更多细节请看 &quot;HTTP 支持&quot; 小节.
+<DT><B>-u </B><I>auth</I>, <B>--auth </B><I>auth<DD>
+如果通过HTTP下载文件时服务器要求提供认证信息, 则由
+auth</I>
+
+指定, 其 格式为 &quot;用户名:密码&quot; (不包括引号).
+<DT><B>-@ </B><I>file</I>, <B>--list </B><I>file<DD>
+从
+file</I>
+
+指定的文件中读取将要播放的MPEG音频流所在的文件和(或)URL, 如果
+命令行中还指定了其它的文件和(或)URL, 也将其包含进播放清单.
+如果指定
+<I>file</I>
+
+为 `-'而非一个普通的文件名, 
+<B>mpg123</B>
+
+将从标准输入读 取文件名和(或)URL, 或者读取一个指向播放清单文件的URL.
+注意:
+<B>-@</B>
+
+选项只能使用一次(如果多处指定, 则只有最后一个有效).
+<DT><B>-z</B>, <B>--shuffle</B>
+
+<DD>
+随机播放. 按随机的顺序播放命令行和清单文件中指定的音频文件.
+<DT><B>--stereo</B>
+
+<DD>
+强制立体声输出.
+<DT><B>--reopen</B>
+
+<DD>
+强制在播放完一个文件后重新打开音频设备.
+<DT><B>--8bit</B>
+
+<DD>
+强制8比特输出.
+<DT><B>-Z</B>, <B>--random</B>
+
+<DD>
+完全随机播放. (译者注: 与 --shuffle 选项的区别是, 指定本选项有可
+能重复多次播放同一文件)
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>操作数</H2>
+
+<B>mpg123</B>
+
+支持下面的操作数:
+<DL COMPACT>
+<DT><I>file</I>
+
+<DD>
+指定输入文件的路径. 这些文件必须包含合法的MPEG-1/2音频 Layer-1,
+Layer-2或Layer-3的比特流.
+如果指定为'-', 将从标准输入读取MPEG数 据. 进一步, 如果以&quot;http://&quot;开头, 则认为指定
+了一个
+<I>URL</I>
+
+(请看下一 节).
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>HTTP 支持</H2>
+
+除了能从普通文件和标准输入读取MPEG音频流,  
+<B>mpg123</B>
+
+还支持通过HTTP协 议从万 维网(WWW)上获取由URL(统一资源定位符)指定的文件.
+一个URL是一个以 &quot;http://&quot; 为前缀的字符串, 当
+<B>mpg123</B>
+
+识别到这个前缀, 它会尝试开启一个 到相应服务器的连接, 
+接着获取相应的文件并进行解码播放.
+<P>
+
+很多时候, 从WWW缓存, 或所谓的网络代理比直接从服务器更容易获取文件. 为利 用这种便利,
+<B>mpg123</B>
+
+会依次检查
+<B>MP3_HTTP_PROXY</B>, http_proxy<B>和</B>HTTP_PROXY,
+
+这三个环境变量是否被设置, 并将第一个被设置的变量的值作为指定的代理.
+如 果你需要自己指定另外的代理, 可以使用
+<B>-p</B>
+
+命令行选项 (请看&quot;选项&quot;小节).  使用
+<B>-p none</B>
+
+选项将不使用任何代理而直接连接服务器, 即使前面所述的三个 变量被设置.
+<P>
+
+值得注意的是, 为了能从一个WWW服务器获取并流畅地播放MPEG音频文件, 
+必须有 足够快的网络连接. 例如, 为了能播放速率为128kbit/s的MPEG文件, 所需的
+网络带宽至少应该是128kbit/s加上网络协 议本身的传输开销.
+如果网络常发生 短时中断, 可以试试用
+<B>-b</B>
+
+选项指定一个缓冲区. 如果你所在的网络根本无 法达到实时传输MPEG音频文件所需的带宽,
+就只好使用
+<B><A HREF="/cgi-bin/man/man2html?1+lynx">lynx</A></B>(1)
+
+之类的软件先将 文件下载到本地硬盘上再进行播放了.
+<P>
+
+如果服务器要求认证, 可以使用
+<B>-u auth</B>
+
+选项(请看&quot;选项&quot;小节)指定用户名和密 码.
+<A NAME="lbAH">&nbsp;</A>
+<H2>中断</H2>
+
+任何时候按Ctrl-C键都能中断
+<B>mpg123</B>
+
+的运行. 如果有多个文件在播放, Ctrl-C 会终止当前文件的播放并
+开始播放下一个文件, 这种情况下, 如果你想终止整 个程序的运行, 必须连按两次Ctrl-C
+(在约一秒钟之内).
+<P>
+
+注意, 按了Ctrl-C之后声音也许不会马上消失, 这是因为系统的音频设备缓冲了 
+一部分数据. 这种延迟随系统不同而不同, 但通常都不超过1到2秒.
+<A NAME="lbAI">&nbsp;</A>
+<H2>相关说明</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+lynx">lynx</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+sox">sox</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+intro">intro</A></B>(1)
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>注意</H2>
+
+MPEG音频解码, 特别是Layer-3的解码, 需要CPU进行大量的运算. 为能达到实时
+解码, 你的计算机至少应该配备Pentium, Alpha, SuperSparc或性能相当的处 理器.
+同时你可以使用
+<B>-singlemix</B>
+
+选项进行单声道解码, 对Layer-3, 这多少 能减少一点CPU负荷. 此外你也可以考虑使用
+<B>-2</B> 和 <B>-4</B>
+
+选项.
+<P>
+
+如果这些方法都不奏效, 试试用
+<B>-s</B>
+
+选项将解码结果送到标准输出上并将其定向 到一个文件中, 然后再用适当的工具播放这个文件.
+你也许会用到
+<B><A HREF="/cgi-bin/man/man2html?1+sox">sox</A></B>(1)
+
+这个 工具, 它能将文件转换成你的音频播放器所用的格式.
+<P>
+
+还有一点就是
+<B>mpg123</B>
+
+总是输出16比特的立体声数据(如果指定
+<B>-0</B>或<B>-1</B>
+
+选项中 的一个, 立体声两个声道的数据是相同的). 如果系统硬件要求其它格式, 比如8
+比特的单声道的数据, 同样可以使用
+<B><A HREF="/cgi-bin/man/man2html?1+sox">sox</A></B>(1)
+
+进行转化.
+<P>
+
+如果你的系统本身足够快, 能够进行实时解码, 只是在系统负荷较重时(如定时任
+务, 用户远程登录或启动`大'程序等)出现停顿, 你应该用
+<B>-b</B>
+
+选项指定一个不小 于1000K字节的缓冲区.
+<A NAME="lbAK">&nbsp;</A>
+<H2>BUGS</H2>
+
+<DL COMPACT>
+<DT>已知的BUG和局限性:<DD>
+<BR>
+
+MPEG-2, Layer-1和-2未经 测试. 可能不能工作.(Layer-3应该能工作.)
+<BR>
+
+不提供对自由格式的音频流的支持.
+<BR>
+
+对Layer-1的支持未经 严格测试. 
+<BR>
+
+未进行CRC错误校验.
+<BR>
+
+没有对DEC Digital Unix, Ultrix 和 IBM AIX平台上的音频硬件提供支 持,
+因此在这些平台上必须使用
+<B>-s</B>
+
+选项.
+</DL>
+<A NAME="lbAL">&nbsp;</A>
+<H2>作者</H2>
+
+<DL COMPACT>
+<DT>主要作者:<DD>
+<BR>
+
+Michael Hipp &lt;<A HREF="mailto:hippm@informatik.uni-tuebingen.de">hippm@informatik.uni-tuebingen.de</A>&gt;
+<DT>使用了下面的代码或借鉴了其中的思想:<DD>
+<BR>
+
+MPEG Software Simulation Group (Base package)
+<BR>
+
+Philipp Knirsch &lt;<A HREF="mailto:phil@mpik-tueb.mpg.de">phil@mpik-tueb.mpg.de</A>&gt; (DCT36/manual unroll)
+<BR>
+
+Tobias Bading &lt;<A HREF="mailto:bading@cs.tu-berlin.de">bading@cs.tu-berlin.de</A>&gt; (subband synthesis)
+<BR>
+
+Jeff Tsay &lt;<A HREF="mailto:ctsay@pasteur.eecs.berkeley.edu">ctsay@pasteur.eecs.berkeley.edu</A>&gt; (DCT36)
+<BR>
+
+Thomas Woerner (SGI Audio)
+<BR>
+
+Damien Clermonte &lt;<A HREF="mailto:clermond@esiee.fr">clermond@esiee.fr</A>&gt; (HP-UX audio fixes)
+<BR>
+
+Oliver Fromme &lt;<A HREF="mailto:oliver.fromme@heim3.tu-clausthal.de">oliver.fromme@heim3.tu-clausthal.de</A>&gt;
+</DL>
+<P>
+
+网络参考资料:
+<A HREF="http://www.sfs.nphil.uni-tuebingen.de/~hipp/mpg123.html">http://www.sfs.nphil.uni-tuebingen.de/~hipp/mpg123.html</A>
+<BR>
+
+<A HREF="http://www.heim3.tu-clausthal.de/~olli/mpg123/">http://www.heim3.tu-clausthal.de/~olli/mpg123/</A>
+<BR>
+
+(包含关于mpg123邮件组的信息)
+<P>
+
+在此获取最新版本:
+<BR>
+
+<A HREF="http://ftp.tu-clausthal.de/pub/unix/audio/mpg123">http://ftp.tu-clausthal.de/pub/unix/audio/mpg123</A>
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+linuxipy &lt;<A HREF="mailto:groove@ustc.edu">groove@ustc.edu</A>&gt;
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2004/2/29
+<A NAME="lbAO">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">命令名</A><DD>
+<DT><A HREF="#lbAC">语法</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">操作数</A><DD>
+<DT><A HREF="#lbAG">HTTP 支持</A><DD>
+<DT><A HREF="#lbAH">中断</A><DD>
+<DT><A HREF="#lbAI">相关说明</A><DD>
+<DT><A HREF="#lbAJ">注意</A><DD>
+<DT><A HREF="#lbAK">BUGS</A><DD>
+<DT><A HREF="#lbAL">作者</A><DD>
+<DT><A HREF="#lbAM">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAN">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAO">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

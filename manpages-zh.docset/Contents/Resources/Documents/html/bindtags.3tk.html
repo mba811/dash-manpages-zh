@@ -1,0 +1,126 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of bindtags</TITLE>
+</HEAD><BODY>
+<H1>bindtags</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: 4.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+bindtags - 确定对一个窗口提供那些绑定和求值的次序
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>bindtags </B><I>window </I>?<I>tagList</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+用  <B>bind</B> 命令建立的一个绑定，可以关联上一个特定的窗口如 <B>.a.b.c</B>，一个类的名字如  <B>Button</B>，关键字 <B>all</B>，或任何其他字符串。所有这些形式叫做绑定标签(<I>binding tags</I>)。每个窗口包含绑定标签的一个列表，它决定这个窗口如何处理事件。当在一个窗口中发生一个事件，依次把它提供给这个窗口的每个标签: 对于每个标签，执行匹配给定标签和事件的最明确的绑定。匹配处理的详情请参见 <B>bind</B>。
+<P>
+
+缺省的，每个窗口有四个绑定标签，它们依次是这个窗口的名字，这个窗口的类的名字，这个窗口的最近的顶层祖先的名字，和 <B>all</B>。顶层窗口缺省的只有三个标签，因为顶层名字与这个窗口的名字相同。<B>bindtags</B> 命令允许读取和修改一个窗口的绑定标签。
+<P>
+
+如果只用一个参数调用 <B>bindtags</B>，则把 <I>window</I> 的当前绑定标签的集合作为一个列表返回。如果对 <B>bindtags</B> 指定了 <I>tagList</I> 参数，则它必须是一个正确的列表；把 <I>window</I> 的标签变更为这个列表的元素。<I>tagList</I> 的元素可以是任意的字符串；但是，任何以一个点号开始的标签将被作为一个窗口的名字对待 ；如果在处理一个事件的时候不存在叫这个名字的窗口，则忽略这个事件的这个标签。<I>tagList</I> 中元素的次序决定执行绑定脚本来响应事件的次序。例如，命令
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>bindtags .b {all . Button .b}</B>
+
+</PRE>
+
+</DL>
+
+
+对叫做 <B>.b</B> 的一个按钮颠倒求值绑定脚本的次序，首先调用 <B>all</B> 绑定，接着是 <B>.b</B> 的顶层(“.”)的绑定，随后是类绑定，最后是 <B>.b</B> 的绑定。如果 <I>tagList</I> 是一个空列表则把 <I>window</I> 的绑定标签返回为上面描述的缺省状态。
+<P>
+
+可以使用 <B>bindtags</B>s 命令来为一个窗口介入任意的补充绑定标签，或则删除标准标签。例如，命令
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>bindtags .b {.b TrickyButton . all}</B>
+
+</PRE>
+
+</DL>
+
+
+把 <B>.b</B> 的 <B>Button</B> 标签替换为 <B>TrickyButton</B>。这意味着与 <B>Button</B> 标签相关联的按钮的缺省组件绑定，将不在提供给 <B>.b</B>，转而提供与 <B>TrickyButton</B> (可能有一些新的按钮行为)关联的任何绑定。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+bind
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+binding, event, tag
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/05/11</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

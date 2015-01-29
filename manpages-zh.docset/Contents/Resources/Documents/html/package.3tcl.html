@@ -1,0 +1,156 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of package</TITLE>
+</HEAD><BODY>
+<H1>package</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.5<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+package - 装载包和版本控制的设施  
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<PRE>
+<B>package forget ?</B><I>package package ...</I>?
+<B>package ifneeded </B><I>package version</I> ?<I>script</I>?
+<B>package names</B>
+<B>package present </B>?<B>-exact</B>? <I>package </I>?<I>version</I>?
+<B>package provide </B><I>package </I>?<I>version</I>?
+<B>package require </B>?<B>-exact</B>? <I>package </I>?<I>version</I>?
+<B>package unknown </B>?<I>command</I>?
+<B>package vcompare </B><I>version1 version2</I>
+<B>package versions </B><I>package</I>
+<B>package vsatisfies </B><I>version1 version2</I>
+</PRE>
+
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令维持由当前解释器使用的可获得的包以及如何把它们装载到解释器中的一个简单的数据库。它支持每个包的多个版本，并基于应用的需要安排装载一个包的正确的版本。这个命令还检测并报告版本冲突。典型的，在通常的 Tcl 脚本中只调用 <B>package require</B> 和 <B>package provide</B> 命令；其他命令主要被系统脚本用来维护包数据库。
+<P>
+
+<B>package</B> 命令的行为由它的第一个参数确定。允许下列形式:    
+<DL COMPACT>
+<DT><B>package forget ?</B><I>package package ...</I>?<DD>
+从这个解释器中删除关于每个指定的包的所有信息，包括由 <B>package ifneeded</B> 和 <B>package provide</B> 提供的信息。  
+<DT><B>package ifneeded </B><I>package version</I> ?<I>script</I>?<DD>
+这个命令典型的只出现在系统配置脚本中，被用来设置包数据库。若需要一个特定的包的一个特定的版本，它指示如果这个包的这个版本是可获得的，可通过执行  <I>script</I>   来把这个包来增加到解释器上。脚本保存在一个数据库中，由随后的 <B>package require</B> 命令使用；典型的，<I>script</I>   为在包中的命令设置自动装载(或直接调用 <B>load</B>  和/或 <B>source</B>)，接着调用<B>package provide</B>  来指示这个包已经存在。在数据库中可以有一个单一的包的多个版本的信息。如果数据库已经包含了对 <I>package</I> 和 <I>version</I> 的信息，则新 <I>script</I>  替换现存的脚本。如果省略了 <I>script</I> 参数，返回包 <I>package</I> 的版本 <I>version</I>  的当前脚本，如果未对这个 <I>package</I> 和 <I>version</I> 调用 <B>package ifneeded</B>  命令则返回一个空串。  
+<DT><B>package names</B><DD>
+返回在这个解释器中所有包的名字，为这些包提供了一个版本(通过 <B>package provide</B>)或可获得给它们的 <B>package ifneeded</B>  脚本。在列表中的元素的次序是任意的。
+<DT><B>package present </B>?<B>-exact</B>? <I>package </I>?<I>version</I>?<DD>
+除了在包没有装载时它不尝试并装载它之外，这个命令等价于 <B>package require</B>。
+<DT><B>package provide </B><I>package </I>?<I>version</I>?<DD>
+调用这个命令来指示在这个解释器中包 <I>package</I>  的这个版本 <I>version</I>  现在已经存在。它典型的被作为一个 <B>ifneeded</B>脚本的一部分而调用一次，并在包最终装载时被包自身再次调用。如果以前的 <B>package provide</B>  命令已经提供的 <I>package</I> 的一个不同的版本则生成一个错误。如果省略了 <I>version</I>  参数，则命令返回当前提供包的版本号，如果在这个解释器中对 <I>package</I> 没有调用 <B>package provide</B> 命令则返回一个空串。
+<DT><B>package require </B>?<B>-exact</B>? <I>package </I>?<I>version</I>?<DD>
+这个命令典型的被想要使用特定包的特定版本的 Tcl 脚本调用。参数指示想要哪个包，和确保把包的合适版本装载到解释器中的命令。如果命令成功执行，它返回装载的包的版本号；否则生成一个错误。如果同时指定了 <B>-exact</B>  开关和 <I>version</I>  选项，则只接受给定版本。如果省略了 <B>-exact</B> 但指定了 <I>version</I>  ，则主版本号与 <I>version </I>相同但晚于 <I>version</I> 的版本也可以接受。如果省略了 <B>-exact</B>  和 <I>version</I>二者则任何版本都可接受。如果已经提供了 <I>package</I> 的一个版本(通过调用 <B>package provide</B>  命令)，则它的版本号必须满足由<B>-exact</B>  和 <I>version</I>  给出的条件并且命令立即返回。否则，命令查找由以前的<B>package ifneeded</B> 命令提供的信息的数据库，看是否能获得一个可接受的版本。如果有，则调用最可接受的版本号的脚本；它必须做所有装载这个包所必须的工作，包括调用为这个包调用 <B>package provide</B>。如果 <B>package ifneeded</B>数据库不包含这个包的可接受的版本并且为这个解释器指定了一个 <B>package unknown</B> 命令则调用这个命令；当它完成的时候，Tcl 再次检查是否现在提供了这个包或是否有一个给它的 <B>package ifneeded</B>脚本。如果所有这些步骤不能提供这个包的一个可接受的版本，则命令返回一个错误。 
+<DT><B>package unknown </B>?<I>command</I>?<DD>
+这个命令提供在一个“最后一搏”(``last resort'') 命令，在 <B>package require</B>  期间如果 <B>package ifneeded</B> 数据库中没有一个包的合适的版本可调用这个命令。如果提供了 <I>command</I> 参数，它包含一个命令的第一部分，在一次 <B>package require</B> 命令期间调用这个命令的时候，Tcl  添加给出所须的包的名字和版本的两个附加参数。例如，如果 <I>command</I>是 <B>foo bar</B>  并且后来调用了命令 <B>package require test 2.4</B>，则 Tcl 将执行命令 <B>foo bar test 2.4</B>  来装载这个包。如果未给 <B>package require</B>  命令提供版本号，则给这个被调用的命令的版本参数是一个空串。如果 <B>package unknown</B>命令但不加 <I>command</I> 参数，则返回当前的 <B>package unknown</B> 脚本，如果没有就返回一个空串。如果指定 <I>command</I>   为一个空串，若当前有  <B>package unknown</B>  脚本则删除它。  
+<DT><B>package vcompare </B><I>version1 version2</I><DD>
+比较由 <I>version1</I>和 <I>version2 </I>给出的两个版本。如果 <I>version1</I> 比 <I>version2 </I>早就返回 -1，如果相同则返回0，如果 <I>version1</I> 比 <I>version2 </I>晚则返回 1。
+<DT><B>package versions </B><I>package</I><DD>
+返回 <I>package</I>  的所有版本号，通过 <B>package ifneeded</B>  命令为它们提供了信息。   
+<DT><B>package vsatisfies </B><I>version1 version2</I><DD>
+如果为 <I>version2</I>  写的脚本不须更改就可为 <I>version1</I>   工作则返回 1(例如，<I>version1</I>  大于等于 <I>version2</I>   并且有相同的主版本号)，否则返回 0。
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>版本号 VERSION NUMBERS</H2>
+
+<P>
+
+版本号由一个或多个用点号分隔的十进制数组成，比如 2 或 1.162  
+或 3.1.13.1。第一个数叫做主版本号。越大的数对应一个包的越晚的版本，最左边的数有更大的权重(significance).  
+例如，版本 2.1 比 1.3 晚而版本         
+3.4.6 比 3.3.5 晚。遗漏的字段等价于零: 版本 1.3 于版本 1.3.0  
+和 1.3.0.0 相同，所以它比 1.3.1 和 1.3.0.2  
+早。假定一个晚期版本向上(upward)兼容有相同主版本号的早期版本。
+例如，为一个包的版本 2.3  
+写的 Tcl 脚本应当在版本 2.3.2、2.4、和 2.5.1  
+下不须更改就能工作。主版本号的变更表示有不兼容的变更:  
+如果代码是使用了一个包的版本 2.1 写成的，不保证在版本 1.7.3  
+或版本 3.1 下不须更改就能工作。        
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>包索引 PACKAGE INDICES</H2>
+
+<P>
+
+推荐的在 Tcl 中使用包的方式是在脚本中调用 <B>package require</B>  和 <B>package provide</B>  命令，并使用过程 <B>pkg_mkIndex</B>  来建立包索引文件。一旦你已经这样做了，将自动的装载包来响应  <B>package require</B> 命令。详情请参见 <B>pkg_mkIndex</B>  的文档。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+msgcat">msgcat</A>(n), <A HREF="/cgi-bin/man/man2html?n+packagens">packagens</A>(n), <A HREF="/cgi-bin/man/man2html?n+pkgMkIndex">pkgMkIndex</A>(n)
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+package, version
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/08/31</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">版本号 VERSION NUMBERS</A><DD>
+<DT><A HREF="#lbAF">包索引 PACKAGE INDICES</A><DD>
+<DT><A HREF="#lbAG">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

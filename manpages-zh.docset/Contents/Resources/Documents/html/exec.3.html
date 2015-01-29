@@ -1,0 +1,302 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of EXEC</TITLE>
+</HEAD><BODY>
+<H1>EXEC</H1>
+Section: Linux Programmer's Manual (3)<BR>Updated: 1993-11-29<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+execl, execlp, execle, execv, execvp - 执行某个文件
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/unistd.h">unistd.h</A>&gt;</B>
+
+<P>
+<B>extern char **environ;</B>
+
+<P>
+<B>int execl( const char *</B><I>path</I><B>, const char *</B><I>arg</I><B>, ...);</B>
+
+<BR>
+
+<B>int execlp( const char *</B><I>file</I><B>, const char *</B><I>arg</I><B>, ...);</B>
+
+<BR>
+
+<B>int execle( const char *</B><I>path</I><B>, const char *</B><I>arg</I>
+
+<B>, ..., char * const </B><I>envp</I><B>[]);</B>
+
+<BR>
+
+<B>int execv( const char *</B><I>path</I><B>, char *const </B><I>argv</I><B>[]);</B>
+
+<BR>
+
+<B>int execvp( const char *</B><I>file</I><B>, char *const </B><I>argv</I><B>[]);</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>exec</B>
+
+系列 函数 用 新的 进程 映象 置换 当前的 进程 映象. 
+本 手册页 描述的 这些 函数 实际上 是 对
+<B><A HREF="/cgi-bin/man/man2html?2+execve">execve</A></B>(2)
+
+函数 的 前端(front-end) 包装. (关于 当前进程 的 置换 详见 
+<B>execve</B>
+
+的 手册页.)
+<P>
+
+这些 函数 的 第一个 参数 是 待执行 程序 的 路径名(文件名).
+<P>
+
+在 函数
+<B>execl</B>,
+
+<B>execlp</B>,
+
+和
+<B>execle</B>
+
+中, 
+<I>const char *arg</I>
+
+以及 省略号 代表 的 参数 可被 视为
+<I>arg0</I>,
+
+<I>arg1</I>,
+
+...,
+<I>argn</I>.
+
+他们 合起来 描述了 指向 null 结尾的 字符串 的 指针 列表, 即 执行程序 的
+参数列表. 作为 约定, 第一个 arg 参数 应该 指向 执行程序名 自身. 参数列表
+<I>必须</I>
+
+用
+<B>NULL</B>
+
+指针 结束!
+<P>
+
+<B>execv</B>
+
+和
+<B>execvp</B>
+
+函数 提供 指向 null 结尾的 字符串 的 指针数组 作为 新程序 的 参数列表.
+作为 约定, 指针数组 中 第一个 元素 应该 指向 执行程序名 自身. 指针数组
+<I>必须</I>
+
+用
+<B>NULL</B>
+
+指针 结束!
+<P>
+
+<B>execle</B>
+
+函数 同时 说明了 执行进程 的 环境(environment), 他 在
+<B>NULL</B>
+
+指针 后面 要求 一个 附加参数, NULL 指针 用于 结束 参数列表, 或者说,
+argv 数组. 这个 附加参数 是 指向 null 结尾的 字符串 的 指针数组, 他
+<I>必须</I>
+
+用
+<B>NULL</B>
+
+指针 结束! 其他 函数 从 当前进程 的
+<I>environ</I>
+
+外部变量 中 获取 新进程 的 环境.
+<P>
+
+某些 函数 有 特殊的 语义.
+<P>
+
+如果 提供的 文件名 中 不包含 斜杠符(/), 函数
+<B>execlp</B>
+
+和
+<B>execvp</B>
+
+将 同 shell 一样 搜索 执行文件. 搜索路径 由 环境变量
+<B>PATH</B>
+
+指定. 如果 该 变量 不存在, 则 使用 缺省路径 ``:/bin:/usr/bin''.
+另外, 某些 错误 要 特殊处理.
+<P>
+
+如果 对 某个 文件 的 访问 遭到 拒绝 (
+<B>execve</B>
+
+返回
+<B>EACCES</B>),
+
+这些 函数 将 在 搜索路径 中 继续 寻找. 如果 没有 找到 符合的 文件,
+他们 返回时 把
+<I>errno</I>
+
+置为
+<B>EACCES</B>.
+
+<P>
+
+如果 无法 识别 文件首部 (
+<B>execve</B>
+
+返回
+<B>ENOEXEC</B>),
+
+这些 函数 将 以 文件名 作为 第一个 参数 调用 shell.
+(如果 这个 尝试 失败 就 不再 进行 搜索 了.)
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>返回值 (RETURN VALUE)</H2>
+
+任何
+<B>exec</B>
+
+函数 返回 均 表明 发生了 错误. 返回值 是 -1, 全局变量
+<I>errno</I>
+
+指出 错误类型.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>文件 (FILE)</H2>
+
+<I>/bin/sh</I>
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>错误 (ERROR)</H2>
+
+这些 函数 均可能 失败, 
+<I>errno</I>
+
+被 置为 库函数
+<B><A HREF="/cgi-bin/man/man2html?2+execve">execve</A></B>(2)
+
+设置的 各种 错误类型.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+sh">sh</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?2+execve">execve</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+fork">fork</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?5+environ">environ</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?2+ptrace">ptrace</A></B>(2)
+
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>兼容性 (COMPATIBILITY)</H2>
+
+在 某些 其他系统 中, 缺省路径 (当 环境变量 <B>PATH</B> 不存在)
+把 当前目录 列在
+<I>/bin</I>
+
+和
+<I>/usr/bin</I>
+
+后面, 这是 为了 防止 特洛伊木马. Linux 在这儿 采取了 传统的 
+&quot;当前目录优先&quot; 缺省路径.
+<P>
+
+当 试图 执行 程序 并且 发生 错误 的 时候,  
+<B>execlp</B>
+
+和
+<B>execvp</B>
+
+的 行为 是 历史 习惯, 但是 没有 进入 正式文档, 也没有 被
+POSIX 标准 说明. BSD (可能 还有 其他 系统) 中 进程 自动 进入 睡眠, 如果
+发生 ETXTBSY, 他们 就 重试. 而 Linux 视此为 严重错误, 并且 立即 返回.
+<P>
+
+传统的 做法中, 函数
+<B>execlp</B>
+
+和
+<B>execvp</B>
+
+忽略 所有 错误, 除了 上述的 错误, 
+<B>ENOMEM</B>
+
+和
+<B>E2BIG</B>.
+
+如果 发生 这三类 错误, 他们 就 返回. 而 现在的 做法是, 不仅仅 上述的 错误,
+任何 错误 均导致 函数 返回.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>遵循 (CONFORMING TO)</H2>
+
+<B>execl</B>,
+
+<B>execv</B>,
+
+<B>execle</B>,
+
+<B>execlp</B>
+
+和
+<B>execvp</B>
+
+遵循
+IEEE Std1003.1-88 (``POSIX.1'').
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">返回值 (RETURN VALUE)</A><DD>
+<DT><A HREF="#lbAF">文件 (FILE)</A><DD>
+<DT><A HREF="#lbAG">错误 (ERROR)</A><DD>
+<DT><A HREF="#lbAH">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAI">兼容性 (COMPATIBILITY)</A><DD>
+<DT><A HREF="#lbAJ">遵循 (CONFORMING TO)</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,442 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of string</TITLE>
+</HEAD><BODY>
+<H1>string</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+string - 操纵字符串
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>string </B><I>option arg </I>?<I>arg ...?</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+依赖于 <I>option</I> (选项)进行某种字符串操作。合法的 <I>option</I> (可以是缩写)有:
+
+
+
+
+
+
+
+<DL COMPACT>
+<DT><B>string bytelength </B><I>string</I><DD>
+返回一个十进制字符串，给出在内存中表示 <I>string</I> 用的字节数。因为 UTF-8 使用一到三字节来表示 Unicode  字符，字节长度可能与通常的字符长度不同。一个脚本关心字节长度的情况较少见。多数情况下，你应该使用  <B>string length</B> 操作。关于 UTF-8 表示的详情请参考 <B>Tcl_NumUtfChars</B> 手册页。
+<DT><B>string compare</B> ?<B>-nocase</B>? ?<B>-length int</B>? <I>string1 string2</I><DD>
+
+
+
+
+
+
+对字符串 <I>string1</I> 和 <I>string2</I><I> </I>进行逐个字符的比较。依赖于     <I>string1</I> 在词典顺序上(lexicographically)小于、等于、大于  <I>string2</I>，返回 -1、0、或 1。
+
+
+
+
+
+
+
+如果指定了 <B>-length</B>     ，则在比较中只使用前 <I>length</I> 个字符。如果 <B>-length</B>     是负数，则被忽略。如果指定了 <B>-nocase</B>     ，则使用大小写不敏感方式比较字符串。
+<DT><B>string equal</B> ?<B>-nocase</B>? ?<B>-length int</B>? <I>string1 string2</I><DD>
+对字符串 <I>string1</I> 和 <I>string2</I><I> </I>进行逐个字符的比较。如果     <I>string1</I> 和 <I>string2</I> 等同则返回 1，否则返回 0。如果指定了     <B>-length</B> ，则在比较中只使用前 <I>length</I>     个字符。如果 <B>-length</B> 是负数，则被忽略。如果指定了     <B>-nocase</B> ，则使用大小写不敏感方式比较字符串。
+<DT><B>string first </B><I>string1 string2</I> ?<I>startIndex</I>?<DD>
+
+
+
+
+
+
+在 <I>string2</I> 中查找精确的匹配 <I>string1 </I>中的字符的一个字符序列。如果找到，返回     <I>string2 </I>中的第一个这样的匹配的第一个字符的索引。如果未找到，返回     -1。
+
+
+
+
+
+
+
+如果指定了 <I>startIndex</I> (以可被 <B>index</B>     方法接受的任何形式)，则约束查找为在 <I>string2</I>     中从用索引指定的字符开始。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>string first a 0a23456789abcdef 5</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>10</B>, but
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>string first a 0123456789abcdef 11</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>-1</B>.
+</DL>
+
+
+
+
+
+
+
+<DT><B>string index </B><I>string charIndex</I><DD>
+返回 <I>string</I> 参数的第 <I>charIndex </I>个字符。<I>charIndex</I>     中 0 对应着字符串的第一个字符。
+
+
+
+
+
+
+
+<BR>&nbsp;<I>charIndex</I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以被指定如下:
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><I>integer</I><DD>
+用整数索引指定字符。
+<DT><B>end</B><DD>
+字符串的最后一个字符。
+<DT><B>end-</B><I>integer</I><DD>
+字符串最后一个字符减去指定整数偏移量(例如， <B>end-1</B> 将参照“abcd”中的“c”)。
+</DL>
+<P>
+
+
+
+
+
+
+
+如果 <I>charIndex</I> 小于 0     或大于等于字符串的长度则返回一个空串。
+
+
+
+
+
+
+
+</DL>
+
+<DT><B>string is </B><I>class</I> ?<B>-strict</B>? ?<B>-failindex </B><I>varname</I>? <I>string</I><DD>
+如果 <I>string</I> 是指定字符类的一个有效成员则返回 1，否则返回     0。如果指定了 <B>-strict</B>，则对一个空串返回 0，否则在任何类上对一个空串返回     1。如果指定了 <B>-failindex</B>，则若函数返回 0，把字符串中类不再有效的地方的索引存储到叫做     <I>varname</I> 的变量中。如果函数返回 1则不设置 <I>varname</I>     。识别下列字符类(类的名字可以被缩写):
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>alnum</B><DD>
+任何 Unicode 字母或数字字符。
+<DT><B>alpha</B><DD>
+任何 Unicode 字母字符。
+<DT><B>ascii</B><DD>
+值小于 \u0080 的任何字符(这是 7-bit ascii 的范围)。
+<DT><B>boolean</B><DD>
+<B>Tcl_GetBoolean</B> 所允许的任何形式。
+<DT><B>control</B><DD>
+任何 Unicode 控制字符。
+<DT><B>digit</B><DD>
+任何 Unicode 数字字符。注意这包括在 [0-9] 范围外的字符。
+<DT><B>double</B><DD>
+双精度数在 Tcl  中的任何有效形式，可以有可选的围绕白空格。在值下溢/上溢的情况下，返回 0 并且 <I>varname</I> 将包含 -1。
+<DT><B>false</B><DD>
+<B>Tcl_GetBoolean</B> 允许的任何形式，这里的值是假。
+<DT><B>graph</B><DD>
+除了空格之外的任何 Unicode 打印字符。
+<DT><B>integer</B><DD>
+整数在 Tcl 中的任何有效形式，可以有可选的围绕白空格。在值下溢/上溢的情况下，返回 0 并且 <I>varname</I> 将包含 -1。
+<DT><B>lower</B><DD>
+任何 Unicode 小写字母字符。.
+<DT><B>print</B><DD>
+包括空格在内的任何 Unicode 打印字符。
+<DT><B>punct</B><DD>
+任何 Unicode 标点字符。
+<DT><B>space</B><DD>
+任何 Unicode 空格字符。
+<DT><B>true</B><DD>
+<B>Tcl_GetBoolean</B> 所允许的任何形式，这里的值是真。
+<DT><B>upper</B><DD>
+在 Unicode 中的任何大写字符。
+<DT><B>wordchar</B><DD>
+任何 Unicode 单字字符。它是任何字母字符和 Unicode  连接符标点字符(例如，下划线)。
+<DT><B>xdigit</B><DD>
+任何十六进制数字字符 ([0-9A-Fa-f]).
+</DL>
+<P>
+
+在 <B>boolean</B>、<B>true</B> 和 <B>false</B> 的情况下，如果函数将返回 0，则 <I>varname</I> 总是被设置为 0，原因是一个有效 boolean 值有多种本地(表示)。
+</DL>
+
+<DT><B>string last </B><I>string1 string2</I> ?<I>startIndex</I>?<DD>
+
+
+
+
+
+
+在 <I>string2</I> 中查找精确的匹配在 <I>string1 </I>中的字符的一个字符序列。如果找到，返回在     <I>string2 </I>中最后一个这样的匹配的第一个字符的索引。如果没有匹配，则返回     -1。
+
+
+
+
+
+
+
+如果指定了 <I>startIndex</I>(以可被 <B>index</B>     方法接受的任何形式)， 则查找只针对 <I>string2</I> 中用 <I>startIndex</I>     指定的和此前的字符。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>string last a 0a23456789abcdef 15</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>10</B>, 而
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>string last a 0a23456789abcdef 9</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>1</B>.
+</DL>
+
+
+
+
+
+
+
+<DT><B>string length </B><I>string</I><DD>
+返回一个十进制字符串，给出在 <I>string </I>中字符的数目。注意这不是必须与用于存储这个字符串的字节的数目相同。
+
+
+
+
+
+
+
+<DT><B>string map</B> ?<B>-nocase</B>? <I>charMap string</I><DD>
+基于在 <I>charMap </I>中的键-值对替代 <I>string</I>     中的字符。<I>charMap</I> 是形如 <I>key value key value</I> ...  的一个列表，同于从 <B>array get </B>返回的那种形式。在字符串中这些键的每个实例将被替代为相应的值。如果指定了 <B>-nocase</B>，则进行匹配时不区别大小写。<I>key</I> 和 <I>value</I>  二者都可以是多字节的。以一种有次序的方式进行替代，所以在列表中出现在最前面的键将被首先检查，以此类推。<I>string</I> 只被重复操作(iterate)一次，所以早先的键替代将不影响以后的键匹配。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>string map {abc 1 ab 2 a 3 1 0} 1abcaababcabababc</B>
+
+</PRE>
+
+</DL>
+
+
+将返回字符串 <B>01321221</B>.
+</DL>
+
+<DT><B>string match</B> ?<B>-nocase</B>? <I>pattern</I> <I>string</I><DD>
+
+
+
+
+
+
+查看 <I>pattern</I> 是否匹配 <I>string</I>；如果是则返回 1，不是则返回 0。
+
+
+
+
+
+
+
+如果指定了 <B>-nocase</B>，则针对字符串的模式匹配采用大小写不敏感的方式。
+
+
+
+
+
+
+对于要进行匹配的这两个字符串，除了在 <I>pattern </I>中可以出现的下列特殊序列之外它们的内容必须相同:
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>*</B><DD>
+匹配 <I>string </I>中任何字符的一个序列，包括一个空字符。
+<DT><B>?</B><DD>
+匹配 <I>string</I> 中的一个单一字符。
+<DT><B>[</B><I>chars</I><B>]</B><DD>
+匹配在用 <I>chars </I>给出的集合中的任何字符。如果在 <I>chars</I> 中出现一个形式是 <I>x</I><B>-</B><I>y</I> 的一个序列，则匹配在 <I>x</I> 和 <I>y</I>,之间的任何字符，包括二者。
+
+
+
+
+
+
+
+当与 <B>-nocase </B>一起使用的时候，范围的端点首先被转换为小写。所以在大小写敏感匹配时 {[A-z]} 匹配‘_’(‘_’位于‘Z’和‘a’之间)，加上 <B>-nocase</B> 则将被象 {[A-Za-z]} 那样对待(并可能是前者的真实意图)。
+
+
+
+
+
+
+<DT><B>\</B><I>x</I><DD>
+匹配单一字符 <I>x</I>。这提供了一种方式避免在 <I>pattern </I>中对字符 <B>*?[]\</B> 做特殊解释。
+</DL>
+</DL>
+
+<DT><B>string range </B><I>string first last</I><DD>
+从 <I>string </I>返回一个范围的连续字符，从索引是 <I>first</I> 的字符开始并结束于索引是 <I>last</I> 的字符。 索引 0 参照字符串的
+
+
+
+
+
+
+
+第一个字符。可以按 <B>index</B> 方法的方式指定 <I>first</I> 和 <I>last</I> 。
+
+
+
+
+
+
+如果 <I>first</I> 小于零，则把它作为零对待，而如果 <I>last</I> 大于等于字符串的长度，则把它作为 <B>end</B> 对待。如果 <I>first</I> 大于 <I>last</I> 则返回空串。
+
+
+
+
+
+
+
+<DT><B>string repeat </B><I>string count</I><DD>
+把 <I>string </I>重复 <I>count</I> 次后返回。
+<DT><B>string replace </B><I>string first last</I> ?<I>newstring</I>?<DD>
+从 <I>string</I> 删除一个范围的连续字符，范围从索引是 <I>first</I>  的字符开始并结束于索引是 <I>last</I> 的字符。索引 0     参照字符串的第一个字符。可以按 <B>index</B>     方法的方式指定 <I>first</I> 和 <I>last</I> 。如果指定了 <I>newstring</I>     ，则把它放置在删除的字符范围中。如果 <I>first</I>     小于零，则把它作为零对待，而如果 <I>last</I>     大于等于字符串的长度，则把它作为 <B>end</B> 对待。如果 <I>first</I>     大于 <I>last </I>或最初的字符串的长度 ，或者 <I>last</I>     小于 0，则不做变动的返回最初的字符串。
+<DT><B>string tolower </B><I>string</I> ?<I>first</I>? ?<I>last</I>?<DD>
+返回一个等同于 <I>string</I> 的值，但所有大写(或标题)字母都被转换为小写。如果指定了     <I>first</I>，则它参照字符串中开始修改的第一个字符的索引。如果指定了     <I>last</I>，则它参照字符串中修改停止到(包括它)的那个字符的索引。按     <B>index</B> 方法的方式指定 <I>first</I> 和 <I>last</I>。
+<DT><B>string totitle </B><I>string</I> ?<I>first</I>? ?<I>last</I>?<DD>
+返回等同于 <I>string</I> 的一个值，但把 <I>string</I>     的第一个字符转换成它的 Unicode 标题大写变体(如果没有标题大写变体则为大写)而把字符串的其余部分转换成小写。如果指定了     <I>first</I>，则它参照字符串中开始修改的第一个字符的索引。如果指定了     <I>last</I>，则它参照字符串中修改停止到(包括它)的那个字符的索引。按     <B>index</B> 方法的方式指定 <I>first</I> 和 <I>last</I>。
+<DT><B>string toupper </B><I>string</I> ?<I>first</I>? ?<I>last</I>?<DD>
+返回一个等同于 <I>string</I> 的值，但所有小写(或标题)字母都被转换为大写。如果指定了     <I>first</I>，则它参照字符串中开始修改的第一个字符的索引。如果指定了     <I>last</I>，则它参照字符串中修改停止到(包括它)的那个字符的索引。按     <B>index</B> 方法的方式指定 <I>first</I> 和 <I>last</I>。
+
+
+
+
+
+
+<DT><B>string trim </B><I>string</I> ?<I>chars</I>?<DD>
+返回一个等同于 <I>string</I>     的值，但删除了任何前导或尾随的用 <I>chars</I>     给出的字符集合中字符。如果未指定 <I>chars</I>     则删除白空格(空格、tab、换行、回车)。
+<DT><B>string trimleft </B><I>string</I> ?<I>chars</I>?<DD>
+返回一个等同于 <I>string</I>     的值，但删除了任何前导的用 <I>chars</I>     给出的字符集合中字符。如果未指定 <I>chars</I>     则删除白空格(空格、tab、换行、回车)。
+<DT><B>string trimright </B><I>string</I> ?<I>chars</I>?<DD>
+返回一个等同于 <I>string</I>     的值，但删除了任何尾随的用 <I>chars</I>     给出的字符集合中字符。如果未指定 <I>chars</I>     则删除白空格(空格、tab、换行、回车)。
+
+
+
+
+
+
+
+<DT><B>string wordend </B><I>string charIndex</I><DD>
+返回包含 <I>string </I>的第 <I>charIndex</I>     个字符的那个字最后的字符后面的那个字符的索引。按 <B>index</B>     方法的方式指定 <I>charIndex</I>     。一个字被认为是任何连续范围的 alphanumeric (Unicode 字母或十进制数字)或下划线(Unicode 连接符标点)字符，或除了这些之外的任何单一字符。
+<DT><B>string wordstart </B><I>string charIndex</I><DD>
+返回包含 <I>string </I>的第 <I>charIndex</I> 个字符的那个字的第一个字符的索引。按 <B>index</B>  方法的方式指定 <I>charIndex</I> 。一个字被认为是任何连续范围的 alphanumeric (Unicode 字母或十进制数字)或下划线(Unicode 连接符标点)字符，或除了这些之外的任何单一字符。
+
+
+
+
+
+
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+expr">expr</A>(n), <A HREF="/cgi-bin/man/man2html?n+list">list</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+case conversion, compare, index, match, pattern, string, word, equal, ctype
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/11/15</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

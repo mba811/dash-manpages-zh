@@ -1,0 +1,138 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of FERROR</TITLE>
+</HEAD><BODY>
+<H1>FERROR</H1>
+Section: Linux Programmer's Manual (3)<BR>Updated: 2001-10-16<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+clearerr, feof, ferror, fileno - 检测和重置流状态
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/stdio.h">stdio.h</A>&gt;</B>
+
+<P>
+<B>void clearerr(FILE *</B><I>stream</I><B>);</B>
+
+<BR>
+
+<B>int feof(FILE *</B><I>stream</I><B>);</B>
+
+<BR>
+
+<B>int ferror(FILE *</B><I>stream</I><B>);</B>
+
+<BR>
+
+<B>int fileno(FILE *</B><I>stream</I><B>);</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+函数
+<B>clearerr</B>
+
+清除
+<I>stream</I>
+
+指向的流中的文件结束标记和错误标记。
+<P>
+
+函数
+<B>feof</B>
+
+测试
+tests the end-of-file indicator for the stream pointed to by
+<I>stream</I>
+
+指向的流中的文件结束标记，如果已设置就返回非零值。文件结束标记只能用函数
+<B>clearerr</B>
+
+清除。
+<P>
+
+函数
+<B>ferror</B>
+
+测试
+<I>stream</I>
+
+指向的流中的错误标记，如果已设置就返回非零值。错误标记只能用函数
+<B>clearerr</B>
+
+重置。
+<P>
+
+函数
+<B>fileno</B>
+
+检测
+<I>stream</I>
+
+参数，返回它的整数形式的文件描述符。
+<P>
+
+关于对应的非锁定函数，请参见
+<B><A HREF="/cgi-bin/man/man2html?3+unlocked_stdio">unlocked_stdio</A></B>(3)
+
+。
+<A NAME="lbAE">&nbsp;</A>
+<H2>ERRORS 错误</H2>
+
+这些函数不应当失败，它们不设置外部变量
+<I>errno</I>
+
+。(但是，如果
+<B>fileno</B>
+
+检测到它的参数不是有效的流，它必须返回 -1，并且将
+<I>errno</I>
+
+设置为
+<B>EBADF</B>
+
+。)
+<A NAME="lbAF">&nbsp;</A>
+<H2>CONFORMING TO 标准参考</H2>
+
+函数
+<B>clearerr</B>,
+
+<B>feof</B>,
+
+以及
+<B>ferror</B>
+
+遵循 X3.159-1989 (``ANSI C'') 标准。
+<A NAME="lbAG">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+open">open</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?3+unlocked_stdio">unlocked_stdio</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+stdio">stdio</A></B>(3)
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">ERRORS 错误</A><DD>
+<DT><A HREF="#lbAF">CONFORMING TO 标准参考</A><DD>
+<DT><A HREF="#lbAG">SEE ALSO 参见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

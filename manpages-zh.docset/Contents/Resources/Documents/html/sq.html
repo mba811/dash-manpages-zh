@@ -1,0 +1,106 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SQ</TITLE>
+</HEAD><BODY>
+<H1>SQ</H1>
+Section: User Commands  (1)<BR>Updated: LOCAL<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+sq - 压缩一个排过序的单词列表
+unsq - 解压一个排过序的单词列表
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>sq</B>
+
+&lt; infile &gt; outfile
+<P>
+
+<B>unsq</B>
+
+&lt; infile &gt; outfile
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<I>sq</I>
+
+压缩 一个 排过序的 单词 列表 (一个 字典). 比如:
+<DL COMPACT><DT><DD>
+sort /usr/dict/words | sq | compress &gt; words.sq.Z
+</DL>
+
+会 大概 以 4 为 因数 压缩 字典.
+<P>
+
+<I>unsq</I>
+
+解压
+<I>sq</I>
+
+的 输出. 比如:
+<DL COMPACT><DT><DD>
+compress -d &lt; words.sq.Z | unsq | sort -f -o words
+</DL>
+
+会 解压 
+<I>sq</I>
+
+压缩 的 字典.
+<P>
+
+根据 文档 描述, 它 通过 省略 相同 的 词头 来 压缩, 用 一个 单独 的 字符 取代
+这个 词头, 这个 字符 对 与 前一个词 相同的 字符数 进行 编码.
+词头 的 大小 用 一个 编了码 的 可打印 的 字符 表示:
+0-9 代表 0-9, A-Z 代表 10-35, a-z 代表 36-61.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>作者 (AUTHOR)</H2>
+
+Mike Wexler
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+compress">compress</A>(1), <A HREF="/cgi-bin/man/man2html?1+sort">sort</A>(1).
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/9/20</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">作者 (AUTHOR)</A><DD>
+<DT><A HREF="#lbAF">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

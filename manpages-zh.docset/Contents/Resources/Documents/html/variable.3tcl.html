@@ -1,0 +1,102 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of variable</TITLE>
+</HEAD><BODY>
+<H1>variable</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+variable - 建立并初始化一个名字空间变量
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>variable </B>?<I>name value...</I>? <I>name </I>?<I>value</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+通常在 <B>namespace eval</B> 命令中使用这个命令在一个名字空间中建立一个或多个变量。每个变量 <I>name</I> 都被初始化为 <I>value</I>。给最后一个变量的值是可选的。
+<P>
+
+如果一个变量 <I>name</I> 不存在，则建立它。在这种情况下，如果指定了 <I>value</I> ，它被分配为一个新建的变量。如果未指定 <I>value</I>，则保持新变量为未定义。如果变量已经存在，若指定了 <I>value</I> 则把它设置为 <I>value</I> ，若未给出 <I>value</I> 则保持不变。通常的，<I>name</I> 是未被限定的(不包含任何包容它的名字空间的名字)，而变量建立在当前名字空间中。如果 <I>name</I> 包含任何名字空间限定符，则变量建立在指定的名字空间中。如果变量未被定义，它将对 <B>namespace which</B> 命令是可见的，但对 <B>info exists</B> 命令不是。
+<P>
+
+如果在一个 Tcl 过程中执行 <B>variable</B> 命令，它建立连接到相应的名字空间变量的局部变量。在这种方式下 <B>variable</B> 命令类似于 <B>global</B> 命令，但 <B>global</B> 命令只连接到在全局名字空间中的变量。如果给出了任何 <I>value</I>，使用它们来修改相关的名字空间变量的值。如果一个名字空间变量不存在，则建立它并可选择的初始化它。
+<P>
+
+<I>name</I> 参数不能引用在数组中的一个元素。<I>name</I> 应该引用整个数组，并应当去掉初始化的 <I>value</I> 。在变量被声明之后，可以使用平常的 <B>set</B> 或 <B>array</B> 命令来设置数组中的元素。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+global">global</A>(n), <A HREF="/cgi-bin/man/man2html?n+namespace">namespace</A>(n), <A HREF="/cgi-bin/man/man2html?n+upvar">upvar</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+global, namespace, procedure, variable
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/11/20</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

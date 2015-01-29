@@ -1,0 +1,237 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of RDEV</TITLE>
+</HEAD><BODY>
+<H1>RDEV</H1>
+Section: Linux Programmer's Manual (8)<BR>Updated: 20 November 1993<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+rdev - 查询/设置内核映像文件的根设备，RAM 磁盘大小或视频模式
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<PRE>
+<B>rdev [ -rvh ] [ -o </B>offset<B> ] [ </B>image<B> [ </B>value<B> [ </B>offset<B> ] ] ]</B>
+<B>rdev [ -o </B>offset<B> ] [ </B>image<B> [ </B>root_device<B> [ </B>offset<B> ] ] ]</B>
+<B>ramsize [ -o </B>offset<B> ] [ </B>image<B> [ </B>size<B> [ </B>offset<B> ] ] ]</B>
+<B>vidmode [ -o </B>offset<B> ] [ </B>image<B> [ </B>mode<B> [ </B>offset<B> ] ] ]</B>
+<B>rootflags [ -o </B>offset<B> ] [ </B>image<B> [ </B>flags<B> [ </B>offset<B> ] ] ]</B>
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+不带任何参数的
+<B>rdev</B>
+
+命令将输出当前根文件系统的
+<I>/etc/mtab</I>
+
+文件行。不带任何参数的
+<B>ramsize</B>, <B>vidmode</B>, 和 <B>rootflags</B>
+
+将显示帮助信息。
+<P>
+在一个 i386 上的 linux 可引导内核映像文件中，有几对字节用来指定根设备，视频模式和 RAM 磁盘的大小。这些字节对，在默认情况下起始在内核映像的偏移量504 (十进制) 处。
+<P>
+<PRE>
+<DL COMPACT><DT><DD> 498 Root flags (根标志)
+(500 和 502 保留)
+ 504 RAM Disk Size RAM (磁盘大小)
+ 506 VGA Mode (VGA 模式)
+ 508 Root Device (根设备)
+(510 Boot Signature (启动标记))
+</DL>
+</PRE>
+
+<P>
+<B>rdev</B>
+
+可以改变这些值。
+<P>
+典型的
+<I>image</I>
+
+参数的值是一个可启动的 linux 内核映像，可能是
+<P>
+<PRE>
+<DL COMPACT><DT><DD>/vmlinux
+/vmunix
+/boot/bzImage-2.4.0
+/dev/fd0
+/dev/fd1
+</DL>
+</PRE>
+
+<P>
+当使用
+<B>rdev</B>
+
+命令时，
+<I>root_device</I>
+
+参数是类似如下所示的值：
+<P>
+<PRE>
+<DL COMPACT><DT><DD>/dev/hda1
+/dev/hdf13
+/dev/sda2
+/dev/sdc4
+/dev/ida/c0d0p1
+</DL>
+</PRE>
+
+<P>
+也可以通过使用一个逗号 (comma) 分隔的十进制整数对
+<I>major</I>,<I>minor</I>
+
+来指定这个设备。
+<P>
+对于
+<B>ramsize</B>
+
+命令，
+<B>size</B>
+
+参数指定了 RAM 磁盘的大小，以千字节为单位。
+<P>
+对于
+<B>rootflags</B>
+
+命令，
+<B>flags</B>
+
+参数包含在挂载 root 文件系统时额外的信息。当前这些标志的唯一作用是当
+<B>flags</B>
+
+非零时，强制内核以只读模式来挂载 root 文件系统。
+<P>
+对于
+<B>vidmode</B>
+
+命令，
+<B>mode</B>
+
+参数指定了视频模式。
+<P>
+<PRE>
+<DL COMPACT><DT><DD>-3 = Prompt (提示)
+-2 = Extended VGA (扩展的VGA)
+-1 = Normal VGA (普通VGA)
+ 0 = as if &quot;0&quot; was pressed at the prompt (假设在提示时按下了&quot;0&quot;)
+ 1 = as if &quot;1&quot; was pressed at the prompt
+ 2 = as if &quot;2&quot; was pressed at the prompt
+ n = as if &quot;n&quot; was pressed at the prompt
+</DL>
+</PRE>
+
+<P>
+如果没有指定
+<I>value</I>
+
+，将检测
+<I>image</I>
+
+来得到当前的设置。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>-r</B>
+
+<DD>
+使得
+<B>rdev</B>
+
+作为
+<B>ramsize</B>
+
+运行。
+<DT><B>-R</B>
+
+<DD>
+使得
+<B>rdev</B>
+
+作为
+<B>rootflags</B>
+
+运行。
+<DT><B>-v</B>
+
+<DD>
+使得
+<B>rdev</B>
+
+作为
+<B>vidmode</B>
+
+运行。
+<DT><B>-h</B>
+
+<DD>
+提供帮助。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>BUGS</H2>
+
+<B>rdev</B>
+
+工具，如果不是用做查找当前根设备的名称，那么就是一种古老的破解 (hack) ，依靠对内核的一个特定 (magic) 位移以特殊 (magic) 数字进行修改来工作。它在 i386 之外的体系中不能工作。不鼓励使用它。使用一个启动管理器，例如 SysLinux , LILO 或者 grub 来替代它。
+<A NAME="lbAG">&nbsp;</A>
+<H2>历史 HISTORY</H2>
+
+偏移 502 从前是交换设备的设备号 (在 linux 0.12 中)，运行 <I>&quot;rdev -s&quot;</I> 或者 <I>&quot;swapdev&quot;</I> 将设置它。但是，从 linux 0.95 起，这个常量不再使用，交换设备是以
+<I>swapon</I>()
+
+系统调用来指定的。
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者 AUTHORS</H2>
+
+<PRE>
+原作者是 Werner Almesberger (<A HREF="mailto:almesber@nessie.cs.id.ethz.ch">almesber@nessie.cs.id.ethz.ch</A>)；
+Peter MacDonald (<A HREF="mailto:pmacdona@sanjuan.UVic.CA">pmacdona@sanjuan.UVic.CA</A>) 进行了修改；
+Stephen Tweedie (<A HREF="mailto:sct@dcs.ed.ac.uk">sct@dcs.ed.ac.uk</A>) 加入了 rootflags 支持。
+</PRE>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>所罗门 &lt;<A HREF="mailto:solomen@email.com.cn">solomen@email.com.cn</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>Nov 21 2000</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">BUGS</A><DD>
+<DT><A HREF="#lbAG">历史 HISTORY</A><DD>
+<DT><A HREF="#lbAH">作者 AUTHORS</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

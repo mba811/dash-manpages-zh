@@ -1,0 +1,133 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE LANGUAGE</TITLE>
+</HEAD><BODY>
+<H1>CREATE LANGUAGE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE LANGUAGE - 定义一种新的过程语言
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE [ TRUSTED ] [ PROCEDURAL ] LANGUAGE <I>name</I>
+    HANDLER <I>call_handler</I> [ VALIDATOR <I>valfunction</I> ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<BR>&nbsp;使用&nbsp;CREATE&nbsp;LANGUAGE，&nbsp;一个PostgreSQL&nbsp;用户可以在&nbsp;PostgreSQL里注册一个新的语言。&nbsp;因而，函数和触发器过程可以用这种新语言定义。要注册新语言用户必须具有&nbsp;PostgreSQL&nbsp;超级用户权限。
+<P>
+
+<B>CREATE LANGUAGE</B> 将该语言的名字和一个调用句柄关联起来，而该调用句柄负责执行该语言书写的函数。 请参考 ``User-Defined Functions'' 获取有关语言调用句柄的更多信息。
+<P>
+
+<BR>&nbsp;请注意过程语言是对每个独立的数据库而言是自己的。&nbsp;要让一种语言缺省时可以为所有数据库获得，那你应该把它安装到&nbsp;template1&nbsp;数据库里。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B>TRUSTED</B><DD>
+TRUSTED 说明对该语言的调用句柄是安全的； 也就是说，它不会提供给非特权用户任何绕过访问限制的能力。 如果忽略这个关键字，只有具有 PostgreSQL  超级用户权限的人可以使用这个语言创建新的函数。
+<DT><B>PROCEDURAL</B><DD>
+<BR>&nbsp;这是个没有用的字。
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;新的过程化语言的名称。语言名是大小写无关的。&nbsp;这个名字应该在数据库的所有语言中唯一。
+<P>
+<BR>&nbsp;出于向下兼容的原因，这个名字可以用单引号包围。
+<DT><B>HANDLER </B><I>call_handler</I><B></B><DD>
+<I>call_handler</I> 是一个以前注册过的函数的名字，该函数将被调用来执行这门过程语言写的函数。 过程语言的调用句柄必须用一种编译语言书写，比如 C，调用风格必须是版本 1 的调用风格， 并且在 PostgreSQL 里注册为不接受参数并且返回 language_handler 类型的函数， language_handler 是用于将函数声明为调用句柄的占位符。
+<DT><B>VALIDATOR </B><I>valfunction</I><B></B><DD>
+<I>valfunction</I> 是一个已经注册的函数的名字， 在用该语言创建新函数的时候将调用它来校验新函数。如果没有声明校验函数，那么建立新函数的时候就不会检查它。 校验函数必须接受一个类型为 oid 的参数，它是将要创建的函数的 OID，并且通常会返回 void。
+<P>
+<BR>&nbsp;校验函数通常会检查函数体，看看看有没有语法错误，但是它也可以查看函数的其它属性，&nbsp;比如该语言是否不能处理某种参数类型。要发出一个错误，校验函数应该用&nbsp;elog()&nbsp;函数。&nbsp;该函数的返回值将被忽略。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;这条命令通常不应该由用户直接执行。&nbsp;对于&nbsp;PostgreSQL&nbsp;版本里提供的过程语言，&nbsp;我们应该使用&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+createlang">createlang</A></B>(1)&nbsp;程序，&nbsp;它将为我们安装正确的调用句柄。&nbsp;（createlang&nbsp;也会在内部调用&nbsp;CREATE&nbsp;LANGUAGE。）
+<P>
+
+<BR>&nbsp;在&nbsp;PostgreSQL&nbsp;版本&nbsp;7.3&nbsp;之前，&nbsp;我们必须声明句柄函数返回占位类型&nbsp;opaque，而不是&nbsp;language_handler。&nbsp;为了支持装载旧的转储文件，CREATE&nbsp;LANGUAGE&nbsp;还将接受声明为返回&nbsp;opaque&nbsp;的函数，&nbsp;但是它会发出一条通知并且把函数声明返回类型改为&nbsp;language_handler。
+<P>
+
+<BR>&nbsp;使用&nbsp;CREATE&nbsp;FUNCTION&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+create_function">create_function</A></B>(7)]&nbsp;命令创建新函数。
+<P>
+
+<BR>&nbsp;使用&nbsp;DROP&nbsp;LANGUAGE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+drop_language">drop_language</A></B>(7)]，或者更好是&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+droplang">droplang</A></B>(1)&nbsp;程序删除一个过程语言。
+<P>
+
+<BR>&nbsp;系统表&nbsp;pg_language&nbsp;（参阅&nbsp;``System&nbsp;Catalogs''）&nbsp;记录了更多有关当前安装的过程语言的信息。createlang&nbsp;也有一个选项列出已安装的语言。
+<P>
+
+<BR>&nbsp;目前，除了权限之外，一种过程语言创建之后它的定义就不能再更改。
+<P>
+
+<BR>&nbsp;要使用一种过程语言，用户必须被赋予&nbsp;USAGE&nbsp;权限。&nbsp;如果该语言已知是可信的，那么&nbsp;createlang&nbsp;程序自动给每个人赋予权限。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;下面两条顺序执行的命令将注册一门新的过程语言及其关联的调用句柄。
+<P>
+<PRE>
+CREATE FUNCTION plsample_call_handler() RETURNS language_handler
+    AS '$libdir/plsample'
+    LANGUAGE C;
+CREATE LANGUAGE plsample
+    HANDLER plsample_call_handler;
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>CREATE LANGUAGE</B> 是 PostgreSQL 扩展。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+ALTER LANGUAGE [<B><A HREF="/cgi-bin/man/man2html?7+alter_language">alter_language</A></B>(7)], CREATE FUNCTION [<B><A HREF="/cgi-bin/man/man2html?l+create_function">create_function</A></B>(l)], DROP LANGUAGE [<B><A HREF="/cgi-bin/man/man2html?l+drop_language">drop_language</A></B>(l)], GRANT [<B><A HREF="/cgi-bin/man/man2html?l+grant">grant</A></B>(l)], REVOKE [<B><A HREF="/cgi-bin/man/man2html?l+revoke">revoke</A></B>(l)], <B><A HREF="/cgi-bin/man/man2html?1+createlang">createlang</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+droplang">droplang</A></B>(1)
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,181 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ALTER USER</TITLE>
+</HEAD><BODY>
+<H1>ALTER USER</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ALTER USER - 改变数据库用户帐号
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+ALTER USER <I>name</I> [ [ WITH ] <I>option</I> [ ... ] ]
+
+where <I>option</I> can be:
+
+    [ ENCRYPTED | UNENCRYPTED ] PASSWORD '<I>password</I>' 
+    | CREATEDB | NOCREATEDB
+    | CREATEUSER | NOCREATEUSER 
+    | VALID UNTIL '<I>abstime</I>'
+
+ALTER USER <I>name</I> RENAME TO <I>newname</I>
+
+ALTER USER <I>name</I> SET <I>parameter</I> { TO | = } { <I>value</I> | DEFAULT }
+ALTER USER <I>name</I> RESET <I>parameter</I>
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>ALTER USER</B> 用于更改用户的 PostgreSQL 帐号的属性。 没有在该命令中出现的属性保持原值。
+<P>
+
+<BR>&nbsp;这条命令模式中的第一个变种修改某些全局用户权限和认证设置。&nbsp;（见下文获取细节。）只有数据库超级用户可以用这条命令改变这些权限和使口令失效。普通用户只能修改它们自己的口令。
+<P>
+
+<BR>&nbsp;第二个变种改变用户的名字。只有数据库超级用户才能重新命名用户帐户。&nbsp;当前会话用户不能重命名。（如果想这么干，先用另外一个用户账号连接。）
+<P>
+
+<BR>&nbsp;第三和第四个变种修改用户会话的特定配置变量的缺省值。&nbsp;当该用户随后启动一个新的会话时，声明的数值将成为会话的缺省，覆盖&nbsp;任何出现在&nbsp;postgresql.conf&nbsp;里，或者从&nbsp;postmaster&nbsp;&nbsp;命令行接收到的设置。&nbsp;普通用户可以修改它们自己的会话缺省。超级用户可以修改任何用户的缺省。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;想进行属性更改的用户名字。
+<DT><B></B><I>password</I><B></B><DD>
+<BR>&nbsp;此帐号所使用的新口令。
+<DT><B>ENCRYPTED</B><DD>
+<DT><B>UNENCRYPTED</B><DD>
+<BR>&nbsp;这些关键字控制口令是否以加密形式存在&nbsp;pg_shadow&nbsp;里。&nbsp;（参阅
+CREATE USER [<B><A HREF="/cgi-bin/man/man2html?7+create_user">create_user</A></B>(7)]
+获取这个选项的更多信息。）
+<DT><B>CREATEDB</B><DD>
+<DT><B>NOCREATEDB</B><DD>
+<BR>&nbsp;这个子句定义该用户创建数据库的能力。&nbsp;如果声明了CREATEDB，该用户可以创建她自己的数据库。&nbsp;用NOCREATEDB将剥夺一个用户创建数据库的能力。
+<DT><B>CREATEUSER</B><DD>
+<DT><B>NOCREATEUSER</B><DD>
+<BR>&nbsp;这个子句决定一个用户能否创建新用户。&nbsp;这个选项同样还令该用户成为超级用户，可以超越所有访问限制。
+<DT><B></B><I>abstime</I><B></B><DD>
+<BR>&nbsp;该用户帐号口令的过期的日期（和可选的时间）。&nbsp;要设置一个口令从不过期，可以用'infinity'。
+<DT><B></B><I>newname</I><B></B><DD>
+<BR>&nbsp;用户的新名字。
+<DT><B></B><I>parameter</I><B></B><DD>
+<DT><B></B><I>value</I><B></B><DD>
+<BR>&nbsp;把该用户特定的配置变量的会话缺省设置为给定的数值。&nbsp;如果&nbsp;value&nbsp;为&nbsp;DEFAULT&nbsp;&nbsp;或者使用了等效的&nbsp;RESET，那么删除用户相关的变量，&nbsp;并且该用户将在新会话中继承缺省设置。使用&nbsp;RESET&nbsp;ALL&nbsp;&nbsp;清除所有设置。
+<P>
+<BR>&nbsp;参阅&nbsp;SET&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+set">set</A></B>(7)]&nbsp;和&nbsp;Section&nbsp;16.4&nbsp;``Run-time&nbsp;Configuration''&nbsp;获取有关可用变量和数值的更多信息。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;使用&nbsp;CREATE&nbsp;USER&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+create_user">create_user</A></B>(7)]
+创建新用户和 DROP USER [<B><A HREF="/cgi-bin/man/man2html?7+drop_user">drop_user</A></B>(7)] 删除用户。
+<P>
+
+<B>ALTER USER</B> 无法改变一个用户的组的成员性。 用
+ALTER GROUP [<B><A HREF="/cgi-bin/man/man2html?7+alter_group">alter_group</A></B>(7)]
+实现这个目地。
+<P>
+
+<BR>&nbsp;使用&nbsp;ALTER&nbsp;DATABASE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+alter_database">alter_database</A></B>(7)]，我们还可能把一个会话缺省和某个数据库绑定起来，而不是和某个用户绑定。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;更改一用户口令：
+<P>
+<PRE>
+ALTER USER davide WITH PASSWORD 'hu8jmn3';
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;更改一用户有效期：
+<P>
+<PRE>
+ALTER USER manuel VALID UNTIL 'Jan 31 2030';
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;更改一用户有效期，&nbsp;声明其权限应该在用比UTC早一小时的时区记时的&nbsp;2005&nbsp;年&nbsp;5&nbsp;月&nbsp;4&nbsp;日正午失效
+<P>
+<PRE>
+ALTER USER chris VALID UNTIL 'May 4 12:00:00 2005 +1';
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;令用户永远有效：
+<P>
+<PRE>
+ALTER USER fred VALID UNTIL 'infinity';
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;赋予一用户创建新用户和新数据库的权限：
+<P>
+<PRE>
+ALTER USER miriam CREATEUSER CREATEDB;
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY  兼容性</H2>
+
+<P>
+
+<B>ALTER USER</B> 语句是 PostgreSQL 扩展。SQL 标准将用户的定义交给实现完成。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+CREATE USER [<B><A HREF="/cgi-bin/man/man2html?7+create_user">create_user</A></B>(7)], DROP USER [<B><A HREF="/cgi-bin/man/man2html?l+drop_user">drop_user</A></B>(l)], SET [<B><A HREF="/cgi-bin/man/man2html?l+set">set</A></B>(l)]
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY  兼容性</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

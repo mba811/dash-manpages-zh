@@ -1,0 +1,336 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ftpaccess</TITLE>
+</HEAD><BODY>
+<H1>ftpaccess</H1>
+Section: File Formats (5)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ftpaccess - ftpd的配置档
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+这个ftpaccess档案是用来配置下述功能的运作
+<P>
+<P>
+
+存取功能(AccessCapabilities)
+<P>
+<DL COMPACT>
+<DT>autogroup&lt;群组名称&gt;&lt;类别&gt;[&lt;类别&gt;...]<DD>
+如果一个匿名的(ANONYMOUS)使用者是任何&lt;类别&gt;的成员，那麽ftp伺服器将会实行一次setegid()到该&lt;群组名称&gt;。这允许特殊类别的匿名使用者存取group-and-owner-read-only的档案以及目录。&lt;群组名称&gt;是/etc/group里的一个有效群组（或是你的getgrent()呼叫所查阅的地方）。
+<P>
+<DT>class&lt;类别&gt;&lt;类型列表&gt;&lt;全球位址&gt;[&lt;全球位址&gt;...]<DD>
+定义使用者的&lt;类别&gt;，使用&lt;全球位址&gt;格式的来源位址。可以定义&lt;类别&gt;多个成员。可以有多个&quot;class&quot;指令列出该类别额外的成员。如果多个&quot;calss&quot;指令可以应用到该次的连线期间，会使用在access档案中第一个列出的。尝试为一台主机定义一个有效的类别失败的话将会引起存取被拒绝。&lt;类型列表&gt;是一个以任何&quot;anonymous&quot;,&quot;guest&quot;及&quot;real&quot;关键字所组成使用逗点隔开的列表。如果包含&quot;real&quot;关键字，该类别可以符合使用FTP存取真实的帐号的使用者，而如果包含&quot;anonymous&quot;关键字该类别可以符合使用匿名FTP的使用者。而&quot;guest&quot;关键字符合访客存取帐号（参阅&quot;guestgroup&quot;以取得更多资讯）
+<P>
+<BR>&nbsp;&lt;全球位址&gt;可以是一个全球的领域名称或是一个全球的数字
+位址。
+<P>
+<DT>deny&lt;全球位址&gt;&lt;讯息档案&gt;<DD>
+永远拒绝符合&lt;全球位址&gt;主机的存取。显示&lt;讯息档案&gt;。&lt;全球位址&gt;可以是&quot;!nameserved&quot;用来拒绝没有名称伺服器服务中的节点的存取。
+<P>
+<DT>guestgroup&lt;群组名称&gt;[&lt;群组名称&gt;...]<DD>
+如果一个真实的(REAL)使用者是任何&lt;群组名称&gt;的成员，该次连线期间的设立完全如同匿名的FTP一般。换句话说，会执行一次chroot()，而且该使用者不再被允许发出USER及PASS指令。&lt;群组名称&gt;是/etc/group里的一个有效群组（或是你的getgrent()呼叫所查阅的地方）。
+<P>
+该使用者的home目录必须适当地加以设定，跟匿名FTP所要做的完全一样。在passwd项目里的home目录栏位被分成两个目录。第一个栏位将是chroot()呼叫的根目录参数。第二个部份是相对於该根目录的使用者home目录。这两半是以&quot;/./&quot;分隔开的。
+<P>
+在/etc/passwd里，该真实的项目：
+<P>
+<PRE>
+guest1::100:92:Guest
+Account:/ftp/./incoming:/etc/ftponly
+</PRE>
+
+<P>
+当guest1成功地签入的时候，此ftp伺服器将会执行一次chroot(&quot;/ftp&quot;)然後接著chdir(&quot;/incoming&quot;)。该guest使用者将只能够存取/ftp下的目录结构（此目录对guest1而言看起来跟用起来就像是/目录），就如同一个匿名FTP使用者所见到的。
+<P>
+<DT><BR>&nbsp;limit&lt;类别&gt;&lt;时间&gt;&lt;讯息档案&gt;<DD>
+在某&lt;时间&gt;将某&lt;类别&gt;限制为个使用者，若使用者的存取被拒绝则显示&lt;讯息档案&gt;内容。限制的检查只在签入时期实行。如果多个&quot;limit&quot;指令可以应用到该次连线期间的话，会使用第一个适合的。尝试定义一个有效的限制失败，或是值为-1的限制，等於不设限。&lt;时间&gt;使用UUCPL.sys档案相同的格式。
+<P>
+<DT>loginfails&lt;数字&gt;<DD>
+在&lt;数字&gt;签入失败後，记录一个重复签入失败(repeated loginfailures)讯息并且终止该FTP连线。预设值是5。
+<P>
+<DT>private<DD>
+使用者签入之後，SITEGROUP及SITEGPASS指令可以用来指定一增强存取的群组以及与之有关的密码。如果该群组名称以及密码是有效的，该使用者变成（经由setegid()）一个在群组存取档案/etc/ftpgroups中所指定群组的成员。
+<P>
+该群组存取档案的格式是：
+<P>
+存取群组名称：经编码的密码：真实群组名称
+<P>
+其中的存取群组是一个随意的（文数字＋标点）字串。经编码的密码是经由<A HREF="/cgi-bin/man/man2html?3+crypt">crypt</A>(3)编码过的密码，与/etc/passwd里的完全一样。真实群组名称是/etc/group里所列出有效群组其中的一个名称。
+<P>
+注意：要使这个选项能运作於匿名的FTP使用者，该FTP伺服器必须保持使/etc/group永久开启而且将群组存取档案载入记忆体。这意指(1)该ftp伺服器现在使一个额外的档案描述子(filedescriptor)开启，以及(2)经由SITEGROUP使用者必须的密码以及存取权利的承认在一次FTP连线期间以内将会是静态的。如果你有紧急的需求要＊现在＊改变存取群组以及／或是密码，那麽你只要砍掉(kill)所有正在执行中的FTP伺服器。
+<P>
+</DL>
+<P>
+
+资讯功能(InformationalCapabilities)
+<P>
+<DL COMPACT>
+<DT>banner&lt;路径&gt;<DD>
+作用与message指令类似，除了此banner是在使用者键入使用者名称／密码之前显示以外。该&lt;路径&gt;系相对於真实的系统根目录，不是匿名FTP所使用的根目录。
+<P>
+警告：这个指令的使用可以完全地防止不相容的FTP客户端程式使用该FTP伺服器。并非所有的客户端都能够处理多行回应(multi-lineresponses)（这正是banner显示的方式）
+<P>
+<DT>email&lt;名称&gt;<DD>
+定义ftp档案处(archive)维护者的电子邮递位址。这个字串将会在每一次使用%E代换变数(magiccookie)的时候印出。
+<P>
+<DT>message&lt;路径&gt;{&lt;时机&gt;{&lt;类别&gt;...}}<DD>
+定义一个配合&lt;路径&gt;的档案名称在使用者签入时或是在使用切换工作目录指令的时候ftpd将会显示该档案的内容。该项&lt;时机&gt;参数可以是&quot;LOGIN&quot;或&quot;CWD=&lt;目录&gt;&quot;。如果&lt;时机&gt;是&quot;CWD=&lt;目录&gt;&quot;的话，&lt;目录&gt;指定将会引发该通知的新预设目录。
+<P>
+该选择性的&lt;类别&gt;指定允许该讯息只对特殊类别的成员显示。可以指定超过一个类别。
+<P>
+在说明档中可以有代换变数(magiccookies)这会使ftp伺服器以指定的文字字串取代
+该变数：
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>%T<DD>
+本地时间(form ThuNov1517:12:42 1990)
+<DT>%F<DD>
+CWD所在分割区的剩馀空间(kbytes)[并非所有系统都有支援]
+<DT>%C<DD>
+目前的工作目录
+<DT>%E<DD>
+定义在ftpaccess中维护者的电子邮递位址
+<DT>%R<DD>
+远端主机名称
+<DT>%L<DD>
+本地主机名称
+<DT>%U<DD>
+签入时所给的使用者名称
+<DT>%M<DD>
+这个类别所允许的最大使用者数目
+<DT>%N<DD>
+这个类别目前的使用者数目
+</DL>
+</DL>
+
+<P>
+此项message将只显示一次以避免惹使用者讨厌。要记得当MESSAGEs被一匿名的FTP使用者引发时，该&lt;路径&gt;必须是相对於匿名FTP目录树的根目录。
+<P>
+<DT>readme&lt;路径&gt;{&lt;时机&gt;{&lt;类别&gt;}}<DD>
+定义一个配合&lt;路径&gt;的档案名称在使用者签入时或是在使用切换工作目录指令的时候ftpd将会告知使用者该档案存在及修改的日期。&lt;时机&gt;参数可以是&quot;LOGIN&quot;或&quot;CWD=&lt;目录&gt;&quot;。若&lt;时机&gt;是&quot;CWD=&lt;目录&gt;&quot;的话，&lt;目录&gt;指定将会引发该通知的新预设目录。此项讯息将只显示一次以避免打扰使用者。要记得当README讯息被一匿名的FTP使用者引发时，该&lt;路径&gt;必须是相对於匿名FTP目录树的根目录。
+<P>
+该选择性的&lt;类别&gt;指定允许该讯息只对特殊类别的成员显示。可以指定超过一个类别。
+<P>
+</DL>
+<P>
+
+记录功能(LoggingCapabilities)
+<P>
+<DL COMPACT>
+<DT>logcommands&lt;类型列表&gt;<DD>
+以使用者启动个别的记录指令。&lt;类型列表&gt;是一个以任何的&quot;anonymous&quot;,&quot;guest&quot;及&quot;real&quot;关键字所组成使用逗点隔开的列表。如果包含&quot;real&quot;关键字，将会为使用FTP存取真实帐号的使用者做记录，而如果包含&quot;anonymous&quot;关键字则将会为使用匿名FTP的使用者做记录。&quot;guest&quot;关键字符合访客存取帐号（参阅&quot;guestgroup&quot;以取得更多资讯）
+<P>
+<DT>logtransfers&lt;类型列表&gt;&lt;目录&gt;<DD>
+启动对真实的或匿名的FTP使用者的档案传输记录。对传输到伺服器（进来）的记录可以跟从伺服器传输（出去）分开来启动。&lt;类型列表&gt;是一个以任何的&quot;anonymous&quot;,&quot;guest&quot;及&quot;real&quot;关键字所组成使用逗点隔开的列表。如果其中包含有&quot;real&quot;关键字，将会为使用FTP存取真实帐号的使用者做记录，而如果包含&quot;anonymous&quot;关键字则将会为使用匿名FTP的使用者做记录。而&quot;guest&quot;关键字符合访客存取帐号（参阅&quot;guestgroup&quot;以取得更多资讯）。&lt;目录&gt;是一个以任何的&quot;inbound&quot;以及&quot;outbound&quot;两个关键字所组成以逗点隔开的列表，而且将会分别引发对送往该伺服器以及从该伺服器送出的传输记录。
+<P>
+</DL>
+<P>
+
+其它功能(MiscellaneousCapabilities)
+<P>
+<DL COMPACT>
+<DT>alias&lt;字串&gt;&lt;目录&gt;<DD>
+为一个目录定义一个别名，&lt;字串&gt;。可以用来加入逻辑目录的其它概念。
+<P>
+例如：
+<P>
+aliasrfc:/pub/doc/rfc
+<P>
+允许使用者从任何目录以指令&quot;cdrfc:&quot;存取/pub/doc/rfc。别名只应用於cd指令上。
+<P>
+<DT>cdpath&lt;目录&gt;<DD>
+定义cdpath里的一个项目。这定义一个在改变目录时使用的搜寻路径。
+<P>
+例如：
+<P>
+<PRE>
+cdpath/pub/packages
+cdpath/.aliases
+</PRE>
+
+<P>
+允许使用者直接cd到任何/pub/packages或/.alias目录以下的目录。该搜寻路径系以该行出现在ftpaccess档案里的顺序定义。
+<P>
+如果使用者所下的指令是：
+<P>
+<PRE>
+cdfoo
+</PRE>
+
+<P>
+则会以下列的顺序搜寻该目录：
+<P>
+<I>./foo</I>
+
+一个称为&quot;foo&quot;的别名
+<I>/pub/packages/foo</I>
+
+<I>/.aliases/foo</I>
+
+<P>
+该cdpath只能够配合cd指令使用。如果你有数量很大的别名那麽你可能想要设立一个目录别名链结到所有你希望能让使用者使用的区域。
+<P>
+<DT><PRE>
+<DD>compress[...]
+tar[...]
+</PRE>
+
+为任何符合任何的类别启动压缩(compress)或包裹(tar)功能。实际的转换(conversions)定义在外部的档案FTPLIB/ftpconversions之中。
+<P>
+<DT>shutdown&lt;路径&gt;<DD>
+如果&lt;路径&gt;所指的档案存在，伺服器将会规律地检查该档案以便得知该伺服器是否将要被停机。如果计画一次停机，则会通告使用者，新的连线在停机之前的一段指定的时间之後会被拒绝且目前的连线在停机之前的一段指定的时间之後会被停止。&lt;路径&gt;指到一个结构如下的档案：
+<P>
+<PRE>
+&lt;年&gt;&lt;月&gt;&lt;日&gt;&lt;时&gt;&lt;分&gt;&lt;拒绝_期间&gt;&lt;抛弃_期间&gt;&lt;本文&gt;
+</PRE>
+
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>&lt;年&gt;<DD>
+任何&gt;1970的年份
+<DT>&lt;月&gt;<DD>
+0-11&lt;----注意!
+<DT>&lt;时&gt;<DD>
+0-23
+<DT>&lt;分&gt;<DD>
+0-59
+</DL>
+</DL>
+
+<P>
+&lt;拒绝_期间&gt;以及&lt;抛弃_期间&gt;是在停机之前新的连线将会被拒绝以及存在的连线将会被抛弃的一段格式为HHMM的期间。
+<P>
+&lt;本文&gt;跟从任何讯息（参阅&quot;message&quot;）的一般规则，配合下列额外可用的代换变数：
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>%s<DD>
+系统将要停机的时间
+<DT>%r<DD>
+新的连线将会被拒绝的时间
+<DT>%d<DD>
+目前的连线将会被抛弃的时间
+</DL>
+</DL>
+
+<P>
+所有时间的格式都是：dddMMMDDhh:mm:ssYYYY。在该配置档中只能有一个&quot;shutdown&quot;指令。
+<P>
+外部程式<A HREF="/cgi-bin/man/man2html?8+ftpshut">ftpshut</A>(8)可以用来自动化产生这个档案的程序。
+<P>
+</DL>
+<P>
+
+许可功能(PermissionCapabilities)
+<DL COMPACT>
+<DT><PRE>
+<DD>chmod&lt;类型列表&gt;
+delete&lt;类型列表&gt;
+overwrite&lt;类型列表&gt;
+umask&lt;类型列表&gt;
+</PRE>
+
+允许或不允许执行指定功能的能力。依照预设值，允许所有的使用者执行。
+<P>
+&lt;类型列表&gt;是一个以任何&quot;anonymous&quot;,&quot;guest&quot;及&quot;real&quot;关键字所组成使用逗点隔开的列表。
+<P>
+<DT>passwd-check()<DD>
+定义该伺服器对匿名ftp密码检查的层级与执行。
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>none<DD>
+不执行密码检查。
+<DT>trivial<DD>
+密码中必须包含一个'@'字元。
+<DT>rfc822<DD>
+密码必须是一个rfc822相容的位址。
+<DT>warn<DD>
+警告该使用者，但是允许他们签入。
+<DT>enforce<DD>
+警告该使用者，并且接著将之踢出。
+</DL>
+</DL>
+
+<P>
+<DT>path-filter&lt;类型列表&gt;&lt;讯息&gt;&lt;允许的字元集&gt;{&lt;不允许的正规表示式&gt;...}<DD>
+对於属於&lt;类型列表&gt;的使用者，path-filter定义控制何种档案名称允许或不允许的正规表示式(regularexpressions)。可以有多个不允许的正规表示式。如果一个档案名称因为不符合正规表示式的标准而无效的话，将会显示&lt;讯息&gt;给该使用者。例如：
+<P>
+<PRE>
+path-filteranonymous/etc/pathmsg^[-A-Za-z0-9._]*$^.^-
+</PRE>
+
+<P>
+指定所有匿名使用者所上传的档案名称只能以A-Z,a-z,0-9以及&quot;._-&quot;组成而且不能以一个&quot;.&quot;或是一个&quot;-&quot;开始。如果该档案名称是不合法的，则将会显示/etc/pathmsg给该使用者。
+<P>
+<DT>upload&lt;拥有者&gt;&lt;群组&gt;[&quot;dirs&quot;|&quot;nodirs&quot;]<DD>
+配合定义一个认可或拒绝上传的目录。
+<P>
+如果其认可上传，所有档案将会由&lt;拥有者&gt;以及&lt;群组&gt;所拥有而且将会具有根据设置的权限(permission)。
+<P>
+目录系以最佳-符合(best-match)为基础。
+<P>
+例如：
+<P>
+<PRE>
+upload*no
+upload/incomingyesftpdaemon0666
+upload/incoming/gifsyesjlcguest0600
+nodirs
+</PRE>
+
+<P>
+这将仅允许上传到/incoming以及/incoming/gifs。上传到/incoming的档案将由ftp/daemon所拥有并且具有0666的权限。上传到/incoming/gifs的档案将由jlc/guest拥有并且具有0600的权限。
+<P>
+选择性的&quot;dir&quot;以及&quot;nodir&quot;关键字可以指定允许或不允许使用mkdir指令建立新的子目录。
+<P>
+该upload关键字只应用於匿名的使用者。
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+FTPLIB/ftpaccess
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>&lt;<A HREF="mailto:asdchen@pc2.hinet.net">asdchen@pc2.hinet.net</A>&gt;</B>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>1995/12/26</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">文件 FILES</A><DD>
+<DT><A HREF="#lbAE">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAF">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAG">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

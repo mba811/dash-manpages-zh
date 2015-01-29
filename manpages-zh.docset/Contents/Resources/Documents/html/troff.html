@@ -1,0 +1,826 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of TROFF</TITLE>
+</HEAD><BODY>
+<H1>TROFF</H1>
+Section: User Commands  (1)<BR>Updated: 16 September 2002<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+troff - groff 文档排版系统的 troff 处理器
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+
+
+
+
+
+<BR>
+
+<B>troff</B>
+
+
+
+[&nbsp;<B>-abcivzCERU</B><I></I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-d</B><I>cs</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-f</B><I>fam</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-F</B><I>dir</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-m</B><I>name</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-M</B><I>dir</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-n</B><I>num</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-o</B><I>list</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-r</B><I>cn</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-T</B><I>name</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-w</B><I>name</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-W</B><I>name</I>&nbsp;]
+
+
+
+
+[&nbsp;<I>files...</I>&nbsp;]
+
+<BR>
+
+
+<P>
+
+在一个命令行选项与其参数之间可以有空格。
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+
+这份手册页描述了 GNU 版本的
+<B>troff</B>.
+
+它是 groff 文档排版系统的一部分。
+它与 UNIX troff 的功能兼容，但是有很多的扩展，参见
+<B><A HREF="/cgi-bin/man/man2html?7+groff_diff">groff_diff</A></B>(7).
+
+通常它应当用
+<B><A HREF="/cgi-bin/man/man2html?1+groff">groff</A></B>(1)
+
+命令调用，groff 会以合适的顺序和合适的选项，运行预处理器和后处理器。
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+
+<DL COMPACT>
+<DT><B>-a</B>
+
+<DD>
+产生一个排版输出的
+<FONT SIZE="-1">ASCII</FONT>
+近似结果 (approximation)
+<DT><B>-b</B>
+
+<DD>
+在每条错误或警告消息中打印回溯信息
+此信息可以帮助跟踪错误的原因
+信息中的行号可能有误，因为
+<B>troff</B>
+
+中行号的意义与请求类型是
+<B>as</B>
+
+还是
+<B>am</B>
+
+有关
+<DT><B>-c</B>
+
+<DD>
+禁止颜色输出 (兼容模式下总是禁止)
+<DT><B>-C</B>
+
+<DD>
+使用兼容模式
+<DT><B>-d</B><I>cs</I>
+
+<DD>
+
+<BR>
+
+
+<DT>
+
+<B>-d</B><I>name</I><B>=</B><I>s</I>
+
+定义
+<I>c</I>
+
+或
+<I>name</I>
+
+是一个字符串
+<I>s</I>;
+
+<I>c</I>
+
+必须是单字符的一个名称
+<DT><B>-E</B>
+
+<DD>
+阻止
+<B>troff</B>
+
+的错误输出.
+注意这不影响发出
+<B>tm</B>
+
+或
+<B>tm1</B>
+
+请求的宏包发出的错误消息向标准错误输出
+<DT><B>-f</B><I>fam</I>
+
+<DD>
+使用
+<I>fam</I>
+
+作为默认字体族
+<DT><B>-F</B><I>dir</I>
+
+<DD>
+在目录中 (或目录路径中) 搜索
+<I>dir</I>
+
+子目录
+<B>dev</B><I>name</I>
+
+(<I>name</I>
+
+是设备的名称) 查找其中的
+<B>DESC</B>
+
+文件和字体文件
+<I>dir</I>
+
+在所有其他字体目录之前查找
+<DT><B>-i</B>
+
+<DD>
+处理完所有输入文件后继续从标准输入读入
+<DT><B>-m</B><I>name</I>
+
+<DD>
+读入文件
+<I>name</I><B>.tmac</B>.
+
+如果没有找到，则去读
+<B>tmac.</B><I>name</I>
+
+它将先在
+<B>-M</B>
+
+命令行参数给定的目录中搜索，然后是
+<B>GROFF_TMAC_PATH</B>
+
+环境变量中的目录，然后是当前目录 (安全模式不会做这一步)，
+然后是个人目录，/usr/lib/groff/site-tmac, /usr/share/groff/site-tmac
+还有 /usr/share/groff/1.18.1/tmac.
+<DT><B>-M</B><I>dir</I>
+
+<DD>
+搜索目录 (或目录路径)
+<I>dir</I>
+
+查找宏文件
+检索在所有其他宏目录之前进行
+<DT><B>-n</B><I>num</I>
+
+<DD>
+为第一页编号
+<I>num</I>.
+
+<DT><B>-o</B><I>list</I>
+
+<DD>
+仅输出
+<I>list</I>
+
+中指定的页，参数是一个以逗号分隔的页号范围的列表;
+<I>n</I>
+
+意思是打印页面
+<I>n</I>,
+
+<I>m</I><B>-</B><I>n</I>
+
+意思是打印
+<I>m</I>
+
+到
+<I>n</I>
+
+之间的所有页面,
+<B>-</B><I>n</I>
+
+意思是打印直到
+<I>n</I>
+
+的所有页面,
+<I>n</I><B>-</B>
+
+意思是打印从
+<I>n</I>
+
+开始的所有页面，直到结束.
+<B>troff</B>
+
+打印完列表中的最后一页后将退出
+<DT><B>-r</B><I>cn</I>
+
+<DD>
+
+<DD>
+
+<DT>
+
+<B>-r</B><I>name</I><B>=</B><I>n</I>
+
+设置数字寄存器
+<I>c</I>
+
+或
+<I>name</I>
+
+为
+<I>n</I>;
+
+<I>c</I>
+
+必须是单字符的一个名称，
+<I>n</I>
+
+可以是任何 troff 数字表达式
+<DT><B>-R</B>
+
+<DD>
+不读取
+<B>troffrc</B>
+
+和
+<B>troffrc-end</B>.
+
+<DT><B>-T</B><I>name</I>
+
+<DD>
+为设备
+<I>name</I>
+
+而不是默认的
+<B>ps</B>
+
+准备输出
+<DT><B>-U</B>
+
+<DD>
+不全模式
+这将允许下列请求
+<B>open</B>,
+
+<B>opena</B>,
+
+<B>pso</B>,
+
+<B>sy</B>,
+
+和
+<B>pi</B>.
+
+出于安全原因，这些潜在的危险的请求在其他情况下被禁止。
+同时它将当前目录加入宏搜索路径
+<DT><B>-v</B>
+
+<DD>
+打印版本号
+<DT><B>-w</B><I>name</I>
+
+<DD>
+允许发出
+<I>name</I>
+
+警告。可能的警告名称在下面的
+<I>警告 WARNINGS</I>
+
+章节中详述
+例如，要允许所有警告，使用
+<B>-w</B>
+
+<B>all</B>.
+
+允许使用多个
+<B>-w</B>
+
+选项
+<DT><B>-W</B><I>name</I>
+
+<DD>
+禁止发出
+<I>name</I>
+
+警告。允许使用多个
+<B>-W</B>
+
+选项
+<DT><B>-z</B>
+
+<DD>
+阻止格式化的输出
+
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>警告 WARNINGS</H2>
+
+
+<B>troff</B>
+
+可以发出的警告分为下列类别
+每种警告关联的名称在
+<B>-w</B>
+
+和
+<B>-W</B>
+
+选项中使用；关联的数字被
+<B>warn</B>
+
+请求和
+<B>.warn</B>
+
+寄存器使用, 它总是 2 的幂，以允许位运算
+<P>
+
+<CENTER><TABLE BORDER><TR><TD><TABLE>
+<TR VALIGN=top><TD ALIGN=center><DD>Bit</TD><TD ALIGN=center>Code</TD><TD ALIGN=center>Warning</TD><TD ALIGN=center>Bit</TD><TD ALIGN=center>Code</TD><TD ALIGN=center>Warning<BR></TD></TR>
+<TR VALIGN=top><TD COLSPAN=6><HR></TD></TR>
+<TR VALIGN=top><TD ALIGN=right>0</TD><TD ALIGN=right><I>1</I></TD><TD><B>char</B></TD><TD ALIGN=right>10</TD><TD ALIGN=right><I>1024</I></TD><TD><B>reg</B><BR></TD></TR>
+<TR VALIGN=top><TD ALIGN=right>1</TD><TD ALIGN=right><I>2</I></TD><TD><B>number</B></TD><TD ALIGN=right>11</TD><TD ALIGN=right><I>2048</I></TD><TD><B>tab</B><BR></TD></TR>
+<TR VALIGN=top><TD ALIGN=right>2</TD><TD ALIGN=right><I>4</I></TD><TD><B>break</B></TD><TD ALIGN=right>12</TD><TD ALIGN=right><I>4096</I></TD><TD><B>right-brace</B><BR></TD></TR>
+<TR VALIGN=top><TD ALIGN=right>3</TD><TD ALIGN=right><I>8</I></TD><TD><B>delim</B></TD><TD ALIGN=right>13</TD><TD ALIGN=right><I>8192</I></TD><TD><B>missing</B><BR></TD></TR>
+<TR VALIGN=top><TD ALIGN=right>4</TD><TD ALIGN=right><I>16</I></TD><TD><B>el</B></TD><TD ALIGN=right>14</TD><TD ALIGN=right><I>16384</I></TD><TD><B>input</B><BR></TD></TR>
+<TR VALIGN=top><TD ALIGN=right>5</TD><TD ALIGN=right><I>32</I></TD><TD><B>scale</B></TD><TD ALIGN=right>15</TD><TD ALIGN=right><I>32768</I></TD><TD><B>escape</B><BR></TD></TR>
+<TR VALIGN=top><TD ALIGN=right>6</TD><TD ALIGN=right><I>64</I></TD><TD><B>range</B></TD><TD ALIGN=right>16</TD><TD ALIGN=right><I>65536</I></TD><TD><B>space</B><BR></TD></TR>
+<TR VALIGN=top><TD ALIGN=right>7</TD><TD ALIGN=right><I>128</I></TD><TD><B>syntax</B></TD><TD ALIGN=right>17</TD><TD ALIGN=right><I>131072</I></TD><TD><B>font</B><BR></TD></TR>
+<TR VALIGN=top><TD ALIGN=right>8</TD><TD ALIGN=right><I>256</I></TD><TD><B>di</B></TD><TD ALIGN=right>18</TD><TD ALIGN=right><I>262144</I></TD><TD><B>ig</B><BR></TD></TR>
+<TR VALIGN=top><TD ALIGN=right>9</TD><TD ALIGN=right><I>512</I></TD><TD><B>mac</B></TD><TD ALIGN=right>19</TD><TD ALIGN=right><I>524288</I></TD><TD><B>color</B><BR></TD></TR>
+</TABLE></TABLE></CENTER>
+
+<P>
+
+
+
+
+<DL COMPACT>
+<DT><B>break</B>	4
+
+<DD>
+在填充 (fill) 模式下，不可分行的行的长度 比行的长度要小。
+In fill mode, lines which could not be broken so that their length was
+less than the line length.
+此警告是默认允许的
+<DT><B>char</B>	1
+
+<DD>
+不存在的字符。
+此警告是默认允许的
+<DT><B>color</B>	524288
+
+<DD>
+颜色相关的警告
+<DT><B>delim</B>	8
+
+<DD>
+关闭定界符丢失或不匹配
+<DT><B>di</B>	256
+
+<DD>
+没有当前转移 (current diversion) 而使用了不带参数的
+<B>di</B>
+
+或
+<B>da</B>
+
+<DT><B>el</B>	16
+
+<DD>
+使用
+<B>el</B>
+
+请求但是没有相应的
+<B>ie</B>
+
+请求
+<DT><B>escape</B>	32768
+
+<DD>
+不可识别的转义序列。
+当遇到一个不可识别的转义序列时，转义字符被忽略
+<DT><B>font</B>	131072
+
+<DD>
+不存在的字体。
+此警告是默认允许的
+<DT><B>ig</B>	262144
+
+<DD>
+<B>ig</B>
+
+请求忽略的文本中的非法转义。
+如果不是在被忽略的文本中，它们将是错误
+<DT><B>input</B>	16384
+
+<DD>
+非法输入字符
+<DT><B>mac</B>	512
+
+<DD>
+使用未定义的字符串，宏和标号 (diversions) (?).
+当使用一个未定义的字符串，宏或标号 (diversions) 时，字符串被自动定义为空。
+因此，在大多数情况下，每个名字最多会给出一个警告
+<DT><B>missing</B>	8192
+
+<DD>
+请求缺少必要的参数
+<DT><B>number</B>	2
+
+<DD>
+非法数值表达式。
+此警告是默认允许的
+<DT><B>range</B>	64
+
+<DD>
+超出范围的参数
+<DT><B>reg</B>	1024
+
+<DD>
+使用未定义的数字寄存器。
+当使用一个未定义的数字寄存器时，寄存器被自动定义为值 ~0。
+因此，大多数情况下，使用一个特定的名字最多会得到一个警告
+<DT><B>right-brace</B>	4096
+
+<DD>
+在应当使用数字的地方使用了
+<B>\}</B>
+
+<DT><B>scale</B>	32
+
+<DD>
+无意义的比例指示 (scaling indicators).
+<DT><B>space</B>	65536
+
+<DD>
+在一个请求或宏与其参数之间缺少空格。
+当遇到一个两个字符以上的未定义名字，并且名字的前两个字符是一个已定义的名称时将给出这个警告，
+请求或宏不会执行。
+当给出这个警告时，不会自动定义宏。
+此警告是默认允许的。
+在兼容模式下不会发生这种警告
+<DT><B>syntax</B>	128
+
+<DD>
+数值表达式中语法有歧义
+<DT><B>tab</B>	2048
+
+<DD>
+不合适地使用了 tab 字符。
+在应当使用数字的地方使用了tab字符，或者在一个未用双引号引用的宏参数中使用tab 时会发生
+</DL>
+<P>
+
+也有可以引用一组警告的名称
+<DL COMPACT>
+<DT><B>all</B>
+
+<DD>
+所有的警告，除了
+<B>di</B>,
+
+<B>mac</B>,
+
+和
+<B>reg</B>.
+
+它的目的是指代所有在传统的宏包中有用的警告
+<DT><B>w</B>
+
+<DD>
+所有警告
+
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>环境 ENVIRONMENT</H2>
+
+
+<DL COMPACT>
+<DT><FONT SIZE="-1"><B>GROFF_TMAC_PATH</B>
+
+</FONT>
+<DD>
+一个以冒号分隔的目录的列表，从中搜索宏文件
+<B>troff</B>
+
+将先搜索
+<B>-M</B>
+
+选项给出的目录，以及标准的路径 ( 当前目录
+(如果是不安全模式)，个人目录
+<B>/usr/lib/groff/site-tmac</B>,
+
+<B>/usr/share/groff/site-tmac</B>,
+
+<B>/usr/share/groff/1.18.1/tmac</B>)
+
+最后搜索它
+<DT><FONT SIZE="-1"><B>GROFF_TYPESETTER</B>
+
+</FONT>
+<DD>
+默认设备
+<DT><FONT SIZE="-1"><B>GROFF_FONT_PATH</B>
+
+</FONT>
+<DD>
+一个以冒号分隔的目录的列表，从中搜索
+<B>dev</B><I>name</I>
+
+目录。
+<B>troff</B>
+
+将先搜索
+<B>-F</B>
+
+选项给出的目录，以及标准的路径
+(<B>/usr/share/groff/site-font</B>,
+
+<B>/usr/share/groff/1.18.1/font</B>,
+
+<B>/usr/lib/font</B>)
+
+最后搜索它
+
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+
+
+u+3n<DL COMPACT>
+<DT>
+<DD>
+
+
+<B>/usr/share/groff/1.18.1/tmac/troffrc</B>
+
+初始化文件 (在任何其他宏包之前调用).
+<DT><B>/usr/share/groff/1.18.1/tmac/troffrc-end</B>
+
+<DD>
+初始化文件 (在任何其他宏包之后调用).
+<DT><B>/usr/share/groff/1.18.1/tmac/</B><I>name</I><B>.tmac</B>
+
+<DD>
+
+<BR>
+
+
+<DT>
+
+<B>/usr/share/groff/1.18.1/tmac/tmac.</B><I>name</I>
+
+宏文件
+<DT><B>/usr/share/groff/1.18.1/font/dev</B><I>name</I><B>/DESC</B>
+
+<DD>
+设备
+<I>name</I>
+
+的设备描述文件.
+<DT><B>/usr/share/groff/1.18.1/font/dev</B><I>name</I><B>/</B><I>F</I>
+
+<DD>
+设备
+<I>name</I>
+
+的字体
+<I>F</I>
+
+的字体文件
+</DL>
+<P>
+
+注意默认情况下既不在当前目录也不在个人目录搜索
+<B>troffrc</B>
+
+和
+<B>troffrc-end</B>
+
+，因为安全的原因 (即使给出了
+<B>-U</B>
+
+选项)。
+如果有必要，使用
+<B>-M</B>
+
+命令行选项或者
+<B>GROFF_TMAC_PATH</B>
+
+环境变量来将这些路径添加到搜索路径中
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+
+<DD>Copyright (C) 1989, 2001, 2002 Free Software Foundation, Inc.
+<P>
+
+此文档按照 FDL (GNU Free Documentation License) 1.1 或更新版本的要求发布。
+You should have received a copy of the FDL on your system, it is also
+available on-line at the
+
+This document was written by James Clark, with modifications from
+
+和
+
+<P>
+
+此文档是
+<I>groff</I>
+
+GNU roff 套件的一部分
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+
+<DL COMPACT>
+<DT><B><A HREF="/cgi-bin/man/man2html?1+groff">groff</A></B>(1)
+
+<DD>
+<I>groff</I>
+
+系统的主程序，
+<I>troff</I>
+
+的包装.
+<DT><B><A HREF="/cgi-bin/man/man2html?7+groff">groff</A></B>(7)
+
+<DD>
+<I>groff</I>
+
+语言的描述，包括一个虽然短但是完整的手册，内容是所有预定义的
+请求 (request)，寄存器 (register) 和
+<I>groff</I>
+
+正文的转义 (escapes of plain groff).
+可以在命令行查看，使用命令
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><DD>
+<B>man 7 groff</B>
+
+</DL>
+</DL>
+
+<DT><B><A HREF="/cgi-bin/man/man2html?7+groff_diff">groff_diff</A></B>(7)
+
+<DD>
+<I>groff</I>
+
+语言和传统的
+<I>classical troff</I>
+
+语言不同之处。
+当前，这是
+<I>groff</I>
+
+系统最为现实 (actual) 的一篇文档
+<DT><B><A HREF="/cgi-bin/man/man2html?7+roff">roff</A></B>(7)
+
+<DD>
+对
+<I>groff</I>
+
+和其他
+<I>roff</I>
+
+系统的概述，包括更多相关文档的链接
+</DL>
+<P>
+
+<I>groff info</I>
+
+<I>file</I>,
+
+参见 (cf.) 
+<B><A HREF="/cgi-bin/man/man2html?1+info">info</A></B>(1),
+
+将所有 groff 文档整合到了单独的一篇文档中
+
+
+
+
+
+
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>bbbush &lt;<A HREF="mailto:bbbush@163.com">bbbush@163.com</A>&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003.11.25</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国linux论坛man手册翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">警告 WARNINGS</A><DD>
+<DT><A HREF="#lbAG">环境 ENVIRONMENT</A><DD>
+<DT><A HREF="#lbAH">文件 FILES</A><DD>
+<DT><A HREF="#lbAI">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAJ">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国linux论坛man手册翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

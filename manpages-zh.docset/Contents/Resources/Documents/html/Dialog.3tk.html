@@ -1,0 +1,149 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of Dialog</TITLE>
+</HEAD><BODY>
+<H1>Dialog</H1>
+Section: Misc. Reference Manual Pages (3tk)<BR>Updated: tcllib - BWidget<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>Dialog  - 有定制按钮的对话框</B>
+
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>创建 CREATION</H2>
+
+<B>Dialog pathName ?option value...?</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+Dialog 组件使用户能建立一个对话框。一些命令接受一个 index 参数来指示在哪个 Button 上工作。这个索引与 ButtonBox 命令由相同的规定:
+<P>
+number 
+用数值来指定 Button，这里的 0 对应于第一个增加的 Button，1 对应下一个，以此类推。
+<P>
+endor 或 last
+指示最后添加的项目。 
+<P>
+default
+指示缺省 Button。
+<P>
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>组件特有选项 WIDGET-SPECIFIC OPTIONS</H2>
+
+<DL COMPACT>
+<DT>-anchor (read-only)<DD>
+指定 ButtonBox 的定位点(anchor point)。必须是 w、e、n、s、c 之一。如果 side选项被设置为 top或 bottom，anchor值 n、s和 c有相同的效果。如果 side选项被设置为 left或 right，anchor值 w、e和 c有相同的效果。
+<P>
+<DT>-bitmap (read-only)<DD>
+指定在用户框架的左面显示的一个位图。image选项屏弃 bitmap。
+<P>
+<DT>-cancel<DD>
+指定这个 Dialog 的取消按钮的编号。当用户在 Dialog 中按下 Esc 的时候，调用这个按钮。
+<P>
+<DT>-default<DD>
+指定这个 Dialog 的缺省按钮的编号。当用户在 Dialog 中按下 Return 的时候，调用这个按钮。
+<P>
+<DT>-image (read-only)<DD>
+指定在用户框架的左面显示一个图像。image选项屏弃 bitmap。
+<P>
+<DT>-modal<DD>
+这个选项必须是 none, local或 global。这个选项的值指定对话框的 grab 模式和如何完成 Dialog::draw。
+<P>
+<DT>-parent<DD>
+这个 Dialog 的父窗口。Dialog 在它的父窗口中居中。如果为空。则在根窗口中居中。
+<P>
+<DT>-separator (read-only)<DD>
+指定在用户框架和 ButtonBox 之间是否绘制一个分隔线。
+<P>
+<DT>-side (read-only)<DD>
+指定在相对于用户框架的何处绘制 ButtonBox。必须是 top、left、bottom或 right 之一。
+<P>
+<DT>-titleDialog <DD>
+顶层窗口的标题. 
+<P>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>组件命令</H2>
+
+<P>
+<DL COMPACT>
+<DT>pathName add?arg...? <DD>
+向这个对话框的按钮框增加一个按钮。缺省的 -command 选项是 Dialog::enddialog $path index，这里的 index是增加的按钮的编号。
+<P>
+<DT>pathName cget option<DD>
+返回用 option 给出的配置选项的当前值。Option可以是能被建立命令接受的任何值。
+<P>
+<DT>pathName configure?option? ?valueoptionvalue...? <DD>
+查询或修改这个组件的配置选项。如果未指定 option，则返回描述 pathName的所有可获得的选项的一个列表。如果指定了不带 value的 option，则这个命令返回描述这个指名的 option的一个列表(这个列表与未指定 option所返回的值的相应的子集是一样的)。如果指定了一个或多个选项-值对，则这个命令把给定的组件选项修改为给定的值；在这种情况下这个命令返回一个空串。Option可以是能被建立命令接受的任何值。只读选项不可修改。
+<P>
+<DT>pathName draw?focus? 这个命令绘制 Dialog，并把 grab 设置为依从 modal选项。如果 modal选项设置成 none，则这个命令立即返回一个空串。在所有其他情况下，在调用 Dialog::enddialog或销毁 Dialog 的时候这个命令返回。返回值是 Dialog::enddialog的 result参数，如果是被销毁的则返回 -1。<DD>
+<P>
+缺省的把焦点设置到用 default 选项引用的缺省按钮上，如果没有设置缺省按钮则在 Dialog 的顶层窗口上。如果 focus 存在，则它必须是一个路径名，或者是到一个按钮的索引。最初的焦点被设置到这个路径或对应的按钮上。
+<P>
+<DT>pathName enddialog  result <DD>
+典型的在按钮的命令内调用这个命令来使 Dialog::draw 返回。 
+<P>
+<DT>pathName getframe <DD>
+返回这个用户窗口的路径名。
+<P>
+<DT>pathName invoke index <DD>
+调用由 index 给出的按钮。
+<P>
+<DT>pathName itemcget index option <DD>
+返回这个项目的一个配置选项的当前值。Option 可以是这个项目的建立命令能接受的任何值。
+<P>
+<DT>pathName itemconfigure index ?option? ?value option value ...? <DD>
+这个命令类似于 configure 命令，但是它为单独的项目提供选项，而 configure 为作为整体的组件提供选项。Options 可以是项目建立组件命令可接受的任何值。如果指定了选项，则依据命令的指示修改选项并且命令返回一个空串。如果未指定选项，则返回描述这个项目的当前选项的一个列表。只读选项不能修改。
+<P>
+<DT>pathName setfocus index <DD>
+把焦点设置到用 index 给出的按钮。
+<P>
+<DT>pathName withdraw <DD>
+调用这个命令来隐藏这个对话框。
+<P>
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/07/13</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">创建 CREATION</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">组件特有选项 WIDGET-SPECIFIC OPTIONS</A><DD>
+<DT><A HREF="#lbAF">组件命令</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,143 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ACCESS</TITLE>
+</HEAD><BODY>
+<H1>ACCESS</H1>
+Section: User Commands  (1)<BR>Updated: 4 January 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+access - 确定文件是否可以存取访问
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>access</B>
+
+<I>-mode</I>
+
+<I>file</I>
+
+<P>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION (描述)</H2>
+
+如果
+<I>file</I>
+
+可以在特定模式下存取访问,那么成功退出.
+<I>mode</I>
+
+为
+<I>rwx</I>
+
+中的一个或多个字符,
+这里的
+<I>r</I>
+
+表示可读,
+<I>w</I>
+
+表示可写,而
+<I>x</I>
+
+表示可执行.
+<P>
+
+<B>access</B>
+
+和
+<B>test</B>
+
+之间的区别在于
+后者查看权限位,而前者使用
+<B><A HREF="/cgi-bin/man/man2html?2+access">access</A></B>(2)
+
+系统调用进行检查.当文件系统以只读方式被挂载时,两者就有区别了.
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS(选项)</H2>
+
+<B>access</B>
+
+接受以下附加的选项:
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+打印帮助信息并退出.
+<DT><B>--version</B>
+
+<DD>
+打印版本信息并退出.
+<P>
+
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+access">access</A></B>(2)
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;email&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003.11.22</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION (描述)</A><DD>
+<DT><A HREF="#lbAE">OPTIONS(选项)</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

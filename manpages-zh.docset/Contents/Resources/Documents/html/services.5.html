@@ -1,0 +1,256 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SERVICES</TITLE>
+</HEAD><BODY>
+<H1>SERVICES</H1>
+Section: File Formats (5)<BR>Updated: 1996年1月11日<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+services - Internet 网络服务列表
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<B>services</B>
+
+是一个普通的 ASCII 码文件, 它在 internet 服务的友好原文名以及这些服务预先分配的
+端口和协议类型之间提供了映射. 每个联网程序必须查找该文件以获取
+其服务的端口号(和协议).
+C 库例程
+<B><A HREF="/cgi-bin/man/man2html?3+getservent">getservent</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+getservbyname">getservbyname</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+getservbyport">getservbyport</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+setservent">setservent</A></B>(3),
+
+和
+<B><A HREF="/cgi-bin/man/man2html?3+endservent">endservent</A></B>(3)
+
+支持由程序查询该文件.
+<P>
+端口号由 IANA(Internet Assigned Numbers Authority) 分配, 
+他们当前的工作是分配端口号时, 指定 TCP 和 UDP 协议.
+这样, 大多数记录会包括两条子记录, 即使只是 TCP 的服务也是如此
+<P>
+端口号在 1024 之下的(也称作'低编码'端口)只能由 root (参见
+<B><A HREF="/cgi-bin/man/man2html?2+bind">bind</A></B>(2),<B><A HREF="/cgi-bin/man/man2html?7+tcp">tcp</A></B>(7),<B>和</B><A HREF="/cgi-bin/man/man2html?7+udp">udp</A><B>(7).)</B>
+
+绑定.
+这样连接到低编码端口的客户可信任运行在该端口上的服务是标准的实现,
+而不是由某台机器的用户运行的无聊的服务.由 IANA 确定的众所周知的端口号通常只在
+root 的控制范围之内 
+<P>
+在
+<B>services</B>
+
+文件中出现的一条服务记录并不表示该服务当前在机器上运行.参见
+<B><A HREF="/cgi-bin/man/man2html?5+inetd.conf">inetd.conf</A></B>(5)
+
+以获知提供的Internet服务的配置.注意不是所有联网服务都由
+<B><A HREF="/cgi-bin/man/man2html?8+inetd">inetd</A></B>(8)
+
+启动,因而也不会出现在
+<B><A HREF="/cgi-bin/man/man2html?5+inetd.conf">inetd.conf</A></B>(5)
+
+之中.
+特别地,news (NNTP)和mail (SMTP)服务程序通常由系统引导脚本初始化.
+<P>
+<B>services</B>
+
+文件所存放的位置由
+<I>/usr/include/netdb.h</I>
+
+中的
+<B>_PATH_SERVICES</B>
+
+定义.
+它通常设为
+<I>/etc/services</I>.
+
+<P>
+每行描述了一个服务,其格式如下:
+<DL COMPACT>
+<DT><DD>
+<I>服务名&nbsp;&nbsp;&nbsp;端口</I><B>/</B><I>协议&nbsp;&nbsp;&nbsp;</I>[<I>别名 ...</I>]
+这里的
+<DT><I>服务名</I>
+
+<DD>
+是给服务所起的可供查找的友好的名字.它是区分大小写的.通常,客户端程序都以
+<I>服务名</I>
+
+命名.
+<DT><I>端口</I>
+
+<DD>
+为该服务所用的端口号(十进制格式).
+<DT><I>协议</I>
+
+<DD>
+为所使用的协议类型.该字段应与
+<B><A HREF="/cgi-bin/man/man2html?5+protocols">protocols</A></B>(5)
+
+文件中的一条记录相匹配.典型的值包括
+<B>tcp</B>
+
+和
+<B>udp</B>.
+
+<DT><I>别名</I>
+
+<DD>
+可以空缺,或者是以tab分隔的该服务的其他名字的列表(不过请查看下面的BUGS章节).同样,
+这些名字也是区分大小写的.
+</DL>
+<P>
+
+<P>
+可以使用空格或者tab分隔这些字段.
+<P>
+注释以hash标识(#)开头,一直到该行末结束.空行可跳过.
+<P>
+<I>服务名</I>
+
+必须是该文件的第一列,因为其前面的空格不会删去.
+<I>服务名</I>
+
+可以为任何可打印的字符,包括空格和tab,但是,应该使用字符的保守选择来最低限度地减少
+操作中的问题.例如:a-z,0-9,和连字符(-)看上去就是一个合理的选择.
+<P>
+不匹配该格式的行不应该在该文件中出现.(当前情况下,
+<B><A HREF="/cgi-bin/man/man2html?3+getservent">getservent</A></B>(3),<B><A HREF="/cgi-bin/man/man2html?3+getservbyname">getservbyname</A></B>(3),<B>和</B><A HREF="/cgi-bin/man/man2html?3+getservbyport">getservbyport</A><B>(3)</B>
+
+可以忽略它们.不过,不应该依靠这种方法.)
+<P>
+为了向后兼容,在
+<I>端口</I>
+
+号和
+<I>协议</I>
+
+名之间的斜杠(/)实际可以为斜杠或者是逗号(,).在现代的安装中使用逗号是落后的.
+<P>
+该文件也可以通过使用网络级命名服务如黄页/NIS(Yellow Pages/NIS)或BIND/Hesiod来在一
+个网络中发布.
+<P>
+一个
+<B>services</B>
+
+的样本文件看上去如下:
+<DL COMPACT><DT><DD>
+<PRE>
+
+
+netstat         15/tcp
+qotd            17/tcp          quote
+msp             18/tcp          # message send protocol
+msp             18/udp          # message send protocol
+chargen         19/tcp          ttytst source
+chargen         19/udp          ttytst source
+ftp             21/tcp
+# 22 - unassigned
+telnet          23/tcp
+
+</PRE>
+
+</DL>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>BUGS</H2>
+
+最大只能有35个别名,这是由
+<B><A HREF="/cgi-bin/man/man2html?3+getservent">getservent</A></B>(3)
+
+代码的写入方式决定的.
+<P>
+比
+<B>BUFSIZ</B>
+
+(当前为1024)个字符更长的行,
+<B><A HREF="/cgi-bin/man/man2html?3+getservent">getservent</A></B>(3),<B><A HREF="/cgi-bin/man/man2html?3+getservbyname">getservbyname</A></B>(3),<B>and</B><A HREF="/cgi-bin/man/man2html?3+getservbyport">getservbyport</A><B>(3)</B>
+
+会忽略掉.
+不过,这也会导致错过下一行.
+<A NAME="lbAE">&nbsp;</A>
+<H2>FILES(相关文件)</H2>
+
+<DL COMPACT>
+<DT><I>/etc/services</I>
+
+<DD>
+Internet网络服务列表
+<DT><I>/usr/include/netdb.h</I>
+
+<DD>
+<B>_PATH_SERVICES</B>
+
+的定义
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?3+getservent">getservent</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+getservbyname">getservbyname</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+getservbyport">getservbyport</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+setservent">setservent</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+endservent">endservent</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?5+protocols">protocols</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?2+listen">listen</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?5+inetd.conf">inetd.conf</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?8+inetd">inetd</A></B>(8).
+
+<P>
+分配号码RFC,最新的RFC 1700,(AKA STD0002)
+<P>
+黄页服务的指南
+<P>
+BIND/Hesiod服务的指南
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/11/01</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAD">BUGS</A><DD>
+<DT><A HREF="#lbAE">FILES(相关文件)</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

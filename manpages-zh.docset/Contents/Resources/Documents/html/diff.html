@@ -1,0 +1,645 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DIFF</TITLE>
+</HEAD><BODY>
+<H1>DIFF</H1>
+Section: GNU Tools (1)<BR>Updated: 22sep1993<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+diff - 找出两个文件的不同点
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>diff</B>
+
+[选项] 源文件 目标文件
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+在最简单的情况是, 
+<I>diff</I>
+
+比较两个文件的内容
+<I>（源文件</I>
+
+和
+<I>目标文件）</I>.
+
+文件名可以是
+<B>-</B>
+
+由标准输入设备读入的文本.
+作为特别的情况是,
+<B>diff - -</B>
+
+比较一份标准输入的它自己的拷贝
+如果 
+<I>源文件</I>
+
+是一个目录和
+<I>目标文件</I>
+
+不是（目录）,
+<I>diff</I>
+
+会比较在
+<I>源文件（目录）</I>
+
+里的文件的中和
+<I>目标文件同名的（文件）,</I>
+
+反过来也一样. 非目录文件不能是
+<B>-</B>.
+
+<P>
+如果
+<I>源文件</I>
+
+和
+<I>目标文件</I>
+
+都是目录,
+<I>diff</I>
+
+比较两个目录中相应的文件，
+依照字母次序排序；这个比较是不会递归的，除非给出
+<B>-r</B>
+
+或者
+<B>--recursive.</B>
+
+<I>diff</I>
+
+不把一个目录的内容看为它是一个文件来比较。被指定的文件不
+能是标准的输入, 因为标准的输入是无名的并且＂有一样的名字的文
+件＂的观点不适用。
+<B>diff</B>
+
+的选项由
+<B>-</B>,
+
+开始
+所以正常地
+<I>源文件（名）</I>
+
+和
+<I>目标文件（名）</I>
+
+不可以用
+<B>-</B>
+
+开头.
+然而,
+<B>--</B>
+
+可以被它视为保留的即使作为文件名的开头（
+they begin with
+<B>-</B>.<B>）</B>
+
+<A NAME="lbAE">&nbsp;</A>
+<H3>选项</H3>
+
+下面是 GNU所接受的
+<I>diff</I>
+
+的所有选项的概要.
+大多数的选项有两个相同的名字,一个是单个的
+跟在 
+<B>-</B>
+
+后面字母,
+另一个是由
+<B>--</B>
+
+引出的长名字.
+多个单字母选项（除非它们产生歧义）能够组合为单行的命令行语法
+<B>-ac</B>
+
+是等同于
+<B>-a -c</B>.
+
+长命名的选项能被缩短到他们的名字的任何唯一的前缀.
+用
+(<B>[</B>
+
+和
+<B>]</B>)
+
+括起来显示选项产生歧义的选项
+<DL COMPACT>
+<DT><B>-</B><I>行数（一个整数）</I>
+
+<DD>
+显示上下文
+<I>行数</I>
+
+(一个整数).
+这个选项自身没有指定输出格式，这是没有效果的，除非和
+<B>-c</B>
+
+或者
+<B>-u</B>
+
+组合使用.
+这是已废置的选项，对于正确的操作,
+上下文至少要有两行。
+<DT><B>-a</B>
+
+<DD>
+所有的文件都视为文本文件来逐行比较，甚至他们似乎不是文本文件.
+<DT><B>-b</B>
+
+<DD>
+忽略空格引起的变化.
+<DT><B>-B</B>
+
+<DD>
+忽略插入删除空行引起的变化.
+<DT><B>--brief</B>
+
+<DD>
+仅报告文件是否相异,在乎差别的细节.
+<DT><B>-c</B>
+
+<DD>
+使用上下文输出格式.
+<DT><B>-C </B><I>行数（一个整数）</I>
+
+<DD>
+<BR>
+
+
+<DT><B>--context[=</B><I>lines</I><B>]</B>
+
+<DD>
+使用上下文输出格式，显示以指定
+<I>行数</I>
+
+(一个整数), 或者是三行（当
+<I>行数</I>
+
+没有给出时.
+对于正确的操作,
+上下文至少要有两行.
+<DT><B>--changed-group-format=</B><I>format</I>
+
+<DD>
+使用
+<I>format</I>
+
+输出一组包含两个文件的不同处的行，其格式是 if-then-else .
+<DT><B>-d</B>
+
+<DD>
+改变算法也许发现变化的一个更小的集合.这会使
+<I>diff</I>
+
+变慢 (有时更慢).
+<DT><B>-D </B><I>name</I>
+
+<DD>
+合并 if-then-else 格式输出, 预处理宏（由name参数提供）条件.
+<DT><B>-e</B>
+
+<DD>
+<BR>
+
+
+<DT><B>--ed</B>
+
+<DD>
+输出为一个有效的
+<I>ed</I>
+
+脚本.
+<DT><B>--exclude=</B><I>pattern</I>
+
+<DD>
+比较目录的时候，忽略和目录中与
+<I>pattern</I>（样式）
+
+相配的.
+<DT><B>--exclude-from=</B><I>file</I>
+
+<DD>
+比较目录的时候，忽略和目录中与任何包含在
+<I>file</I>（文件）
+
+的样式相配的文件和目录.
+<DT><B>--expand-tabs</B>
+
+<DD>
+在输出时扩展tab为空格，保护输入文件的tab对齐方式
+<DT><B>-f</B>
+
+<DD>
+产生一个很象
+<I>ed</I>
+
+脚本的输出，但是但是在他们在文件出现的顺序有改变
+<DT><B>-F </B><I>regexp</I>
+
+<DD>
+在上下文和统一格式中，对于每一大块的不同，显示出匹配
+<I>regexp</I>.
+
+的一些前面的行.
+<DT><B>--forward-ed</B>
+
+<DD>
+产生象
+<B>ed</B>
+
+脚本的输出，但是它们在文件出现的顺序有改变。
+<DT><B>-h</B>
+
+<DD>
+这选项现在已没作用，它呈现Unix的兼容性.
+<DT><B>-H</B>
+
+<DD>
+使用启发规则加速操作那些有许多离散的小差异的大文件.
+<DT><B>--horizon-lines=</B><I>lines</I>
+
+<DD>
+比较给定行数的有共同前缀的最后行，和有共同或缀的最前行.
+<DT><B>-i</B>
+
+<DD>
+忽略大小写.
+<DT><B>-I </B><I>regexp</I>
+
+<DD>
+忽略由插入，删除行（由regexp 参数提供参考）带来的改变.
+<DT><B>--ifdef=</B><I>name</I>
+
+<DD>
+合并 if-then-else 格式输出, 预处理宏（由name参数提供）条件.
+<DT><B>--ignore-all-space</B>
+
+<DD>
+在比较行的时候忽略空白.
+<DT><B>--ignore-blank-lines</B>
+
+<DD>
+忽略插入和删除空行
+<DT><B>--ignore-case</B>
+
+<DD>
+忽略大小写.
+<DT><B>--ignore-matching-lines=</B><I>regexp</I>
+
+<DD>
+忽略插入删除行（由regexp 参数提供参考）.
+<DT><B>--ignore-space-change</B>
+
+<DD>
+忽略空白的数量.
+<DT><B>--initial-tab</B>
+
+<DD>
+在文本行（无论是常规的或者格式化的前后文关系）前输出tab代替空格.
+引起的原因是tab对齐方式看上去象是常规的一样.
+<DT><B>-l</B>
+
+<DD>
+产生通过
+<I>pr</I>
+
+编码的输出.
+<DT><B>-L </B><I>label</I>
+
+<DD>
+<BR>
+
+
+<DT><B>--label=</B><I>label</I>
+
+<DD>
+使用
+<I>label</I>
+
+给出的字符在文件头代替文件名输出.
+<DT><B>--left-column</B>
+
+<DD>
+以并列方式印出两公共行的左边
+<DT><B>--line-format=</B><I>format</I>
+
+<DD>
+使用
+<I>format</I>
+
+输出所有的行，在
+if-then-else 格式中.
+<DT><B>--minimal</B>
+
+<DD>
+改变算法也许发现变化的一个更小的集合.这会使
+<I>diff</I>
+
+变慢 (有时更慢).
+<DT><B>-n</B>
+
+<DD>
+输出 RC-格式 diffs; 
+除了每条指令指定的行数受影响外 象
+<B>-f</B>
+
+一样。
+<DT><B>-N</B>
+
+<DD>
+<BR>
+
+
+<DT><B>--new-file</B>
+
+<DD>
+在目录比较中，如果那个文件只在其中的一个目录中找到，那么它被视为在
+另一个目录中是一个空文件.
+<DT><B>--new-group-format=</B><I>format</I>
+
+<DD>
+使用
+<I>format</I>
+
+以if-then-else 格式输出只在第二个文件中取出的一个行组
+<DT><B>--new-line-format=</B><I>format</I>
+
+<DD>
+使用
+<I>format</I>
+
+以if-then-else 格式输出只在第二个文件中取出的一行
+<DT><B>--old-group-format=</B><I>format</I>
+
+<DD>
+使用
+<I>format</I>
+
+以if-then-else 格式输出只在第一个文件中取出的一个行组
+<DT><B>--old-line-format=</B><I>format</I>
+
+<DD>
+使用
+<I>format</I>
+
+使用
+<I>format</I>
+
+以if-then-else 格式输出只在第一个文件中取出的一行
+<DT><B>-p</B>
+
+<DD>
+显示带有c函数的改变.
+<DT><B>-P</B>
+
+<DD>
+在目录比较中，如果那个文件只在其中的一个目录中找到，那么它被视为在
+另一个目录中是一个空文件.
+<DT><B>--paginate</B>
+
+<DD>
+产生通过
+<I>pr</I>
+
+编码的输出.
+<DT><B>-q</B>
+
+<DD>
+仅报告文件是否相异,不报告详细的差异.
+<DT><B>-r</B>
+
+<DD>
+当比较目录时，递归比较任何找到的子目录.
+<DT><B>--rcs</B>
+
+<DD>
+输出 RC-格式 diffs; 
+除了每条指令指定的行数受影响外 象
+<B>-f</B>
+
+一样。
+<DT><B>--recursive</B>
+
+<DD>
+当比较目录时，递归比较任何找到的子目录.
+<DT><B>--report-identical-files</B>
+
+<DD>
+<BR>
+
+
+<DT><B>-s</B>
+
+<DD>
+报告两个文件相同.
+<DT><B>-S </B><I>file</I>
+
+<DD>
+当比较目录时，由
+<I>file</I>
+
+开始.
+这用于继续中断了的比较.
+<DT><B>--sdiff-merge-assist</B>
+
+<DD>
+打印附加的信息去帮助
+<I>sdiff</I>.
+
+<I>sdiff</I>
+
+在运行
+<I>diff</I>
+
+时使用这些选项.
+这些选项不是特意为使用者直接使用而准备的。
+<DT><B>--show-c-function</B>
+
+<DD>
+显示带有c函数的改变.
+<DT><B>--show-function-line=</B><I>regexp</I>
+
+<DD>
+在上下文和统一的格式，对于每一大块的差别，显示出匹配
+<I>regexp</I>.
+
+的一些前面的行
+<P>
+<DT><B>--side-by-side</B>
+
+<DD>
+使用并列的输出格式.
+<DT><B>--speed-large-files</B>
+
+<DD>
+使用启发规则加速操作那些有许多离散的小差异的大文件.
+<DT><B>--starting-file=</B><I>file</I>
+
+<DD>
+当比较目录时，由
+<I>file</I>
+
+开始.
+这用于继续中断了的比较.
+<DT><B>--suppress-common-lines</B>
+
+<DD>
+在并列格式中不印出公共行。
+<DT><B>-t</B>
+
+<DD>
+在输出时扩展tab为空格，保护输入文件的tab对齐方式
+<DT><B>-T</B>
+
+<DD>
+在文本行（无论是常规的或者格式化的前后文关系）前输出tab代替空格.引起的原因
+是tab对齐方式看上去象是常规的一样.
+<DT><B>--text</B>
+
+<DD>
+所有的文件都视为文本文件来逐行比较，甚至他们似乎不是文本文件.
+<DT><B>-u</B>
+
+<DD>
+使用统一的输出格式.
+<DT><B>--unchanged-group-format=</B><I>format</I>
+
+<DD>
+使用
+<I>format</I>
+
+输出两个文件的公共行组，其格式是if-then-else.
+<DT><B>--unchanged-line-format=</B><I>format</I>
+
+<DD>
+使用
+<I>format</I>
+
+输出两个文件的公共行，其格式是if-then-else.
+<DT><B>--unidirectional-new-file</B>
+
+<DD>
+在目录比较中，如果那个文件只在其中的一个目录中找到，那么它被视为在
+另一个目录中是一个空文件.
+<DT><B>-U </B><I>lines</I>
+
+<DD>
+<BR>
+
+
+<DT><B>--unified[=</B><I>lines</I><B>]</B>
+
+<DD>
+使用前后关系格式输出，显示以指定
+<I>行数</I>
+
+(一个整数), 或者是三行（当
+<I>行数</I>
+
+没有给出时.
+对于正确的操作,
+上下文至少要有两行.
+<DT><B>-v</B>
+
+<DD>
+<BR>
+
+
+<DT><B>--version</B>
+
+<DD>
+输出
+<I>diff</I>
+
+版本号.
+<DT><B>-w</B>
+
+<DD>
+在比较行时忽略空格
+<DT><B>-W </B><I>columns</I>
+
+<DD>
+<BR>
+
+
+<DT><B>--width=</B><I>columns</I>
+
+<DD>
+在并列格式输出时，使用指定的列宽.
+<DT><B>-x </B><I>pattern</I>
+
+<DD>
+比较目录的时候，忽略和目录中与
+<I>pattern</I>（样式）
+
+相配的.
+<DT><B>-X </B><I>file</I>
+
+<DD>
+比较目录的时候，忽略和目录中与任何包含在
+<I>file</I>（文件）
+
+的样式相配的文件和目录.
+<DT><B>-y</B>
+
+<DD>
+使用并列格式输出
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参考</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+cmp">cmp</A>(1), <A HREF="/cgi-bin/man/man2html?1+comm">comm</A>(1), <A HREF="/cgi-bin/man/man2html?1+diff3">diff3</A>(1), <A HREF="/cgi-bin/man/man2html?1+ed">ed</A>(1), <A HREF="/cgi-bin/man/man2html?1+patch">patch</A>(1), <A HREF="/cgi-bin/man/man2html?1+pr">pr</A>(1), <A HREF="/cgi-bin/man/man2html?1+sdiff">sdiff</A>(1).
+<A NAME="lbAG">&nbsp;</A>
+<H2>DIAGNOSTICS</H2>
+
+退出状态为0意味着没有差别，
+1意味着有一些不同。
+2意味很有问题（许多差异）
+<BR>
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Scorpio &lt;<A HREF="mailto:rawk@chinese.com">rawk@chinese.com</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/19</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DL>
+<DT><A HREF="#lbAE">选项</A><DD>
+</DL>
+<DT><A HREF="#lbAF">参考</A><DD>
+<DT><A HREF="#lbAG">DIAGNOSTICS</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国Linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

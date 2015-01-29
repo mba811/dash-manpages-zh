@@ -1,0 +1,109 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LISTALIAS</TITLE>
+</HEAD><BODY>
+<H1>LISTALIAS</H1>
+Section: User Commands  (1)<BR>Updated: Elm Version 2.5<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+listalias - 列出用户和系统别名
+<A NAME="lbAC">&nbsp;</A>
+<H2>总揽</H2>
+
+<B>listalias</B>
+
+[ -s | -u ] [ 正则表达式]
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<I>Listalias</I>
+
+按用户及系统别名每个输出一行。每行具有下列格式：
+<PRE>
+   
+   &lt;别名&gt;     &lt;地址&gt;  (&lt;注解&gt;)
+
+</PRE>
+
+如果采用了正则表达式选项，则只有与指定表达式匹配的别名才被列出，
+如果未采用正则表达式，所有别名将被列出。
+<P>
+在两种方式下，命令的输出都被排序。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-s</B>
+
+<DD>
+只输出系统别名。  
+<B>&nbsp;-s</B>&nbsp;和<B>&nbsp;-u</B>
+
+两个选项为互斥关系，即两个选项只能选一个。
+<DT><B>-u</B>
+
+<DD>
+只输出用户别名  
+<B>&nbsp;-s</B>&nbsp;和<B>&nbsp;-u</B>
+
+两个选项为互斥关系。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>作者</H2>
+
+Elm 开发小组
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见</H2>
+
+<A HREF="/cgi-bin/man/man2html?1L+checkalias">checkalias</A>(1L), <A HREF="/cgi-bin/man/man2html?1L+elm">elm</A>(1L), <A HREF="/cgi-bin/man/man2html?1L+elmalias">elmalias</A>(1L), <A HREF="/cgi-bin/man/man2html?1L+newalias">newalias</A>(1L)
+<A NAME="lbAH">&nbsp;</A>
+<H2>缺陷</H2>
+
+由于该程序通过管道调用了另一个程序egrep, 因此表达式的检查结果由egrep决定，而非这个程序自己决定！
+<A NAME="lbAI">&nbsp;</A>
+<H2>程序错误报告至</H2>
+
+Bill Pemberton  <A HREF="mailto:flash@virginia.edu">flash@virginia.edu</A>
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Liu JingSong &lt;<A HREF="mailto:js-liu@263.net">js-liu@263.net</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/05/02</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总揽</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">作者</A><DD>
+<DT><A HREF="#lbAG">参见</A><DD>
+<DT><A HREF="#lbAH">缺陷</A><DD>
+<DT><A HREF="#lbAI">程序错误报告至</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

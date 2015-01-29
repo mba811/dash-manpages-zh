@@ -1,0 +1,107 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of tk_dialog</TITLE>
+</HEAD><BODY>
+<H1>tk_dialog</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: 4.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tk_dialog - 建立模式对话框并等待响应
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>tk_dialog </B><I>window title text bitmap default string string ...</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个过程是 Tk 脚本库的一部分。它的参数描述一个对话框:
+<DL COMPACT>
+<DT><I>window</I><DD>
+用于对话框的顶层窗口的名字。销毁叫这个名字的任何现存窗口。
+<DT><I>title</I><DD>
+显示在窗口管理器给这个对话框的标题栏中的文字。
+<DT><I>text</I><DD>
+出现在对话框顶部的消息。
+<DT><I>bitmap</I><DD>
+如果非空，则指定在对话框的顶部显示在文字左边的一个位图。如果它是一个空串则在对话框中不显示位图。
+<DT><I>default</I><DD>
+如果它是大于等于零的一个整数，则它给出成为这个对话框的缺省按钮的按钮的索引(0 给最左的按钮，并以次类推)。如果小于零或是一个空串则没有缺省按钮。
+<DT><I>string</I><DD>
+为这些参数中的每个建立一个按钮。按从左至右的次序，每个<I>string</I> 指定要在一个按钮中显示的文字。
+</DL>
+<P>
+
+在建立了对话框之后，<B>tk_dialog</B> 等待用户选择按钮中的一个，要么通过用鼠标点击按钮之一要么通用键入返回键来调用缺省按钮(如果有的话)。接着它返回选择的按钮的索引: 0 是最左的按钮，1 是下一个按钮，并以次类推。如果这个对话框的窗口在用户选择按钮中的一个之前就被销毁了，则返回 -1。
+<P>
+
+在等待用户响应期间，<B>tk_dialog</B> 设置一个本地夺取(grab)。这将防止用户以除了调用这个对话框之外的任何方式与应用进行交互。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+bitmap, dialog, modal
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/05/17</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

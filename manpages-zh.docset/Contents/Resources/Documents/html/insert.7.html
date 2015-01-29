@@ -1,0 +1,166 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of INSERT</TITLE>
+</HEAD><BODY>
+<H1>INSERT</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+INSERT - 在表中创建新行
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+INSERT INTO <I>table</I> [ ( <I>column</I> [, ...] ) ]
+    { DEFAULT VALUES | VALUES ( { <I>expression</I> | DEFAULT } [, ...] ) | <I>query</I> }
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>INSERT</B> 允许我们向表中插入新行。 我们可以一次插入一行或多行作为查询结果。
+<P>
+
+<BR>&nbsp;目标列表中的列/字段可以按任何顺序排列。&nbsp;在目标列中没有出现的列/字段将插入缺省值，&nbsp;可能是定义了的缺省值或者&nbsp;NULL。
+<P>
+
+<BR>&nbsp;如果每行的表达式不是正确的数据类型，系统将试图进行自动的类型转换。
+<P>
+
+<BR>&nbsp;要想向表中插入数据，你必须有&nbsp;INSERT&nbsp;权限，&nbsp;如果你使用了&nbsp;<I>query</I>&nbsp;子句插入来自查询里的数据行，&nbsp;你还需要拥有在查询里使用的表的&nbsp;SELECT&nbsp;权限。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>table</I><B></B><DD>
+<BR>&nbsp;现存表的名称（可以有模式修饰）。
+<DT><B></B><I>column</I><B></B><DD>
+<BR>&nbsp;表&nbsp;<I>table</I>&nbsp;中的字段名。
+<DT><B>DEFAULT VALUES</B><DD>
+<BR>&nbsp;所有字段都会用它们的缺省值填充。
+<DT><B></B><I>expression</I><B></B><DD>
+<BR>&nbsp;赋予&nbsp;<I>column</I>&nbsp;的一个有效表达式或值。
+<DT><B>DEFAULT</B><DD>
+<BR>&nbsp;这个字段将被字段它的填充。
+<DT><B></B><I>query</I><B></B><DD>
+<BR>&nbsp;一个查询（SELECT&nbsp;语句），它提供插入的数据行。&nbsp;请参考&nbsp;SELECT&nbsp;语句获取语法描述。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>OUTPUTS 输出</H2>
+
+<P>
+
+<BR>&nbsp;成功完成后，一条&nbsp;INSERT&nbsp;命令返回一个下面形式的命令标签
+<P>
+<PRE>
+INSERT <I>oid</I> <I>count</I>
+
+</PRE>
+
+<I>count</I> 是插入的行数。 如果 <I>count</I>
+正好是一，并且目标表有 OID， 那么
+<I>oid</I> 是赋予插入行的 OID。 否则
+<I>oid</I> 是零。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;向表&nbsp;films&nbsp;里插入一行：
+<P>
+<PRE>
+INSERT INTO films VALUES
+    ('UA502', 'Bananas', 105, '1971-07-13', 'Comedy', '82 minutes');
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;在第二个例子里面省略了字段&nbsp;len&nbsp;&nbsp;因此在它里面将只存储缺省的&nbsp;NULL&nbsp;值：
+<P>
+<PRE>
+INSERT INTO films (code, title, did, date_prod, kind)
+    VALUES ('T_601', 'Yojimbo', 106, '1961-06-16', 'Drama');
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;在第三个例子里，我们用&nbsp;DEFAULT&nbsp;值作为数据字段，而不是声明一个数值：
+<P>
+<PRE>
+INSERT INTO films VALUES
+    ('UA502', 'Bananas', 105, DEFAULT, 'Comedy', '82 minutes');
+INSERT INTO films (code, title, did, date_prod, kind)
+    VALUES ('T_601', 'Yojimbo', 106, DEFAULT, 'Drama');
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;从表&nbsp;tmp&nbsp;中插入几行到表&nbsp;films&nbsp;中：
+<P>
+<PRE>
+INSERT INTO films SELECT * FROM tmp;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;插入数组：
+<P>
+<PRE>
+-- 创建一个空的 3x3 游戏板来玩圈-和-叉游戏
+-- (所有这些查询创建相同的游戏)
+INSERT INTO tictactoe (game, board[1:3][1:3])
+    VALUES (1,'{{&quot;&quot;,&quot;&quot;,&quot;&quot;},{},{&quot;&quot;,&quot;&quot;}}');
+INSERT INTO tictactoe (game, board[3][3])
+    VALUES (2,'{}');
+INSERT INTO tictactoe (game, board)
+    VALUES (3,'{{,,},{,,},{,,}}');
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>INSERT</B> 完全遵循 SQL 标准。可能碰到的关于 <I>query</I>  子句特性的限制在
+SELECT [<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)] 语句中有相关文档。
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">OUTPUTS 输出</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

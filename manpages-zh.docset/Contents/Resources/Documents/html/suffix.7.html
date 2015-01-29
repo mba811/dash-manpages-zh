@@ -1,0 +1,273 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SUFFIXES</TITLE>
+</HEAD><BODY>
+<H1>SUFFIXES</H1>
+Section: Linux 程序员手册 (7)<BR>Updated: April 4, 1996<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+suffixes - 列出文件后缀。 
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION [描述]</H2>
+
+文件后缀与文件名之间以点（.）间隔，通常包括一个或多个字母。 
+我们用文件后缀来描述文件的内容。很多标准的实用程序，如编译器，
+以后缀来识别文件类型。
+<B><A HREF="/cgi-bin/man/man2html?1+make">make</A></B>(1)
+
+就是基于文件后缀的。
+<P>
+
+下面是 Linux 下常见的文件后缀：
+<PRE>
+ 后缀        文件类型
+ ,v          RCS(Revision Control System（修改控制系统）) 文件 
+ -           备份文件。
+ .C          C++ 源代码文件。
+ .F          带 <B><A HREF="/cgi-bin/man/man2html?1+cpp">cpp</A></B>(1) 的 Fortran 源代码或用 freeze 压缩的文件。
+ .S          汇编源代码。
+ .Y          用 yabba 压缩的文件。
+ .Z          用 <B> compress</B> (1) 压缩的文件。
+ .[0-9]+gf   TeX 普通字体文件
+ .[0-9]+pk   TeX 打包字体文件
+ .[1-9]      相关章节的手册页
+ .[1-9][a-z] 包含子章节的手册页
+ .a          静态对象代码库 
+ .ad         X 应用程序缺省资源文件。 
+ .adb        Ada 体源文件（校注：懂 Ada 的同志请指正）
+ .ads        Ada 描述源文件
+ .afm        PostScript 字体度量
+ .al         Perl 自动加载文件
+ .am         <B>automake</B> (1) 输入文件
+ .arc        <B>arc</B> (1) 档案文件 
+ .arj        <B>arj</B> (1) 档案文件 
+ .asc        PGP ASCII-保护数据
+ .asm        (GNU) 汇编源代码 
+ .au         Audio 声音文件
+ .aux        LaTeX 辅助文件 
+ .avi        (msvideo) 电影 
+ .awk        AWK 程序 
+ .b          LILO 启动加载器镜象
+ .bak        备份文件 
+ .bash       <B>bash</B> (1) 脚本
+ .bb         gcc -ftest-coverage 生成的基础块列表数据
+ .bbg        gcc -ftest-coverage 生成的基础块图形数据
+ .bbl        BibTeX 输出文件 
+ .bdf        X 字体文件 
+ .bib        TeX 数目数据库，BibTeX 输入文件
+ .bm         bitmap 源文件
+ .bmp        bitmap 位图 
+ .bz2        <B> bzip2</B> (1)的压缩文件
+ .c          C 源代码 
+ .cat        信息目录文件
+ .cc         C++ 源代码
+ .cf         配置文件 
+ .cfg        同上
+ .cgi        可以产生 web 页的脚本或程序
+ .class      Java 已编译文件 
+ .conf       配置文件 
+ .config     同上
+ .cpp        <I>(等价于 .cc) </I>
+ .csh        <B>csh</B> (1) 脚本 
+ .cxx        <I>(等价于 .cc) </I>
+ .dat        数据文件 
+ .deb        Debian 软件包 
+ .def        Modula-2 语言的定义模块的源代码 
+ .def        其它定义文件 
+ .desc       用 munpack 解压的邮件信息的初始化部分 
+ .diff       文件不同之处 (<A HREF="/cgi-bin/man/man2html?1+diff">diff</A>(1) 的输出文件) 
+ .dir        dbm 数据库目录文件 
+ .doc        文档文件 
+ .dtx        LaTeX 包的源文件 
+ .dvi        TeX's 设备无关的输出文件 
+ .el         Emacs-Lisp 源代码 
+ .elc        编译后的 Emacs-Lisp 文件 
+ .eps        压缩过的 PostScript 
+ .f          Fortran 源代码 
+ .f77        Fortran 77 源代码 
+ .f90        Fortran 90 源代码 
+ .fas        预编译的 Common-Lisp 
+ .fi         Fortran 包含文件 
+ .fig        FIG 图象文件 (<B> xfig</B> (1)调用) 
+ .fmt        TeX 格式文件 
+ .gif        Compuserve Graphics Image File format(图象文件) 
+ .gmo        GNU 格式信息目录
+ .gsf        Ghostscript 字体 
+ .gz         用 <B> gzip</B> (1) 压缩的文件
+ .h          C 或 C++ 头文件
+ .help       帮助文件 
+ .hf         等价于 <I> .help</I> 
+ .hlp        等价于 <I> .help</I> 
+ .htm        穷人的（有些系统扩展名只能三个字符）<I> .html</I>
+ .html       WWW 中使用的 HTML 文档
+ .hqx        7-位编码的 Macintosh 文件
+ .i          预处理过的 C 程序 
+ .icon       位图源文件
+ .idx        超文本或数据库系统用的参考书目或数据索引
+ .image      位图源文件
+ .in         配置摸板,常用于 GNU Autoconf 
+ .info       Emacs info 浏览器文件
+ .info-[0-9]+   info 文件 
+ .ins        LaTeX 打包的用于 docstrip 的安装文件
+ .java       Java 源代码 
+ .jpeg       Joint Photographic Experts Group format 
+ .jpg        有些系统扩展名只能三个字符<I> .jpeg </I> 
+ .kmap       <B>lyx</B> (1) 键盘布局 
+ .l          等价于 <I> .lex</I> 或 <I> .lisp</I> 
+ .lex        <B>lex</B> (1) 或 <B> flex</B> (1) 文件
+ .lha        lharc 档案文件 
+ .lib        Common-Lisp 库文件 
+ .lisp       Lisp 源代码 
+ .ln         files for use with <B> lint</B> (1) 
+ .log        日志文件, 多见于 TeX 
+ .lsm        Linux Software Map entry(软件列表?)
+ .lsp        Common-Lisp 源代码
+ .lzh        lharc 档案文件
+ .m4         <B>m4</B> (1) 源代码
+ .mac        宏命令文件 
+ .man        手册页 (通常是源文件,有些是格式化过的) 
+ .map        map 文件
+ .me         使用 me 宏命令包的 Nroff 源文件
+ .mf         Metafont (Tex 使用的字体) 资源 
+ .mm         <B>groff</B> (1) 的 mm 格式的文件
+ .mo         信息目录二进制文件（校注：本地化文件）
+ .mod        Modula-2 执行模块源代码 
+ .mov        (quicktime) 电影
+ .mp         Metapost 资源 
+ .mpe        电影 
+ .o          对象文件
+ .old        旧的或备份文件 
+ .orig       <B>patch</B> (1) 产生的备份或原始文件 
+ .out        输出文件, 一般是可执行程序(a.out) 
+ .p          Pascal 源代码 
+ .pag        dbm 数据库数据文件 
+ .patch      <B>patch</B> (1) 用的文件的差别文件
+ .pbm        portable bitmap format(可移植位图格式) 
+ .pcf        X11 字体 
+ .pdf        AdobePortableDataFormat(用Acrobat/<B>acroread</B>或<B>xpdf</B>查看 ) 
+ .perl       Perl 源代码 
+ .pfa        PostScript 字体定义文件, ASCII 格式 
+ .pfb        PostScript 字体定义文件, 二进制格式 
+ .pgm        portable greymap format(可移植灰度图格式)
+ .pgp        PGP 二进制数据
+ .ph         Perl 头文件
+ .pid        存储后台程序信息的文件(e.g. crond.pid)
+ .pl         TeX 属性列表 或 Perl 库文件 
+ .pm         Perl 模块
+ .png        Portable Network Graphics file(可移植网络图象文件) 
+ .po         信息目录资源（校注：本地化资源文件）
+ .pod        <B>perldoc</B> (1) 文件 
+ .ppm        portable pixmap format(可移植点图格式) 
+ .pr         bitmap source(位图资源) 
+ .ps         PostScript 文件
+ .py         Python 源代码 
+ .pyc        python 编译后文件 
+ .qt         quicktime movie(电影)
+ .r          RATFOR 资源 (已过时) 
+ .rej        <B>patch</B> (1) 不能用的补丁 
+ .rpm        RedHat 软件包 
+ .rtf        Rich Text Format file(富文本文件) 
+ .rules      rules for something(规则文件)
+ .s          assembler source(汇编源代码) 
+ .sa         a.out 共享库的存根库
+ .sc         <B> sc</B> (1) 电子表格命令
+ .sgml       SGML 源文件 
+ .sh         <B>sh</B> (1) 脚本 
+ .shar       <B>shar</B> (1) 产生的档案文件 
+ .so         共享库或动态可载入对象 
+ .sql        SQL 资源 
+ .sqml       SQML 结构或查询程序
+ .sty        LaTeX 类型文件 
+ .sym        Modula-2 已编译的定义模块 
+ .tar        <B>tar</B> (1) 产生的档案文件 
+ .tar.Z      <B>compress</B> (1) 压缩的tar档案文件 
+ .tar.bz2    <B>bzip2</B> (1) 压缩的tar档案文件
+ .tar.gz     <B>gzip</B> (1) 压缩的tar档案文件 
+ .taz        <B>compress</B> (1) 压缩的tar档案文件 
+ .tex        TeX 或 LaTeX 资源 
+ .texi       等价于 <I> .texinfo</I> 
+ .texinfo    Texinfo 文档资源 
+ .text       文本文件 
+ .tfm        TeX font metric file 
+ .tgz        <B>gzip</B> (1) 压缩的tar档案文件 
+ .tif        poor man's <I> .tiff(图象) </I>
+ .tiff       Tagged Image File Format(图象) 
+ .tk         tcl/tk 脚本 
+ .tmp        临时文件 
+ .tmpl       临时文件 
+ .txt        等价于 <I> .text</I> 
+ .uu         等价于 <I> .uue</I> 
+ .uue        <B>uuencode</B> (1) 编码的二进制文件 
+ .vf         TeX 虚拟字体文件 
+ .vpl        TeX 虚拟属性列表 
+ .w          Silvio Levi's CWEB 
+ .wav        波形声音文件
+ .web        Donald Knuth's WEB(唐纳得.可鲁梭的 WEB) ??
+ .xbm        X11 位图源文件
+ .xml        eXtended Markup Language file（扩展标记语言文件）
+ .xsl        XSL stylesheet 
+ .xpm        X11 点图源文件
+ .xs         h2xs 生成的 Perl 的 xsub 文件
+ .y          <B>yacc</B> (1) 或 <B> bison</B> (1)（分析器生成器）文件
+ .z          <B>pack</B> (1) (或旧版 <B> gzip</B> (1)) 产生的压缩文件 
+ .zip        <B>zip</B> (1) 档案文件 
+ .zoo        <B>zoo</B> (1) 档案文件 
+ ~           Emacs 或 <B> patch</B> (1) 备份文件 
+ rc          开始 (`运行控制') 文件, 如. <I> .newsrc</I> 
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>CONFORMS TO [遵循]</H2>
+
+一般 UNIX 约定 
+<A NAME="lbAE">&nbsp;</A>
+<H2>BUGS</H2>
+
+本列表尚有遗漏 
+<A NAME="lbAF">&nbsp;</A>
+<H2>SEE ALSO [另见]</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+file">file</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+make">make</A></B>(1)
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>RedCandle &lt;<A HREF="mailto:redcandle51@chinaren.com">redcandle51@chinaren.com</A>&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/11/10</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION [描述]</A><DD>
+<DT><A HREF="#lbAD">CONFORMS TO [遵循]</A><DD>
+<DT><A HREF="#lbAE">BUGS</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO [另见]</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

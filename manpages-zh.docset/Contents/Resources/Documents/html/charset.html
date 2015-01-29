@@ -1,0 +1,159 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CHARSET</TITLE>
+</HEAD><BODY>
+<H1>CHARSET</H1>
+Section: Linux User's Manual (1)<BR>Updated: 10 Aug 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+charset - 设置 G0/G1 字符集槽中的一个的 ACM
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>charset [</B><I>-v</I><B>] </B><I>G0</I><B>|</B><I>G1</I><B> [</B><I>cp437</I><B>|</B><I>iso01</I><B>|</B><I>vt100</I><B>|</B><I>user</I><B>|</B><I>&lt;acm_name&gt;</I><B>]</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+linux 终端 有 两个 字符集 槽 (charset slot)， 分别 用
+<I>G0</I>
+
+和
+<I>G1</I>
+
+表示。
+<B>charset</B>
+
+把 当前 虚拟 终端 用的 槽 改为
+<I>G0</I>
+
+或者
+<I>G1</I>
+
+并且 填入 3个 预定义的 ACM
+(<I>cp437</I>, <I>iso01</I>, <I>vt100</I>)
+
+或者 是 用户 定义的 ACM 中 的 一个。 你 可以 指定
+<I>user</I>
+
+来 查询 当前 用户 定义的 ACM, 或者 指定 一个 文件名， 把 文件 中 的 新的
+ACM 装进 一个 槽。
+<P>
+注意 虽然 每个 虚拟 终端 都有 自己 的 槽 设置， 但是 对 所有 的 虚拟 终端
+只能 有 一个 用户 定义 的 ACM, 也就是 说 当你 的 tty1 设置 是
+<I>G0=cp437</I>
+
+和
+<I>G1=vt100</I>
+
+tty2 设置 是
+<I>G0=iso01</I>
+
+和
+<I>G1=iso02</I>
+
+(用户 定义) 时, 你
+<B>不能</B>
+
+同时 tty1 用
+<I>iso02</I>
+
+tty2 用
+<I>iso03</I>。
+
+这是 linux 内核 的 限制。
+<P>
+注意 你可以 用
+<B><A HREF="/cgi-bin/man/man2html?1+filterm">filterm</A></B>(1)
+
+实用 程序 来 模拟 这样 的 设置。 在 终端 是 UTF8 模式 时， 告诉
+<B>filterm</B>
+
+在 运行 中 把 屏幕 的 输出 转换 为 UTF8.
+<P>
+你 可以 在 Marcin Kowalczyk 写的
+<B><A HREF="/cgi-bin/man/man2html?1+konwert">konwert</A></B>(1)
+
+包中 找到
+<B><A HREF="/cgi-bin/man/man2html?1+filterm">filterm</A></B>(1)<B>,</B>
+
+包 可以 从
+<I><A HREF="http://qrczak.home.ml.org/">http://qrczak.home.ml.org/</A></I>
+
+获得。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+<DL COMPACT>
+<DT><I>-v</I>
+
+<DD>
+详细 显示。
+<B>charset</B>
+
+会 显示 它 正在 做什么。
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>错误 (BUGS)</H2>
+
+<B>charset</B>
+
+在 指定 的 时间 并 不能 判断 2 个 槽 中 的 哪个 正在 被 使用， 所以 如果 你
+不 希望 改变 另外 一个， 你 必须 告诉 它 你 希望 的 是 哪一个。 这个 是 终端
+驱动 程序 的 限制。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+consolechars">consolechars</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?1+unicode_start">unicode_start</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+filterm">filterm</A></B>(1).
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/9/20</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">错误 (BUGS)</A><DD>
+<DT><A HREF="#lbAG">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

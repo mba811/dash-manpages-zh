@@ -1,0 +1,101 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of lreplace</TITLE>
+</HEAD><BODY>
+<H1>lreplace</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.4<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+lreplace - 在一个列表中用新元素替换旧元素
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>lreplace </B><I>list first last </I>?<I>element element ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>lreplace</B> 指定要替换的元素范围的最先索引和最后索引。0 参照这个列表的第一个元素，而用 <B>end</B>  (或它的任何缩写)参照这个列表的最后一个元素。如果 <I>list</I>  是空，则忽略 <I>first</I> 和 <I>last</I>。
+<P>
+如果 <I>first</I>  小于零，则作为对列表的第一个元素的参照来考虑。对于非空列表，<I>first</I>  指定的元素必须存在。
+<P>
+如果 <I>last</I>  小于零但大于 <I>first</I>，则在这个列表的开始处插入指定的所有元素。如果 <I>last</I>  小于 <I>first</I>  则不删除元素；新元素被简单的插入到 <I>first </I>前面。
+<P>
+<I>element</I> 参数指定要添加到这个列表中被删除了元素的位置上的零个或多个新参数。每个 <I>element</I>  参数都将变成这个列表的一个独立的元素。如果未指定 <I>element</I>  参数，则只简单的删除在 <I>first</I> 和 <I>last</I>  之间的元素。如果 <I>list</I>  是空，在这个列表的尾部添加所有的 <I>element</I>  参数。
+<P>
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+lappend">lappend</A>(n), <A HREF="/cgi-bin/man/man2html?n+lindex">lindex</A>(n), <A HREF="/cgi-bin/man/man2html?n+linsert">linsert</A>(n), <A HREF="/cgi-bin/man/man2html?n+list">list</A>(n), <A HREF="/cgi-bin/man/man2html?n+llength">llength</A>(n), <A HREF="/cgi-bin/man/man2html?n+lrange">lrange</A>(n),
+<A HREF="/cgi-bin/man/man2html?n+lsearch">lsearch</A>(n), <A HREF="/cgi-bin/man/man2html?n+lsort">lsort</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+element, list, replace
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/21</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

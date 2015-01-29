@@ -1,0 +1,130 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of USERDEL</TITLE>
+</HEAD><BODY>
+<H1>USERDEL</H1>
+Section: Maintenance Commands (8)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+userdel - 删 除 使 用 者 帐 号 及 相 关 档 案
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>userdel</B>
+
+[<B>-r</B>]
+<I>login</I>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+userdel 命 令 修 改 系 统 帐 号 档 删 除 所 有 login 会 参 考 的 部 份 。 使 用 者 名 称 必 须是 存 在 的 。
+The options which apply to the <B>userdel</B> command are:
+<DL COMPACT>
+<DT><B>-r</B><DD>
+使 用 者 目 录 下 的 档 案 一 并 移 除 。 在 其 他 位 置 上 的 档 案 也 将 一 一 找 出 并 删 除 。
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+/etc/passwd - 使 用 者 帐 号 资 料
+<BR>
+
+/etc/shadow - 使 用 者 帐 号 资 讯 加 密
+<BR>
+
+/etc/group - 群 组 资 讯
+<A NAME="lbAF">&nbsp;</A>
+<H2>返回值 EXIT VALUES</H2>
+
+0       - success
+<BR>
+
+1       - can't update password file
+<BR>
+
+2       - bad command syntax
+<BR>
+
+6       - specified user doesn't exist
+<BR>
+
+8       - user currently logged in
+<BR>
+
+10      - can't update group file
+<BR>
+
+12      - can't remove home directory
+<A NAME="lbAG">&nbsp;</A>
+<H2>警告 CAVEATS</H2>
+
+<B>userdel</B> 不 允 许 你 移 除 正 在线 上 的 使 用 者 帐 号 。 你 必 须 砍 掉 此 帐 号 现 在 在 系 统 上 执 行 的 程 序 才 能 进 行 帐 号 删 除 。 不 能 在 NIS client 端 移 除 NIS 属 性 的 东 西 。 这 动 做 须 在 NIS server 端 上 执 行 。
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+chfn">chfn</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+chsh">chsh</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+passwd">passwd</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?8+groupadd">groupadd</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+groupdel">groupdel</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+groupmod">groupmod</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+useradd">useradd</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+usermod">usermod</A></B>(8)
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+Julianne Frances Haugh (<A HREF="mailto:jockgrrl@ix.netcom.com">jockgrrl@ix.netcom.com</A>)
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>软件教程之Linux Man </B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>1998.01.01</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">文件 FILES</A><DD>
+<DT><A HREF="#lbAF">返回值 EXIT VALUES</A><DD>
+<DT><A HREF="#lbAG">警告 CAVEATS</A><DD>
+<DT><A HREF="#lbAH">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAI">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

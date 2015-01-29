@@ -1,0 +1,199 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of <A HREF="/cgi-bin/man/man2html?5+ENVIRON">ENVIRON</A>(5)</TITLE>
+</HEAD><BODY>
+<H1><A HREF="/cgi-bin/man/man2html?5+ENVIRON">ENVIRON</A>(5)</H1>
+Section: <A HREF="/cgi-bin/man/man2html?5+ENVIRON">ENVIRON</A>(5) (Linux)<BR>Updated: Programmer's<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+environ - 用户环境(变量)
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+
+<PRE>
+extern char **environ;
+<BR>
+</PRE>
+
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+变量 environ 指向的是一个叫 'environment'(环境)的字符串数组
+(这个变量必须在用户程序中声明，但是在使用 libc4 或 libc5 以
+及使用 glibc 并且定义了 _GNU_SOURCE 的情况下 ，它是在头文件
+unistd.h 中声明的)。对于一个进程，这个字符串的数组是通过开
+始进程的 <A HREF="/cgi-bin/man/man2html?3+exec">exec</A>(3) 调用来得到，习惯上，这些字符串的格式是'name=value'
+(名称=值)。常用的例子是：
+<DL COMPACT>
+<DT><B>USER</B>
+
+<DD>
+登录用户的名字(被一些从 BSD 派生来程序所使用)。
+<DT><B>LOGNAME</B>
+
+<DD>
+登录用户的名字(被一些从 System-V 派生来程序所使用)。
+<DT><B>HOME</B>
+
+<DD>
+用户的登录目录，被<A HREF="/cgi-bin/man/man2html?1+login">login</A>(1)按口令文件 <A HREF="/cgi-bin/man/man2html?5+passwd">passwd</A>(5) 设置。
+<DT><B>LANG</B>
+
+<DD>
+当不被 LC_ALL 或更特殊的环境变量所忽略的时候，是用
+于地域分类的地域名。
+<DT><B>PATH</B>
+
+<DD>
+预先设定的目录前缀的序列，<A HREF="/cgi-bin/man/man2html?1+sh">sh</A>(1) 和许多程序可借此查找路径
+名不完全的文件。前缀由':'分隔。(类似的，有一些 shell
+用 CDPATH 查找位于不同目录的命令，以及用 MANPATH 找
+手册页等等。)
+<DT><B>PWD</B>
+
+<DD>
+当前的工作路径。被一些 shell 设置。
+<DT><B>SHELL</B>
+
+<DD>
+用户的登录 shell 的文件名。
+<DT><B>TERM</B>
+
+<DD>
+用于准备输出的终端类型。 
+<DT><B>PAGER</B>
+
+<DD>
+用户指定的显示文本文件的工具。
+<DT><B>EDITOR/VISUAL</B>
+
+<DD>
+用户指定的编辑文本文件的工具。
+</DL>
+<P>
+
+更多的名字可以通过和在 <A HREF="/cgi-bin/man/man2html?1+sh">sh</A>(1) 中的 export 命令和 'name=value'，或 <A HREF="/cgi-bin/man/man2html?1+csh">csh</A>(1) 中
+的 setenv 命令设置。参数也可以在
+执行 <A HREF="/cgi-bin/man/man2html?2+exec">exec</A>(2) 的时候被放置在环境中。一个 C 程序可以使用函数
+<B><A HREF="/cgi-bin/man/man2html?3+getenv">getenv</A>(3)</B>、
+
+<B><A HREF="/cgi-bin/man/man2html?3+putenv">putenv</A>(3)</B>、
+
+<B><A HREF="/cgi-bin/man/man2html?3+setenv">setenv</A>(3)</B>
+
+和 
+<B><A HREF="/cgi-bin/man/man2html?3+unsetenv">unsetenv</A>(3)</B>
+
+来操纵自身的环境。
+<P>
+注意许多程序和库例程的行为受特定的环境变量的存在和值的影响。
+随便的搜集一下就有：
+<P>
+
+环境变量 LANG、LANGUAGE、NLSPATH、LOCPATH、LC_ALL、
+LC_MESSAGES 等影响地域的处理。
+<P>
+
+TMPDIR 影响 <A HREF="/cgi-bin/man/man2html?3+tmpnam">tmpnam</A>(3) 生成名字的路径名前缀和其他一些例程，
+<A HREF="/cgi-bin/man/man2html?1+sort">sort</A>(1) 和其他程序用的临时文件目录等等。
+<P>
+
+LD_LIBRARY_PATH、LD_PRELOAD 和其他 LD_* 变量影响动态 
+(装载器/连接器)的行为。
+<P>
+
+POSIXLY_CORRECT 使特定的程序和库例程遵循 POSIX 规定。 
+<P>
+
+MALLOC_* 变量影响 <A HREF="/cgi-bin/man/man2html?3+malloc">malloc</A>(3) 的行为。
+<P>
+
+HOSTALIASES 变量给出包含 <A HREF="/cgi-bin/man/man2html?3+gethostbyname">gethostbyname</A>(3) 用的别名的文件的
+文件名。
+<P>
+
+TZ 和 TZDIR 给出时区信息。
+<P>
+
+TERMCAP 给出给定终端的窗口大小(或给出包含这种信息的文件的
+文件名)。
+<P>
+
+等等，还有很多。
+<P>
+这里有一个明显的安全风险。不止一个系统命令曾经被一个使用了一
+个不寻常的
+<B>IFS</B> 或 <B>LD_LIBRARY_PATH</B>
+
+变量值的用户诱入骗局中。
+<P>
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>SEE ALSO 又见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+login">login</A>(1),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?1+sh">sh</A>(1),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?1+bash">bash</A>(1),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?1+csh">csh</A>(1),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?1+tcsh">tcsh</A>(1),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?2+execve">execve</A>(2),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?3+exec">exec</A>(3),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?3+getenv">getenv</A>(3),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?3+putenv">putenv</A>(3),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?3+setenv">setenv</A>(3),</B>
+
+<B><A HREF="/cgi-bin/man/man2html?3+unsetenv">unsetenv</A>(3).</B>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>mhss &lt;<A HREF="mailto:jijingzhisheng@up369.com">jijingzhisheng@up369.com</A>&gt;</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/11/26</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">SEE ALSO 又见</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

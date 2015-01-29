@@ -1,0 +1,179 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of APM</TITLE>
+</HEAD><BODY>
+<H1>APM</H1>
+Section: Linux Programmer's Manual (1)<BR>Updated: 10 Jan 1996<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+apm - 查询高级电源管理(APM) BIOS
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>apm</B>
+
+[ -
+<I>vVmsS</I>
+
+]
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>apm</B>
+
+读取
+<B>/proc/apm</B>
+
+并用人能看懂的格式输出。因为提供了首要的
+电池状态，这个命令在有兼容的
+<B>APM BIOS</B>
+
+的笔记本电脑上非常有用。
+<B>apm</B>
+
+允许使机器进入等待或挂起模式。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-V, --version</B>
+
+<DD>
+输出
+<B>apm</B>
+
+程序的版本并立即退出。
+<DT><B>-v, --verbose</B>
+
+<DD>
+输出关于
+<B>APM BIOS</B>
+
+的版本和
+<B>Linux APM</B>
+
+驱动程序的版本的信息。
+<DT><B>-m, --minutes</B>
+
+<DD>
+输出剩余的总共的分钟数而不是
+<I>hh:mm</I>
+
+格式。
+<DT><B>-s, --suspend</B>
+
+<DD>
+如果可能使机器进入挂起模式。
+<DT><B>-S, --standby</B>
+
+<DD>
+如果可能使机器进入等待模式。
+<DT><B>-i, --ignore</B>
+
+<DD>
+告诉系统在使用
+<B>AC （交流）</B>
+
+电源时忽略系统生成的
+<B>APM</B>
+
+挂起或等待事件。
+对这样的用户有用：拥有膝上型电脑，在用电池为电源
+时希望
+<B>APM </B>
+
+事件发生，在使用
+<B>AC （交流）</B>
+
+电源时不希望
+<B>APM</B>
+
+事件发生。
+<DT><B>-n, --noignore</B>
+
+<DD>
+告诉系统在使用
+<B>AC</B>
+
+电源时不忽略系统生成的
+<B>APM</B>
+
+挂起或等待事件。
+这是缺省的模式；提供这个选项作为取消的前
+面的 &quot;
+<I>apm -i</I>
+
+&quot; 调用的方法。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>缺陷</H2>
+
+本程序要求内核在 
+<B>1.3.57</B>
+
+以上。除非在老的内核上增加
+<B>APM</B>
+
+补丁否则不能运行。原因是
+<B>/proc/apm</B>
+
+的格式被更改得非常迅速。
+<A NAME="lbAG">&nbsp;</A>
+<H2>相关文件</H2>
+
+<I>/proc/apm</I>
+
+<BR>
+
+<I>linux/drivers/char/apm_bios.c</I>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>著作者</H2>
+
+本程序是由 Rik Faith (<A HREF="mailto:faith@cs.unc.edu">faith@cs.unc.edu</A>)写的，在 GPL 条款下
+可以自由发布。对这个程序绝对没有任何担保。当前的维护者是
+Avery Pennarun (<A HREF="mailto:apenwarr@worldvisions.ca">apenwarr@worldvisions.ca</A>)。
+<A NAME="lbAI">&nbsp;</A>
+<H2>参见</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+xapm">xapm</A>(1), <A HREF="/cgi-bin/man/man2html?8+apmd">apmd</A>(8)
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+mhss
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2000/10/31 
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">缺陷</A><DD>
+<DT><A HREF="#lbAG">相关文件</A><DD>
+<DT><A HREF="#lbAH">著作者</A><DD>
+<DT><A HREF="#lbAI">参见</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

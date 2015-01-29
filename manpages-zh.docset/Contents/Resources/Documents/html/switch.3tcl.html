@@ -1,0 +1,181 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of switch</TITLE>
+</HEAD><BODY>
+<H1>switch</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+switch - 依据一个给定的值对多个脚本中的一个进行求值
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>switch </B>?<I>options</I>?<I> string pattern body </I>?<I>pattern body </I>...?
+<P>
+<B>switch </B>?<I>options</I>?<I> string </I>{<I>pattern body </I>?<I>pattern body </I>...?}
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>switch</B> 命令依次针对每个 <I>pattern </I>(模式)参数匹配它的 
+<I>string</I> 参数。如果它发现一个 <I>pattern</I> 匹配 <I>string</I>，则立即通过把跟随在(这个模式)后面的 
+<I>body</I> 参数递归的传递给 Tcl 
+解释器来求值它，并返回这次求值的结果。如果最后的 <I>pattern</I> 
+参数是 <B>default</B>，则它匹配所有的东西。如果没有 <I>pattern</I> 
+参数匹配 <I>string</I> 并且没有给出缺省，则 <B>switch</B> 
+命令返回一个空串。
+<P>
+
+如果给 <B>switch</B> 的最初的参数以 <B>-</B> 
+开始，则它们被作为选项来对待。当前支持下列选项:
+<DL COMPACT>
+<DT><B>-exact</B><DD>
+当与一个模式比较 <I>string</I>  的时候，使用精确匹配。这是缺省的。
+<DT><B>-glob</B><DD>
+当与一个模式比较 <I>string</I> 的时候，使用通配符式样的匹配(与 <B>string match</B> 命令所实现的相同)。
+<DT><B>-regexp</B><DD>
+当与一个模式比较 <I>string</I> 的时候，使用正则表达式匹配(在 <B>re_syntax</B> 参考页中描述)。
+<DT><B>--</B><DD>
+选项结束的标志。此后的参数即使以 <B>-</B> 开始仍被作为 <I>string</I> 来对待。
+</DL>
+<P>
+
+为 <I>pattern</I> 和 <I>body</I> 参数提供了两个语法。第一个是对于每个模式和命令使用一个独立的参数；如果在一些模式或命令上需要替换，则这种形式是很方便的。第二种形式是把所有的模式和命令放在一起作为一个单一的参数；这个参数必须有正确的列表结构，它的元素是模式和命令。第二种形式适合于构造多行 switch 命令，因为花括号包围着所有元素，所以没有必要在每行结束之处包含一个反斜杠。
+在第二种形式中因为 <I>pattern</I>参数在花括号中，所以在它们上不进行命令和变量替换；这使得第二种形式的行为在一些情况下与第一种形式不同。
+<P>
+
+如果指定一个 <I>body</I> 为``<B>-</B>''，则意味着给下一个模式的 <I>body </I>也被用于这个模式(如果下一个模式也有一个执行体“<B>-</B>”则使用它后面的这个执行体，以此类推)。这个特征使在多个模式之间共享一个单一的 <I>body</I> 成为可能。
+<P>
+
+在 <B>switch</B> 命令放置注释要注意。注释只能放置在一个模式的执行体中，而不能与模式混合。
+<P>
+
+下面是 <B>switch</B> 命令的一些例子:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>switch&nbsp;abc&nbsp;a&nbsp;-&nbsp;b&nbsp;{format 1}&nbsp;abc&nbsp;{format 2}&nbsp;default&nbsp;{format 3}</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>2</B>, 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>switch&nbsp;-regexp&nbsp;aaab {
+   ^a.*b$&nbsp;-
+   b&nbsp;{format 1}
+   a*&nbsp;{format 2}
+   default&nbsp;{format 3}
+}</B>
+
+</PRE>
+
+</DL>
+
+
+将返回  <B>1</B>, 而
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>switch&nbsp;xyz {
+   a
+     -
+   b
+     {
+     # Correct Comment Placement
+     format 1
+   }
+   a*
+     {format 2}
+   default
+     {format 3}
+}</B>
+
+</PRE>
+
+</DL>
+
+
+将返回  <B>3</B>.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+for">for</A>(n), <A HREF="/cgi-bin/man/man2html?n+if">if</A>(n), <A HREF="/cgi-bin/man/man2html?n+regexp">regexp</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+switch, match, regular expression
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/11/15</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

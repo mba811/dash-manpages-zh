@@ -1,0 +1,528 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of IPC</TITLE>
+</HEAD><BODY>
+<H1>IPC</H1>
+Section: Linux Programmer's Manual (5)<BR>Updated: November 1, 1993<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ipc - System V 进程间通信机制
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<PRE>
+<B># include &lt;<A HREF="file:///usr/include/sys/types.h">sys/types.h</A>&gt;</B>
+<B># include &lt;<A HREF="file:///usr/include/sys/ipc.h">sys/ipc.h</A>&gt;</B>
+<B># include &lt;<A HREF="file:///usr/include/sys/msg.h">sys/msg.h</A>&gt;</B>
+<B># include &lt;<A HREF="file:///usr/include/sys/sem.h">sys/sem.h</A>&gt;</B>
+<B># include &lt;<A HREF="file:///usr/include/sys/shm.h">sys/shm.h</A>&gt;</B>
+</PRE><A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+本手册页涉及 System V 进程间通信机制在 Linux 下的实现:
+消息队列, 信号灯集合, 以及共享内存段. 下面提到
+<B>资源</B>
+
+时, 就是指上面这些通信机制中的一种.
+<A NAME="lbAE">&nbsp;</A>
+<H3>资源访问权限</H3>
+
+对每个资源, 系统用一个共有的
+<B>struct ipc_perm</B>
+
+结构来存放权限信息, 以确定一个 ipc 操作是否可访问该资源. 在
+<I>&lt;<A HREF="file:///usr/include/sys/ipc.h">sys/ipc.h</A>&gt;</I>
+
+中定义了
+<B>ipc_perm,</B>
+
+其成员如下: 
+<P>
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort cuid;<TT>&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 创建者 uid */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort cgid;<TT>&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 创建者 gid */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort uid;</B>
+
+/* 所有者 uid */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort gid;</B>
+
+/* 所有者 gid */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort mode;</B>
+
+/* 读/写权限 */<BR>
+<P>
+
+结构
+<B>ipc_perm</B>
+
+的成员
+<B>mode</B>
+
+的低九位定义了对该资源的访问许
+可, 以确定一个执行了 ipc 系统调用的进程能否访问该资源. 其解
+释如下:
+<P>
+<PRE>
+        0400    用户可读.
+        0200    用户可写.
+
+        0040    组成员可读.
+        0020    组成员可写.
+
+        0004    其他用户可读.
+        0002    其他用户可写.
+</PRE>
+
+<P>
+
+系统没有使用执行位 0100, 0010 和 0001. 另外, 这里的 &quot;可写&quot; 等
+效于信号灯集合里的 &quot;可更改&quot;. 
+<P>
+
+在
+<I>&lt;<A HREF="file:///usr/include/sys/ipc.h">sys/ipc.h</A>&gt;</I>
+
+系统头文件里还定义了如下符号常数:
+<DL COMPACT>
+<DT><B>IPC_CREAT</B>
+
+<DD>
+如果 key 不存在就创建.
+<DT><B>IPC_EXCL</B>
+
+<DD>
+如果 key 已经存在则失败.
+<DT><B>IPC_NOWAIT</B>
+
+<DD>
+如果请求必须等待, 产生错误.
+<DT><B>IPC_PRIVATE</B>
+
+<DD>
+私有 key.
+<DT><B>IPC_RMID</B>
+
+<DD>
+删除资源.
+<DT><B>IPC_SET</B>
+
+<DD>
+设置资源选项.
+<DT><B>IPC_STAT</B>
+
+<DD>
+取得资源选项.
+</DL>
+<P>
+
+请注意
+<B>IPC_PRIVATE</B>
+
+是一个
+<B>key_t</B>
+
+类型, 而别的符号常数都是标志域,它们的可以或( OR )在一起形成
+<B>int</B>
+
+类型.
+<A NAME="lbAF">&nbsp;</A>
+<H3>消息队列</H3>
+
+消息队列由正整数
+(它的 <I>msqid</I>)
+
+唯一标识, 其结构体
+<B>struct msquid_ds</B>
+
+在
+<I>&lt;<A HREF="file:///usr/include/sys/msg.h">sys/msg.h</A>&gt;</I>
+
+中定义, 包含如下成员: 
+<P>
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>struct ipc_perm msg_perm;</B>
+
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort msg_qnum;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 队列中消息数目 */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort msg_qbytes;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 一条队列最大字节数 */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort msg_lspid;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 上一次 msgsnd 调用的 pid  */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort msg_lrpid;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 上一次 msgrcv 调用的 pid */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>time_t msg_stime;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 上一次 msgsnd 的时间 */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>time_t msg_rtime;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 上一次 msgrcv 的时间 */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>time_t msg_ctime;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 上一次修改时间 */<BR>
+<DL COMPACT>
+<DT><B>msg_perm</B>
+
+<DD>
+<B>ipc_perm</B>
+
+结构, 指明了对该消息队列的访问权限. 
+<DT><B>msg_qnum</B>
+
+<DD>
+该队列当前的消息总数.
+<DT><B>msg_qbytes</B>
+
+<DD>
+该队列所允许的消息正文最大字节总数.
+<DT><B>msg_lspid</B>
+
+<DD>
+最后做
+<B>msgsnd</B>
+
+系统调用的进程的 ID. 
+<DT><B>msg_lrpid</B>
+
+<DD>
+最后做
+<B>msgrcv</B>
+
+系统调用的进程的 ID. 
+<DT><B>msg_stime</B>
+
+<DD>
+最近做
+<B>msgsnd</B>
+
+系统调用的时间.
+<DT><B>msg_rtime</B>
+
+<DD>
+最近做
+<B>msgrcv</B>
+
+系统调用的时间.
+<DT><B>msg_ctime</B>
+
+<DD>
+最后一次改变
+<B>msqid_ds</B>
+
+结构成员的时间. 
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H3>信号灯集合</H3>
+
+信号灯集合由正整数
+(它的 <I>semid</I>)
+
+唯一标识, 并有一个与之关联的结构体
+<B>struct semid_ds</B>
+
+它在
+<I>&lt;<A HREF="file:///usr/include/sys/sem.h">sys/sem.h</A>&gt;</I>
+
+中定义, 包含如下成员: 
+<P>
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>struct ipc_perm sem_perm;</B>
+
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>time_t sem_otime;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 上一次操作的时间 */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>time_t sem_ctime;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 上一次修改的时间 */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort sem_nsems;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 集合中信号灯数目 */<BR>
+<DL COMPACT>
+<DT><B>sem_perm</B>
+
+<DD>
+<B>ipc_perm</B>
+
+结构, 指明对该信号灯集合的访问权限. 
+<DT><B>sem_otime</B>
+
+<DD>
+最近做
+<B>semop</B>
+
+系统调用的时间.
+<DT><B>sem_ctime</B>
+
+<DD>
+最近做
+<B>semctl</B>
+
+系统调用的时间, 该调用修改了上面结构的一个成员
+或者改变了属于该集合的一个信号灯. 
+<DT><B>sem_nsems</B>
+
+<DD>
+该信号灯集合的信号灯数目. 集合中每个信号灯都可以用从
+<B>0</B>
+
+到
+<B>sem_nsems-1</B>
+
+的一个非负整数来引用. 
+</DL>
+<P>
+
+一个信号灯就是一个
+<B>struct sem</B>
+
+结构, 包含如下成员: 
+<P>
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort semval;<TT>&nbsp;&nbsp;</TT></B>
+
+/* 信号灯值 */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>short sempid;<TT>&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 上一次操作的进程的 pid */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort semncnt;<TT>&nbsp;</TT></B>
+
+/* 等待增加 semval 值的进程数目 */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort semzcnt;<TT>&nbsp;</TT></B>
+
+/* 等待 semval = 0 的进程数目 */<BR>
+<DL COMPACT>
+<DT><B>semval</B>
+
+<DD>
+该信号灯值,是一个非负整数. 
+<DT><B>sempid</B>
+
+<DD>
+最后一个对该信号灯做操作的进程 ID. 
+<DT><B>semncnt</B>
+
+<DD>
+等待增加
+<B>semval</B>
+
+的进程数. 
+<DT><B>semznt</B>
+
+<DD>
+等待
+<B>semval</B>
+
+变成 0 的进程数. 
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H3>共享内存段</H3>
+
+共享内存段由正整数
+(它的 <I>shmid</I>)
+
+唯一标识, 有一个关联的结构类型
+<B>struct shmid_ds</B>
+
+在
+<I>&lt;<A HREF="file:///usr/include/sys/shm.h">sys/shm.h</A>&gt;</I>
+
+中定义, 包含如下成员: 
+<P>
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>struct ipc_perm shm_perm;</B>
+
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>int shm_segsz;<TT>&nbsp;&nbsp;</TT></B>
+
+/* 段尺寸 */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort shm_cpid;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 创建者 pid */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>ushort shm_lpid;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 上一次操作的进程的 pid */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>short shm_nattch;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 目前附着的进程数目 */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>time_t shm_atime;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 上一次附着的时间 */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>time_t shm_dtime;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 上一次脱离的时间 */<BR>
+<BR>
+
+<B><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>time_t shm_ctime;<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT></B>
+
+/* 上一次修改的时间 */<BR>
+<DL COMPACT>
+<DT><B>shm_perm</B>
+
+<DD>
+<B>ipc_perm</B>
+
+结构, 指明对共享内存段的访问权限. 
+<DT><B>shm_segsz</B>
+
+<DD>
+共享内存段的大小, 以字节为单位. 
+<DT><B>shm_cpid</B>
+
+<DD>
+创建该共享内存段的进程的 ID. 
+<DT><B>shm_lpid</B>
+
+<DD>
+最后执行
+<B>shmat</B>
+
+或者
+<B>shmdt</B>
+
+系统调用的进程 ID. 
+<DT><B>shm_nattch</B>
+
+<DD>
+当前对该共享内存段的活跃连接数. 
+<DT><B>shm_atime</B>
+
+<DD>
+最后做
+<B>shmat</B>
+
+系统调用的时间.
+<DT><B>shm_dtime</B>
+
+<DD>
+最后做
+<B>shmdt</B>
+
+系统调用的时间.
+<DT><B>shm_ctime</B>
+
+<DD>
+最后做
+<B>shmctl</B>
+
+系统调用的时间, 如果该调用改变了
+shmid_ds.
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>又见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?3+ftok">ftok</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?2+msgctl">msgctl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+msgget">msgget</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+msgrcv">msgrcv</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+msgsnd">msgsnd</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+semctl">semctl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+semget">semget</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+semop">semop</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+shmat">shmat</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+shmctl">shmctl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+shmget">shmget</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+shmdt">shmdt</A></B>(2).
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>name &lt;email&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/02/02</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DL>
+<DT><A HREF="#lbAE">资源访问权限</A><DD>
+<DT><A HREF="#lbAF">消息队列</A><DD>
+<DT><A HREF="#lbAG">信号灯集合</A><DD>
+<DT><A HREF="#lbAH">共享内存段</A><DD>
+</DL>
+<DT><A HREF="#lbAI">又见</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

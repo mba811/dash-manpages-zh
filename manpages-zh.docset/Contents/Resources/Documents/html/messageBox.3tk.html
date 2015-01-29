@@ -1,0 +1,141 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of tk_messageBox</TITLE>
+</HEAD><BODY>
+<H1>tk_messageBox</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: 4.2<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tk_messageBox - 弹出一个消息窗口并等待用户响应。
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>tk_messageBox </B>?<I>option value ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个过程建立并显示一个消息窗口，它带有一个用户消息，一个图标和一组按钮。用一个唯一的符号名字标识消息窗口中的每个按钮(参见 <B>-type</B> 选项)。在弹出消息窗口之后，<B>tk_messageBox</B> 等待用户选择按钮中的一个。接着返回选择的按钮的符号名字。
+<P>
+支持下列选项-值对:
+<DL COMPACT>
+<DT><B>-default</B> <I>name</I><DD>
+<I>Name</I> 给出这个消息窗口的缺省按钮的符号名字(‘ok’、‘cancel’和诸如此类)。符号名字的列表请参见     <B>-type</B>。如果这个消息框只有一个按钮则它将自动成为缺省，如果未指定这个选项，则不会有任何缺省按钮。
+<DT><B>-icon</B> <I>iconImage</I><DD>
+指定要显示的一个图标。<I>IconImage</I> 必须是下列之一: <B>error</B>、<B>info</B>、<B>question</B>     或 <B>warning</B>。如果未指定这个选项，则显示 info 图标。
+<DT><B>-message</B> <I>string</I><DD>
+指定在这个消息框中显示的消息。
+<DT><B>-parent</B> <I>window</I><DD>
+使 <I>window</I>     成为这个消息框的逻辑父窗口。这个消息框在它的父窗口顶上显示。
+<DT><B>-title</B> <I>titleString</I><DD>
+指定一个字符串显示为这个消息窗口的标题。缺省值为一个空串。
+<DT><B>-type</B> <I>predefinedType</I><DD>
+安排要显示的预定按钮集合。<I>predefinedType </I>可能是下列值:
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>abortretryignore</B><DD>
+显示三个按钮，它们的符号名字是 <B>abort</B>、<B>retry</B>   和 <B>ignore</B>。
+<DT><B>ok</B><DD>
+显示一个按钮，它的符号名字是 <B>ok</B>。
+<DT><B>okcancel</B><DD>
+显示两个按钮，它们的符号名字是 <B>ok</B> 和 <B>cancel</B>。
+<DT><B>retrycancel</B><DD>
+显示两个按钮，它们的符号名字是 <B>retry</B> 和 <B>cancel</B>。
+<DT><B>yesno</B><DD>
+显示两个按钮，它们的符号名字是 <B>yes</B> 和 <B>no</B>。
+<DT><B>yesnocancel</B><DD>
+显示三个按钮，它们的符号名字是 <B>yes</B>、<B>no</B>  和 <B>cancel</B>。
+</DL>
+</DL>
+
+</DL>
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>示例 EXAMPLE</H2>
+
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+set answer [tk_messageBox -message &quot;Really quit?&quot; -type yesno -icon question]
+switch -- $answer {
+    yes exit
+    no {tk_messageBox -message &quot;I know you like this application!&quot; -type ok}
+}
+
+</PRE>
+
+</DL>
+
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+message box
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/05/21</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">示例 EXAMPLE</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

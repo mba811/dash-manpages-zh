@@ -1,0 +1,165 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of quota</TITLE>
+</HEAD><BODY>
+<H1>quota</H1>
+Section: User Commands  (1)<BR>Updated: Tue Jun 8 1993<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+quota - 显示磁盘的使用和限额
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+quota [
+<B>-guv | q</B>
+
+]
+<BR>
+
+quota [
+<B>-uv | q</B>
+
+] user
+<BR>
+
+quota [
+<B>-gv | q</B>
+
+] group
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>Quota</B>
+
+显示 用户的 磁盘 使用情况 和 限额. 缺省功能 只显示 用户限额.
+<P>
+
+<DL COMPACT>
+<DT><B>-g</B>
+
+<DD>
+显示 用户所在组 的 组限额. 可选项(optional).
+<DT><B>-u</B>
+
+<DD>
+和 缺省情况 一样.
+<DT><B>-v</B>
+
+<DD>
+显示 文件系统上 的 限额, 即使 没有 占用 空间.
+<DT><B>-q</B>
+
+<DD>
+简洁的 信息, 只 显示 超出 限额 的 文件系统.
+</DL>
+<P>
+
+同时指定
+<B>-g</B>
+
+和
+<B>-u</B>
+
+既显示 用户限额, 也显示 该用户 的 组限额.
+<P>
+
+只有 超级用户 可以 使用
+<B>-u</B>
+
+选项 和 
+<B>user</B>
+
+参数 察看 其他用户 的 限额. 普通用户 可以 使用
+<B>-g</B>
+
+选项 和
+<B>group</B>
+
+参数 察看 用户所在组 的 限额.
+<P>
+
+<B>-q</B>
+
+选项 优先于
+<B>-v</B>
+
+选项.
+<P>
+
+<B>Quota</B>
+
+报告 
+<B>/etc/fstab</B>
+
+中 列出的 全部 文件系统 上 的 限额. 如果 文件系统 是 挂载的 NFS, 
+Quota 调用 服务器 上的 rpc.rquotad, 以便 获取 相关信息.
+<P>
+如果
+<B>quota</B>
+
+返回 非零值, 表明 在 某些 文件系统 上 超出了 限额.
+<A NAME="lbAE">&nbsp;</A>
+<H2>文件 (FILES)</H2>
+
+<B>quota.user</B>
+
+位于 文件系统 根目录, 存放 用户限额
+<BR>
+
+<B>quota.group</B>
+
+位于 文件系统 根目录, 存放 组限额
+<BR>
+
+<B>/etc/fstab</B>
+
+用于 查找 文件系统 的 名称和位置
+<A NAME="lbAF">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+quotactl (2),
+fstab (5),
+edquota (8),
+quotacheck (8),
+quotaon (8),
+repquota (8)
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">文件 (FILES)</A><DD>
+<DT><A HREF="#lbAF">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

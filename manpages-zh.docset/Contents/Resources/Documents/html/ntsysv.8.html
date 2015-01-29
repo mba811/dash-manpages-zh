@@ -1,0 +1,84 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of NTSYSV</TITLE>
+</HEAD><BODY>
+<H1>NTSYSV</H1>
+Section: Maintenance Commands (8)<BR>Updated: Mon Oct 13 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ntsysv - 用于配置运行级别的简单接口
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>ntsysv</B> [--back] [--level &lt;levels&gt;]
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<B>ntsysv</B> 是个用于配置运行级别服务(也可通过 <B>chkconfig</B> 来配置)的简单接口。对于缺省情况，它配置当前的运行级别。 如果用户需要配置其它的运行级别，可以在命令行上用 <B>--levels</B>选项，在其后列出所要配置的那些运行级别，且互相之间不加空格。例如，<B>--levels 016</B> 选项编辑运行级别0、1和6。
+<P>
+如果一项服务是由正被编辑的运行级别中任一级别启动的话，那么它会被考虑在设置的运行级别中启动。
+<P>
+<B>ntsysv</B> 窗口通常包含一个<B>取消</B>按钮。如果指定使用<B>--back</B> 选项的话，会出现一个<B>回退</B>按钮作为代替。
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>返回值 RETURN CODES</H2>
+
+<B>ntsysv</B> 在正常情况下返回0，在出错时返回2，且如果用户取消(或撤回)程序则返回1。
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+chkconfig">chkconfig</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+serviceconf">serviceconf</A></B>(8)
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+Erik Troan &lt;<A HREF="mailto:ewt@redhat.com">ewt@redhat.com</A>&gt;
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">返回值 RETURN CODES</A><DD>
+<DT><A HREF="#lbAF">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

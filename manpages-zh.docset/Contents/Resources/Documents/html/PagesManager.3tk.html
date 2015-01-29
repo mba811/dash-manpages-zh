@@ -1,0 +1,108 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PagesManager</TITLE>
+</HEAD><BODY>
+<H1>PagesManager</H1>
+Section: Misc. Reference Manual Pages (3tk)<BR>Updated: tcllib - BWidget<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>PagesManager - 页面管理器组件</B>
+
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>创建 CREATION</H2>
+
+<B>PagesManager pathName ?option value...?</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+PagesManager 组件管理一组页面并显示其中之一。PagesManager 不象 NoteBook 那样提供任何用户访问方法，这可以通过列表框、菜单、单选按钮、或其他什么东西来完成。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>组件特有选项 WIDGET-SPECIFIC OPTIONS</H2>
+
+<DL COMPACT>
+<DT>-height  <DD>
+为页面指定想要的高度。如果这个选项等于零(缺省的)，则这个窗口根本不要求任何大小。在这种情况下，用户可以调用 PagesManager::compute_size 来使 PagesManager 足够大得包含最大的页面。
+<P>
+<DT>-width  <DD>
+为页面指定想要的宽度。如果这个选项等于零(缺省的)，则这个窗口根本不要求任何大小。在这种情况下，用户可以调用 PagesManager::compute_size 来使 PagesManager 足够大得包含最大的页面。 
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>组件命令</H2>
+
+<P>
+<DL COMPACT>
+<DT>pathName add page  <DD>
+增加用 page  标识的一个新页面。返回这个新页面的路径名。 
+<P>
+<DT>pathName cget option  <DD>
+返回用 option 给出的配置选项的当前值。Option 可以是能被建立命令接受的任何值。 
+<P>
+<DT>pathName compute_size  <DD>
+调用这个命令使 PagesManager 足够大得包含最大的页面。 
+<P>
+<DT>pathName configure ?option? ?value option value ...? <DD>
+查询或修改这个组件的配置选项。如果未指定 option ，则返回描述 pathName 的所有可获得的选项的一个列表。如果指定了不带 value 的 option，则这个命令返回描述这个指名的 option 的一个列表(这个列表与未指定 option 所返回的值的相应的子集是一样的)。如果指定了一个或多个选项-值 对，则这个命令把给定的组件选项修改为给定的值；在这种情况下这个命令返回一个空串。Option 可以是能被建立命令接受的任何值。只读选项不可修改。 
+<P>
+<DT>pathName delete page  <DD>
+删除页面 page。 
+<P>
+<DT>pathName getframe page  <DD>
+返回页面 page 的路径名。 
+<P>
+<DT>pathName page first ?last? <DD>
+反对使用它，建议替代为 pages。
+<P>
+如果省略了 last，则返回在索引 first 上的页面，如果 first 引用一个不存在的页面则返回空串。如果指定了 last，则这个命令返回一个列表，它的元素是在 first 和 last 之间(包含二者)的所有页面。first 和 last 二者可以是索引的任何标准形式。 
+<P>
+<DT>pathName pages ?first? ?last? <DD>
+如果省略了 first 和 last，则返回所有页面的一个列表。如果指定了 first 而省略了 last，则返回在索引 first 上的页面，如果 first 引用一个不存在的元素则返回空串。如果指定了 first 和 last，则这个命令返回一个列表，它的元素是在 first 和 last 之间(包含二者)的所有页面。first 和 last 二者可以是索引的任何标准形式。 
+<P>
+<DT>pathName raise ?page? <DD>
+提升(raise)页面 page，如果省略了 page 则返回突出的(raised)页面。
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/05/15</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">创建 CREATION</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">组件特有选项 WIDGET-SPECIFIC OPTIONS</A><DD>
+<DT><A HREF="#lbAF">组件命令</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

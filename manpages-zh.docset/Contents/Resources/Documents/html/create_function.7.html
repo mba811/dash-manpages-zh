@@ -1,0 +1,193 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE FUNCTION</TITLE>
+</HEAD><BODY>
+<H1>CREATE FUNCTION</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE FUNCTION - 定义一个新函数
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE [ OR REPLACE ] FUNCTION <I>name</I> ( [ <I>argtype</I> [, ...] ] )
+    RETURNS <I>rettype</I>
+  { LANGUAGE <I>langname</I>
+    | IMMUTABLE | STABLE | VOLATILE
+    | CALLED ON NULL INPUT | RETURNS NULL ON NULL INPUT | STRICT
+    | [EXTERNAL] SECURITY INVOKER | [EXTERNAL] SECURITY DEFINER
+    | AS '<I>definition</I>'
+    | AS '<I>obj_file</I>', '<I>link_symbol</I>'
+  } ...
+    [ WITH ( <I>attribute</I> [, ...] ) ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE FUNCTION</B> 定义一个新的函数。 CREATE OR REPLACE FUNCTION 将要么创建一个新函数， 要么替换现有的定义。
+<P>
+
+<BR>&nbsp;如果包含了一个模式名，那么函数就在指定的模式中创建。否则它会在当前模式中创建。&nbsp;新函数的名字不能和同一个模式中的任何带有同样参数类型的函数同名。&nbsp;不过，参数类型不同的函数可以同名（这叫做重载）。
+<P>
+
+<BR>&nbsp;要更新一个现有函数的定义，使用&nbsp;CREATE&nbsp;OR&nbsp;REPLACE&nbsp;FUNCTION。&nbsp;我们不能用这个方法修改一个函数的名字或者参数类型（如果你这么干，那么你就会创建一个新的，不同的函数）。&nbsp;同样，CREATE&nbsp;OR&nbsp;REPLACE&nbsp;FUNCTION&nbsp;也不会允许你修改一个现有函数的返回类型。&nbsp;要做这些事情，你必须删除并重新创建函数。
+<P>
+
+<BR>&nbsp;如果你删除然后重建一个函数，新函数和旧的将是不同的实体；你会破坏现有规则，视图，触发器等等。&nbsp;使用&nbsp;CREATE&nbsp;OR&nbsp;REPLACE&nbsp;FUNCTION&nbsp;可以在不破坏引用该函数的对象的前提下修改函数定义。
+<P>
+
+<BR>&nbsp;创建这个函数的用户成为函数的所有者。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;要创建的函数名字。
+<DT><B></B><I>argtype</I><B></B><DD>
+<BR>&nbsp;该函数的数据类型（可以有模式修饰）。如果有的话，参数类型可以是基本类型，也可以是复合类型，域类型，或者和一个现有字段相同的类型。
+<P>
+<BR>&nbsp;一个字段的类型是用&nbsp;<I>tablename</I>.<I>columnname</I>%TYPE&nbsp;&nbsp;表示的；使用这个东西可以帮助函数独立于表定义的修改。
+<P>
+<BR>&nbsp;根据实现语言的不同，我们还可以在这上面声明&nbsp;&quot;伪类型&quot;，&nbsp;比如&nbsp;cstring。伪类型表示实际的参数类型要么是没有完整地声明，要么是在普通的&nbsp;SQL&nbsp;数据类型之外。
+<DT><B></B><I>rettype</I><B></B><DD>
+<BR>&nbsp;返回数据类型。输出类型可以声明为一个基本类型，复合类型，域类型，&nbsp;或者从现有字段拷贝。参阅上面&nbsp;argtype&nbsp;的描述获取如何引用一个现有类型的信息。
+<P>
+<BR>&nbsp;根据实现语言的不同，我们还可以在这上面声明&nbsp;&quot;伪类型&quot;，&nbsp;比如&nbsp;cstring。&nbsp;SETOF&nbsp;修饰词表示该函数将返回一套条目，&nbsp;而不是一条条目。
+<DT><B></B><I>langname</I><B></B><DD>
+<BR>&nbsp;用以实现函数的语言的名字。&nbsp;可以是&nbsp;SQL，C，&nbsp;internal，或者是用户定义的过程语言名字。&nbsp;（又见&nbsp;createlang。&nbsp;）&nbsp;为了保持向下兼容，该名字可以用单引号包围。&nbsp;
+<DT><B>IMMUTABLE</B><DD>
+<DT><B>STABLE</B><DD>
+<DT><B>VOLATILE</B><DD>
+<BR>&nbsp;这些属性告诉系统把对该函数的多次调用替换成一次是否安全。&nbsp;主要用于运行时优化。&nbsp;至少应该声明一个选择。如果任何一个都没有出现，那么&nbsp;VOLATILE&nbsp;是缺省假设。
+<P>
+IMMUTABLE 表示该函数在给出同样的参数值时总是返回相同的结果； 也就是说，它不做数据库查找或者是使用那些并没有直接出现在其参数列表里面的信息。 如果给出这个选项，那么任何带着全部是常量参数对该函数的调用都将立即替换为该函数的值。
+<P>
+STABLE 表示在一次表扫描里，对相同参数值， 该函数将稳定返回相同的值，但是它的结果可能在不同 SQL 语句之间变化。 这个选项对那些结果倚赖数据库查找，参数变量（比如当前时区），等等的函数是很合适的。 还要注意 current_timestamp 族函数是 stable (稳定)的，因为它们的值在一次事务中不会变化。
+<P>
+VOLATILE 表示该函数值甚至可以在一次表扫描内改变， 因此不会做任何优化。很少数据库函数在这个概念上是易变的； 一些例子是 random()，currval()， timeofday()。请注意任何有副作用的函数都必需列为易变类， 即使其结果相当有规律也应该这样，这样才能避免它被优化；一个例子就是 setval()。
+<DT><B>CALLED ON NULL INPUT</B><DD>
+<DT><B>RETURNS NULL ON NULL INPUT</B><DD>
+<DT><B>STRICT</B><DD>
+CALLED ON NULL INPUT （缺省）表明该函数在自己的某些参数是空值的时候还是可以按照正常的方式调用。 剩下的事情是函数的作者必须负责检查空值以及相应地做出反应。
+<P>
+RETURNS NULL ON NULL INPUT 或 STRICT 表明如果它的任何参数是 NULL，此函数总是返回 NULL。 如果声明了这个参数，则如果存在 NULL 参数时不会执行该函数； 而只是自动假设一个 NULL 结果。
+<DT><B>[EXTERNAL] SECURITY INVOKER</B><DD>
+<DT><B>[EXTERNAL] SECURITY DEFINER</B><DD>
+SECURITY INVOKER 表明该函数将带着调用它的用户的权限执行。 这是缺省。SECURITY DEFINER 声明该函数将以创建它的用户的权限执行。
+<P>
+<BR>&nbsp;关键字&nbsp;EXTERNAL&nbsp;的目的是和&nbsp;SQL&nbsp;兼容，&nbsp;但是我们和&nbsp;SQL&nbsp;不同的是，这个特性不仅仅适用于外部的函数，&nbsp;所以它是可选的。
+<DT><B></B><I>definition</I><B></B><DD>
+<BR>&nbsp;一个定义函数的字串；含义取决于语言。它可以是一个内部函数名字，&nbsp;一个指向某个目标文件的路径，一个&nbsp;SQL&nbsp;查询，或者一个用过程语言写的文本。
+<DT><B></B><I>obj_file</I><B>, </B><I>link_symbol</I><B></B><DD>
+<BR>&nbsp;这个形式的&nbsp;AS&nbsp;子句用于在函数的&nbsp;C&nbsp;源文件里的函数名字和&nbsp;SQL&nbsp;函数的名字不同的时候可动态装载&nbsp;C&nbsp;语言函数。&nbsp;字串&nbsp;obj_file&nbsp;是包含可动态装载的对象的文件名，而&nbsp;link_symbol&nbsp;是函数的链接符号，也就是该函数在&nbsp;C&nbsp;源文件里的名字。&nbsp;如果省略了链接符号，那么就假设它和被定义的&nbsp;SQL&nbsp;函数同名。
+<DT><B></B><I>attribute</I><B></B><DD>
+<BR>&nbsp;历史遗留的函数可选信息。下面的属性可以在此出现：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>isStrict</B><DD>
+<BR>&nbsp;等效于&nbsp;STRICT&nbsp;或者&nbsp;RETURNS&nbsp;NULL&nbsp;ON&nbsp;NULL&nbsp;INPUT
+<DT><B>isCachable</B><DD>
+isCachable 是 IMMUTABLE  的过时的等效物；不过出于向下兼容，我们仍然接受它。
+</DL>
+</DL>
+
+</DL>
+<P>
+
+<BR>&nbsp;属性名是大小写无关的。
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;请参阅&nbsp;``User-Defined&nbsp;Functions''&nbsp;获取更多关于书写函数的信息。
+<P>
+
+<BR>&nbsp;我们允许你将完整的&nbsp;SQL&nbsp;类型语法用于输入参数和返回值。&nbsp;不过，有些类型声明的细节（比如，numeric&nbsp;类型的精度域）是由下层函数实现负责的，&nbsp;并且会被&nbsp;CREATE&nbsp;FUNCTION&nbsp;命令悄悄地吞掉。&nbsp;（也就是说，不再被识别或强制）。
+<P>
+
+PostgreSQL 允许函数重载； 也就是说，同一个函数名可以用于几个不同的函数， 只要它们的参数可以区分它们。不过，所有函数的 C 名字必须不同， 也就是说你必须给予重载的 C 函数不同的 C 名字（比如，使用参数类型作为 C 名字的一部分）。
+<P>
+
+<BR>&nbsp;如果重复调用&nbsp;CREATE&nbsp;FUNCTION，并且都指向同一个目标文件，&nbsp;那么该文件只装载一次。要卸载和恢复装载该文件（可能是在开发过程中），你可以使用&nbsp;LOAD&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+load">load</A></B>(7)]&nbsp;命令。
+<P>
+
+<BR>&nbsp;使用&nbsp;DROP&nbsp;FUNCTION&nbsp;删除一个用户定义函数。
+<P>
+
+<BR>&nbsp;函数定义里面的任何单引号或者反斜杠都必须用写双份的方式逃逸。
+<P>
+
+<BR>&nbsp;要能定义函数，用户必须对该语言有&nbsp;USAGE&nbsp;&nbsp;权限。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;这里是一个简单的例子，用于帮助你开始掌握这个命令。&nbsp;更多信息和例子，参阅&nbsp;``User-Defined&nbsp;Functions''。
+<P>
+<PRE>
+CREATE FUNCTION add(integer, integer) RETURNS integer
+    AS 'select $1 + $2;'
+    LANGUAGE SQL
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT;
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;在&nbsp;SQL99&nbsp;里的确定义了一个CREATE&nbsp;FUNCTION&nbsp;&nbsp;PostgreSQL&nbsp;的和它类似但是不兼容。&nbsp;这个属性是不可移植的，可以使用的不同语言也是如此。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<P>
+
+ALTER FUNCTION [<B><A HREF="/cgi-bin/man/man2html?7+alter_function">alter_function</A></B>(7)],
+DROP FUNCTION [<B><A HREF="/cgi-bin/man/man2html?7+drop_function">drop_function</A></B>(7)],
+GRANT [<B><A HREF="/cgi-bin/man/man2html?7+grant">grant</A></B>(7)],
+LOAD [<B><A HREF="/cgi-bin/man/man2html?7+load">load</A></B>(7)],
+REVOKE [<B><A HREF="/cgi-bin/man/man2html?7+revoke">revoke</A></B>(7)],
+<B><A HREF="/cgi-bin/man/man2html?1+createlang">createlang</A></B>(1)
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

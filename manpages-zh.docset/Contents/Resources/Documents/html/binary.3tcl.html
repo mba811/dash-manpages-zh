@@ -1,0 +1,743 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of binary</TITLE>
+</HEAD><BODY>
+<H1>binary</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+binary - 从(向)二进制串插入和提取字段
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>binary format </B><I>formatString </I>?<I>arg arg ...</I>?
+<BR>
+
+<B>binary scan </B><I>string formatString </I>?<I>varName varName ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<BR>&nbsp;这个命令提供操纵二进制数据的设施。第一种形式是&nbsp;<B>binary&nbsp;format</B>，从普通的&nbsp;Tcl&nbsp;值来建立一个二进制串。例如，给出值&nbsp;16&nbsp;和&nbsp;22，可以产生一个8字节的二进制串，由两个4字节的整数组成。第二种形式是&nbsp;<B>binary&nbsp;scan</B>，做相反的事:&nbsp;从一个二进制串中提取出数据并作为通常的&nbsp;Tcl&nbsp;字符串值而返回。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>二进制化 BINARY FORMAT</H2>
+
+<P>
+
+<B>binary format</B> 命令生成一个二进制串，其格式由 <I>formatString</I> 指定，它的内容来(自在后面)增添的参数。返回结果二进制值。
+<P>
+
+<I>formatString</I> 由零个或多个字段说明符(specifier)的序列组成，用零个或多个空格分隔。每个说明符都是一个单独的类型字符，跟随着一个可选的数值 <I>count</I>。多数字段说明符消耗(consume)一个参数来获取被格式化的值。类型字符指定如何格式化值。<I>count</I> 典型的指示从值中接受了多少个指定类型的单项(item)。如果<I>count</I> 存在，则是一个非负十进制整数或 <B>*</B>，星号通常指示使用在值中所有的单项。如果参数的个数不匹配在消耗参数的这些格式串中的字段的个数，则产生一个错误。
+<P>
+
+每个类型-数目(type-count)对在二进制串上移动一个假想的游标，在当前的位置上存储一些字节并且游标前进到最近存储的字节的紧后面。游标初始在位置 0 也就是在数据的开始(端)。类型可以是下列字符中的任意一个:
+<DL COMPACT>
+<DT><B>a</B><DD>
+在输出串中存储长度是 <I>count</I> 的一个字符串。如果 <I>arg</I> 比 <I>count</I> 的字节数少，则有增补的零字节来填充字段。如果 <I>arg</I> 比指定长度多，忽略额外的字符。如果 <I>count</I> 是 <B>*</B>, 则格式化在 <I>arg</I> 中的所有字节。如果省略了 <I>count</I> ，则格式化一个字符。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format a7a*a alpha bravo charlie</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>alpha\000\000bravoc</B>的一个串。
+</DL>
+
+<DT><B>A</B><DD>
+除了使用空格而不是空字符来填充之外，这种形式同于 <B>a</B>。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format A6A*A alpha bravo charlie</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>alpha bravoc</B>.
+</DL>
+
+<DT><B>b</B><DD>
+在输出串中存储 <I>count</I> 个二进制数字的一个串，并且在每个字节中以从低到高的次序(来排序)。<I>Arg</I> 必须包含一个 <B>1</B> 和 <B>0</B> 字符的一个序列。以从最先到最后的次序散布(emit)结果字节，并且以在每个字节中以从低到高的次序格式化每位。如果 <I>arg</I> 比 <I>count</I> 的位数少，则剩余的位使用零。如果 <I>arg</I> 比指定的位数多，忽略额外的位。如果 <I>count</I> 是 <B>*</B>, 则格式化在 <I>arg</I> 中所有的位。如果省略了 <I>count</I>，则格式化一位。如果如果格式化的位数不结束在字节边界上，最后的字节的剩余的位将是零。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format b5b* 11100 111000011010</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>\x07\x87\x05</B>的一个串。
+</DL>
+
+<DT><B>B</B><DD>
+除了在每个字节中以从高到低的次序(来排序)之外，这种形式同于 <B>b</B>。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format B5B* 11100 111000011010</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>\xe0\xe1\xa0</B>的一个串。
+</DL>
+
+<DT><B>h</B><DD>
+在输出串中存储 <I>count</I> 个十六进制的数字的一个串，并且在每个字节中以从低到高的次序(来排序)。<I>Arg</I>  必须包含在“0123456789abcdefABCDEF”(字符)集中的字符的一个序列。以从最先到最后的次序散布(emit)结果字节，并且在每个字节中以从低到高的次序格式化十六进制数字。如果 <I>arg</I> 比 <I>count</I> 的数字个数少，则剩余的数字使用零。如果 <I>arg</I> 比指定的数字的个数多，忽略额外的数字。如果 <I>count</I> 是 <B>*</B>，则格式化在 <I>arg</I> 中所有的数字。如果省略了 <I>count</I> ，则格式化一个数字。如果格式化的数字的个数不结束在一个字节的边界上，最后的字节的剩余的位将是零。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format h3h* AB def</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>\xba\x00\xed\x0f</B>的一个串。
+</DL>
+
+<DT><B>H</B><DD>
+除了在每个字节中以从高到低的次序(来排序)之外，这种形式同于 <B>h</B> 。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format H3H* ab DEF</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>\xab\x00\xde\xf0</B>的一个串。
+</DL>
+
+<DT><B>c</B><DD>
+在输出串中存储一个或多个8位整数值。如果未指定 <I>count</I>，则 <I>arg</I> 必须包含一个整数值；否则 <I>arg</I> 必须包含至少有一个整数元素的一个列表。在当前的位置上把每个整数的低位(low-order)的 8 位存储成一个一字节的值。如果 <I>count</I> 是 <B>*</B>，则格式化在列表中所有的整数。如果在列表中的元素的个数比 <I>count</I> 少，则产生一个错误。 如果在列表中的元素的个数比 <I>count</I> 多，则忽略额外的元素。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format c3cc* {3 -3 128 1} 260 {2 5}</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>\x03\xfd\x80\x04\x02\x05</B> 的一个串。而
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format c {2 5}</B>
+
+</PRE>
+
+</DL>
+
+
+将产生一个错误。
+</DL>
+
+<DT><B>s</B><DD>
+除了以小端(little-endian)字节序在输出串中存储一个或多个16位整数之外，这种形式同于 <B>c</B>。在当前位置上把每个整数的低位的16位存储成一个两字节的值，并且首先存储最低有效(significant)字节。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format s3 {3 -3 258 1}</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>\x03\x00\xfd\xff\x02\x01</B> 的一个字串。
+</DL>
+
+<DT><B>S</B><DD>
+除了以大端(big-endian)字节序在输出串中存储一个或多个16位整数之外，这种形式同于 <B>s</B> 。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format S3 {3 -3 258 1}</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>\x00\x03\xff\xfd\x01\x02</B> 的一个串。
+</DL>
+
+<DT><B>i</B><DD>
+<BR>&nbsp;除了以小端(little-endian)字节序在输出串中存储一个或多个32位整数之外，这种形式同于&nbsp;<B>c</B>。在当前位置上把每个整数的低位的32位存储成一个四字节的值，并且首先存储最低有效字节。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format i3 {3 -3 65536 1}</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>\x03\x00\x00\x00\xfd\xff\xff\xff\x00\x00\x01\x00</B> 的一个串。
+</DL>
+
+<DT><B>I</B><DD>
+除了以大端(big-endian)字节序在输出串中存储一个或多个32位整数之外，这种形式同于 <B>i</B>。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format I3 {3 -3 65536 1}</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>\x00\x00\x00\x03\xff\xff\xff\xfd\x00\x01\x00\x00</B> 的一个串。
+</DL>
+
+<DT><B>f</B><DD>
+除了以机器的本地表示在输出串中存储一个或多个单精度浮点数之外，这种形式同于 <B>c</B>。这种表示是不能跨体系移植的，所以不应用于在网络上交流浮点数。浮点数的大小在体系间可能不同，所以生成的字节数也可能不同。如果值溢出了机器的本地表示，则使用系统定义的 FLT_MAX 的值。因为 Tcl 在内部使用双精度浮点数，在转换成单精度时可能损失些精度。例如，运行在 Intel Pentium 处理器的一个 Windows 系统上，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format f2 {1.6 3.4}</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>\xcd\xcc\xcc\x3f\x9a\x99\x59\x40</B> 的一个串。
+</DL>
+
+<DT><B>d</B><DD>
+除了以机器的本地表示在输出串中存储一个或多个双精度浮点数之外，这种形式同于 <B>f</B>。例如，运行在 Intel Pentium 处理器的一个 Windows 系统上，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format d1 {1.6}</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>\x9a\x99\x99\x99\x99\x99\xf9\x3f</B> 的一个串。
+</DL>
+
+<DT><B>x</B><DD>
+Stores <I>count</I> null bytes in the output string.  If <I>count</I> is
+not specified, stores one null byte.  If <I>count</I> is <B>*</B>,
+generates an error.  This type does not consume an argument.  For
+example,
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format a3xa3x2a3 abc def ghi</B>
+
+</PRE>
+
+</DL>
+
+
+将返回等价于 <B>abc\000def\000\000ghi</B> 的一个串。
+</DL>
+
+<DT><B>X</B><DD>
+在输出串中反向移动游标 <I>count</I> 字节。如果 <I>count</I> 是 <B>*</B> 或比当前游标位置大，则游标定位到位置 0，这样下个存储的字节将是结果串中的第一个字节。如果省略了<I>count</I>，则游标反向移动一字节。 这种形式不使用参数。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format a3X*a3X2a3 abc def ghi</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>dghi</B>.
+</DL>
+
+<DT><B>@</B><DD>
+在输出串中把游标移动到由 <I>count</I> 指定的绝对位置上。位置 0 参照在输出串中的第一个字节。如果 <I>count</I> 参照的位置超出至今所存储的最后的字节，则在空挡的(unitialized ?)位置上放置空字节并把游标放置到指定位置。如果 <I>count</I> 是 <B>*</B>，则游标将被移动到输出串的末端。如果省略了 <I>count</I>，则产生一个错误。这种类型不使用参数。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary format a5@2a1@*<A HREF="mailto:a3@10a1">a3@10a1</A> abcde f ghi j</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>abfdeghi\000\000j</B>.
+</DL>
+
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>二进制检索 BINARY SCAN</H2>
+
+<P>
+
+<B>binary scan</B> 命令从一个二进制串分析字段、返回完成的转换的数目。<I>String</I> 给出要被分析的输入而 <I>formatString</I> 指示如何分析它。每个 <I>varName</I> 给出一个变量的名字；当从 <I>string</I> 检索出一个字段时，结果被赋给相应的变量。
+<P>
+
+如同 <B>binary format</B> 那样，<I>formatString</I> 由零个或多个字段说明符(specifier)的序列组成，用零个或多个空格分隔。每个说明符都是一个单独的类型字符，跟随着一个可选的数值 <I>count</I>。多数字段说明符消耗(consume)一个参数来获取检索出的值要放置在其中的那个变量。类型字符指定如何解释二进制串。<I>count</I> 典型的指定从数据中接受指定类型的多少个单项(item)。如果存在，<I>count</I> 是一个非负数的十进制整数或 <B>*</B>，星号通常指示要用到在数据中所有的剩余的单项。如果在满足当前字段说明符的当前位置之后没有剩下足够的字节，则相应的变量保持不动(untouch)而 <B>binary scan</B> 立即返回设置了的变量的个数。如果没有足够的参数给所有这些消耗参数的格式串中的字段，则产生一个错误。
+<P>
+
+着重 (<B>important</B>) 注意 <B>c</B>, <B>s</B> 和 <B>S</B>(还有在64位系统上的 <B>i</B> 和 <B>I</B>I)将被检索成一个长整型 (long) 大小的值。在这种情况下，(最)高位设置(为1)的值(对于char 是 0x80，对于 short 是 0x8000，对于 int 是 0x80000000)，将被符号扩展。所以下列情况将发生:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>set signShort [binary format s1 0x8000]</B>
+<B>binary scan $signShort s1 val; </B><I># val == 0xFFFF8000</I>
+
+</PRE>
+
+</DL>
+
+
+如果你打算生成一个无符号值，那么你可以把返回值屏蔽(mask)成需要的大小。例如，要生成一个无符号  short 值:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>set val [expr {$val &amp; 0xFFFF}]; </B><I># val == 0x8000</I>
+
+</PRE>
+
+</DL>
+
+
+<P>
+
+每个类型-数目(type-count)对在二进制串上移动一个假想的游标，从当前的位置上读一些字节。游标的初始在位置 0 也就是数据的开始(端)。类型可以是下列字符中的任意一个:
+<DL COMPACT>
+<DT><B>a</B><DD>
+数据是长度是 <I>count</I> 的一个字符串。如果 <I>count</I> 是 <B>*</B>，则在 string 中所有的剩余的字节将被检索到变量中。如果省略了 <I>count</I>，则将检索一个字符。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan abcde\000fghi a6a10 var1 var2</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>1</B> 并把等价于 <B>abcde\000</B> 的一个字符串存储到 <B>var1</B> 而 <B>var2</B> 保持不变。
+</DL>
+
+<DT><B>A</B><DD>
+除了在存储到变量之前从检索到的值中去除(strip)尾随的空白(blank)和空字符(null)之外，这种形式同于 <B>a</B>。例如
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan &quot;abc efghi  \000&quot; A* var1</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>1</B> 并把 <B>abc efghi</B> 存储到 <B>var1</B>。
+</DL>
+
+<DT><B>b</B><DD>
+把数据转换成 <I>count</I> 位二进制数字的一个字符串，以从低到高的次序表示成“1”和“0”字符的一个序列。数据字节按从最先到最后的次序被检索，并且在每个字节中按从低到高的次序接受(每)位。忽略在最后的字节中的任何额外的位。如果 <I>count</I> 是 <B>*</B>，则检索在串中的所有的剩余的位。 如果省略了 <I>count</I>，则检索一位。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x07\x87\x05 b5b* var1 var2</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>2</B> 并把 <B>11100</B> 存储到 <B>var1</B> 且 <B>1110000110100000</B> 存储到 <B>var2</B>.
+</DL>
+
+<DT><B>B</B><DD>
+除了在每字节中按从高到低的次序接受(每)位之外，这种形式同于 <B>b</B>。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x70\x87\x05 B5B* var1 var2</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>2</B> 并把 <B>01110</B> 存储到 <B>var1</B> 且 <B>1000011100000101</B> 存储到 <B>var2</B>.
+</DL>
+
+<DT><B>h</B><DD>
+把数据转换成 <I>count</I> 个十六进制数字的一个字符串，以从低到高的次序表示成一个在 “0123456789abcdefABCDEF” (字符)集中的字符的一个序列。按从最先到最后的次序检索数据字节，并且在每个字节中以从低到高的次序接受十六进制数字。忽略最后的字节中的任何额外的位。如果 <I>count</I> 是 <B>*</B>, 则检索在串中所有剩余的十六进制数字。如果省略了 <I>count</I>，则检索一位十六进制数字。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x07\x86\x05 h3h* var1 var2</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>2</B> 并把 <B>706</B> 存储到 <B>var1</B> 且 <B>50</B> 存储到n <B>var2</B>.
+</DL>
+
+<DT><B>H</B><DD>
+除了在每个字节中以从高到低的次序接受数字之外，这种形式同于 <B>h</B>。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x07\x86\x05 H3H* var1 var2</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>2</B> 并把 <B>078</B> 存储到<B>var1</B> 且 <B>05</B> 存储到 <B>var2</B>.
+</DL>
+
+<DT><B>c</B><DD>
+把数据转换成 <I>count</I> 个8位有符号整数并作为一个列表存储到相应的变量中。如果 <I>count</I> 是 <B>*</B>，则检索在串中所有剩余的字节。如果省略了 <I>count</I>，则检索一个8位整数。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x07\x86\x05 c2c* var1 var2</B>
+
+</PRE>
+
+</DL>
+
+
+将返回<B>2</B> 并把 <B>7 -122</B> 存储到 <B>var1</B> 且 <B>5</B> 存储到 <B>var2</B>.  注意返回的整数是有符号的，但它们是类似下面这样的表达式来转换成无符号的8位数量(quantity):
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>expr ( $num + 0x100 ) % 0x100</B>
+
+</PRE>
+
+</DL>
+
+
+</DL>
+
+<DT><B>s</B><DD>
+把数据解释成 <I>count</I> 个表示为小端字节序的16位有符号整数。 整数被作为一个列表存储到相应的变量中。如果 <I>count</I> 是 <B>*</B>，则检索在串中所有剩余的字节。如果省略了 <I>count</I>，则检索一个16位整数。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x05\x00\x07\x00\xf0\xff s2s* var1 var2</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>2</B> 并把 <B>5 7</B> 存储到 <B>var1</B> 且 <B>-16</B> 存储到 <B>var2</B>.  注意返回的整数是有符号的，但它们是类似下面这样的表达式来转换成无符号的16位数量(quantity):
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>expr ( $num + 0x10000 ) % 0x10000</B>
+
+</PRE>
+
+</DL>
+
+
+</DL>
+
+<DT><B>S</B><DD>
+除了把数据解释成 <I>count</I> 个表示为大端字节序的16位有符号整数之外，这种形式同于 <B>s</B>。例如， 
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x00\x05\x00\x07\xff\xf0 S2S* var1 var2</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>2</B> 并把 <B>5 7</B> 存储到 <B>var1</B> 且 <B>-16</B> 存储到 <B>var2</B>. 
+</DL>
+
+<DT><B>i</B><DD>
+把数据解释成 <I>count</I> 个表示为小端字节序的32位有符号整数。 整数被作为一个列表存储到相应的变量中。如果 <I>count</I> 是 <B>*</B>，则检索在串中所有剩余的字节。如果省略了 <I>count</I>，则检索一个32位整数。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x05\x00\x00\x00\x07\x00\x00\x00\xf0\xff\xff\xff i2i* var1 var2</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>2</B> ，并把 <B>5 7</B> 存储到 <B>var1</B> 且 <B>-16</B> 存储到 <B>var2</B>。注意返回的整数是有符号的并且不能被 Tcl 表示成无符号的值。
+</DL>
+
+<DT><B>I</B><DD>
+除了把数据解释成 <I>count</I> 个表示为大端字节序的32位有符号整数之外，这种形式同于 <B>i</B>。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary \x00\x00\x00\x05\x00\x00\x00\x07\xff\xff\xff\xf0 I2I* var1 var2</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>2</B>  ，并把 <B>5 7</B> 存储到 <B>var1</B> 且 <B>-16</B> 存储到 <B>var2</B>。
+</DL>
+
+<DT><B>f</B><DD>
+把数据解释成 <I>count</I> 个机器本地表示的单精度浮点数，把浮点数作为一个列表存储到相应的变量中 。如果 <I>count</I> 是 <B>*</B>，则检索在串中所有剩余的字节。如果省略了 <I>count</I>，则检索一个单精度浮点数。 浮点数的大小在体系间可能不同，所以检索的字节数也可能不同。如果数据不表示一个有效的浮点数，结果值是未定义的并且依赖于编译器。例如，运行在 Intel Pentium 处理器的一个 Windows 系统上，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x3f\xcc\xcc\xcd f var1</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>1</B>，并把 <B>1.6000000238418579</B> 存储到 <B>var1</B>。
+</DL>
+
+<DT><B>d</B><DD>
+除了把数据解释成 <I>count</I> 个机器本地表示的双精度浮点数之外，这种形式同
+于 <B>f</B>。例如，运行在 Intel Pentium 处理器的一个 Windows 系统上，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x9a\x99\x99\x99\x99\x99\xf9\x3f d var1</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>1</B> ，并把 <B>1.6000000000000001</B> 存储到 <B>var1</B>1。
+</DL>
+
+<DT><B>x</B><DD>
+在 <I>string</I> 中正向移动游标 <I>count</I> 字节。如果 <I>count</I> 是 <B>*</B> 或比当前游标位置之后的字节数大，则游标定位到位置 <I>string</I> 中的最后一个字节之后。如果省略了<I>count</I>，则游标正向移动一字节。 注意 这种形式不消耗参数。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x01\x02\x03\x04 x2H* var1</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>1</B>，并把 <B>0304</B> 存储到 <B>var1</B>。
+</DL>
+
+<DT><B>X</B><DD>
+在 <I>string</I> 中反向移动游标 <I>count</I> 字节。如果 <I>count</I> 是 <B>*</B> 或比当前游标位置大，则游标定位到位置 0，这样下个检索的字节将是 <I>string</I> 中的第一个字节。如果省略了<I>count</I>，则游标反向移动一字节。 注意这种形式不消耗参数。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x01\x02\x03\x04 c2XH* var1 var2</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 <B>2</B>，并把 <B>1 2</B> 存储到 <B>var1</B> 且 <B>020304</B> 存储到 <B>var2</B>。
+</DL>
+
+<DT><B>@</B><DD>
+在数据串中把游标移动到由 <I>count</I>t 指定的绝对位置上。位置 0 参照在 <I>string</I> 中的第一个字节。如果 <I>count</I> 参照的位置超出 <I>string</I> 的末端，则把游标定位在最后的字节的后面。如果省略了 <I>count</I>，则产生一个错误。例如， 　
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>binary scan \x01\x02\x03\x04 c2@1H* var1 var2</B>
+
+</PRE>
+
+</DL>
+
+
+将返回 2 ，并把 1 2 存储到 var1 且 020304 存储到 var2。
+</DL>
+
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>平台相关事宜 PLATFORM ISSUES</H2>
+
+<BR>&nbsp;有时希望以机器的本地字节序来格式化或检索整数值。参照&nbsp;<B>tcl_platform</B>&nbsp;&nbsp;数组中的&nbsp;<B>byteOrder</B>&nbsp;元素来决定在格式化或检索整数时使用那种类型字符。
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+format">format</A>(n), <A HREF="/cgi-bin/man/man2html?n+scan">scan</A>(n), <A HREF="/cgi-bin/man/man2html?n+tclvars">tclvars</A>(n)
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+binary, format, scan
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/21</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">二进制化 BINARY FORMAT</A><DD>
+<DT><A HREF="#lbAF">二进制检索 BINARY SCAN</A><DD>
+<DT><A HREF="#lbAG">平台相关事宜 PLATFORM ISSUES</A><DD>
+<DT><A HREF="#lbAH">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAI">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

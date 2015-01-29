@@ -1,0 +1,174 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MKSWAP</TITLE>
+</HEAD><BODY>
+<H1>MKSWAP</H1>
+Section: Linux Programmer's Manual (8)<BR>Updated: 25 March 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+mkswap - 建立一个linux交换区
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>mkswap [-c] [-v</B><I>N</I><B>] [-f] </B><I>device</I><B> [</B><I>size</I><B>]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>mkswap</B>
+
+在一个设备上或者在一个文件里创建一个linux交换区。
+<P>
+(该交换区创建后，必须使用
+<B>swapon</B>
+
+命令来启用它。通常交换区被列在
+<I>/etc/fstab</I>
+
+中，从而使得在启动时可通过某些启动脚本中的
+<B>swapon -a</B>
+
+命令来启用。)
+<P>
+参数
+<I>device</I>
+
+通常是一个磁盘分区（类似于
+<I>/dev/hda4</I>
+
+或者
+<I>/dev/sdb7</I>
+
+），但也可以是一个文件。
+Linux内核不会着眼于分区号，但是一些安装脚本会假定类型为
+16进制的82(LINUX_SWAP)的分区意味着交换分区。
+<P>
+参数
+<I>size</I>
+
+是多余的，但为了向兼容性而被保留。(它指定期望的以1024
+字节为单位的交换区大小。如果它未被指定，
+<B>mkswap</B>
+
+将使用整个分区或者文件。错误地使用&quot;-a&quot;选项将会损坏您的磁盘。)
+<P>
+Linux能理解两种类型的交换区：旧类型和新类型。交换区第一页的最后
+10个字节区分两种类型：旧类型以&quot;SWAP_SPACE&quot;，新类型以&quot;SWAPSPACE2&quot;
+作标识。
+<P>
+在旧类型里，第一页的其它部分是一个位图，每一位指出交换区中的可
+用页面。因为第一页保存位图，所以第一位为0。同样的，最后10位保存
+标识。所以，如果页面大小为S，旧类型交换区可以描述最多8*(S-10)-1
+个可用于交换的页面。对于S=4096（象i386上），最大可用区域是
+133890048字节（如果1 MB=2^20 bytes，则差不多为128 MB），而其他部
+分将被浪费。在alpha和sparc64上，S=8192,最大可用区域是535560992字
+节（与上述同样条件下，差不多为512 MB）。
+<P>
+因为零位表示坏的块或者超过交换区末尾的块，旧的设置浪费了大部分的
+位图页面，一个简单的整数就可以满足指出交换区大小的需要，而且如果
+有坏的块，也可以简单的列出来。没有人想使用有许多坏块的交换区（我
+甚至不会使用包含一个坏块的交换空间）。在新类型交换区正好是这样做
+的。现在交换区的最大可用数目取决于具体结构。大致来说，在i386, 
+PPC, m68k, ARM上为2GB，在sparc上为1GB，在mips上为512MB，在alpha
+上为128GB，在sparc64上为3TB。
+<P>
+注意在2.1.117内核之前，每一页分配一个字节，而现在为两个字节，所
+以为了获得2GB的可用交换区，可能需要2MB的核心内存。
+<P>
+目前，Linux允许8个交换区。这些正在使用的区域可从文件
+<I>/proc/swaps</I>
+
+（从2.1.25起）中查到。
+<P>
+<B>mkswap</B>
+
+不允许小于10个页面的区域。
+<P>
+如果不知道您的机器所用的页面大小，可以用&quot;cat /proc/cpuinfo&quot;来查
+看（或者不能查看 - 这个文件的内容取决于系统结构和内核版本）。
+<P>
+为了设置一个交换文件，需要在执行
+<B>mkswap ,</B>
+
+前创建这个文件，例如，象如下命令：
+<P>
+<PRE>
+<DL COMPACT><DT><DD># dd if=/dev/zero of=swapfile bs=1024 count=65536
+</DL>
+</PRE>
+
+<P>
+注意一个交换文件必须不包括任何空洞（所以，不能使用
+<B><A HREF="/cgi-bin/man/man2html?1+cp">cp</A></B>(1)
+
+来创建该文件）。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-c</B>
+
+<DD>
+在创建交换区之前检查设备（如果是块设备）的坏块。
+如果发现任何坏块，坏块的总数将被打印出来。
+<DT><B>-f</B>
+
+<DD>
+强行向前执行，即使该命令是愚蠢的。该选项允许建立比
+所在的文件或者分区还大的交换区。在SPARC上，强行创建
+交换区。无该选项的
+<B>mkswap</B>
+
+将拒绝在包含有效的SPARC超
+级块的设备上创建vo交换区，因为那样可能意味着将删除
+分区表。
+<DT><B>-v0</B>
+
+<DD>
+创建一个旧类型的交换区。
+<DT><B>-v1</B>
+
+<DD>
+创建一个新类型的交换区。
+<P>
+</DL>
+<P>
+
+如果未指定-v选项，而且交换区大小没有超过旧类型交换区
+的最大值，同时当前内核比2.1.117老（且PAGE_SIZE小于
+2048），
+<B>mkswap</B>
+
+将默认创建旧类型的交换区。万一您的引导分区或者磁盘卷
+标在第一块，新类型的头部将不接触那些部分，所以可能更
+好（如果同样交换区较小），
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参考</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+fdisk">fdisk</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+swapon">swapon</A></B>(8)
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">参考</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

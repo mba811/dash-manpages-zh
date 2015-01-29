@@ -1,0 +1,270 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LOCALE</TITLE>
+</HEAD><BODY>
+<H1>LOCALE</H1>
+Section: Linux Programmer's Manual(Linux程序员手册) (7)<BR>Updated: 1993年4月24日<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+locale - 描述多语言支持
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<PRE>
+<B>#include &lt;<A HREF="file:///usr/include/locale.h">locale.h</A>&gt;</B>
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+locale 就是一系列语言文化规则.
+它包括如下一些方面: 讯息的语言, 不同字符设置, 文字惯例, 等等.
+程序需要能够判断其 locale 并根据适合于不同文化的要求来运行.
+<P>
+
+头文件 
+<B>&lt;<A HREF="file:///usr/include/locale.h">locale.h</A>&gt;</B>
+
+声明了用于该项作业中的数据类型,函数和宏.
+<P>
+
+它声明的函数有:
+<B>setlocale()</B>
+
+用来设置当前 locale,
+<B>localeconv()</B>
+
+用来获得数字格式方面的信息.
+<P>
+
+程序可能需要的本地化信息会有不同的种类; 它们都以宏的方式声明
+把它们当做
+<B>setlocale()</B>
+
+的第一个参数来用, 就可以把其中一个设置为需要的 locale:
+<DL COMPACT>
+<DT><B>LC_COLLATE</B>
+
+<DD>
+这用来修改函数
+<B>strcoll()</B>
+
+和
+<B>strxfrm()</B>
+
+的执行方式, 其中 strxfrm() 函数用来以本地化字母表进行字符串比较.
+例如,
+德国升半音的 s 排序为 &quot;ss&quot;.
+<DT><B>LC_CTYPE</B>
+
+<DD>
+修改字符处理分类函数如
+<B>isupper()</B>
+
+和
+<B>toupper()</B>
+
+的执行方式,
+还修改多字节字符函数如
+<B>mblen()</B>
+
+或者
+<B>wctomb()</B>
+
+的执行方式.
+<DT><B>LC_MONETARY</B>
+
+<DD>
+修改由
+<B>localeconv()</B>
+
+返回的信息, 这些信息描述了数字, 以及诸如
+小数点和千进位逗号之类输出的常见格式的细节. 这些信息由函数
+<B>strfmon()</B>
+
+在内部调用.
+<DT><B>LC_MESSAGES</B>
+
+<DD>
+修改显示的语言信息以及正值和负值的表达方式.
+GNU C-library包含:
+<B>rpmatch()</B>
+
+函数用于方便地使用这些信息.
+<DT><B>LC_NUMERIC</B>
+
+<DD>
+在考虑使用 locale 设置时,修改
+<B>printf()</B>
+
+和
+<B>scanf()</B>
+
+函数族使用的信息.该信息也可以由
+<B>localeconv()</B>
+
+函数读取.
+<DT><B>LC_TIME</B>
+
+<DD>
+修改
+<B>strftime()</B>
+
+函数的执行方式以显示适于当地格式的当前时间;
+例如,欧洲的绝大部分地区使用的是 24 小时的时钟,
+而美国则是 12 小时的时钟.
+<DT><B>LC_ALL</B>
+
+<DD>
+上述所有的.
+</DL>
+<P>
+
+如果
+<B>setlocale()</B>
+
+的第二个参数为空,
+则设置
+<B>&quot;&quot;</B>,
+
+为默认的locale,它通过以下几步来确定:
+<DL COMPACT>
+<DT>1.<DD>
+如果有非空的环境变量
+<B>LC_ALL</B>,
+
+则使用
+<B>LC_ALL</B>
+
+的值.
+<DT>2.<DD>
+如果存在一个与上述列出的种类同名的环境变量并且其不为空, 则使用该分类的值.
+<DT>3.<DD>
+如果有非空的环境变量
+<B>LANG</B>,
+
+则使用
+<B>LANG</B>
+
+的值.
+</DL>
+<P>
+
+关于本地数字格式的值用于由
+<B>localeconv()</B>
+
+函数返回的
+<B>struct lconv ,</B>
+
+其有以下声明:
+<PRE>
+struct lconv
+{
+/* 数码(非货币形式)信息. */
+
+char *decimal_point; /* 小数点字符. */
+char *thousands_sep; /* 千数的分隔符. */
+/* 每个元素就是每组的阿拉伯数字;指数越高的元素在越左边.一个值为CHAR_MAX的元素表示不需继续
+分组了.一个值为0的元素表示前面的字符用于所有更左边的组. */
+char *grouping;
+
+/* 货币信息. */
+
+/* 前三个字符是ISO 4217定义的流通符号.
+第四个字符是分隔符. 第五个字符是'&nbsp;'. */
+char *int_curr_symbol;
+char *currency_symbol; /* 当地货币符号. */
+char *mon_decimal_point; /* 小数点字符. */
+char *mon_thousands_sep; /* 千数的分隔符. */
+char *mon_grouping; /* 如前述的'分组'元素. */
+char *positive_sign; /* 正值符号. */
+char *negative_sign; /* 负值符号. */
+char int_frac_digits; /* 国际通用的数字. */
+char frac_digits; /* 本地使用的数字. */
+/* 如果currency_symbol后跟着一个正值则为1,如果顺序相反为0. */
+char p_cs_precedes;
+/* 如果在currency_symbol和正值之间是一个空格则为1. */
+char p_sep_by_space;
+/* 如果currency_symbol后跟着一个负值则为1,如果顺序相反为0. */
+char n_cs_precedes;
+/* 如果在currency_symbol和正值之间是一个空格则为1. */
+char n_sep_by_space;
+/* 正值和负值符号位置:
+数量值和currency_symbol在圆括号内则为0.
+符号字符串先于数量值和currency_symbol则为1.
+符号字符串在数量值和currency_symbol之后则为2.
+符号字符串后紧跟数量值和currency_symbol则为3.
+符号字符串紧跟在数量值和currency_symbol之后则为4. */
+char p_sign_posn;
+char n_sign_posn;
+};
+</PRE>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>CONFORMS TO(遵循规则)</H2>
+
+POSIX.1
+<A NAME="lbAF">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?3+setlocale">setlocale</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+localeconv">localeconv</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?1+locale">locale</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+localedef">localedef</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?3+rpmatch">rpmatch</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+strfmon">strfmon</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+strcoll">strcoll</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+strxfrm">strxfrm</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+strftime">strftime</A></B>(3)
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+
+
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/07/19</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAE">CONFORMS TO(遵循规则)</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

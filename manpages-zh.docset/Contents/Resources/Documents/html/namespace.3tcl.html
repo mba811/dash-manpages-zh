@@ -1,0 +1,505 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of namespace</TITLE>
+</HEAD><BODY>
+<H1>namespace</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+namespace - 建立及操作给命令和变量的上下文
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>namespace </B>?<I>option</I>? ?<I>arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>namespace</B> 命令让你建立、访问、和销毁给命令和变量的独立的上下文。名字空间的概述参见下面的<B>WHAT IS A NAMESPACE?</B> (什么是名字空间) 章节。下面列出了合法的 <I>option </I>。注意你可以缩写这些 <I>option </I>。
+<DL COMPACT>
+<DT><B>namespace children </B>?<I>namespace</I>? ?<I>pattern</I>?<DD>
+返回属于名字空间 <I>namespace </I>的所有子名字空间的一个列表。如果未指定<I>namespace</I>，则返回当前名字空间的所有子名字空间。这个命令返回完全限制的(fully-qualified)的名字，它们以 <B>:: </B>开始。如果给出了可选的 <I>pattern</I>  ，则这个命令只返回匹配通配符式样模式的名字。确定实际使用的模式如下: 以 <B>::</B>  开始的模式直接使用，否则把命令空间 <I>namespace</I>  (或当前名字空间的完全限制的名字) 加在这个模式的前面。
+<DT><B>namespace code </B><I>script</I><DD>
+为以后执行脚本 <I>script </I>而捕获(Capture)当前的名字空间上下文。它返回一个新脚本，在这个结果脚本中 <I>script</I>  被包裹在一个 <B>namespace inscope</B> 命令中。新脚本有两个重要的特性。首先，它可以在任何名字空间中被求值，而导致 <I>script</I>  在当前的名字空间(调用 <B>namespace code</B>命令的那个名字空间)中被求值。其次，可以向结果脚本添加补充的参数   并且它们将被作为补充参数而传递给 <I>script</I>   。例如，假设在名字空间 <B>::a::b</B> 中调用命令<B>set script [namespace code {foo bar}]</B>。则可以在任何名字空间中执行 <B>eval &quot;$script x y&quot;</B>   (假定 <B>script</B>  的值已经被正确的传递进来) 而与命令 <B>namespace eval ::a::b {foo bar x y} </B>有相同的效果。这个命令是必须有的，因为象 Tk   这样的扩展一般在全局名字空间中执行回调脚本。一个有作用域的(scoped)命令把一个命令和它的名字空间上下文一起捕获，在这种方式下就能在以后正确的执行它。如何使用这个命令建立回调脚本的例子参见<B>SCOPED VALUES</B> (有作用域的值)章节。
+<DT><B>namespace current</B><DD>
+返回给当前名字空间的完全限定的名字。全局名字空间的实际的名字是“”(一个空串)，但这个命令为了编程者的方便而为全局名字空间返回 <B>::</B>。
+<DT><B>namespace delete </B>?<I>namespace namespace ...</I>?<DD>
+删除所有的名字空间 <I>namespace</I>  和这些名字空间包含的所有变量、过程、和子名字空间。如果在名字空间中一个过程正在执行，在这个过程返回之前这个过程保持存在；但是，会标记这个名字空间来防止其他代码通过名字查找它。如果一个名字空间不存在，这个命令返回一个错误。如果未给出名字空间名字，这个命令什么也不做。
+<DT><B>namespace eval</B> <I>namespace arg</I> ?<I>arg ...</I>?<DD>
+激活叫 <I>namespace</I>  的名字空间并在这个上下文中对某些脚本进行求值。如果这个名字空间不存在，则建立它。如果指定了多于一个 <I>arg</I>    参数，则用与 <B>eval</B>命令一样的方式把这些参数串联起来并用空格彼此分隔，并对结果进行求值。
+<BR>
+
+<P>
+如果 <I>namespace</I>  有前导的名字空间限定符并且有的前导名字空间不存在，则自动建立它们。
+<DT><B>namespace export </B>?-<B>clear</B>? ?<I>pattern pattern ...</I>?<DD>
+指定从一个名字空间中导出那些命令。导出的那些命令以后可以被其他名字空间用 <B>namespace import</B> 命令导入。在一个名字空间中定义的命令和这个名字空间以前导入的命令二者都可以被这个名字空间导出。在执行<B>namespace export</B>  命令的时候，这些(要导出的)命令不是必须已经被定义了。每个 <I>pattern</I>   可以包含通配符式样的特殊字符，但不可以包含任何名字空间限定符。就是说，模式只能指定在当前(导出)的名字空间中的命令。把所有 <I>pattern   </I>添加到这个名字空间的导出模式列表上。如果给出了 -<B>clear</B>  标志，则在添加任何    <I>pattern</I> 参数之前，重置这个名字空间的导出模式列表为空。如果未给出 <I>pattern</I>s 并且未给出 -<B>clear</B>标志，这个命令返回这个名字空间当前的导出列表。
+<DT><B>namespace forget </B>?<I>pattern pattern ...</I>?<DD>
+删除以前从一个名字空间导入的命令。所有 <I>pattern</I> 都是一个限定的命令如 <B>foo::x</B> 或 <B>a::b::p*</B>。限定的名字包含 <B>::</B>并且用一个或多个名字空间的名字限制一个名字。每个 <I>pattern</I>   被一个导出名字空间的名字所限制，并且在限定的名字的结束处可以有通配符式样的特殊字符。通配字符可以不出现在名字空间的名字中。这个命令首先查找匹配的导出命令。接着检查是否有些命令是以前由当前名字空间导入的。如果有，这个命令删除相应的导入的命令。效果上，这个命令撤消 <B>namespace import</B>命令的动作。
+<DT><B>namespace import </B>?<B>-force</B>? ?<I>pattern</I> <I>pattern ...</I>?<DD>
+导入命令到一个名字空间中。所有 <I>pattern</I>都是一个限定的命令如<B>foo::x</B> 或 <B>a::p*</B>。就是说，它包括一个导出名字空间的名字，并且在限定的名字的结束处可以有通配符式样的特殊字符。通配字符可以不出现在名字空间的名字中。把所有匹配某个 <I>pattern</I> 字符串并且被它们的名字空间导出的命令添加到当前名字空间中。这是通过在当前名字空间中建立一个新命令，这个新命令指向在它的原始名字空间中的导出命令；当调用这个新导入的命令的时候，它调用那个导出的命令。如果一个导入的命令与一个现存的命令有冲突，则这个命令通常返回一个错误。但是，如果给出了 -<B>force</B> 选项，在则导入命令将悄无声息的替换现存的命令。<B>namespace import</B>  命令有当前快照(snapshot)语义: 就是说，在要求(导入)的命令中，只导入在导出的名字空间中定义了的那些命令。换句话说，你只能导入在执行 <B>namespace import</B> 的时候在一个名字空间中(已经存在)的命令。如果此后又定义并导出了其他命令，则不会导入它们。
+<DT><B>namespace inscope</B> <I>namespace arg</I> ?<I>arg ...</I>?<DD>
+在一个特定的名字空间的上下文中执行一个脚本。不希望编程者直接执行这个命令；例如，在应用使用 <B>namespace code</B>命令建立回调脚本，并且应用接着要向 Tk组件注册它的时候，隐式的生成对它的调用。除了有 <B>lappend</B>语义并且名字空间必须已经存在之外，<B>namespace inscope</B>命令与 <B>namespace eval</B> 命令非常相似。它把第一个参数作为一个列表来对待，接着把后面的所有参数作为适当的列表元素添加到第一个参数的尾部。<B>namespace inscope ::foo a x y z</B> 等价于<B>namespace eval ::foo [concat a [list x y z]]</B>。这个 <B>lappend&gt;</B>语义很重要，因为许多回调 脚本实际上是前缀。
+<DT><B>namespace origin </B><I>command</I><DD>
+返回导入的命令 <I>command</I>所引用的原始命令的完全限定的名字。当一个命令被导入一个名字空间的时候，在这个名字空间中建立一个新命令，它指向在导出名字空间中的实际命令。如果一个命令被导入到一个名字空间的序列 <I>a, b,...,n </I>之中，这里每一个后续的名字空间只从前面的名字空间中导入命令，这个命令返回在第一个名字空间中的原始命令的完全限定的名字 <I>a</I>。如果 <I>command</I>不引用一个导入的命令，返回这个(<I>command</I>)命令自己的完全限定的名字。
+<DT><B>namespace parent</B> ?<I>namespace</I>?<DD>
+返回给名字空间 <I>namespace</I> 的父名字空间的完全限定的名字。如果未指定 <I>namespace</I>，返回当前名字空间的父名字空间的完全限定的命令。
+<DT><B>namespace qualifiers</B> <I>string</I><DD>
+返回给 <I>string </I>的所有前导的名字空间限定符。限定符是由 <B>::</B>分隔的名字空间的名字。对于 <I>string</I> <B>::foo::bar::x</B>，这个命令返回 <B>::foo::bar</B>，而对于 <B>::</B>它返回一个空串。这个命令与 <B>namespace tail</B> 命令互补。注意，它不检查名字空间的名字事实上是否是目前定义的名字空间的名字。
+<DT><B>namespace tail</B> <I>string</I><DD>
+返回在一个限定的字符串尾部的简单名字。限定符是由 <B>::</B>分隔的名字空间的名字。对于 <I>string</I> <B>::foo::bar::x</B>，这个命令返回 <B>x</B>，而对于 <B>::</B>它返回一个空串。这个命令与 <B>namespace qualifiers</B>命令互补。它不检查名字空间的名字事实上是否是目前定义的名字空间的名字。
+<DT><B>namespace which</B> ?-<B>command</B>? ?-<B>variable</B>? <I>name</I><DD>
+把 <I>name</I>  作为一个命令或者变量来查找并返回它的完全限定的名字。例如，如果 <I>name</I> 在当前名字空间中不存在但在全局名字空间中存在，这个命令返回在全局名字空间中的一个完全限定的名字。如果这个命令或变量不存在，这个命令返回空串。如果变量已经建立但未被定义，比如通过 <B>variable</B> 命令或通过在变量上<B>trace</B>(进行追踪)，这个命令返回这个变量的完全限定的名字。如果未给出标志，<I>name</I>被作为一个命令的名字。关于名字解析的规则的解释请参见下面的<B>NAME RESOLUTION</B> (名字解析)章节。
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>什么名字空间 WHAT IS A NAMESPACE?</H2>
+
+<P>
+
+一个名字空间是命令和变量的一个集合(collection)。它封装命令和变量来确保它们不会被其他名字空间中命令和变量所干扰。Tcl 总是有一个这样的集合，它被引用为<I>global namespace</I> (全局名字空间)。全局名字空间持有所有全局变量和命令。<B>namespace eval</B>命令让你建立一个新的名字空间。例如，
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>namespace eval Counter {
+    namespace export bump
+    variable num 0
+
+    proc bump {} {
+        variable num
+        incr num
+    }
+}</B>
+
+</PRE>
+
+</DL>
+
+
+建立包含变量 <B>num</B>  和过程 <B>bump </B>的一个新的名字空间。在这个名字空间中的命令和变量独立于在同一个程序中的其他命令和变量。例如，如果在全局名字空间中有一个叫 <B>bump</B>的命令，它不同的于在 <B>Counter</B> 名字空间中的 <B>bump</B>  命令。
+<P>
+
+名字空间变量类似于在 Tcl 中的全局变量。它们存在于名字空间中的过程之外，但象在上面的例子中展示的那样，在同一个名字空间中的过程可以通过 <B>variable</B> 命令访问它。
+<P>
+
+名字空间是动态的。你可以在任意时候增加及删除命令和变量，所以你可以使用一系列 <B>namespace eval</B>命令分几次(over time)来建造一个名字空间的内容。例如，下面的一系列命令与上面展示的定义有相同的效果:  
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>namespace eval Counter {
+    variable num 0
+    proc bump {} {
+        variable num
+        return [incr num]
+    }
+}
+namespace eval Counter {
+    proc test {args} {
+        return $args
+    }
+}
+namespace eval Counter {
+    rename test &quot;&quot;
+}</B>
+
+</PRE>
+
+</DL>
+
+
+注意在例子中向 <B>Counter</B>  名字空间增加了 <B>test</B> 过程，后来又用 <B>rename</B>命令把它删除了。
+<P>
+
+在名字空间内可以又其他的名字空间，它们是有层次的嵌套。一个嵌套的名字空间被封装在它的父名字空间中并且不会被其他名字空间所干扰。      
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>限定的名字 QUALIFIED NAMES</H2>
+
+<P>
+
+每个名字空间都有一个文本名字比如<B>history</B> 或 <B>::safe::interp</B>。因为名字空间可以嵌套，使用限定的名字来引用在名字空间中的命令、变量、和包含子名字空间。除了使用 <B>::</B>作为分隔符而不是 <B>/</B> 或 <B>.</B> 之外，限定的(qualified)名字类似于给 Unix 文件或 Tk 组件的有层次的路径，最顶层或全局名字空间拥有名字“” (一个空串)，而 <B>::</B> 是它的同义词。例如，名字 <B>::safe::interp::create</B>  引用在名字空间 <B>::safe </B>的子名字空间 <B>interp</B> 中的命令 <B>create</B>，<B>::safe </B>是全局名字空间 <B>:: </B>的子名字空间。
+<P>
+
+如果你打算从其他的名字空间中访问命令和变量，你必须使用额外的语法。名字必须被包含它们的名字空间所限定。例如我们可以象下面这样访问 <B>Counter</B> 的过程: 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>Counter::bump 5
+Counter::Reset</B>
+
+</PRE>
+
+</DL>
+
+
+我们可以象下面这样访问当前的 count (变量的值):  
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>puts &quot;count = $Counter::num&quot;</B>
+
+</PRE>
+
+</DL>
+
+
+当一个名字空间包含另一个的时候，要到达它的元素你可能需要多于一个的限定符。如果我们有一个名字空间 <B>Foo</B>，它包含名字空间 <B>Counter</B>，你可以象下面这样从全局名字空间调用它的 <B>bump</B> 过程:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>Foo::Counter::bump 3</B>
+
+</PRE>
+
+</DL>
+
+
+<P>
+
+你还可以在建立和重命名命令的时候使用限定的名字。例如，你可以象下面这样向 <B>Foo</B>增加一个过程:  
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>proc Foo::Test {args} {return $args}</B>
+
+</PRE>
+
+</DL>
+
+
+你可以象下面这样把同一个过程移动到另一个名字空间中: 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>rename Foo::Test Bar::Test</B>
+
+</PRE>
+
+</DL>
+
+
+<P>
+
+我们覆盖(cover)剩下的一些关于限定的名字的要点。除了全局名字空间之外名字空间有非空的名字。除了作为名字空间分隔符，不允许 <B>::</B>  在简单命令、变量、和名字空间名字中使用。在限定的名字中忽略额外的 <B>:</B> ；就是说，两个或更多的 <B>: </B>被作为一个名字空间分隔符。在一个限定的变量或命令名字中的尾随的 <B>::</B> 引用叫做 {} 的变量或命令。但是忽略在一个限定的名字空间名中的尾随的 <B>::</B>。 
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>NAME</H2>
+
+<P>
+
+一般的，所有接受变量和命令的名字的 Tcl 命令都支持限定的名字。这意味着你可以把限定的名字给这样的命令如<B>set</B>、<B>proc</B>、<B>rename</B>、和 <B>interp alias</B>。如果你提供了以 <B>:: </B>开始的一个完全限定的名字，对任何命令、变量、或名字空间多没有问题。但是，如果这个名字不以一个 <B>::</B>    开始(它是<I>相对的</I>)，Tcl 依据一个固定的规则来查找它: 解析命令和变量名字总是首先在当前的名字空间中查找，接着在全局名字空间中查找。另一方面，解析名字空间总是在当前名字空间中查找。
+<P>
+
+在下列例子中, 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>set traceLevel 0
+namespace eval Debug {
+    printTrace $traceLevel
+}</B>
+
+</PRE>
+
+</DL>
+
+
+Tcl 在名字空间 <B>Debug</B> 中查找 <B>traceLevel</B>接着在全局名字空间中查找，它以相同的方式查找命令 <B>printTrace</B>。如果一个变量或命令的名字在这两个上下文中都找不到，则这个名字是未定义的。为了使这一点绝对清楚，考虑下列例子:   
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>set traceLevel 0
+namespace eval Foo {
+    variable traceLevel 3
+
+    namespace eval Debug {
+        printTrace $traceLevel
+    }
+}</B>
+
+</PRE>
+
+</DL>
+
+
+这里 Tcl 首先在名字空间 <B>Foo::Debug </B>中查找 <B>traceLevel</B>。因为在这里未找到，Tcl 接着在全局名字空间中查找。在名字解析过程中完全忽略了变量 <B>Foo::traceLevel</B>。
+<P>
+
+你可以使用 <B>namespace which</B>  命令来清除关于名字解析的任何问题: 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>namespace eval Foo::Debug {namespace which -variable traceLevel}</B>
+
+</PRE>
+
+</DL>
+
+
+返回  <B>::traceLevel</B>。另一方面，命令，
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>namespace eval Foo {namespace which -variable traceLevel}</B>
+
+</PRE>
+
+</DL>
+
+
+返回 <B>::Foo::traceLevel</B>.
+<P>
+
+如上面提及的那样，查找名字空间名字与变量和命令的名字不同。总是在当前名字空间中解析名字空间名字。这意味除非新名字空间的名字以一个 <B>::</B>开始，否则建立一个新名字空间的 <B>namespace eval</B> 命令总是建立当前名字空间的一个子名字空间。
+<P>
+
+Tcl 对你可以引用的变量、命令、或名字空间没有访问控制。如果你能提供一个限定的名字来通过名字解析规则解析到一个元素，你就可以访问这个元素。
+<P>
+
+你可以通过 <B>variable</B>  命令从同一个名字空间中的一个过程中访问一个名字空间变量。非常象 <B>global</B> 命令，它建立到名字空间变量的一个本地连接。如果需要，这个命令还在当前的名字空间中建立这个变量并初始化它。注意：<B>global</B>命令只建立到在全局名字空间中的变量的连接。如果你总是使用一个适当的限定的名字来引用名字空间变量，则使用 <B>variable</B> 命令不是必须的。 
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>导入命令 IMPORTING COMMANDS</H2>
+
+<P>
+
+名字空间经常用来表示库。一些库命令使用的如此频繁以至于键入它们的限定的名字是极其烦人的。例如， 假设在一个包如 BLT 中的所有命令都包含在一个叫 <B>Blt </B>的名字空间中。则你可以象下面这样访问这些命令: 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>Blt::graph .g -background red
+Blt::table . .g 0,0</B>
+
+</PRE>
+
+</DL>
+
+
+如果你频繁使用 <B>graph</B> 和 <B>table</B>  命令，你可能希望访问它们而不用加 <B>Blt::</B>前缀。你可以通过把它导入到当前名字空间中的方式来达到此目的。例如: 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>namespace import Blt::*</B>
+
+</PRE>
+
+</DL>
+
+
+这个例子把从 <B>Blt</B>名字空间导出的所有命令增加到当前名字空间上下文中，所以你可以象下面这样写代码: 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>graph .g -background red
+table . .g 0,0</B>
+
+</PRE>
+
+</DL>
+
+
+<B>namespace import</B>命令从一个名字空间导入的命令只能是那个名字空间中用 <B>namespace export</B>命令导出的命令。
+<P>
+
+从一个名字空间导入<I>所有</I>命令一般是一个坏主意，因为你不知道你将会得到些什么。更好的方式是只导入你需要的命令。例如，命令
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>namespace import Blt::graph Blt::table</B>
+
+</PRE>
+
+</DL>
+
+
+只把 <B>graph</B> 和 <B>table</B>  命令导入到当前上下文。
+<P>
+
+如果你要导入一个已经存在的命令，你将得到一个错误。这防止你从两个不同的包导入同一个命令。但是有的时候(可能在调试时)，你可能希望超越这个限制。你可能希望重新发起(reissue) <B>namespace import</B>命令来导入(pick up)一个新命令，而同名的命令在这个名字空间中已经出现过了。在这种情况下，你可以使用 <B>-force</B>   选项，现存命令将悄无声息的被覆写(overwritten): 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>namespace import -force Blt::graph Blt::table</B>
+
+</PRE>
+
+</DL>
+
+
+如果出于某种原因，你打算停止使用导入的命令，你可以用 <B>namespace forget</B> 命令删除它们，例如: 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>namespace forget Blt::*</B>
+
+</PRE>
+
+</DL>
+
+
+它在当前名子空间中查找从 <B>Blt </B>导入的所有命令，如果找到则删除它们。否则，它什么都不做。此后，访问 <B>Blt</B>命令必须使用 <B>Blt::</B>  前缀。
+<P>
+
+当你从导出(命令的)名字空间删除一个命令的时候，例如:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>rename Blt::graph &quot;&quot;</B>
+
+</PRE>
+
+</DL>
+
+
+则从所有导入它的名字空间中自动删除这个命令。 
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>导出命令 EXPORTING COMMANDS</H2>
+
+你可以从一个名字空间中导出命令，例如: 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>namespace eval Counter {
+    namespace export bump reset
+    variable Num 0
+    variable Max 100
+
+    proc bump {{by 1}} {
+        variable Num
+        incr Num $by
+        Check
+        return $Num
+    }
+    proc reset {} {
+        variable Num
+        set Num 0
+    }
+    proc Check {} {
+        variable Num
+        variable Max
+        if {$Num &gt; $Max} {
+            error &quot;too high!&quot;
+        }
+    }
+}</B>
+
+</PRE>
+
+</DL>
+
+
+过程 <B>bump</B>  和 <B>reset</B>  被导出，所以当你从 <B>Counter</B> 名字空间导入的时候，它们被包括在内。例如:  
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>namespace import Counter::*</B>
+
+</PRE>
+
+</DL>
+
+
+但是 <B>Check</B>  过程未被导出，所以它被导入操作所忽略。
+<P>
+
+<B>namespace import</B>，命令只导入被它们的名字空间导出的命令。<B>namespace export</B> 命令指定什么命令可以被其他名字空间导入。如果一个 <B>namespace import</B>命令指定了一个未被导出的命令，则不导入这个命令。
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+variable">variable</A>(n)
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+exported, internal, variable
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/12</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">什么名字空间 WHAT IS A NAMESPACE?</A><DD>
+<DT><A HREF="#lbAF">限定的名字 QUALIFIED NAMES</A><DD>
+<DT><A HREF="#lbAG">NAME</A><DD>
+<DT><A HREF="#lbAH">导入命令 IMPORTING COMMANDS</A><DD>
+<DT><A HREF="#lbAI">导出命令 EXPORTING COMMANDS</A><DD>
+<DT><A HREF="#lbAJ">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAK">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAL">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAM">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAN">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

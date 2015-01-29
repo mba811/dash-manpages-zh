@@ -1,0 +1,96 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of IMAPD</TITLE>
+</HEAD><BODY>
+<H1>IMAPD</H1>
+Section: Maintenance Commands (8)<BR>Updated: October 12, 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+IMAPd - Internet 邮件存取协议服务器
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>/usr/etc/imapd</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<I>imapd</I>
+
+是个支持
+<B>IMAP4rev1</B>
+
+远程邮件存取协议(由RFC2060定义)的服务器。
+<I>imapd</I>
+
+是由internet服务器(参见
+<I><A HREF="/cgi-bin/man/man2html?8+inetd">inetd</A></I>(8)<I>)来调用的，</I>
+
+正常情况下监听对
+<B>IMAP</B>
+
+端口的连接请求，该端口在
+<I>/etc/services</I>
+
+文件(参见
+<I><A HREF="/cgi-bin/man/man2html?5+services">services</A></I>(5)).
+
+)中定义。通常它是143。
+<P>
+
+<I>imapd</I>
+
+也可以由很多基于Unix平台的客户端通过
+<I><A HREF="/cgi-bin/man/man2html?1C+rsh">rsh</A></I>(1C)
+
+进行访问。为此，
+<I>imapd</I>
+
+程序必须具有一个到
+<I>/etc/rimapd</I>
+
+的链接，因为这是系统认为该软件所在的地方。
+<A NAME="lbAE">&nbsp;</A>
+<H2>又见</H2>
+
+<A HREF="/cgi-bin/man/man2html?1C+rsh">rsh</A>(1C) <A HREF="/cgi-bin/man/man2html?8C+ipopd">ipopd</A>(8C)
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/05/01</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">又见</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国Linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

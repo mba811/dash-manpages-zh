@@ -1,0 +1,194 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ICMP</TITLE>
+</HEAD><BODY>
+<H1>ICMP</H1>
+Section: Linux Programmer's Manual (7)<BR>Updated: 27 Apr 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME 名称</H2>
+
+icmp, IPPROTO_ICMP - Linux IPv4 ICMP 核心模块. 
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+本网络核心协议模块实现了基于 RFC792 协议中定义的《互联网控制报文协议》
+。它针对网络主机间通讯出错的情况作出回应并给出诊断信息。
+用户不能直接使用本模块。相反本模块需与核心中的其他协议进行通讯，而这
+些协议将 ICMP 出错信息返回到网络协议的应用层。ICMP 核心模块也回应 ICMP 请求。
+<P>
+
+如果用 IPPROTP_ICMP 打开原始套接字（raw socket）时，
+用户协议有可以收到任意本地套接字 ICMP 包。
+<B>IPPROTO_ICMP</B>.
+
+请参阅
+<B><A HREF="/cgi-bin/man/man2html?7+raw">raw</A></B>(7)
+
+传递到套接字的 ICMP 包可以用
+<B>ICMP_FILTER</B>
+
+套接字选项进行过滤。核心会处理所有 ICMP 包，包括传递到用户的套接字去的。
+<P>
+Linux 对可以到达每个目标主机出错信息包的比率设立了限制。
+<B>ICMP_REDIRECT</B>
+
+及
+<B>ICMP_DEST_UNREACH</B>
+
+也受进入包的目标路由的限制。
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>SYSCTLS</H2>
+
+ICMP 支持通过 sysctl 接口来设置一些全局 IP 参数。对 Sysctl 的访问可以通过读、写
+<B>/proc/sys/net/ipv4/*</B>
+
+下的文件通过 
+<B><A HREF="/cgi-bin/man/man2html?2+sysctl">sysctl</A></B>(2)
+
+接口进行. 大多数这些 sysctls 对特定 ICMP 类型的数据包数量进行了限制。
+Linux 2.2 使用记号单元过滤器对 ICMP 包进行限制。
+
+此值表示超时错误，以秒计，直到到顶后记号单元过滤器被清除为止。
+<DL COMPACT>
+<DT><B>icmp_destunreach_rate</B>
+
+<DD>
+发送目的地不可到达 ICMP 消息包的最大数据包比率。这限制了发送到任意一个
+路由或目的地的数据包的比率。
+这个限制不影响发送用来发现数据链路最大传送单位（MTU）的
+<B>ICMP_FRAG_NEEDED</B>包
+
+数据包。
+<DT><B>icmp_echo_ignore_all</B>
+
+<DD>
+如果该值不为零,Linux将忽略所有的
+<B>ICMP_ECHO</B>
+
+请求。
+<DT><B>icmp_echo_ignore_broadcasts</B>
+
+<DD>
+如果该值不为零,Linux将忽略所有发送到广播地址的
+<B>ICMP_ECHO</B>
+
+数据包。
+<DT><B>icmp_echoreply_rate</B>
+
+<DD>
+发送响应
+<B>ICMP_ECHOREQUEST</B>
+
+请求的
+<B>ICMP_ECHOREPLY</B>
+
+数据包比率的最大值。
+<DT><B>icmp_paramprob_rate</B>
+
+<DD>
+发送
+<B>ICMP_PARAMETERPROB</B>
+
+数据包比率的最大值。当一个具有非法 IP 报头数据包到达时将发送这些包。
+<DT><B>icmp_timeexceed_rate</B>
+
+<DD>
+发送
+<B>ICMP_TIME_EXCEEDED</B>
+
+包比率的最大值。当一个数据包通过太多网段时，这些包用作防止路由回环。
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>NOTES</H2>
+
+由于在许多其他实现中不支持
+<B>IPPROTO_ICMP </B>
+
+原始套接字（raw socket），可移植程序不能依靠这一特性。
+
+
+<P>
+
+
+<P>
+
+
+当Linux不作为路由器时，将不被发送
+<B>ICMP_REDIRECT</B>
+
+包。内核也只有在路由表中的旧网关和路由重新定向超时时才接受这些包。
+<P>
+
+<B>ICMP_TIMESTAMP</B>
+
+返回的 64 位毫秒为单位的时间戳是自1970年1月1日以来的时间．
+<P>
+
+Linux 的 ICMP 在内部使用原始套接字（raw socket）来发送ICMP包。
+这个原始套接字可能在
+<B><A HREF="/cgi-bin/man/man2html?8+netstat">netstat</A></B>(8)
+
+消息输出中出现，带着一个“zero inode”信息。
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>VERSIONS</H2>
+
+在2.2版本中将再不支持
+<B>ICMP_ADDRESS</B>
+
+请求。
+<P>
+
+在2.2版本中将不再支持
+<B>ICMP_SOURCE_QUENCH</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?7+ip">ip</A></B>(7)
+
+<P>
+
+RFC792 对ICMP协议进行了详细的叙述。
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>LetBright &lt;<A HREF="mailto:letbright@netease.com">letbright@netease.com</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/30</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME 名称</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAD">SYSCTLS</A><DD>
+<DT><A HREF="#lbAE">NOTES</A><DD>
+<DT><A HREF="#lbAF">VERSIONS</A><DD>
+<DT><A HREF="#lbAG">参见</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

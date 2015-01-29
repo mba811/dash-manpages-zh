@@ -1,0 +1,212 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of NMBLOOKUP</TITLE>
+</HEAD><BODY>
+<H1>NMBLOOKUP</H1>
+Section:  (1)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+nmblookup - 基于TCP/IP上的NetBIOS客户用于查询NetBIOS名字的程序
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<P>
+<P>
+<B>nmblookup</B> [-M] [-R] [-S] [-r] [-A] [-h] [-B &lt;broadcast address&gt;] [-U &lt;unicast address&gt;] [-d &lt;debug level&gt;] [-s &lt;smb config file&gt;] [-i &lt;NetBIOS scope&gt;][-T] [-f] {name}
+<P>
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+<P>
+
+<B>nmblookup</B>
+
+是 <B><A HREF="/cgi-bin/man/man2html?7+Samba">Samba</A></B>(7)套件的一部分。
+<P>
+<P>
+
+<B>nmblookup</B> 用于在网络中查询NetBIOS名字并映射对应的IP地址。使用它可以在一个特殊的IP广播区域或者机器中直接查询名字。所有的查询操作都在UDP上实现。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+<P>
+<DL COMPACT>
+<DT>-M<DD>
+通过查找类型为<B>0x1d</B>的NetBIOS名字 <I>name</I>来搜索一个主浏览器。如果 <I> name</I> 是 &quot;-&quot;，那么它搜索特殊的名字 <B>__MSBROWSE__</B>。 Please note that in order to use the name &quot;-&quot;, you need to make sure &quot;-&quot; isn't parsed as an argument, e.g. use : <B>nmblookup -M -- -</B>。
+<P>
+<P>
+<DT>-R<DD>
+用这个选项在包中指定一个希望得到的二进制位来进行递归查找。 当向WINS服务器发送名字查询及用户希望在WINS服务器上进行名字查询时可以用这种方法。如果不设定这样的二进制递归位，则主机上的普通NetBIOS处理代码(以广播方式)将替代它。详细资料请参见rfc1001和rfc1002。
+<P>
+<DT>-S<DD>
+通过这个选项可以使名字查询操作返回一个IP地址时，再跟着作节点状态的查询操作。节点状态查询会返回主机注册的NetBIOS名字。
+<P>
+<P>
+<DT>-r<DD>
+用这个选项来试图并绑定UDP端口137用于发送和接收UDP数据包。使用这个选项的理由是Windows 95在这方面有一个错误：它会忽略请求数据包的原始端口而只回复到UDP端口137(系统发送和接收包可能并不用137端口)。不幸的情况是在UNIX系统上绑定这个端口需要root权限。另外，运行<B>nmbd</B>守护程序也应该绑定到这个端口。 
+<P>
+<P>
+<DT>-A<DD>
+用这个选项把<I>name</I>参数解释成一个IP地址并使用这个地址来作节点状态查询。 
+<P>
+<DT>-n &lt;primary NetBIOS name&gt;<DD>
+This option allows you to override the NetBIOS name that Samba uses for itself. This is identical to setting the <I>netbios name</I> parameter in the <I>smb.conf</I> file. However, a command line setting will take precedence over settings in <I>smb.conf</I>.
+<P>
+<P>
+<DT>-i &lt;scope&gt;<DD>
+This specifies a NetBIOS scope that <B>nmblookup</B> will use to communicate with when generating NetBIOS names. For details on the use of NetBIOS scopes, see rfc1001.txt and rfc1002.txt. NetBIOS scopes are <B>very</B> rarely used, only set this parameter if you are the system administrator in charge of all the NetBIOS systems you communicate with.
+<P>
+<P>
+<DT>-W|--workgroup=domain<DD>
+Set the SMB domain of the username. This overrides the default domain which is the domain defined in smb.conf. If the domain specified is the same as the servers NetBIOS name, it causes the client to log on using the servers local SAM (as opposed to the Domain SAM).
+<P>
+<P>
+<DT>-O socket options<DD>
+TCP socket options to set on the client socket. See the socket options parameter in the <I>smb.conf</I> manual page for the list of valid options.
+<P>
+<P>
+<DT>-h|--help<DD>
+打印帮助(使用方法)信息。 
+<P>
+<P>
+<DT>-B &lt;broadcast address&gt;<DD>
+用给出的广播地址发送查询。如果没有使用这个选项的话，nmblookup将会把查询发送到通过自动检测或者在<B>smb.conf</B> (5)文件的<I>interfaces</I>参数定义好的网络接口的广播地址上。
+<P>
+<DT>-U &lt;unicast address&gt;<DD>
+用这个选项对指定地址或者<I>unicast address</I>主机进行单独的查询。查找一个WINS服务器需要这样的参数(还有<I>-R</I>选项)。
+<P>
+<DT>-V<DD>
+输出程序版本号。
+<P>
+<P>
+<DT>-s &lt;configuration file&gt;<DD>
+指定的文件包含服务器需要的配置细节。文件信息包括服务器特定的信息，比如使用哪个 printcap文件；也包括服务器提供的服务的描述。查看<I>smb.conf</I> 来获得更详细的信息。默认的配置文件名是在编译时指定的。
+<P>
+<DT>-d|--debug=debuglevel<DD>
+<I>debuglevel</I> 是个从0到10的整数。参数未指定时默认值为0。
+<P>
+这个值越高，将记录越多关于nmblookup活动的资料。在把调试级设为0时，只记录紧急错误和严重警告。级别一是日常运行时合适的级别 - 它产生小量的执行操作的信息。
+<P>
+1以上的调试级将产生相当多的记录数据，并且只在研究问题时才有用。3以上的调试级只被设计为让开发者使用并会产生极大数量的记录数据，而且其中很多部分非常难以理解。 
+<P>
+注意在此使用这个参数将越过在<I>smb.conf</I> (5)文件中的<I>log level</I>参数。 
+<P>
+<DT>-l|--logfile=logbasename<DD>
+File name for log/debug files. The extension <B>&quot;.client&quot;</B> will be appended. The log file is never removed by the client.
+<P>
+<P>
+<DT>-T<DD>
+使用这个选项使得查找到的ip地址通过DNS反向查询查出所有的DNS名称，并将结果输出到通常的的
+<P>
+<B>IP address .... NetBIOS name</B>
+<P>
+对应关系前面。
+<P>
+<DT>-f<DD>
+Show which flags apply to the name that has been looked up. Possible answers are zero or more of: Response, Authoritative, Truncated, Recursion_Desired, Recursion_Available, Broadcast.
+<P>
+<P>
+<DT>name<DD>
+这个选项用来指定要查的NetBIOS名字。根据前面已经使用的选项这里可能出现的形式是一个NetBIOS名或者是IP地址。如果用的是NetBIOS名则可以在名字中加入'#&lt;type&gt;'来指定不同的名字类型。当然也可以用*来代替输入项，这样的话会通过广播区域返回所有已注册的名字。 
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>范例 EXAMPLES</H2>
+
+<P>
+<P>
+
+<B>nmblookup</B> 可被用于查询WINS服务器(同样<B>nslookup</B>用于查询DNS服务器)。要查询WINS服务器，必须这样调用 <B>nmblookup</B>：
+<P>
+<P>
+
+<B>nmblookup -U server -R 'name'</B>
+<P>
+<P>
+
+例如，运行：
+<P>
+<P>
+
+<B>nmblookup -U samba.org -R 'IRIX#1B'</B>
+<P>
+<P>
+
+通过这个命令将向WINS服务器samba.org查询IRIX工作组中的域主浏览器(名字类型为1B)。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>版本 VERSION</H2>
+
+<P>
+<P>
+
+此手册页是针对samba套件版本3.0的。 
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<P>
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?8+nmbd">nmbd</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?7+samba">samba</A></B>(7), and <B><A HREF="/cgi-bin/man/man2html?5+smb.conf">smb.conf</A></B>(5).
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+<P>
+<P>
+
+samba软件和相关工具最初由Andrew Tridgell创建。samba现在由Samba Team 作为开源软件来发展，类似linux内核的开发方式。
+<P>
+<P>
+
+最初的samba手册页是 Karl Auer写的。
+手册页源码已经转换为YODL格式(另一种很好的开源软件，可以在<I><A HREF="ftp://ftp.ice.rug.nl/pub/unix">ftp://ftp.ice.rug.nl/pub/unix</A></I>找到)，由Jeremy Sllison 更新到Samba2.0 版本。
+Gerald Carter 在Samba2.2中将它转化为DocBook 格式。
+Alexander Bokovoy 在Samba 3.0中实现了DocBook XML4.2 格式的转换。
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">范例 EXAMPLES</A><DD>
+<DT><A HREF="#lbAG">版本 VERSION</A><DD>
+<DT><A HREF="#lbAH">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAI">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

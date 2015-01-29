@@ -1,0 +1,123 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of seek</TITLE>
+</HEAD><BODY>
+<H1>seek</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+seek - 改变一个打开的通道的访问位置
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>seek </B><I>channelId offset </I>?<I>origin</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+改变 <I>channelId </I>的访问位置。<I>ChannelId</I> 必须是从以前的 <B>open</B> 或 <B>socket </B>调用返回的一个通道标识符。<I>offset</I> 和 <I>origin</I> 参数指定在 <I>channelId </I>中下一次读或写发生的位置。<I>Offset</I> 必须是一个整数(可以是负数) 而 <I>origin</I> 必须是下列之一:
+<DL COMPACT>
+<DT><B>start</B><DD>
+新访问位置是在底层的文件或设备的开始处偏移 <I>offset</I> 字节。
+<DT><B>current</B><DD>
+新访问位置是在当前访问位置上偏移 <I>offset</I> 字节；一个负数 <I>offset</I> 在底层文件或设备中反向移动访问位置。
+<DT><B>end</B><DD>
+新访问位置是在文件或设备的结束处偏移 <I>offset</I> 字节。一个负数 <I>offset</I> 把访问位置置于文件结束之前，而一个正数 <I>offset</I> 把访问位置置于文件结束之后。
+</DL>
+<P>
+
+The <I>origin</I> argument defaults to <B>start</B>.
+<P>
+
+即使通道处于非阻塞模式下，在这个命令返回之前，它要刷新为这个通道缓冲的所有输出。它还丢弃所有已被缓冲而未读取的输入。这个命令返回一个空串。如果对其底层文件或设备不支持搜寻(seek)的通道使用了这个命令，则生成一个错误。
+<P>
+
+
+
+
+
+
+
+
+注意：<I>offset</I> 值是字节偏移量。<B>seek</B> 和 <B>tell</B> 二者按照字节进行操作，而不是象 <B>read </B>那样按照字符进行操作。
+
+
+
+
+
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+file">file</A>(n), <A HREF="/cgi-bin/man/man2html?n+open">open</A>(n), <A HREF="/cgi-bin/man/man2html?n+close">close</A>(n), <A HREF="/cgi-bin/man/man2html?n+gets">gets</A>(n), <A HREF="/cgi-bin/man/man2html?n+tell">tell</A>(n)
+<BR>&nbsp;
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+access position, file, seek
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/30</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

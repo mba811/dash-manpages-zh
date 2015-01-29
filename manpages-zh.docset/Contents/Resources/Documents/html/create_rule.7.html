@@ -1,0 +1,132 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE RULE</TITLE>
+</HEAD><BODY>
+<H1>CREATE RULE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE RULE - 定义一个新的重写规则
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE [ OR REPLACE ] RULE <I>name</I> AS ON <I>event</I>
+    TO <I>table</I> [ WHERE <I>condition</I> ]
+    DO [ INSTEAD ] { NOTHING | <I>command</I> | ( <I>command</I> ; <I>command</I> ... ) }
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE RULE</B> 定义一个适用于特定表或者视图的新规则。 CREATE OR REPLACE RULE 要么是创建一个新规则， 要么是用一个同表上的同名规则替换现有规则。
+<P>
+
+PostgreSQL规则系统允许我们在从数据库或表中更新， 插入或删除东西时定义一个其它的动作来执行。 简单说，规则就是当我们在指定的表上执行指定的动作的时候，导致一些额外的动作被执行。 另外，规则可以用另外一个命令取代某个特定的命令，或者令命令完全不被执行。 规则还用于实现表视图。我们要明白的是规则实际上只是一个命令转换机制，或者说命令宏。 这种转换发生在命令开始执行之前。如果你实际上想要一个为每个物理行独立发生的操作， 那么你可能还是要用一个触发器，而不是规则。有关规则的更多信息可以在 ``The Rule System'' 找到。
+<P>
+
+<BR>&nbsp;目前，ON&nbsp;SELECT&nbsp;规则必须是无条件的&nbsp;INSTEAD&nbsp;规则并且必须有一个由一条&nbsp;SELECT&nbsp;查询组成的动作。&nbsp;因此，一条&nbsp;ON&nbsp;SELECT&nbsp;规则有效地把对象表转成视图，&nbsp;它的可见内容是规则的&nbsp;SELECT&nbsp;查询返回的记录而不是存储在表中的内容（如果有的话）。&nbsp;我们认为写一条&nbsp;CREATE&nbsp;VIEW&nbsp;命令比创建一个表然后定义一条&nbsp;ON&nbsp;SELECT&nbsp;规则在上面的风格要好。
+<P>
+
+<BR>&nbsp;你可以创建一个可以更新的视图的幻觉，&nbsp;方法是在视图上定义&nbsp;ON&nbsp;INSERT，ON&nbsp;UPDATE，和&nbsp;ON&nbsp;DELETE&nbsp;&nbsp;规则（或者满足你需要的任何上述规则的子集），用合适的对其它表的更新替换在视图上更新的动作。
+<P>
+
+<BR>&nbsp;如果你想在视图更新上使用条件规则，那么这里就有一个补充：&nbsp;对你希望在视图上允许的每个动作，你都必须有一个无条件的&nbsp;INSTEAD&nbsp;规则。&nbsp;如果规则是有条件的，或者它不是&nbsp;INSTEAD，&nbsp;那么系统仍将拒绝执行更新动作的企图，因为它认为它最终会在某种程度上在虚拟表上执行动作。&nbsp;如果你想处理条件规则上的所由有用的情况，那也可以；只需要增加一个无条件的&nbsp;DO&nbsp;INSTEAD&nbsp;NOTHING&nbsp;规则确保系统明白它将决不会被调用来更新虚拟表就可以了。&nbsp;然后把条件规则做成非&nbsp;INSTEAD；在这种情况下，如果它们被触发，那么它们就增加到缺省的&nbsp;INSTEAD&nbsp;NOTHING&nbsp;&nbsp;动作中。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;创建的规则名。它必须在同一个表上的所有规则的名字中唯一。&nbsp;同一个表上的同一个事件类型的规则是按照字母顺序运行的。
+<DT><B></B><I>event</I><B></B><DD>
+<BR>&nbsp;事件是&nbsp;SELECT，&nbsp;UPDATE，DELETE&nbsp;&nbsp;或&nbsp;INSERT&nbsp;之一。
+<DT><B></B><I>table</I><B></B><DD>
+<BR>&nbsp;规则施用的表或者视图的名字（可以有模式修饰）。
+<DT><B></B><I>condition</I><B></B><DD>
+<BR>&nbsp;任意&nbsp;SQL&nbsp;条件表达式（返回&nbsp;boolean）。&nbsp;条件表达式除了引用&nbsp;NEW&nbsp;和&nbsp;OLD&nbsp;之外不能引用任何表，并且不能有聚集函数。
+<DT><B></B><I>command</I><B></B><DD>
+<BR>&nbsp;组成规则动作的命令。有效的命令是&nbsp;SELECT，INSERT，&nbsp;UPDATE，DELETE，或&nbsp;NOTIFY&nbsp;语句之一。
+</DL>
+<P>
+
+<BR>&nbsp;在&nbsp;condition&nbsp;&nbsp;和&nbsp;command&nbsp;里，&nbsp;特殊表名字&nbsp;NEW&nbsp;和&nbsp;OLD&nbsp;可以用于指向被引用表里的数值&nbsp;new&nbsp;在&nbsp;ON&nbsp;INSERT&nbsp;和&nbsp;ON&nbsp;UPDATE&nbsp;规则里可以指向被插入或更新的新行。&nbsp;OLD&nbsp;在&nbsp;ON&nbsp;UPDATE，和&nbsp;ON&nbsp;DELETE&nbsp;规则里可以指向现存的被更新，或者删除的行。
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;为了在表上定义规则，你必须有&nbsp;RULE&nbsp;权限。
+<P>
+
+<BR>&nbsp;有一件很重要的事情是要避免循环规则。&nbsp;比如，尽管下面两条规则定义都是&nbsp;PostgreSQL&nbsp;可以接受的，&nbsp;但一条&nbsp;SELECT&nbsp;命令会导致&nbsp;PostgreSQL&nbsp;报告一条错误信息，因为该查询循环了太多次：
+<P>
+<PRE>
+CREATE RULE &quot;_RETURN&quot; AS
+    ON SELECT TO t1
+    DO INSTEAD 
+        SELECT * FROM t2;
+
+CREATE RULE &quot;_RETURN&quot; AS
+    ON SELECT TO t2
+    DO INSTEAD 
+        SELECT * FROM t1;
+
+SELECT * FROM t1;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;目前，如果一个规则包含一个&nbsp;NOTIFY&nbsp;查询，那么该&nbsp;NOTIFY&nbsp;将被无条件执行&nbsp;---&nbsp;也就是说，如果规则不施加到任何行上头，&nbsp;该&nbsp;NOTIFY&nbsp;也会被发出。比如，在
+<P>
+<PRE>
+CREATE RULE notify_me AS ON UPDATE TO mytable DO NOTIFY mytable;
+
+UPDATE mytable SET name = 'foo' WHERE id = 42;
+
+</PRE>
+
+<BR>&nbsp;里，一个&nbsp;NOTIFY&nbsp;事件将在&nbsp;UPDATE&nbsp;的时候发出，不管是否有某行的&nbsp;id&nbsp;=&nbsp;42。这是一个实现的限制，将来的版本应该修补这个毛病。
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>CREATE RULE</B> 是 PostgreSQL  语言的扩展，整个规则系统也是如此。
+<A NAME="lbAH">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

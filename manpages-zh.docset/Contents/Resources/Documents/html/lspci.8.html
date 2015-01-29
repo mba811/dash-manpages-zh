@@ -1,0 +1,219 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of lspci</TITLE>
+</HEAD><BODY>
+<H1>lspci</H1>
+Section: Linux PCI Utilities (8)<BR>Updated: 30 March 2002<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="ixAAB"></A>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+lspci - 列出所有PCI设备
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>lspci</B>
+
+[<B>options</B>]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<B>lspci</B>
+
+是一个用来显示系统中所有PCI总线设备或连接到该总线上的所有设备的工具。
+<P>
+为了能使用这个命令所有功能，你需要有 <I>linux</I> <I>2.1.82</I> 或以上版本，支持 <I>/proc/bus/pci</I> 接口的内核。在旧版本内核中，PCI工具必须使用只有root才能执行的直接硬件访问，而且总是出现竞争状况以及其他问题。
+<P>
+如果你要报告 PCI 设备驱动中，或者是
+<I>lspci</I>
+
+自身的 bugs，请在报告中包含 <I>&quot;lspci -vvx&quot;</I> 的输出。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>-v</B>
+
+<DD>
+使得
+<I>lspci</I>
+
+以冗余模式显示所有设备的详细信息。
+<DT><B>-vv</B>
+
+<DD>
+使得
+<I>lspci</I>
+
+以过冗余模式显示更详细的信息 (事实上是 PCI 设备能给出的所有东西)。这些数据的确切意义没有在此手册页中解释，如果你想知道更多，请参照
+<B>/usr/include/linux/pci.h</B>
+
+或者 PCI 规范。
+<DT><B>-n</B>
+
+<DD>
+以数字形式显示 PCI 生产厂商和设备号，而不是在 PCI ID 数据库中查找它们。
+<DT><B>-x</B>
+
+<DD>
+以十六进制显示 PCI 配置空间 (configuration space) 的前64个字节映象 (标准头部信息)。此参数对调试驱动和
+<I>lspci</I>
+
+本身很有用。
+<DT><B>-xxx</B>
+
+<DD>
+以十六进制显示所有 PCI 配置空间的映象。此选项只有 root 可用，并且很多 PCI 设备在你试图读取配置空间的未定义部分时会崩溃 (此操作可能不违反PCI标准，但是它至少非常愚蠢)。
+<DT><B>-b</B>
+
+<DD>
+以总线为中心进行查看。显示所有 IRQ 号和内存地址，就象 PCI 总线上的卡看到的一样，而不是内核看到的内容。
+<DT><B>-t</B>
+
+<DD>
+以树形方式显示包含所有总线、桥、设备和它们的连接的图表。
+<DT><B>-s [[&lt;bus&gt;]:][&lt;slot&gt;][.[&lt;func&gt;]]</B>
+
+<DD>
+仅显示指定总线、插槽上的设备或设备上的功能块信息。设备地址的任何部分都可以忽略，或以“*”代替 (意味着所有值)。所有数字都是十六进制。例如：“0：”指的是在0号总线上的所有设备；“0”指的是在任意总线上0号设备的所有功能块；“0.3”选择了所有总线上0号设备的第三个功能块；“.4”则是只列出每一设备上的第四个功能块。
+<DT><B>-d [&lt;vendor&gt;]:[&lt;device&gt;]</B>
+
+<DD>
+只显示指定生产厂商和设备 ID 的设备。 这两个 ID 都以十六进制表示，可以忽略或者以“*”代替 (意味着所有值)。
+<DT><B>-i &lt;file&gt;</B>
+
+<DD>
+使用
+<B>&lt;file&gt;</B>
+
+作为 PCI ID 数据库而不是使用默认的 <I>/usr/share/hwdata/pci.ids</I>。
+<DT><B>-p &lt;dir&gt;</B>
+
+<DD>
+使用
+<B>&lt;dir&gt;</B>
+
+作为包含 PCI 总线信息的目录而不是使用默认的目录 <I>/proc/bus/pci</I>。
+<DT><B>-m</B>
+
+<DD>
+以机器可读的方式转储 PCI 设备数据 (支持两种模式：普通和冗余)，便于脚本解析。
+<DT><B>-M</B>
+
+<DD>
+使用总线映射模式，这种模式对总线进行全面地扫描以查明总线上的所有设备，包括配置错误的桥之后的设备。请注意，此操作只应在调试时使用，并可能造成系统崩溃 (只在设备有错误的时候，但是不幸的是它们存在)，此命令只有 root 可以使用。同时，在不直接接触硬件的 PCI 访问模式中使用 <I>-M</I> 参数没有意义，因为显示的结果 (排除 lspci 中的 bug 的影响) 与普通的列表模式相同。
+<DT><B>--version</B>
+
+<DD>
+显示
+<I>lspci</I>
+
+的版本。这个选项应当单独使用。
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>PCILIB 选项 PCILIB OPTIONS</H2>
+
+PCI 工具使用 PCILIB (一种可移植的库，提供平台独立的函数来访问 PCI 配置空间) 来和PCI卡交互。下面的选项用来控制库参数，特别是所用访问模式的指定。默认情况下，PCILIB 使用第一种可用的访问模式，不会显示任何调试信息。每一个开关选项都列出了一组它所支持的硬件/软件列表。
+<P>
+<DL COMPACT>
+<DT><B>-P &lt;dir&gt;</B>
+
+<DD>
+使用 linux 2.1 风格的配置，直接访问目录
+<B>&lt;dir&gt;</B>
+
+而非 <I>/proc/bus/pci</I> 目录。(只能在 linux 2.1 或以上版本中使用)
+<DT><B>-H1</B>
+
+<DD>
+通过 Intel 架构 <B>1</B> 来实现直接硬件访问。(只能用于 i386 及其兼容机)
+<DT><B>-H2</B>
+
+<DD>
+通过Intel 架构 <B>2</B> 来实现直接硬件访问。警告：此模式只能寻址任何总线上的前16个设备，并且在很多情况下相当不可靠。(只能用于 i386 及其兼容机)
+<DT><B>-S</B>
+
+<DD>
+使用 PCI 系统调用访问。(只能用于 Alpha 和 Ultra-Sparc 上的 Linux)
+<DT><B>-F &lt;file&gt;</B>
+
+<DD>
+从所给的包含 <I>lspci -x</I> 命令输出的文件中获取相关信息。这在分析用户提交的错误报告时很有用，因为你可以用任何方式来显示硬件配置信息而无需为了获取更多信息打扰用户。(可用于所有系统)
+<DT><B>-G</B>
+
+<DD>
+增加库的调试等级。(可用于所有系统)
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+<DL COMPACT>
+<DT><B>/usr/share/hwdata/pci.ids</B>
+
+<DD>
+所有已知 PCI ID 的清单 (厂商，设备名，类，子类)
+<DT><B>/proc/bus/pci</B>
+
+<DD>
+<I>linux 2.1.82</I> 之后版本内核提供的 PCI 总线配置空间的接口。包含每个总线 (per-bus) 的子目录以及每个设备卡 (per-card) 的配置空间文件，还有一个
+<I>devices</I>
+
+文件，包含所有PCI设备的列表。
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+setpci">setpci</A></B>(8)
+
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+Linux PCI 工具由 Martin Mares &lt;<A HREF="mailto:mj@atrey.karlin.mff.cuni.cz">mj@atrey.karlin.mff.cuni.cz</A>&gt; 维护。
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>所罗门 &lt;<A HREF="mailto:solomen@email.com.cn">solomen@email.com.cn</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>Nov 28 2000</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">PCILIB 选项 PCILIB OPTIONS</A><DD>
+<DT><A HREF="#lbAG">文件 FILES</A><DD>
+<DT><A HREF="#lbAH">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAI">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

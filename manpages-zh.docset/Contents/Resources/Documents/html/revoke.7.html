@@ -1,0 +1,153 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of REVOKE</TITLE>
+</HEAD><BODY>
+<H1>REVOKE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+REVOKE - 删除访问权限
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+REVOKE [ GRANT OPTION FOR ]
+    { { SELECT | INSERT | UPDATE | DELETE | RULE | REFERENCES | TRIGGER }
+    [,...] | ALL [ PRIVILEGES ] }
+    ON [ TABLE ] <I>tablename</I> [, ...]
+    FROM { <I>username</I> | GROUP <I>groupname</I> | PUBLIC } [, ...]
+    [ CASCADE | RESTRICT ]
+
+REVOKE [ GRANT OPTION FOR ]
+    { { CREATE | TEMPORARY | TEMP } [,...] | ALL [ PRIVILEGES ] }
+    ON DATABASE <I>dbname</I> [, ...]
+    FROM { <I>username</I> | GROUP <I>groupname</I> | PUBLIC } [, ...]
+    [ CASCADE | RESTRICT ]
+
+REVOKE [ GRANT OPTION FOR ]
+    { EXECUTE | ALL [ PRIVILEGES ] }
+    ON FUNCTION <I>funcname</I> ([<I>type</I>, ...]) [, ...]
+    FROM { <I>username</I> | GROUP <I>groupname</I> | PUBLIC } [, ...]
+    [ CASCADE | RESTRICT ]
+
+REVOKE [ GRANT OPTION FOR ]
+    { USAGE | ALL [ PRIVILEGES ] }
+    ON LANGUAGE <I>langname</I> [, ...]
+    FROM { <I>username</I> | GROUP <I>groupname</I> | PUBLIC } [, ...]
+    [ CASCADE | RESTRICT ]
+
+REVOKE [ GRANT OPTION FOR ]
+    { { CREATE | USAGE } [,...] | ALL [ PRIVILEGES ] }
+    ON SCHEMA <I>schemaname</I> [, ...]
+    FROM { <I>username</I> | GROUP <I>groupname</I> | PUBLIC } [, ...]
+    [ CASCADE | RESTRICT ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>REVOKE</B> 撤销以前赋予（别人）的权限，可以是撤销一个或多个用户或者一组用户的权限。 关键字 PUBLIC 代表隐含定义的拥有所有用户的组。
+<P>
+
+<BR>&nbsp;参阅&nbsp;GRANT&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+grant">grant</A></B>(7)]&nbsp;命令的描述获取权限类型的含义。
+<P>
+
+<BR>&nbsp;请注意，任何特定的用户都将拥有直接赋予他/她的权限，加上他/她所处的任何组，&nbsp;以及再加上赋予&nbsp;PUBLIC&nbsp;的权限的总和。因此，举例来说，废止&nbsp;PUBLIC&nbsp;&nbsp;的&nbsp;SELECT&nbsp;权限并不意味着所有用户都失去了对该对象的&nbsp;SELECT&nbsp;权限：&nbsp;那些直接得到权限赋予的以及通过一个组得到权限的人仍然拥有该权限。
+<P>
+
+<BR>&nbsp;如果声明了&nbsp;GRANT&nbsp;OPTION&nbsp;FOR，那么只是撤销对该权限的授权的权力，而不是撤销该权限本身。
+<P>
+
+<BR>&nbsp;如果一个用户持有某项权限，并且还有授权的选项，并且还把这个权限赋予了其他用户，&nbsp;那么那些其他用户持有的权限都叫做依赖性权限。&nbsp;如果第一个用户持有的权限或者授权选项被撤销，而依赖性权限仍然存在，&nbsp;那么如果我们声明了&nbsp;CASCADE，则所有依赖性权限都被撤销，&nbsp;否则撤销动作就会失败。这个递规的撤销只影响那种通过一个用户链赋予的权限，&nbsp;这个链条可以通过这条&nbsp;REVOKE&nbsp;命令里面给出的用户追踪。&nbsp;因此，如果权限本身是通过其他用户赋予的，&nbsp;那么被影响的用户可以有效地保留这个权限。
+<A NAME="lbAE">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;使用&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1)&nbsp;的&nbsp;<B>\z</B>&nbsp;命令显示在一个现存对象上赋予的权限。&nbsp;参见&nbsp;GRANT&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+grant">grant</A></B>(7)]&nbsp;获取关于格式的信息。
+<P>
+
+<BR>&nbsp;一个用户只能撤销由它自己直接赋予的权限。举例来说，如果用户&nbsp;A&nbsp;带着授权选项吧一个权限赋予了用户&nbsp;B，然后用户&nbsp;B&nbsp;又赋予了用户&nbsp;C，&nbsp;那么用户&nbsp;A&nbsp;不能直接将&nbsp;C&nbsp;的权限撤销。但是，用户&nbsp;A&nbsp;可以撤销用户&nbsp;B&nbsp;的授权选项，并且使用&nbsp;CASCADE&nbsp;选项，这样，&nbsp;用户&nbsp;C&nbsp;的权限就会自动被撤销。
+<P>
+
+<BR>&nbsp;如果一个超级用户发出一个&nbsp;GRANT&nbsp;或者&nbsp;REVOKE&nbsp;命令，&nbsp;那么命令是按照以被影响的对象的所有者执行的方式执行的。因为所有权限最终从对象所有者（可能间接通过赋权选项获取），&nbsp;超级用户可以废除所有权限，但是这样就要求像上面说的那样使用&nbsp;CASCADE。
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;撤销公众在表&nbsp;films&nbsp;上的插入权限：
+<P>
+<PRE>
+REVOKE INSERT ON films FROM PUBLIC;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;废除用户&nbsp;manuel&nbsp;对视图&nbsp;kinds&nbsp;的所有权限：
+<P>
+<PRE>
+  
+REVOKE ALL PRIVILEGES ON kinds FROM manuel;
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+GRANT [<B><A HREF="/cgi-bin/man/man2html?7+grant">grant</A></B>(7)] 命令的兼容性信息基本上也适用于 REVOKE。语法概要是：
+<P>
+<PRE>
+REVOKE [ GRANT OPTION FOR ] <I>privileges</I>
+    ON <I>object</I> [ ( <I>column</I> [, ...] ) ]
+    FROM { PUBLIC | <I>username</I> [, ...] }
+    { RESTRICT | CASCADE }
+
+</PRE>
+
+<BR>&nbsp;标准要求&nbsp;RESTRICT&nbsp;或者&nbsp;CASCADE&nbsp;之一必须出现，&nbsp;但是&nbsp;PostgreSQL&nbsp;假设缺省是&nbsp;RESTRICT。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<P>
+
+GRANT [<B><A HREF="/cgi-bin/man/man2html?7+grant">grant</A></B>(7)]
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">NOTES 注意</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

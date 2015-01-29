@@ -1,0 +1,915 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PERLFAQ</TITLE>
+</HEAD><BODY>
+<H1>PERLFAQ</H1>
+Section: Perl Programmers Reference Guide (7)<BR>Updated: 2003-11-25<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+perlfaq - Perl 常问问题集 (2003/01/31 17:37:17)
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<A NAME="ixAAC"></A>
+perlfaq 按照主题划分为多个文档，在本文档的末尾有一个目录。
+
+<BR>
+
+
+
+<P>
+
+<B>Where to get the perlfaq 如何取得这份文件？</B>
+<P>
+
+
+<A NAME="ixAAD"></A>
+这份文件会定期投到 comp.lang.perl.misc。也可以在许多网站上找到它，例如
+<A HREF="http://www.perldoc.com/">http://www.perldoc.com/</A> 还有 <A HREF="http://faq.perl.org/">http://faq.perl.org/</A>
+译者注：两只老虎工作室的位置是 <A HREF="http://2Ti.com/cgi-bin/2T/perl/">http://2Ti.com/cgi-bin/2T/perl/</A> 还有
+<A HREF="ftp://www.math.ncu.edu.tw/pub/staff/chenym/FAQ/Perl/">ftp://www.math.ncu.edu.tw/pub/staff/chenym/FAQ/Perl/</A>
+还有 &lt;<A HREF="mailto:pailing@2Ti.com">pailing@2Ti.com</A>&gt;
+
+<BR>
+
+
+
+<P>
+
+<B>How to contribute to the perlfaq  如何为 perlfaq 做贡献？</B>
+<P>
+
+
+<A NAME="ixAAE"></A>
+你可以将更正，扩充以及建议以邮件方式发送到
+<A HREF="mailto:perlfaq-workers@perl.org">perlfaq-workers@perl.org</A> .  这个地址不能用来提问题，它只用来修正当前的 <FONT SIZE="-1">FAQ</FONT>。如果有问题那么投递到新闻组 comp.lang.perl.misc。可以在 <A HREF="http://cvs.perl.org/cvsweb/perlfaq/">http://cvs.perl.org/cvsweb/perlfaq/</A> 查看源码树 (它是在主源码树之外)。<FONT SIZE="-1">CVS</FONT> 仓库记录了对 <FONT SIZE="-1">FAQ</FONT> 的所有改变。
+
+<BR>
+
+
+
+<P>
+
+<B>What will happen if you mail your Perl programming problems to the authors 如果把编程问题寄给作者怎么样？</B>
+<P>
+
+
+<A NAME="ixAAF"></A>
+作者大概不会理会您所提的问题，除非您是在建议把一些新问题加进 FAQ去，但如果是这样的话这些问题当初就该寄到 <A HREF="mailto:perlfaq-workers@perl.com">perlfaq-workers@perl.com</A> 处才对。
+<P>
+
+您应该已经阅读了这份 FAQ 的第二部分，您应该知道 comp.lang.perl.misc 才是寻求免费建议的适当地方。如果您的问题真的很重要而且您急着要得到正确解答，那麽您该请一个顾问。
+<A NAME="lbAD">&nbsp;</A>
+<H2>Credits 致谢</H2>
+
+<A NAME="ixAAG"></A>
+最初的 perlfaq 由 Tom Christiansen 完成，接着在 Tom 和 Nathan Torkington 的合作下得以扩展。当前的文档由 perlfaq-workers (<A HREF="mailto:perlfaq-workers@perl.org">perlfaq-workers@perl.org</A>) 进行维护，很多人贡献了解答，更正和评注。
+<A NAME="lbAE">&nbsp;</A>
+<H2>Author and Copyright Information</H2>
+
+<A NAME="ixAAH"></A>
+Copyright (c) 1997-2003 Tom Christiansen, Nathan Torkington, and 
+other contributors noted in the answers.
+<P>
+
+All rights reserved.
+
+<BR>
+
+
+
+<P>
+
+<B>Bundled Distributions</B>
+<P>
+
+
+<A NAME="ixAAI"></A>
+This documentation is free; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+<P>
+
+Irrespective of its distribution, all code examples in these files
+are hereby placed into the public domain.  You are permitted and
+encouraged to use this code in your own programs for fun
+or for profit as you see fit.  A simple comment in the code giving
+credit would be courteous but is not required.
+
+<BR>
+
+
+
+<P>
+
+<B>Disclaimer</B>
+<P>
+
+
+<A NAME="ixAAJ"></A>
+This information is offered in good faith and in the hope that it may
+be of use, but is not guaranteed to be correct, up to date, or suitable
+for any particular purpose whatsoever.  The authors accept no liability
+in respect of this information or its use.
+<A NAME="lbAF">&nbsp;</A>
+<H2>Table of Contents 目录</H2>
+
+<A NAME="ixAAK"></A>
+<DL COMPACT>
+<DT>perlfaq  - 本文档<DD>
+<A NAME="ixAAL"></A>
+
+<DT>perlfaq1 - 有关 Perl 的一般问题<DD>
+<A NAME="ixAAM"></A>
+<DT>perlfaq2 - 获取和学习 Perl<DD>
+<A NAME="ixAAN"></A>
+<DT>perlfaq3 - 编程工具<DD>
+<A NAME="ixAAO"></A>
+<DT>perlfaq4 - 数据操作<DD>
+<A NAME="ixAAP"></A>
+<DT>perlfaq5 - 文件和格式<DD>
+<A NAME="ixAAQ"></A>
+<DT>perlfaq6 - 正则表达式<DD>
+<A NAME="ixAAR"></A>
+<DT>perlfaq7 - 综合的问题<DD>
+<A NAME="ixAAS"></A>
+<DT>perlfaq8 - 系统交互<DD>
+<A NAME="ixAAT"></A>
+<DT>perlfaq9 - 网络<DD>
+<A NAME="ixAAU"></A>
+
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>The Questions 问题</H2>
+
+<A NAME="ixAAV"></A>
+
+<BR>
+
+
+
+<P>
+
+<B>perlfaq1: 有关 Perl 的一般问题</B>
+<P>
+
+
+<A NAME="ixAAW"></A>
+有关 Perl 的一般的，非技术层次的问题
+<DL COMPACT>
+<DT>&bull;<DD>
+什么是 Perl?
+<DT>&bull;<DD>
+谁对 Perl 提供支持？谁开发了它？为什么它是自由的？
+<DT>&bull;<DD>
+我该用哪一个版本的 Perl？
+<DT>&bull;<DD>
+perl4 和 perl5 各代表什麽？
+<DT>&bull;<DD>
+perl6 是什么?
+<DT>&bull;<DD>
+Perl的发展已稳定了吗？
+<DT>&bull;<DD>
+Perl难学吗？
+<DT>&bull;<DD>
+Perl和其他的程设语言比起来如何？例如 Java, Python, <FONT SIZE="-1">REXX</FONT>, Scheme,或 Tcl？
+<DT>&bull;<DD>
+我可以用 Perl来做【某种差事】吗？
+<DT>&bull;<DD>
+哪些场合下不适合用 Perl？
+<DT>&bull;<DD>
+「perl」和「Perl」有什麽不同？
+<DT>&bull;<DD>
+Perl程式应算是 program还是 script？
+<DT>&bull;<DD>
+JAPH 是什麽？
+<DT>&bull;<DD>
+到哪儿可拿到 Larry Wall 的智慧讽语 (witticisms)？
+<DT>&bull;<DD>
+我要如何取信、说服我的系统管理者／上司／属下使用第 5/5.8.3 版的 Perl，而不去用其他的语言？
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>perlfaq2: 获取和学习 Perl</B>
+<P>
+
+
+<A NAME="ixAAX"></A>
+从哪里寻找 Perl 的源程序和文档，支持以及相关事项
+<DL COMPACT>
+<DT>&bull;<DD>
+哪些平台上有 Perl？要到哪里去找？
+<DT>&bull;<DD>
+要如何取得以二进制形式发行的 Perl？
+<DT>&bull;<DD>
+我的系统里没有 C编译器。要如何编译 perl？
+<DT>&bull;<DD>
+我直接将 Perl的执行档从一台机器上复制到另一台机器上，但是程式跑不起来。
+<DT>&bull;<DD>
+我抓回了原始码，试着编译 perl，但是 gdbm/dynamic loading/malloc/linking/...部分失败。要如何将它搞定？
+<DT>&bull;<DD>
+Perl有哪些模组和延伸？ CPAN是什麽？ CPAN/src/...又代表什麽？
+<DT>&bull;<DD>
+是不是有一个经 ISO【国际标准局】或 ANSI【美国国家标准局】认可的 Perl版本？
+<DT>&bull;<DD>
+Perl的相关资料要上哪儿找？
+<DT>&bull;<DD>
+USENET上有哪些专门讨论 Perl的新闻讨论群？问题该投到哪里？
+<DT>&bull;<DD>
+如果我想投程式原始码，该投到哪个板子上？
+<DT>&bull;<DD>
+Perl 书籍
+<DT>&bull;<DD>
+和 Perl 有关的杂志
+<DT>&bull;<DD>
+网路上的 Perl：接触 FTP 和 WWW
+<DT>&bull;<DD>
+有哪些讨论 Perl 的邮件列表？
+<DT>&bull;<DD>
+comp.lang.perl.misc 的档案库
+<DT>&bull;<DD>
+如何购买商业版本的 Perl？
+<DT>&bull;<DD>
+如果发现 bugs要向何处报告？
+<DT>&bull;<DD>
+什麽是 perl.com? Perl Mongers? pm.org? perl.org? cpan.org?
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>perlfaq3: 编程工具</B>
+<P>
+
+
+<A NAME="ixAAY"></A>
+编程工具和编程支持
+<DL COMPACT>
+<DT>&bull;<DD>
+我如何作 (任何事)?
+<DT>&bull;<DD>
+如何以交互的方式使用 Perl?
+<DT>&bull;<DD>
+有 Perl shell吗?
+<DT>&bull;<DD>
+怎样查找我的系统中安装了哪些模块
+<DT>&bull;<DD>
+如何替我的 Perl 程式除虫?
+<DT>&bull;<DD>
+如何检测 (profile) 我的 perl 程式?
+<DT>&bull;<DD>
+如何替我的 Perl程式作交叉参考 (cross-reference)?
+<DT>&bull;<DD>
+有 Perl专用的美化列印程式 (pretty-printer)吗?
+<DT>&bull;<DD>
+有 Perl的 ctags 吗?
+<DT>&bull;<DD>
+有没有一个 <FONT SIZE="-1">IDE</FONT> 或图形界面的 Perl 编辑器？
+<DT>&bull;<DD>
+哪儿有 vi 用的 Perl 宏？
+<DT>&bull;<DD>
+给 emacs用的 perl模式又要去哪抓呢?
+<DT>&bull;<DD>
+如何在 Perl里使用 curses?
+<DT>&bull;<DD>
+X或 Tk如何与 Perl配合呢?
+<DT>&bull;<DD>
+如何不靠 CGI或 Tk 帮助作出简单的目录（选单）?
+<DT>&bull;<DD>
+如何让我的 Perl程式跑得更快些?
+<DT>&bull;<DD>
+如何让我的 Perl 程序少用一些内存？
+<DT>&bull;<DD>
+把局部变量的引用返回是不安全的做法吗?
+<DT>&bull;<DD>
+我如何释放一个数组或散列以缩小我的程式尺寸?
+<DT>&bull;<DD>
+如何让我的 CGI脚本 (script)执行起来更有效率?
+<DT>&bull;<DD>
+如何隐藏 Perl程式的原始码?
+<DT>&bull;<DD>
+如何把我的 Perl程式码编译成 byte code或 C?
+<DT>&bull;<DD>
+怎样把 Perl 编译成 Java?
+<DT>&bull;<DD>
+如何才能让 <TT>&quot;#!perl&quot;</TT> 在 [<FONT SIZE="-1">MS-DOS</FONT>,NT,...] 下起作用?
+<DT>&bull;<DD>
+我能利用命令行写出有用的程式吗?
+<DT>&bull;<DD>
+为何一行的 perl 程式无法在我的 DOS/Mac/VMS系统上运作?
+<DT>&bull;<DD>
+我得去哪里学 Perl的 CGI或是 Web程式设计呢?
+<DT>&bull;<DD>
+从哪里可以学习面向对象的 Perl 编程？
+<DT>&bull;<DD>
+从哪里可以学习将 Perl 与 C 连接？[h2xs, xsubpp]
+<DT>&bull;<DD>
+我已经阅读了 perlembed,perlguts 等等，但是还是不能在我的 C 程序中嵌入 perl；我作错了什么？
+<DT>&bull;<DD>
+我试着运行我的脚本时，看到了这样的消息。它是什么意思？
+<DT>&bull;<DD>
+什么是 MakeMaker?
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>perlfaq4: 数据操作</B>
+<P>
+
+
+<A NAME="ixAAZ"></A>
+操纵数字，日期，字符串，数组，散列以及各种其他数据类型。
+<DL COMPACT>
+<DT>&bull;<DD>
+Why am I getting long decimals (eg, 19.9499999999999) instead of the numbers I should be getting (eg, 19.95)?
+<DT>&bull;<DD>
+Why isn't my octal data interpreted correctly?
+<DT>&bull;<DD>
+Does Perl have a <I>round()</I> function?  What about <I>ceil()</I> and <I>floor()</I>?  Trig functions?
+<DT>&bull;<DD>
+How do I convert between numeric representations?
+<DT>&bull;<DD>
+Why doesn't &amp; work the way I want it to?
+<DT>&bull;<DD>
+How do I multiply matrices?
+<DT>&bull;<DD>
+How do I perform an operation on a series of integers?
+<DT>&bull;<DD>
+How can I output Roman numerals?
+<DT>&bull;<DD>
+Why aren't my random numbers random?
+<DT>&bull;<DD>
+How do I get a random number between X and Y?
+<DT>&bull;<DD>
+How do I find the day or week of the year?
+<DT>&bull;<DD>
+How do I find the current century or millennium?
+<DT>&bull;<DD>
+How can I compare two dates and find the difference?
+<DT>&bull;<DD>
+How can I take a string and turn it into epoch seconds?
+<DT>&bull;<DD>
+How can I find the Julian Day?
+<DT>&bull;<DD>
+How do I find yesterday's date?
+<DT>&bull;<DD>
+Does Perl have a Year 2000 problem?  Is Perl Y2K compliant?
+<DT>&bull;<DD>
+How do I validate input?
+<DT>&bull;<DD>
+How do I unescape a string?
+<DT>&bull;<DD>
+How do I remove consecutive pairs of characters?
+<DT>&bull;<DD>
+How do I expand function calls in a string?
+<DT>&bull;<DD>
+How do I find matching/nesting anything?
+<DT>&bull;<DD>
+How do I reverse a string?
+<DT>&bull;<DD>
+How do I expand tabs in a string?
+<DT>&bull;<DD>
+How do I reformat a paragraph?
+<DT>&bull;<DD>
+How can I access or change N characters of a string?
+<DT>&bull;<DD>
+How do I change the Nth occurrence of something?
+<DT>&bull;<DD>
+How can I count the number of occurrences of a substring within a string?
+<DT>&bull;<DD>
+How do I capitalize all the words on one line?
+<DT>&bull;<DD>
+How can I split a [character] delimited string except when inside [character]?
+<DT>&bull;<DD>
+How do I strip blank space from the beginning/end of a string?
+<DT>&bull;<DD>
+How do I pad a string with blanks or pad a number with zeroes?
+<DT>&bull;<DD>
+How do I extract selected columns from a string?
+<DT>&bull;<DD>
+How do I find the soundex value of a string?
+<DT>&bull;<DD>
+How can I expand variables in text strings?
+<DT>&bull;<DD>
+What's wrong with always quoting ``$vars''?
+<DT>&bull;<DD>
+Why don't my &lt;&lt;<FONT SIZE="-1">HERE</FONT> documents work?
+<DT>&bull;<DD>
+What is the difference between a list and an array?
+<DT>&bull;<DD>
+What is the difference between <TT>$array</TT>[1] and <TT>@array</TT>[1]?
+<DT>&bull;<DD>
+How can I remove duplicate elements from a list or array?
+<DT>&bull;<DD>
+How can I tell whether a certain element is contained in a list or array?
+<DT>&bull;<DD>
+How do I compute the difference of two arrays?  How do I compute the intersection of two arrays?
+<DT>&bull;<DD>
+How do I test whether two arrays or hashes are equal?
+<DT>&bull;<DD>
+How do I find the first array element for which a condition is true?
+<DT>&bull;<DD>
+How do I handle linked lists?
+<DT>&bull;<DD>
+How do I handle circular lists?
+<DT>&bull;<DD>
+How do I shuffle an array randomly?
+<DT>&bull;<DD>
+How do I process/modify each element of an array?
+<DT>&bull;<DD>
+How do I select a random element from an array?
+<DT>&bull;<DD>
+How do I permute N elements of a list?
+<DT>&bull;<DD>
+How do I sort an array by (anything)?
+<DT>&bull;<DD>
+How do I manipulate arrays of bits?
+<DT>&bull;<DD>
+Why does <I>defined()</I> return true on empty arrays and hashes?
+<DT>&bull;<DD>
+How do I process an entire hash?
+<DT>&bull;<DD>
+What happens if I add or remove keys from a hash while iterating over it?
+<DT>&bull;<DD>
+How do I look up a hash element by value?
+<DT>&bull;<DD>
+How can I know how many entries are in a hash?
+<DT>&bull;<DD>
+How do I sort a hash (optionally by value instead of key)?
+<DT>&bull;<DD>
+How can I always keep my hash sorted?
+<DT>&bull;<DD>
+What's the difference between ``delete'' and ``undef'' with hashes?
+<DT>&bull;<DD>
+Why don't my tied hashes make the defined/exists distinction?
+<DT>&bull;<DD>
+How do I reset an <I>each()</I> operation part-way through?
+<DT>&bull;<DD>
+How can I get the unique keys from two hashes?
+<DT>&bull;<DD>
+How can I store a multidimensional array in a <FONT SIZE="-1">DBM</FONT> file?
+<DT>&bull;<DD>
+How can I make my hash remember the order I put elements into it?
+<DT>&bull;<DD>
+Why does passing a subroutine an undefined element in a hash create it?
+<DT>&bull;<DD>
+How can I make the Perl equivalent of a C structure/C<FONT SIZE="-2">++</FONT> class/hash or array of hashes or arrays?
+<DT>&bull;<DD>
+How can I use a reference as a hash key?
+<DT>&bull;<DD>
+How do I handle binary data correctly?
+<DT>&bull;<DD>
+How do I determine whether a scalar is a number/whole/integer/float?
+<DT>&bull;<DD>
+How do I keep persistent data across program calls?
+<DT>&bull;<DD>
+How do I print out or copy a recursive data structure?
+<DT>&bull;<DD>
+How do I define methods for every class/object?
+<DT>&bull;<DD>
+How do I verify a credit card checksum?
+<DT>&bull;<DD>
+How do I pack arrays of doubles or floats for <FONT SIZE="-1">XS</FONT> code?
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>perlfaq5: 文件和格式</B>
+<P>
+
+
+<A NAME="ixABA"></A>
+I/O and the ``f'' issues: filehandles, flushing, formats, and footers.
+<DL COMPACT>
+<DT>&bull;<DD>
+How do I flush/unbuffer an output filehandle?  Why must I do this?
+<DT>&bull;<DD>
+How do I change one line in a file/delete a line in a file/insert a line in the middle of a file/append to the beginning of a file?
+<DT>&bull;<DD>
+How do I count the number of lines in a file?
+<DT>&bull;<DD>
+How can I use Perl's <TT>&quot;-i&quot;</TT> option from within a program?
+<DT>&bull;<DD>
+How do I make a temporary file name?
+<DT>&bull;<DD>
+How can I manipulate fixed-record-length files?
+<DT>&bull;<DD>
+How can I make a filehandle local to a subroutine?  How do I pass filehandles between subroutines?  How do I make an array of filehandles?
+<DT>&bull;<DD>
+How can I use a filehandle indirectly?
+<DT>&bull;<DD>
+How can I set up a footer format to be used with <I>write()</I>?
+<DT>&bull;<DD>
+How can I <I>write()</I> into a string?
+<DT>&bull;<DD>
+How can I output my numbers with commas added?
+<DT>&bull;<DD>
+How can I translate tildes (~) in a filename?
+<DT>&bull;<DD>
+How come when I open a file read-write it wipes it out?
+<DT>&bull;<DD>
+Why do I sometimes get an ``Argument list too long'' when I use &lt;*&gt;?
+<DT>&bull;<DD>
+Is there a leak/bug in <I>glob()</I>?
+<DT>&bull;<DD>
+How can I open a file with a leading ``&gt;'' or trailing blanks?
+<DT>&bull;<DD>
+How can I reliably rename a file?
+<DT>&bull;<DD>
+How can I lock a file?
+<DT>&bull;<DD>
+Why can't I just open(<FONT SIZE="-1">FH</FONT>, &quot;&gt;file.lock&quot;)?
+<DT>&bull;<DD>
+I still don't get locking.  I just want to increment the number in the file.  How can I do this?
+<DT>&bull;<DD>
+All I want to do is append a small amount of text to the end of a file.  Do I still have to use locking?
+<DT>&bull;<DD>
+How do I randomly update a binary file?
+<DT>&bull;<DD>
+How do I get a file's timestamp in perl?
+<DT>&bull;<DD>
+How do I set a file's timestamp in perl?
+<DT>&bull;<DD>
+How do I print to more than one file at once?
+<DT>&bull;<DD>
+How can I read in an entire file all at once?
+<DT>&bull;<DD>
+How can I read in a file by paragraphs?
+<DT>&bull;<DD>
+How can I read a single character from a file?  From the keyboard?
+<DT>&bull;<DD>
+How can I tell whether there's a character waiting on a filehandle?
+<DT>&bull;<DD>
+How do I do a <TT>&quot;tail -f&quot;</TT> in perl?
+<DT>&bull;<DD>
+How do I <I>dup()</I> a filehandle in Perl?
+<DT>&bull;<DD>
+How do I close a file descriptor by number?
+<DT>&bull;<DD>
+Why can't I use ``C:\temp\foo'' in <FONT SIZE="-1">DOS</FONT> paths?  What doesn't `C:\temp\foo.exe` work?
+<DT>&bull;<DD>
+Why doesn't glob(``*.*'') get all the files?
+<DT>&bull;<DD>
+Why does Perl let me delete read-only files?  Why does <TT>&quot;-i&quot;</TT> clobber protected files?  Isn't this a bug in Perl?
+<DT>&bull;<DD>
+How do I select a random line from a file?
+<DT>&bull;<DD>
+Why do I get weird spaces when I print an array of lines?
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>perlfaq6: 正则表达式</B>
+<P>
+
+
+<A NAME="ixABB"></A>
+模式匹配和正则表达式。
+<DL COMPACT>
+<DT>&bull;<DD>
+我该如何使用正规表示式才不至於写出不合语法且难以维护的程式码?
+<DT>&bull;<DD>
+我无法匹配超过一行的内容，哪里出了问题?
+<DT>&bull;<DD>
+我如何取出位於不同行的两个模式间之内容?
+<DT>&bull;<DD>
+我把一个正规表示式放入 $/但却没有用。错在哪里?
+<DT>&bull;<DD>
+如何在 LHS端【译注：式子中运算元左端部份】作不区别大小写式的替换，但在 RHS端【右端】保留大小写区别?
+<DT>&bull;<DD>
+如何使 <TT>&quot;\w&quot;</TT> 对应到附重音记号 (accented)的字元?
+<DT>&bull;<DD>
+如何作一个适合不同 locale【译注：语言环境，国家地区在文字编码上各自的惯例】的 <TT>&quot;/[a-zA-Z]/&quot;</TT> 对应?
+<DT>&bull;<DD>
+在一个正规表示式里如何引入 (quote) 变量?
+<DT>&bull;<DD>
+<TT>&quot;/o&quot;</TT> 到底是干麽用的?
+<DT>&bull;<DD>
+如何使用正规表示式将档案中 C语言样式的注解删掉?
+<DT>&bull;<DD>
+我能用 Perl的正规表示式去对应成对的符号吗?
+<DT>&bull;<DD>
+有人说正规表示式很贪婪，那是什麽意思?该如何避免它所带来的问题?
+<DT>&bull;<DD>
+如何处理每一行的每个字?
+<DT>&bull;<DD>
+我如何印出文字出现频率或行出现频率的纲要?
+<DT>&bull;<DD>
+如何能作近似对应?
+<DT>&bull;<DD>
+我如何有效率地一次对应多个正规表示式?
+<DT>&bull;<DD>
+为何我用 <TT>&quot;\b&quot;</TT> 作字界搜寻时会失败呢?
+<DT>&bull;<DD>
+为什麽每当我用 $&amp;, $`,或 $'时程式的速度就慢下来了呢?
+<DT>&bull;<DD>
+正规表示式中的 <TT>&quot;\G&quot;</TT> 能给我什麽好处?
+<DT>&bull;<DD>
+Perl正规表示引擎是 DFA 或 NFA?它们是 POSIX 相容的吗?
+<DT>&bull;<DD>
+在无返回值上下文中用 grep或 map有什麽不对?
+<DT>&bull;<DD>
+如何对应多位元组字母所构成的字串?
+<DT>&bull;<DD>
+如何匹配用户提供的模式？
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>perlfaq7: 综合的问题</B>
+<P>
+
+
+<A NAME="ixABC"></A>
+综合的 Perl 语言问题，不适于在其他所有段落中讨论的问题
+<DL COMPACT>
+<DT>&bull;<DD>
+我能拿到 Perl的 BNF/yacc/RE吗？
+<DT>&bull;<DD>
+$@%*这些符号是什麽意思？我怎麽知道何时该使用他们呢？
+<DT>&bull;<DD>
+字串加引号或使用分号及逗号是否绝对必要/还是完全没必要？
+<DT>&bull;<DD>
+我如何跳过一些传回值？
+<DT>&bull;<DD>
+我如何暂时滤掉警告讯息？
+<DT>&bull;<DD>
+什麽是一个扩充 (extension)？
+<DT>&bull;<DD>
+为何 Perl运算子的优先顺序和 C的不一样？
+<DT>&bull;<DD>
+我如何声明/创建一个数据结构？
+<DT>&bull;<DD>
+如何创建一个模块？
+<DT>&bull;<DD>
+如何创建一个类？
+<DT>&bull;<DD>
+如何知道一个变量是否是污染的？
+<DT>&bull;<DD>
+什么是闭包？
+<DT>&bull;<DD>
+什么是变量自杀，我应该怎样防止它？
+<DT>&bull;<DD>
+如何传递/返回一个{函数 Function, 文件句柄 FileHandle, 数组 Array, 散列 Hash, 方法 Method, 正则表达式 Regex}?
+<DT>&bull;<DD>
+如何创建一个静态变量？
+<DT>&bull;<DD>
+动态和静态作用域有什么区别？<I>local()</I> 和 <I>my()</I> 呢?
+<DT>&bull;<DD>
+在存在同名内部变量的作用域中，如何存取一个动态变量？
+<DT>&bull;<DD>
+深连接和浅连接有什么不同？
+<DT>&bull;<DD>
+为什么 &quot;my($foo) = &lt;<FONT SIZE="-1">FILE</FONT>&gt;;&quot; 不工作？
+<DT>&bull;<DD>
+如何重定义一个内建函数，操作符 或者方法？
+<DT>&bull;<DD>
+调用函数时 &amp;foo 和 <I>foo()</I> 的形式有什么不同?
+<DT>&bull;<DD>
+如何创建一个分支语句？
+<DT>&bull;<DD>
+如何捕获对未定义变量，函数或方法的访问？
+<DT>&bull;<DD>
+为什么找不到包含在同一个文件中的方法？
+<DT>&bull;<DD>
+如何找到当前的包？
+<DT>&bull;<DD>
+如何注释掉大块的 perl 代码？
+<DT>&bull;<DD>
+如何清空一个包？
+<DT>&bull;<DD>
+如何使用变量值作为一个变量名？
+<DT>&bull;<DD>
+``bad interpreter'' 是什么意思?
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>perlfaq8: 系统交互</B>
+<P>
+
+
+<A NAME="ixABD"></A>
+进程间通信 (<FONT SIZE="-1">IPC</FONT>), 用户界面控制 (键盘，屏幕和指点设备)。
+<DL COMPACT>
+<DT>&bull;<DD>
+如何找出正在运行的操作系统？
+<DT>&bull;<DD>
+为什么 <I>exec()</I> 不返回?
+<DT>&bull;<DD>
+如何对键盘／萤幕／滑鼠做些花样？
+<DT>&bull;<DD>
+如何打印有颜色的内容？
+<DT>&bull;<DD>
+如何只读取一个键而不等待按下回车？
+<DT>&bull;<DD>
+如何检测键盘上已有输入？
+<DT>&bull;<DD>
+如何清屏？
+<DT>&bull;<DD>
+如何获取屏幕大小？
+<DT>&bull;<DD>
+如何向使用者询问密码？
+<DT>&bull;<DD>
+如何读写串口？
+<DT>&bull;<DD>
+如何解码加密的口令文件？
+<DT>&bull;<DD>
+如何在后台开启进程？
+<DT>&bull;<DD>
+如何截获控制字符/信号？
+<DT>&bull;<DD>
+在 Unix 系统中如何修改 shadow 文件？
+<DT>&bull;<DD>
+如何设置时间和日期？
+<DT>&bull;<DD>
+如何 <I>sleep()</I> 或 <I>alarm()</I> 少于一秒的时间?
+<DT>&bull;<DD>
+如何测度少于一秒的时间？
+<DT>&bull;<DD>
+如何做 atexit()或 setjmp()/longjmp()的动作？（异常处理）
+<DT>&bull;<DD>
+为何我的 sockets程式在 System V (Solaris)系统下不能用？「不支持的协议」这个错误讯息又是什麽意思？
+<DT>&bull;<DD>
+如何从 Perl里呼叫系统中独特的 C函数？
+<DT>&bull;<DD>
+在哪里可以找引入档来做 ioctl()或 syscall()？
+<DT>&bull;<DD>
+为何 setuid perl程式会抱怨关於系统核心的问题？
+<DT>&bull;<DD>
+如何打开对某程式既输入又输出的管道 (pipe)？
+<DT>&bull;<DD>
+为何用 system()却得不到一个指令的输出呢？
+<DT>&bull;<DD>
+如何补捉外部指令的 STDERR？
+<DT>&bull;<DD>
+为何当管道开启失败时 open()不会传回错误讯息？
+<DT>&bull;<DD>
+在输出值是空的情境里使用反向引号有何不对？
+<DT>&bull;<DD>
+如何不经过 shell处理来呼叫反向引号？
+<DT>&bull;<DD>
+为何给了 EOF（Unix上是 ^D，MS-DOS上是 ^Z）後我的程式就不能从 STDIN读取东西了呢？
+<DT>&bull;<DD>
+如何把 shell程式转成 perl？
+<DT>&bull;<DD>
+perl能处理 telnet或 ftp 会话吗？
+<DT>&bull;<DD>
+如何在 Perl里达到 Expect的功能？
+<DT>&bull;<DD>
+有没有可能将 perl的指令列隐藏起来，以躲避像 &quot;ps&quot;之类的程式？
+<DT>&bull;<DD>
+我在 perl script里 {更动目录，更改我的使用环境}。为何这些改变在程式执行完後就消失了呢？如何让我做的修改显露出来？
+<DT>&bull;<DD>
+如何关闭一个程序的文件句柄而不用等它完成呢？
+<DT>&bull;<DD>
+如何 fork 一个守护进程？
+<DT>&bull;<DD>
+如何知道自己是否在交互地运行？
+<DT>&bull;<DD>
+如何为缓慢的事件设置超时？
+<DT>&bull;<DD>
+如何设置 <FONT SIZE="-1">CPU</FONT> 限额?
+<DT>&bull;<DD>
+如何避免在 Unix 系统中产生僵尸进程？
+<DT>&bull;<DD>
+如何使用 <FONT SIZE="-1">SQL</FONT> 数据库?
+<DT>&bull;<DD>
+如何使 <I>system()</I> 在收到 control-C 时退出?
+<DT>&bull;<DD>
+如何无阻塞地打开一个文件？
+<DT>&bull;<DD>
+如何从 <FONT SIZE="-1">CPAN</FONT> 安装模块?
+<DT>&bull;<DD>
+require 和 use 的区别是什么？
+<DT>&bull;<DD>
+如何设置我自己的模块/库路径？
+<DT>&bull;<DD>
+如何将我自己的程序的路径加入到模块/库搜索路径中？
+<DT>&bull;<DD>
+如何在运行时将一个目录加入到我的 include 路径中？
+<DT>&bull;<DD>
+什么是 socket.ph，从哪儿可以得到它？
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>perlfaq9: 网络</B>
+<P>
+
+
+<A NAME="ixABE"></A>
+网络通信，互联网以及少量有关 web 的内容
+<DL COMPACT>
+<DT>&bull;<DD>
+一个 <FONT SIZE="-1">CGI</FONT> 脚本的回应的正确格式是什么？
+<DT>&bull;<DD>
+我的 <FONT SIZE="-1">CGI</FONT> 脚本从命令行执行正常，但是在浏览器中不行 (500 Server Error)。
+<DT>&bull;<DD>
+如何从 <FONT SIZE="-1">CGI</FONT> 程序中得到好一点的错误提示？
+<DT>&bull;<DD>
+如何将字符串中的 <FONT SIZE="-1">HTML</FONT> 删除？
+<DT>&bull;<DD>
+如何展开 URL?
+<DT>&bull;<DD>
+如何从用户的机器上下载文件？如何打开其他机器上的文件？
+<DT>&bull;<DD>
+如何在 <FONT SIZE="-1">HTML</FONT> 添加一个弹出菜单?
+<DT>&bull;<DD>
+如何获取 <FONT SIZE="-1">HTML</FONT> 文件?
+<DT>&bull;<DD>
+如何根据提交的内容自动生成一个 <FONT SIZE="-1">HTML</FONT> ?
+<DT>&bull;<DD>
+如何解码或创建 web 中的 %-encoding?
+<DT>&bull;<DD>
+如何重定向到其他页面？
+<DT>&bull;<DD>
+如何为我的网页加上密码？
+<DT>&bull;<DD>
+如何用 Perl 修改我的 .htpasswd 和 .htgroup 文件?
+<DT>&bull;<DD>
+如何确保用户不会在表单中输入使我的 CGI 脚本作坏事的值？
+<DT>&bull;<DD>
+如何解释一个邮件头？
+<DT>&bull;<DD>
+如何解码一个 CGI 表单？
+<DT>&bull;<DD>
+如何检测一个有效的邮件地址？
+<DT>&bull;<DD>
+如何解码一个 <FONT SIZE="-1">MIME/BASE64</FONT> 字符串?
+<DT>&bull;<DD>
+如何返回用户的邮件地址？
+<DT>&bull;<DD>
+如何发邮件？
+<DT>&bull;<DD>
+如何使用 <FONT SIZE="-1">MIME</FONT> 来为邮件消息增加附件？
+<DT>&bull;<DD>
+如何读邮件？
+<DT>&bull;<DD>
+如何找到我的主机名/域名/IP 地址？
+<DT>&bull;<DD>
+如何获取一篇新闻文章或活动的新闻组？
+<DT>&bull;<DD>
+如何获取/上传一个 <FONT SIZE="-1">FTP</FONT> 文件?
+<DT>&bull;<DD>
+如何进行远程过程调用 <FONT SIZE="-1">RPC</FONT> ?
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>译者</H2>
+
+<B>萧百龄，两只老虎工作室，bbbush</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAD">Credits 致谢</A><DD>
+<DT><A HREF="#lbAE">Author and Copyright Information</A><DD>
+<DT><A HREF="#lbAF">Table of Contents 目录</A><DD>
+<DT><A HREF="#lbAG">The Questions 问题</A><DD>
+<DT><A HREF="#lbAH">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

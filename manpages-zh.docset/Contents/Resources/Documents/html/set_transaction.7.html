@@ -1,0 +1,110 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SET TRANSACTION</TITLE>
+</HEAD><BODY>
+<H1>SET TRANSACTION</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+SET TRANSACTION - 设置当前事务的特性
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+SET TRANSACTION
+    [ ISOLATION LEVEL { READ COMMITTED | SERIALIZABLE } ] [ READ WRITE | READ ONLY ]
+SET SESSION CHARACTERISTICS AS TRANSACTION
+    [ ISOLATION LEVEL { READ COMMITTED | SERIALIZABLE } ] [ READ WRITE | READ ONLY ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>SET TRANSACTION</B> 命令为当前事务设置特性。 它对后面的事务没有影响。
+<B>SET SESSION CHARACTERISTICS</B> 为一个会话中的每个事务设置缺省的隔离级别。 
+<B>SET TRANSACTION</B> 可以为一个独立的事务覆盖上面的设置。
+<P>
+
+<BR>&nbsp;可用的事务特性是事务隔离级别和事务访问模式（读/写或者只读）。
+<P>
+
+<BR>&nbsp;事务的隔离级别决定一个事务在同时存在其它并行运行的事务时它能够看到什么数据。
+<DL COMPACT>
+<DT><B>READ COMMITTED</B><DD>
+<BR>&nbsp;一条语句只能看到在它开始之前的数据。这是缺省。
+<DT><B>SERIALIZABLE</B><DD>
+<BR>&nbsp;当前的事务只能看到在这次事务第一条查询或者修改数据的语句执行之前的数据。
+<P>
+<DL COMPACT><DT><DD>
+<B>Tip:</B>
+
+提示:  说白了，serializable（可串行化）意味着两个事务将把数据库保持在同一个状态， 就好象这两个事务是严格地按照先后顺序执行地那样。
+</DL>
+
+<P>
+</DL>
+<P>
+
+<BR>&nbsp;事务隔离级别在事务中第一个数据修改语句&nbsp;(<B>SELECT</B>,
+<B>INSERT</B>, <B>DELETE</B>,
+<B>UPDATE</B>, <B>FETCH</B>,
+<B>COPY</B>) 执行之后就不能再次设置。 参阅 Chapter 12 ``Concurrency Control'' 获取有关事务隔离级别和并发性控制的更多信息。
+<P>
+
+<BR>&nbsp;事务访问模式决定事务是读/写还是只读。读/写是缺省。如果一个&nbsp;事务是只读，而且写入的表不是临时表，那么下面的&nbsp;SQL&nbsp;命令是不允许的：INSERT，&nbsp;UPDATE，DELETE，和&nbsp;COPY&nbsp;TO；&nbsp;而所有的&nbsp;CREATE，ALTER，和&nbsp;DROP&nbsp;命令；&nbsp;COMMENT，GRANT，REVOKE，&nbsp;TRUNCATE；和&nbsp;EXPLAIN&nbsp;ANALYZE&nbsp;和EXECUTE&nbsp;都不允许。这是一个高层次的只读概念，它并不阻止对磁盘的写入。
+<A NAME="lbAE">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;会话的缺省事务隔离级别也可以用命令
+<P>
+<PRE>
+SET default_transaction_isolation = '<I>value</I>'
+
+</PRE>
+
+<BR>&nbsp;以及在配置文件里设置。&nbsp;参考&nbsp;Section&nbsp;16.4&nbsp;``Run-time&nbsp;Configuration''&nbsp;获取更多信息。
+<A NAME="lbAF">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;两个命令都在&nbsp;SQL&nbsp;标准里定义了。SQL&nbsp;里的缺省事务隔离级别是&nbsp;SERIALIZABLE；&nbsp;在&nbsp;PostgreSQL&nbsp;里，缺省隔离级别是&nbsp;READ&nbsp;COMMITED，但是你可以用上面的描述修改它。&nbsp;PostgreSQL&nbsp;并没有提供隔离级别&nbsp;READ&nbsp;UNCOMMITTED&nbsp;和&nbsp;REPEATABLE&nbsp;READ。&nbsp;因为多版本并发控制，SERIALIZABLE&nbsp;级别并非真正的可串行化。参阅&nbsp;Chapter&nbsp;12&nbsp;``Concurrency&nbsp;Control''&nbsp;获取细节。
+<P>
+
+<BR>&nbsp;在&nbsp;SQL&nbsp;标准里还有另外一种事务特性可以用这些命令设置：诊断范围的大小。这个概念只用于嵌入的&nbsp;SQL。
+<A NAME="lbAG">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">NOTES 注意</A><DD>
+<DT><A HREF="#lbAF">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAG">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,122 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of UPDATE</TITLE>
+</HEAD><BODY>
+<H1>UPDATE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+UPDATE - 更新一个表中的行
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+UPDATE [ ONLY ] <I>table</I> SET <I>column</I> = { <I>expression</I> | DEFAULT } [, ...]
+    [ FROM <I>fromlist</I> ]
+    [ WHERE <I>condition</I> ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>UPDATE</B> 改变满足条件的所有行的声明了的列/字段的值。 只有要更改的列/字段需要在语句中出现，没有明确的 SET 的字段保持它们原来的数值。
+<P>
+
+<BR>&nbsp;缺省时，UPDATE&nbsp;将更新所声明的表和所有子表的记录。&nbsp;如果你希望只更新所声明的表，你应该使用&nbsp;ONLY&nbsp;子句。
+<P>
+
+<BR>&nbsp;要更改表，你必须对它有UPDATE&nbsp;权限，&nbsp;同样对&nbsp;expression&nbsp;或者&nbsp;condition&nbsp;条件里提到的任何表也要有SELECT权限。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>table</I><B></B><DD>
+<BR>&nbsp;现存表的名称（可以有模式修饰）。&nbsp;
+<DT><B></B><I>column</I><B></B><DD>
+<BR>&nbsp;表&nbsp;table&nbsp;中列/字段的名。
+<DT><B></B><I>expression</I><B></B><DD>
+<BR>&nbsp;赋予列/字段的一个有效的值或表达式。表达式可以使用表中这个或其它字段的旧数值。
+<DT><B>DEFAULT</B><DD>
+<BR>&nbsp;把字段设置为它的缺省值（如果没有缺省表达式赋予它，那么就是&nbsp;NULL）。
+<DT><B></B><I>fromlist</I><B></B><DD>
+<BR>&nbsp;一个表达式的列表，允许来自其它表中的列/字段出现在&nbsp;WHERE&nbsp;条件里。
+<DT><B></B><I>condition</I><B></B><DD>
+<BR>&nbsp;一个表达式，返回&nbsp;boolean&nbsp;类型。只有这个表达式返回&nbsp;true&nbsp;的行被更新。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>OUTPUTS 输出</H2>
+
+<P>
+
+<BR>&nbsp;成功完成后，UPDATE&nbsp;命令返回形如
+<P>
+<PRE>
+UPDATE <I>count</I>
+
+</PRE>
+
+<BR>&nbsp;的命令标签。count&nbsp;是更新的行数。&nbsp;如果&nbsp;count&nbsp;是&nbsp;0，&nbsp;那么没有符合&nbsp;condition&nbsp;的行（这个不认为是错误）。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;把表&nbsp;films&nbsp;里的字段&nbsp;kind&nbsp;里的词&nbsp;Drama&nbsp;用Dramatic&nbsp;代替：
+<P>
+<PRE>
+UPDATE films SET kind = 'Dramatic' WHERE kind = 'Drama';
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;调整表&nbsp;weather&nbsp;中的一行的温度记录并且把降水设置为缺省值：
+<P>
+<PRE>
+UPDATE weather SET temp_lo = temp_lo+1, temp_hi = temp_lo+15, prcp = DEFAULT
+  WHERE city = 'San Francisco' AND date = '2003-07-03';
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;这条命令遵循&nbsp;SQL&nbsp;标准。FROM&nbsp;子句是&nbsp;PostgreSQL&nbsp;扩展。
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">OUTPUTS 输出</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

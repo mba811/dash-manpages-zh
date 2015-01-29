@@ -1,0 +1,195 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of nscd.conf</TITLE>
+</HEAD><BODY>
+<H1>nscd.conf</H1>
+Section: File Formats (5)<BR>Updated: 1999-10<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+/etc/nscd.conf - 域名服务缓存守护进程配置文件
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+该文件
+<B>/etc/nscd.conf</B>
+
+在启动
+<B><A HREF="/cgi-bin/man/man2html?8+nscd">nscd</A></B>(8)
+
+时读入。每一行或者指定一个属性和值，或者指定一个属性、服务和一个值。域之间通过
+空格或者TAB分开。`#'表示注释的开始；在该字符之后到行的末尾将不会被nscd解释。
+<P>
+有效服务为passwd，group或者hosts。
+<P>
+<B>logfile</B>
+
+<I>debug-file-name</I>
+
+<DL COMPACT><DT><DD>
+指定调试信息写入的文件名。
+</DL>
+
+<P>
+<B>debug-level</B>
+
+<I>value</I>
+
+<DL COMPACT><DT><DD>
+设置希望的调试级别。
+</DL>
+
+<P>
+<B>threads</B>
+
+<I>number</I>
+
+<DL COMPACT><DT><DD>
+这是启动的等待请求的线程数。最少将创建5个线程。
+</DL>
+
+<P>
+<B>server-user</B>
+
+<I>user</I>
+
+<DL COMPACT><DT><DD>
+如果设置了该选项，nscd将作为该用户运行，而不是作为root。如果每个用户都使用一个
+单独的缓存（-S参数），将忽略该选项。
+</DL>
+
+<P>
+<B>enable-cache</B>
+
+<I>service</I>
+
+<I>&lt;yes|no&gt;</I>
+
+<DL COMPACT><DT><DD>
+启用或禁用制定的
+<I>服务</I>
+
+缓存。
+</DL>
+
+<P>
+<B>positive-time-to-live</B>
+
+<I>service</I>
+
+<I>value</I>
+
+<DL COMPACT><DT><DD>
+设置
+<I>service</I>
+
+在指定缓存中正的项目（成功的请求）的TTL（存活时间）。
+<I>Value</I>
+
+以秒为单位。较大的值将增加缓存命中率从而减低平均响应时间，但是将增加缓存的一致
+性问题。
+</DL>
+
+<P>
+<B>negative-time-to-live</B>
+
+<I>service</I>
+
+<I>value</I>
+
+<DL COMPACT><DT><DD>
+设置
+<I>service</I>
+
+在指定缓存中负的项目（失败的请求）的TTL（存活时间）。
+<I>Value</I>
+
+以秒为单位。如果存在由不在系统数据库中的uid（用户ID）（例如在以root身份解包linux
+内核源代码时）所拥有的文件将明显改善性能；应该维持较小的值以降低缓存一致性问题。
+</DL>
+
+<P>
+<B>suggested-size</B>
+
+<I>service</I>
+
+<I>value</I>
+
+<DL COMPACT><DT><DD>
+这是内部散列表的大小，
+<I>value</I>
+
+应该保持一个素数以达到优化效果。
+</DL>
+
+<P>
+<B>check-files</B>
+
+<I>service</I>
+
+<I>&lt;yes|no&gt;</I>
+
+<DL COMPACT><DT><DD>
+启用或禁用检查属于指定
+<I>服务</I>
+
+的文件的改变。这些文件是
+<I>/etc/passwd，</I>
+
+<I>/etc/group，</I>
+
+以及
+<I>/etc/hosts。</I>
+
+</DL>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+nscd">nscd</A></B>(8)
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>作者</H2>
+
+<B>nscd</B>
+
+由Thorsten Kukuk和Ulrich Drepper完成。
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>梁萌 &lt;<A HREF="mailto:mengliang99@sohu.com">mengliang99@sohu.com</A>&gt;</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/5/18</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中国linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">参见</A><DD>
+<DT><A HREF="#lbAE">作者</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">[中国linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

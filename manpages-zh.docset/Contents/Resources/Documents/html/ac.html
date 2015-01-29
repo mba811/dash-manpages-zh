@@ -1,0 +1,359 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of AC</TITLE>
+</HEAD><BODY>
+<H1>AC</H1>
+Section: User Commands  (1)<BR>Updated: 1995 October 31<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ac &nbsp;- 输出用户连接时间
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+
+
+<DL COMPACT>
+<DT><B>ac</B>
+
+<DD>
+[
+<B>-d</B>
+
+|
+<B>--daily-totals</B>
+
+]
+[
+<B>-y</B>
+
+|
+<B>--print-year</B>
+
+]
+<BR>
+
+[
+<B>-p</B>
+
+|
+<B>--individual-totals</B>
+
+]
+[
+<I>people</I>
+
+]
+<BR>
+
+[
+<B>-f</B>
+
+|
+<B>--file</B>
+
+<I>filename</I>
+
+]
+[
+<B>-a</B>
+
+|
+<B>--all-days</B>
+
+]
+<BR>
+
+[ 
+<B>--complain </B>
+
+]
+[
+<B>--reboots </B>
+
+]
+[
+<B>--supplants</B>
+
+]
+<BR>
+
+[
+<B>--timewarps </B>
+
+]
+[
+<B>--compatibility</B>
+
+]
+<BR>
+
+[
+<B>--tw-leniency</B>
+
+<I>num</I>
+
+]
+[
+<B>--tw-suspicious</B>
+
+<I>num</I>
+
+]
+<BR>
+
+[
+<B>-z</B>
+
+|
+<B>--print-zeros</B>
+
+]
+[
+<B>--debug</B>
+
+]
+<BR>
+
+[
+<B>-V</B>
+
+|
+<B>--version </B>
+
+]
+[
+<B>-h</B>
+
+|
+<B>--help </B>
+
+]
+
+
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+基于当前的 /var/log/wtmp 文件中的登录和退出时间输出一个
+关于连接时间(以小时为单位)的报告。并且还输出一个总计时间。
+<P>
+记帐文件  /var/log/wtmp 由 <A HREF="/cgi-bin/man/man2html?8+init">init</A>(8)  和  <A HREF="/cgi-bin/man/man2html?1+login">login</A>(1)  维护。ac  和 
+login  均不生成 /var/log/wtmp 文件，如果记帐文件不存在，则不
+做记帐工作。如果要开始记帐，应生成一个长度为零的记帐文件。
+<P>
+注意：文件 /var/log/wtmp 可能很快就变得非常大。你可能隔一段
+时间就要裁减一下这个文件。
+<P>
+GNU ac 工作起来与 u*x ac 基本一样，但也在几个方面有小的改进。
+你可能希望看到 GNU ac 和其他系统上的 ac 在输出上的不同。想得
+到额外的信息，请使用命令 info accounting。
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-d, --daily-totals</B>
+
+<DD>
+为每天输出输出一个总计时间，而不是在结尾输出一大的总计。输出
+可能象下面这样：
+<BR>&nbsp;&nbsp;&nbsp;Jul&nbsp;3&nbsp;total&nbsp;1.17
+<BR>&nbsp;&nbsp;&nbsp;Jul&nbsp;4&nbsp;total&nbsp;2.10
+<BR>&nbsp;&nbsp;&nbsp;Jul&nbsp;5&nbsp;total&nbsp;8.23
+<BR>&nbsp;&nbsp;&nbsp;Jul&nbsp;6&nbsp;total&nbsp;2.10
+<BR>&nbsp;&nbsp;&nbsp;Jul&nbsp;7&nbsp;total&nbsp;0.30
+<DT><B>-p, --individual-totals</B>
+
+<DD>
+为每个用户输出总计时间，并在最后追加一个所有用户的总计时间的
+累计值。输出可能象下面这样：
+<BR>&nbsp;&nbsp;&nbsp;bob&nbsp;8.06
+<BR>&nbsp;&nbsp;&nbsp;goff&nbsp;0.60
+<BR>&nbsp;&nbsp;&nbsp;maley&nbsp;7.37
+<BR>&nbsp;&nbsp;&nbsp;root&nbsp;0.12
+<BR>&nbsp;&nbsp;&nbsp;total&nbsp;16.15
+<DT><I>[用户列表]</I>
+
+<DD>
+输出的是在用户列表中包括的所有用户的连接时间的总计和值。
+用户列表由空格分隔，其中不允许有通配符。
+<DT><B>-f, --file </B><I>filename</I>
+
+<DD>
+从指定文件而不是系统的 /var/log/wtmp 文件中读取记帐信息。
+<DT><B>--complain</B>
+
+<DD>
+<PRE>
+当 /var/log/wtmp 存在着问题(时间扭曲，丢失记录，
+或其他任何问题)，输出一个适当的错误信息。
+</PRE>
+
+<DT><B>--reboots</B>
+
+<DD>
+<PRE>
+重新引导(reboot)记录不是在系统重新引导时写的，而是
+在系统重新启动(restart)时写的。所以不可能知道重新引导
+的精确的发生时间。用户在系统重新引导时可能已经在系统
+上登录了，许多 ac 依据用户(的要求)自动的统计在登录与重
+新引导记录之间的时间(尽管所有的这些时间不应是问题，但
+系统关机很长的时间时可能就是了)。如果你打算统计这个时
+间，就应包括此选项。
+ *要求对 vanilla ac 的兼容性，就要包含此选项*
+</PRE>
+
+<DT><B>--supplants</B>
+
+<DD>
+<PRE>
+有时，注销记录没有写出明确的终端，因而
+最近的用户的自然增长的时间就不能被计算。如果你打算
+包括在一个终端上的从用户登录到下一次登录的时间(尽管
+可能是不正确的)，就应包括此选项。
+ *要求对 vanilla ac 的兼容性，就要包含此选项*
+</PRE>
+
+<DT><B>--timewarps</B>
+
+<DD>
+<PRE>
+一些时候，在 @WTMP_FILE_LOC 文件中的记录可能突然跳回
+到了以前的时间而却没有时钟更改记录出现。在这种情况
+发生时，不可能知道用户登录了多长时间。如果你打算依据
+用户(的要求)统计从登录到时间扭曲之间的时间，就应包括
+此选项。
+*要求对 vanilla ac 的兼容性，就要包含此选项*
+</PRE>
+
+<DT><B>--compatibility</B>
+
+<DD>
+这是上面三种选项的速写，就不用敲三次键盘了。
+<DT><B>-a, --all-days</B>
+
+<DD>
+<PRE>
+如果我们在输出日总计时使用了此参数，则输出每天的记录，
+而不是忽略掉没有登录活动的间隔日。没有此选项时，在这
+些间隔日期间自然增长的时间被列在下一天即有登录活动的
+那一天的底下。
+</PRE>
+
+<DT><B>--tw-leniency</B><I> num</I>
+
+<DD>
+<PRE>
+设置时间扭曲的宽限为 num 秒。在 /var/log/wtmp 文件中
+的记录可能轻微的乱了次序(最显著的是当两个登录发生在
+ 一前一后的时期，第二个可能先写了记录)。缺省的值被设置
+为60。如果程序注意到了这个问题，除非使用了--timewarps
+选项，否则不把时间赋给用户。
+</PRE>
+
+<DT><DD>
+<B>--tw-suspicious</B><I> num</I>
+
+<PRE>
+设置时间扭曲的不信任值为 num 秒. 结果 /var/log/wtmp 文
+件中的两个记录超出了这个秒间隔数, 那么在 @WTMP_FILE_LOC
+文件中一定存在问题 (或者你的机器已经一年没有使用了). 
+如果程序注意到了这个问题，除非使用了--timewarps选项，
+否则不把时间赋给用户。
+</PRE>
+
+<P>
+<DT><B>-y, --print-year</B>
+
+<DD>
+<BR>&nbsp;在显示日期的时候输出年份。
+<DT><B>-z, --print-zeros</B>
+
+<DD>
+<PRE>
+一个任何类别的总计(除了全部总计)是零，还是输出此总计。
+缺省时禁止输出是零的总计。
+</PRE>
+
+<DT><B>--debug</B>
+
+<DD>
+输出冗余的内部(调试)信息。
+<DT><B>-V, --version</B>
+
+<DD>
+在标准输出上输出版本号并退出。
+<DT><B>-h, --help</B>
+
+<DD>
+在标准输出上输出使用方法并退出。
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>相关文件</H2>
+
+<I>/var/log/wtmp</I>
+
+系统范围的登录记录文件。进一步的细节参见 <A HREF="/cgi-bin/man/man2html?5+wtmp">wtmp</A>(5)。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>著作者</H2>
+
+<PRE>
+GNU 的记帐工具是由 Noel Cragg 写的。
+手册页是从 Susan Kleinmann 写的关于记帐的 texinfo 页转换
+而来的。
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+login">login</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?5+wtmp">wtmp</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?8+init">init</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+sa">sa</A></B>(8)
+
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<PRE>
+<B>mhss</B>
+</PRE><A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2000/10/31 
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">相关文件</A><DD>
+<DT><A HREF="#lbAG">著作者</A><DD>
+<DT><A HREF="#lbAH">参见</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

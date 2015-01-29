@@ -1,0 +1,121 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of after</TITLE>
+</HEAD><BODY>
+<H1>after</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.5<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+after - 延迟一段时间之后执行一个命令
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>after </B><I>ms</I>
+<P>
+<B>after </B><I>ms </I>?<I>script script script ...</I>?
+<P>
+<B>after cancel </B><I>id</I>
+<P>
+<B>after cancel </B><I>script script script ...</I>
+<P>
+<B>after idle </B>?<I>script script script ...</I>?
+<P>
+<B>after info </B>?<I>id</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<BR>&nbsp;这个命令被用于延迟执行程序或者在将来某时在后台执行一个命令。它有几种形式，依靠给命令的第一个参数(来区分):
+<DL COMPACT>
+<DT><B>after </B><I>ms</I><DD>
+<I>Ms</I> 必须是整数，给出以毫秒为单位的时间。命令在睡眠(sleep) <I>ms</I> 毫秒之后返回。当命令在睡眠的时候，应用不响应事件。
+<DT><B>after </B><I>ms </I>?<I>script script script ...</I>?<DD>
+在这种形式中，命令立即返回，它安排一个 Tcl 命令在 <I>ms</I> 毫秒之后作为事件处理器(handler)来运行。在给定时间，命令将被精确的执行一次。延迟的命令是通过连接(concatenate)所有的  <I>script</I> 参数形成的，这与 <B>concat</B> 命令的方式(fashion)一样。命令将在全局层次上执行(在任何 Tcl 过程的上下文之外)。在执行延迟命令时如果有错误发生，则使用 <B>bgerror</B> 机制来报告错误。<B>after</B> 命令返回一个标识符，<B>after cancel</B> 命令用它来取消延迟的命令。
+<DT><B>after cancel </B><I>id</I><DD>
+取消前面安排的延迟命令的执行。<I>Id</I> 指示要取消那条命令；它必须是前面 <B>after</B> 命令返回的。如果用 <I>id</I> 给出的命令已经执行了则 <B>after cancel</B> 命令不起作用。
+<DT><B>after cancel </B><I>script script ...</I><DD>
+这个命令也取消一个延迟命令的执行。用空格分隔符来连接 <I>script</I> 参数(如同在 <B>concat</B> 命令中那样)。如果有一条等待的命令与这个字符串匹配，则取消它并永不执行；如果当前没有这样的等待命令则 <B>after cancel</B> 命令不起作用。
+<DT><B>after idle </B><I>script </I>?<I>script script ...</I>?<DD>
+用空格分隔符连接 <I>script</I> 参数(如同在 <B>concat</B> 命令中那样)，并被作为一个空闲回调(idle callback)来安排结果脚本在以后执行。下次进入事件循环并且没有事件要处理(的时候)，这个脚本被精确的执行一次。命令返回一个标识符，<B>after cancel</B> 命令用它来取消延迟的命令。在执行延迟命令时如果有错误发生，则使用 <B>bgerror</B> 机制来报告错误。
+<DT><B>after info </B>?<I>id</I>?<DD>
+这个命令返回关于存在的事件处理器的信息。如果没提供 <I>id</I> 参数，命令为所有通过 <B>after</B> 命令给这个解释器建立的事件处理器返回一个标识符的列表。如果提供了 <I>id</I>，它指定一个现存的处理器；<I>id</I> 必须是以前调用 <B>after</B> 返回的值并且仍未被触发或取消。这种情况下命令返回一个有两个元素的列表。列表的第一个元素是与 <I>id</I> 关联的脚本，第二个元素要么是 <B>idle</B> 要么是 <B>timer</B>，指示它是那种类型的事件处理器。
+</DL>
+<P>
+
+命令的 <B>after </B><I>ms</I> 和 <B>after idle</B> 形式假定应用是事件驱动的: 除非应用进入事件循环否则延迟命令将不被执行。在通常不事件驱动的应用中，如 <B>tclsh</B>，用 <B>vwait</B> 和 <B>update</B> 命令进入事件循环。
+<P>
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+bgerror
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+cancel, delay, idle callback, sleep, time
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/21</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

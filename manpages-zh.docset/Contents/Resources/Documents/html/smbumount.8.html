@@ -1,0 +1,91 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SMBUMOUNT</TITLE>
+</HEAD><BODY>
+<H1>SMBUMOUNT</H1>
+Section: Maintenance Commands (8)<BR>Updated: 17 Apr 2001<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+smbumount - 为普通用户卸载smb文件系统
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<P>
+<B>smbumount</B> <B>装载点</B>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<P>
+
+普通用户使用这个程序可以卸载smb文件系统。它在工作时会suid到root身份，
+并且向普通linux用户提供了对资源更多的控制能力。在suid方面，它拥有足
+够的安全性，因此，只有装载过文件系统的用户才可以调用它来进行卸载。而
+对于root来说，就没有必要用这个程序了。unix中的通用umount程序也工作得
+不错，但在suid到root方面的确也是有问题的。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>装载点</B><DD>
+要卸载的目标目录。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见</H2>
+
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?8+smbmount">smbmount</A>(8)</B>
+<A NAME="lbAG">&nbsp;</A>
+<H2>作者</H2>
+
+<P>
+
+Volker Lendecke、Andrew Tridgell、Michael H. Warfield和其他人。
+<P>
+
+关于smb文件系统方面的工具，如<B>smbmount</B>、<B>smbumount</B>、和<B>smbmnt</B>，
+其维护者是Urban Widmark &lt;URL:mailto:<A HREF="mailto:urban@teststation.com">urban@teststation.com</A>&gt;。要提问题，
+请到SAMBA的邮件列表&lt;URL:mailto:<A HREF="mailto:samba@samba.org">samba@samba.org</A>&gt;。
+<P>
+
+Gerald Carter在Samba 2.2中对本手册页进行了转换。
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2001/05/20
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">参见</A><DD>
+<DT><A HREF="#lbAG">作者</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

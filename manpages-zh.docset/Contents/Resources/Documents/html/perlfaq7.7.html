@@ -1,0 +1,1896 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PERLFAQ7</TITLE>
+</HEAD><BODY>
+<H1>PERLFAQ7</H1>
+Section: Perl Programmers Reference Guide (7)<BR>Updated: 2003-11-25<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+perlfaq7 - 综合的问题 (2003/07/24 02:17:21)
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<A NAME="ixAAC"></A>
+本节讨论综合的 Perl 语言问题，不适于在其他所有段落中讨论的问题
+
+<BR>
+
+
+
+<P>
+
+<B>我能拿到 Perl的 BNF/yacc/RE吗？</B>
+<P>
+
+
+<A NAME="ixAAD"></A>
+没有 <FONT SIZE="-1">BNF</FONT>, 但是你可以从源代码的 perly.y 文件的 yacc 语法中自行归纳，如果你足够勇敢的话。语法依赖于非常智能的词法分析，因此也要准备好阅读 toke.c。
+<P>
+
+用 Chaim Frenkel的话：``Perl的语法无法被简化到可以用 BNF 表示。解析Perl的工作是分散於 yacc、lexer、烟雾和镜子之间。''
+
+<BR>
+
+
+
+<P>
+
+<B>$@%*这些符号是什麽意思？我怎麽知道何时该使用他们呢？</B>
+<P>
+
+
+<A NAME="ixAAE"></A>
+它们都是类型限定符号，在 perldata 中详述：
+<P>
+
+
+
+<PRE>
+    $ 标量值，数字，字符串或引用
+    @ 数组
+    % 散列，关联数组
+    &amp; 子程序，也就是函数，过程，方法
+    * 代表这个符号的所有类型。在版本4中，可以用作指针，但是在新的 perl 中可以只用引用就可以了
+
+</PRE>
+
+
+<P>
+
+有些其他的符号你可能会碰到但却不是指定形态用的有：
+<P>
+
+
+
+<PRE>
+    &lt;&gt; 这是用来从一个文件句柄里输入一份记录
+    \ 取某样东西的引用
+
+</PRE>
+
+
+<P>
+
+注意 &lt;<FONT SIZE="-1">FILE</FONT>&gt; 不是用来指定文件类型，亦非此句柄的名字。它只是 将&lt;&gt;这个运算符作用在 FILE这个句柄上。在标量上下文 (scalar context) 中，它自 FILE 把手一次读入一行 (嗯，该说一笔记录，参看 $/)，在序列情境 (list context)下，则一次将 全部的内容读 入。当对档案使用开、关或其它 &lt;&gt;之外的动作、或甚至只是提到把 手时，切记不要使用 &lt;&gt;。下面的用法是正确的：<TT>&quot;eof(FH)&quot;</TT>, <TT>&quot;seek(FH, 0,
+2)&quot;</TT> 以及 ``copying from <FONT SIZE="-1">STDIN</FONT> to <FONT SIZE="-1">FILE</FONT>''.
+
+<BR>
+
+
+
+<P>
+
+<B>字串加引号或使用分号及逗号是否绝对必要/还是完全没必要？</B>
+<P>
+
+
+<A NAME="ixAAF"></A>
+通常一个没有冠上形态符号的字 (bareword)是不需被纳入引号里的，但在大多数的情况下或许该这麽做 (在 <TT>&quot;use strict&quot;</TT> 下则是必须的)。但由一个简单的字(不能是一个已定义的副函数之名称)所构成的索引值，和 <TT>&quot;=&gt;&quot;</TT> 左端的运算子，都会被视为已纳入引号了：
+<P>
+
+
+
+<PRE>
+    这些                     和这些一样
+    ------------            ---------------
+    $foo{line}              $foo{&quot;line&quot;}
+    bar =&gt; stuff            &quot;bar&quot; =&gt; stuff
+
+</PRE>
+
+
+<P>
+
+一个区块末端的分号可有可无，一个序列的最後一个逗号亦同。良好的写作风格 (参看perlstyle)中建议除了在单行程式 (one-liners)的情况外都将他们加上去：
+<P>
+
+
+
+<PRE>
+    if ($whoops) { exit 1 }
+    @nums = (1, 2, 3);
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    if ($whoops) {
+        exit 1;
+    }
+    @lines = (
+        &quot;There Beren came from mountains cold&quot;,
+        &quot;And lost he wandered under leaves&quot;,
+    );
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>我如何跳过一些传回值？</B>
+<P>
+
+
+<A NAME="ixAAG"></A>
+一种方法是将传回值当作序列来对待，然後用索引来指名其中的某个位置：
+<P>
+
+
+
+<PRE>
+        $dir = (getpwnam($user))[7];
+
+</PRE>
+
+
+<P>
+
+另一种方法就是在等号左端用 undef 作元素：
+<P>
+
+
+
+<PRE>
+    ($dev, $ino, undef, undef, $uid, $gid) = stat($file);
+
+</PRE>
+
+
+<P>
+
+也可以用一个列表片段来仅选择你需要的元素：
+<P>
+
+
+
+<PRE>
+        ($dev, $ino, $uid, $gid) = ( stat($file) )[0,1,4,5];
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>我如何暂时滤掉警告讯息？</B>
+<P>
+
+
+<A NAME="ixAAH"></A>
+如果正在运行 Perl 5.6.0 或更高版本， <TT>&quot;use warnings&quot;</TT> 编用可以对警告如何产生进行很好的控制。参见 perllexwarn 中的细节
+<P>
+
+
+
+<PRE>
+    {
+        no warnings;          # 暂时关掉警告讯息
+        $a = $b + $c;         # 我知道这些变数可能未定义
+    }
+
+</PRE>
+
+
+<P>
+
+如果运行旧版本的 Perl，变量 <TT>$^W</TT> (在 perlvar 中有记载) 控制了这个块的运行时警告：
+<P>
+
+
+
+<PRE>
+    {
+        local $^W = 0;        # 暂时关掉警告讯息
+        $a = $b + $c;         # 我知道这些变数可能未定义
+    }
+
+</PRE>
+
+
+<P>
+
+注意，像所有的标点符号变数一样，目前不能对 <TT>$^W</TT> 用 my()，只能用 local()。
+
+<BR>
+
+
+
+<P>
+
+<B>什麽是一个扩充?</B>
+<P>
+
+
+<A NAME="ixAAI"></A>
+一种从 Perl呼叫编译好的 C程式码的方法。阅读 perlxstut是个多了解扩充(extensions)的好方法。
+
+<BR>
+
+
+
+<P>
+
+<B>为何 Perl运算子的优先顺序和 C的不一样？</B>
+<P>
+
+
+<A NAME="ixAAJ"></A>
+事实上它们是相同的。所有 Perl自 C借过来的运算子都具备与原来在 C 中相同的优先顺序。问题出在那些 C没有的运算子，特别是那些将其右方一律当成序列情境对待的函数，例如 print, chmod, exec等等。这类的函数被称作序列运算子(``list operators'')，在 perlop的优先顺序表中就是这麽称呼。
+<P>
+
+一个常犯的错误像是：
+<P>
+
+
+
+<PRE>
+    unlink $file || die &quot;snafu&quot;;
+
+</PRE>
+
+
+<P>
+
+这会被解译器看成是：
+<P>
+
+
+
+<PRE>
+    unlink ($file || die &quot;snafu&quot;);
+
+</PRE>
+
+
+<P>
+
+要避免此问题，须加上括号或是用超低优先的 <TT>&quot;or&quot;</TT> 运算子：
+<P>
+
+
+
+<PRE>
+    (unlink $file) || die &quot;snafu&quot;;
+    unlink $file or die &quot;snafu&quot;;
+
+</PRE>
+
+
+<P>
+
+这些“英文的”运算子 (and, or, xor,及 not)是刻意设计成较一般序列运算子低的优先顺序，这就是为了解决前述的状况。
+<P>
+
+另一个拥有出人意料的优先顺序者为指数。它甚至高於负号，这使得 <TT>&quot;-2**2&quot;</TT>变成负四而非正四。他同时也会“向右靠”(right-associate)，意思是说 <TT>&quot;2**3**2&quot;</TT> 代表二的九次方，而不是八的平方。
+<P>
+
+Although it has the same precedence as in C, Perl's <TT>&quot;?:&quot;</TT> operator
+produces an lvalue.  This assigns <TT>$x</TT> to either <TT>$a</TT> or <TT>$b</TT>, depending
+on the trueness of <TT>$maybe:</TT>
+<P>
+
+
+
+<PRE>
+    ($maybe ? $a : $b) = $x;
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>我如何声明/创建一个数据结构？</B>
+<P>
+
+
+<A NAME="ixAAK"></A>
+一般来说，我们不 ``声明'' 一个结构。用一个 (通常是匿名的) 散列的引用 (hash reference)即可。参看 perlref 以及 perldsc，里面有更多资料。以下是一个范例：
+<P>
+
+
+
+<PRE>
+    $person = {};                   # new anonymous hash
+    $person-&gt;{AGE}  = 24;           # set field AGE to 24
+    $person-&gt;{NAME} = &quot;Nat&quot;;        # set field NAME to &quot;Nat&quot;
+
+</PRE>
+
+
+<P>
+
+如果你要的是更严谨的写法，看看 perltoot 。
+
+<BR>
+
+
+
+<P>
+
+<B>如何创建一个模块？</B>
+<P>
+
+
+<A NAME="ixAAL"></A>
+一个模组就是一个放在同名档案里的包裹(package)。例如，Hello::There模组会放在Hello/There.pm。perlmod 里有详尽说明。Exporter 也会很有帮助。如果你正在写一个 C 或是混合了 C及 Perl 的模组，那麽你就该读 perlxstut 。
+<P>
+
+The <TT>&quot;h2xs&quot;</TT> program will create stubs for all the important stuff for you:
+<P>
+
+
+
+<PRE>
+  % h2xs -XA -n My::Module
+
+</PRE>
+
+
+<P>
+
+The <TT>&quot;-X&quot;</TT> switch tells <TT>&quot;h2xs&quot;</TT> that you are not using <TT>&quot;XS&quot;</TT> extension
+code.  The <TT>&quot;-A&quot;</TT> switch tells <TT>&quot;h2xs&quot;</TT> that you are not using the
+AutoLoader, and the <TT>&quot;-n&quot;</TT> switch specifies the name of the module.
+See h2xs for more details.
+
+<BR>
+
+
+
+<P>
+
+<B>如何创建一个类？</B>
+<P>
+
+
+<A NAME="ixAAM"></A>
+perltoot 里面有对於类和对象的介绍， perlobj 和 perlbot 也有。
+
+<BR>
+
+
+
+<P>
+
+<B>如何知道一个变量是否是污染的？</B>
+<P>
+
+
+<A NAME="ixAAN"></A>
+可以使用 Scalar::Util 模块中的 <I>tainted()</I> 函数 (可从 CPAN 获取，也包含在 Perl 5.8.0 中)。参见 perlsec 中的 ``Laundering and Detecting Tainted Data'' 。
+
+<BR>
+
+
+
+<P>
+
+<B>什么是闭包？</B>
+<P>
+
+
+<A NAME="ixAAO"></A>
+关於闭包的说明，请看 perlref 。
+<P>
+
+闭包 (closure)是个精确但又很难解释的计算机科学名词。在 Perl 里面，闭包是以匿名函数的形式来实现，具有持续参照位於该函数范围之外的文字式变数值的能力。这些外部的文字变数会神奇地保留它们在闭包函数最初定义时的值 (深连结)。
+<P>
+
+如果一个程式语言容许函数递回另一个函数的话 (像 Perl 就是)，闭包便具有意义。要注意的是，有些语言虽提供匿名函数的功能，但却无法正确处理闭包； Python 这个语言便是一例。如果要想多了解闭包的话，建议你去找本功能性程式设计的教科书来看。Scheme这个语言不仅支援闭包，更鼓励多加使用。
+<P>
+
+以下是个典型的产生函数的函数：
+<P>
+
+
+
+<PRE>
+    sub add_function_generator {
+      return sub { shift + shift };
+    }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $add_sub = add_function_generator();
+    $sum = $add_sub-&gt;(4,5);                # $sum is 9 now.
+
+</PRE>
+
+
+<P>
+
+闭包用起来就像是个 函数样板，其中保留了一些可以在稍後再填入的空格。 add_function_generator() 所递回的匿名函数在技术上来讲并不能算是一个闭包，因为它没有用到任何位在这个函数范围之外的文字变数。
+<P>
+
+把上面这个例子和下面这个 make_adder()函数对照一下，下面这个函数所递回的匿名函数中使用了一个外部的文字变数。这种指名外部函数的作法需要由 Perl递回一个适当的闭包，因此那个文字变数在匿名函数产生之时的值便永久地被锁进闭 包里。
+<P>
+
+
+
+<PRE>
+    sub make_adder {
+        my $addpiece = shift;
+        return sub { shift + $addpiece };
+    }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $f1 = make_adder(20);
+    $f2 = make_adder(555);
+
+</PRE>
+
+
+<P>
+
+这样一来 <TT>&quot;&amp;$f1($n)&quot;</TT> 永远会是 20加上你传进去的值 <TT>$n</TT> ，而 <TT>&quot;&amp;$f2($n)&quot;</TT> 将 永远会是 555加上你传进去的值 $n。<TT>$addpiece</TT> 的值会在闭包中保留下来。
+<P>
+
+闭包在比较实际的场合中也常用得到，譬如当你想把一些程式码传入一个函数时：
+<P>
+
+
+
+<PRE>
+    my $line;
+    timeout( 30, sub { $line = &lt;STDIN&gt; } );
+
+</PRE>
+
+
+<P>
+
+如果要执行的程式码当初是以字串的形式传入的话，即 <TT>'$line = &lt;STDIN&gt;'</TT> ，那麽 timeout() 这个假想的函数在回到该函数被呼叫时所在的范围後便无法再撷取 <TT>$line</TT> 这个文字变数的值了。
+
+<BR>
+
+
+
+<P>
+
+<B>什么是变量自杀，我应该怎样防止它？</B>
+<P>
+
+
+<A NAME="ixAAP"></A>
+变数自杀指的是 (暂时或是永久)地失去一个变数的值。造成这个现象的原因是做范围界定的 my() 和 local()和闭包或 foreach()回圈变数及函数参数相互影响 所致。过去很容易偶尔丢失变量，现在就困难多了，可以试试这段代码：
+<P>
+
+
+
+<PRE>
+    my $f = &quot;foo&quot;;
+    sub T {
+      while ($i++ &lt; 3) { my $f = $f; $f .= &quot;bar&quot;; print $f, &quot;\n&quot; }
+    }
+    T;
+    print &quot;Finally $f\n&quot;;
+
+</PRE>
+
+
+<P>
+
+有叁个 ``bar'' 加进去的 <TT>$f</TT> 变数应该是一个新的 <TT>$f</TT> (因为 <TT>&quot;my $f&quot;</TT> 在每个循环都应该创造一个新的区域变数)。然而，实际上并非如此。这个臭虫最新的 Perl 版本中已被修正 (在 5.004_05, 5.005_03 和 5.005_56 上测试过)。
+
+<BR>
+
+
+
+<P>
+
+<B>如何传递/返回一个{函数 Function, 文件句柄 FileHandle, 数组 Array,散列 Hash, 方法 Method, 正则表达式 Regex}?</B>
+<P>
+
+
+<A NAME="ixAAQ"></A>
+除了正规表现式这个特例外，你需要以传参考值的方式传资料给这些物件。参看 perlsub 中的 ``Pass by Reference''，里面有针对此问题的讨论，以及 perlref 里面有引用的资讯。
+<P>
+
+参见下面的 ``Passing Regexes''，学习如何传递正则表达式。
+<DL COMPACT>
+<DT>传递变量和函数<DD>
+<A NAME="ixAAR"></A>
+一般的变数和函数是相当简单的：只要传一个指向现存的匿名变数或函数的参考值即可：
+
+
+<P>
+
+
+
+
+<PRE>
+    func( \$some_scalar );
+
+</PRE>
+
+
+
+
+<P>
+
+
+
+
+<PRE>
+    func( \@some_array  );
+    func( [ 1 .. 10 ]   );
+
+</PRE>
+
+
+
+
+<P>
+
+
+
+
+<PRE>
+    func( \%some_hash   );
+    func( { this =&gt; 10, that =&gt; 20 }   );
+
+</PRE>
+
+
+
+
+<P>
+
+
+
+
+<PRE>
+    func( \&amp;some_func   );
+    func( sub { $_[0] ** $_[1] }   );
+
+</PRE>
+
+
+<DT>传递文件句柄<DD>
+<A NAME="ixAAS"></A>
+在 Perl5.6 中，你可以用标量变量表示文件句柄，并将它与其他标量同样处理
+
+
+<P>
+
+
+
+
+<PRE>
+        open my $fh, $filename or die &quot;Cannot open $filename! $!&quot;;
+        func( $fh );
+
+</PRE>
+
+
+
+
+<P>
+
+
+
+
+<PRE>
+        sub func {
+                my $passed_fh = shift;
+
+</PRE>
+
+
+
+
+<P>
+
+
+
+
+<PRE>
+                my $line = &lt;$fh&gt;;
+                }
+
+</PRE>
+
+
+
+
+<P>
+
+
+在 Perl5.6 之前，必须用 <TT>*FH</TT> 或 <TT>&quot;\*FH&quot;</TT> 语法。这叫做 ``typeglobs''--参见 perldata 中的 ``Typeglobs and Filehandles'' 和 perlsub 中的 ``Pass by Reference''。
+<DT>传递正则表达式<DD>
+<A NAME="ixAAT"></A>
+要传递正则表达式，你需要使用足够新的 Perl 发行，足以支持 <TT>&quot;qr//&quot;</TT> 构造方式的版本，传递字符串，使用一个捕获异常的 eval，或者其他更聪明的办法。
+
+
+<P>
+
+
+这里有一个如何传递正则表达式字符串的例子，使用 <TT>&quot;qr//&quot;</TT>:
+
+
+<P>
+
+
+
+
+<PRE>
+    sub compare($$) {
+        my ($val1, $regex) = @_;
+        my $retval = $val1 =~ /$regex/;
+        return $retval;
+    }
+    $match = compare(&quot;old McDonald&quot;, qr/d.*D/i);
+
+</PRE>
+
+
+
+
+<P>
+
+
+注意 <TT>&quot;qr//&quot;</TT> 如何允许在后面加上标志。这个模式在编译期被编译，尽管它后来才执行。 <TT>&quot;qr//&quot;</TT>
+表示法虽然好用，但是直到 5.005 发行中才引入。在那之前，你必须用不直观的办法。例如，如果没有 <TT>&quot;qr//&quot;</TT> 的话:
+
+
+<P>
+
+
+
+
+<PRE>
+    sub compare($$) {
+        my ($val1, $regex) = @_;
+        my $retval = eval { $val1 =~ /$regex/ };
+        die if $@;
+        return $retval;
+    }
+
+</PRE>
+
+
+
+
+<P>
+
+
+
+
+<PRE>
+    $match = compare(&quot;old McDonald&quot;, q/($?i)d.*D/);
+
+</PRE>
+
+
+
+
+<P>
+
+
+确保你没有任何这样的东西：
+
+
+<P>
+
+
+
+
+<PRE>
+    return eval &quot;\$val =~ /$regex/&quot;;   # WRONG
+
+</PRE>
+
+
+
+
+<P>
+
+
+否则别人会靠双引号括起来的字串以及 eval 双重解译的本质而偷偷插入 shell指令来作坏事。例如：
+
+
+<P>
+
+
+
+
+<PRE>
+    $pattern_of_evil = 'danger ${ system(&quot;rm -rf * &amp;&quot;) } danger';
+
+</PRE>
+
+
+
+
+<P>
+
+
+
+
+<PRE>
+    eval &quot;\$string =~ /$pattern_of_evil/&quot;;
+
+</PRE>
+
+
+
+
+<P>
+
+
+想学非常非常聪明的方法的读者可以参考 O'Reilly 出的 Mastering Regular Expressions这本书，作者是 Jeffrey Friedl。其中第 273页的 Build_MatchMany_Function()特别的有趣。在 perlfaq2中可以找到有关本书 的资料。
+<DT>传递方法<DD>
+<A NAME="ixAAU"></A>
+要传递一个对象方法给一个函数，可以这样做：
+
+
+<P>
+
+
+
+
+<PRE>
+    call_a_lot(10, $some_obj, &quot;methname&quot;)
+    sub call_a_lot {
+        my ($count, $widget, $trick) = @_;
+        for (my $i = 0; $i &lt; $count; $i++) {
+            $widget-&gt;$trick();
+        }
+    }
+
+</PRE>
+
+
+
+
+<P>
+
+
+或者，使用一个闭包来包含这个对象，它的方法调用及参数：
+
+
+<P>
+
+
+
+
+<PRE>
+    my $whatnot =  sub { $some_obj-&gt;obfuscate(@args) };
+    func($whatnot);
+    sub func {
+        my $code = shift;
+        &amp;$code();
+    }
+
+</PRE>
+
+
+
+
+<P>
+
+
+也可以研究 UNIVERSAL 类别中的 can()方法 (附於标准 Perl 版本中)。
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>How do I create a static variable?</B>
+<P>
+
+
+<A NAME="ixAAV"></A>
+就像与 Perl相关的其他事情一样，``条条大路通罗马'' (TMTOWTDI)。对其他语言来说叫做 ``静态变数'' (static variable)的东西，在 Perl里面可能是一个函数私有的变数(只有该函数自己看得到，且在不同的呼叫间保持定值)，或是一个档案私有(file-private)变数(只有同一个档案中的函数才看得到)。
+<P>
+
+以下就是实作函数私有变数的程式：
+<P>
+
+
+
+<PRE>
+    BEGIN {
+        my $counter = 42;
+        sub prev_counter { return --$counter }
+        sub next_counter { return $counter++ }
+    }
+
+</PRE>
+
+
+<P>
+
+prev_counter() 和 next_counter() 将会共用一个於编译时初始化的私有变数 $counter。
+<P>
+
+要声明一个档案私有(file-private)变数，你仍然得使用 my()，将它放在档案开头处最外围。假设现在是在 Pax.pm 这个档案里：
+<P>
+
+
+
+<PRE>
+    package Pax;
+    my $started = scalar(localtime(time()));
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    sub begun { return $started }
+
+</PRE>
+
+
+<P>
+
+当用 <TT>&quot;use Pax&quot;</TT> 或 <TT>&quot;require Pax&quot;</TT> 载入此模组时，这个变数就会被初始化。不过它不会被资源回收，像其他出了有效范围的变数那样，因为 begun()函数要用到它，但是没有其他函数能撷取它。这个变数不能以 <TT>$Pax::started</TT> 的形式来撷取，因为它所存在的范围与此包裹无关。它存在的范围是这个档案。可想见地，一个档案里可以放好几个包裹，而所有的包裹都撷取同一个私有变数，但从另一个档案中，即使是属於同一个包裹(package)，也不能取得它的值。
+<P>
+
+参见 perlsub 中的 ``Persistent Private Variables'' 的细节.
+
+<BR>
+
+
+
+<P>
+
+<B>What's the difference between dynamic and lexical (static) scoping?  Between <I>local()</I> and <I>my()</I>?</B>
+<P>
+
+
+<A NAME="ixAAW"></A>
+local($x) 将全域变数 $x的原值存起来，并在此函数执行期间赋予一个新 值，此值可以从此函数所呼叫的其他函数里看见。这整个步骤是在执行期间完成的，所以才叫做动态范围选取 (dynamic scoping)。local()影响的是全域变数，或者称作包裹变数或动态变数。
+<P>
+
+<TT>&quot;my($x)&quot;</TT> 会创造一个只能在目前这个函数里看得见的新变数。这个步骤是在编译期完成(compile-time)，所以称作文字式或是静态范围选取。my()总是作用在私有变数，也称作文字式变数或(不当地)称作静态(范围选取)变数。
+<P>
+
+例如：
+<P>
+
+
+
+<PRE>
+    sub visible {
+        print &quot;var has value $var\n&quot;;
+    }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    sub dynamic {
+        local $var = 'local';   # 为全局变量暂时赋值
+        visible();              # 调用 $var 变量
+    }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    sub lexical {
+        my $var = 'private';    # 新的私有变量 $var
+        visible();              # (在 sub 作用域之外不可见)
+    }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $var = 'global';
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    visible();                  # prints global
+    dynamic();                  # prints local
+    lexical();                  # prints global
+
+</PRE>
+
+
+<P>
+
+你可以发现在整个过程中 ``private''这个值都印不出来。那是因为 $var的值只存在於lexical() 函数的区块里面，对它所呼叫的函数来说是看不到的。
+<P>
+
+总结来说，local()不会产生你想像中的私有、区域变数。它只是将一个暂时的值授予一个全域变数。如果你要的是私有的变数，那麽 my() 才是你要找的。
+<P>
+
+参见 perlsub 中的 ``Private Variables via <I>my()</I>'' 以及
+``Temporary Values via <I>local()</I>'' 来获取详情
+
+<BR>
+
+
+
+<P>
+
+<B>在存在同名内部变量的作用域中，如何存取一个动态变量？</B>
+<P>
+
+
+<A NAME="ixAAX"></A>
+如果你知道你所在的是哪一个包裹(package)的话，你可以直接指名，就像写 <TT>$Some_Pack::var</TT> 这样。注意 <TT>$::var</TT> 这个写法 并非表示目前此包裹 (package) 内的动态变数 $var，而是指在 main包裹(package) 里的那个，就等价於 <TT>$main::var</TT> 。
+<P>
+
+
+
+<PRE>
+        use vars '$var';
+        local $var = &quot;global&quot;;
+        my    $var = &quot;lexical&quot;;
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+        print &quot;lexical is $var\n&quot;;
+        print &quot;global  is $main::var\n&quot;;
+
+</PRE>
+
+
+<P>
+
+可选的，可以使用编译器指令 <I>our()</I> 来在当前静态作用域中引入动态变量
+<P>
+
+
+
+<PRE>
+        require 5.006; # our() did not exist before 5.6
+        use vars '$var';
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+        local $var = &quot;global&quot;;
+        my $var    = &quot;lexical&quot;;
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+        print &quot;lexical is $var\n&quot;;
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+        {
+          our $var;
+          print &quot;global  is $var\n&quot;;
+        }
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>深连接和浅连接有什么不同？</B>
+<P>
+
+
+<A NAME="ixAAY"></A>
+在深连结中，匿名函数中所用到的文字式变数值是以该函数产生时所在的范围为准。在浅连结中，这些变数值是以函数被呼叫时所在的范围为准，如果在这个范围中恰巧有同名的变数，便使用这些当地变数的值。Perl总是使用文字式变数(就是以 my()创造的)式的深连结。然而，动态变数(也称作全域(global)，区域(local)，或包裹(package)变数)在功效上是浅连结。就把这当作是少用它们的另一个理由好 了。请参考 &quot;什么是闭包&quot; 一节。
+
+<BR>
+
+
+
+<P>
+
+<B>为什么 my($foo)</B>
+<P>
+
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>为什么 ``my($foo) = &lt;FILE&gt;;''不工作？</B>
+<P>
+
+
+
+<A NAME="ixAAZ"></A>
+local()会把 =号右边以序列情境来对待。而 &lt;FH&gt; 这个阅读的 动作，就像 Perl里许多的函数以及运算子一样，会自动分辨出自己被呼叫时所在的情境并且采取适当的作法。一般来说，scalar()函数可以帮点忙。这个函数实际上对资料本身不会有任何作用(与一般所认为的相反)，但是会告诉它所作用的函数要以对待纯量值的方法来运算。如果那个函数没有预先定义好碰到纯量情境的行为，那麽它当然也帮不了你(例如 sort() 函数)。
+<P>
+
+然而，在以上这个例子 (local...)中，只要省略括号便可强制使用标量情境：
+<P>
+
+
+
+<PRE>
+    local($foo) = &lt;FILE&gt;;           # WRONG
+    local($foo) = scalar(&lt;FILE&gt;);   # ok
+    local $foo  = &lt;FILE&gt;;           # right
+
+</PRE>
+
+
+<P>
+
+其实在这个例子中，或许你该改用文字式变数 (lexical variables)，不过会碰到 的问题跟上面一样：
+<P>
+
+
+
+<PRE>
+    my($foo) = &lt;FILE&gt;;  # WRONG
+    my $foo  = &lt;FILE&gt;;  # right
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何重定义一个内建函数，操作符 或者方法？</B>
+<P>
+
+
+<A NAME="ixABA"></A>
+为什麽要这麽做？ :-)
+<P>
+
+如果你要覆盖掉某个内建函数，例如说 open()，那你得将其定义从另一个模组载 入。参考 perlsub 中的 Overriding Builtin Functions。在 ``Class::Template'' 里面也有个范例。
+<P>
+
+如果你要覆盖掉一个 Perl运算子，像是 <TT>&quot;+&quot;</TT> 或 <TT>&quot;**&quot;</TT>, 那你该使用 <TT>&quot;use overload&quot;</TT> 这个编用，在 overload 中有记载。
+<P>
+
+如果你要覆盖父类别 (parent class)里的方法呼叫 (method calls)，请看 perltoot 中的 Overridden Methods 。
+
+<BR>
+
+
+
+<P>
+
+<B>调用函数时 &amp;foo 和 foo() 的形式有什么不同?</B>
+<P>
+
+
+<A NAME="ixABB"></A>
+当你用 &amp;foo的方式呼叫一个函数时，你等於让这个函数撷取你目前 @_里面的值，同时也跳过原型定义 (prototypes)不用。这表式此函数抓到的是你当时的 @_， 而非一个空的 @_！虽然严格讲起来它也不能算是个 bug (但是在 perlsub里面是这麽说的)但在大部份情况下，这也算不上是个特别功能。
+<P>
+
+当你用 &amp;foo()的方式呼叫你的函数时，你会得到一个新的 @_，但是原型定义 仍然会被避开不用。
+<P>
+
+在一般情况下，你该用 foo()的方式去呼叫函数。只有在编译器已事先知道这个函数的定义时，括号才能省略，譬如当这个函数所在的模组或包裹被 use (但如果是被 require则不行)时，或是透过先前提及或 use subs宣告等方法，让编译器先接触到这个函数的定义。用这种呼叫方式，即使是当括号省掉时，你都会得到一个乾净的 @_，不会有任何不该出现的旧值残留在上面。
+
+<BR>
+
+
+
+<P>
+
+<B>如何创建一个分支语句？</B>
+<P>
+
+
+<A NAME="ixABC"></A>
+这个问题在 perlsyn 文件里有更详尽的解释。简单来说，因为 Perl本身已提供了多种不同的条件测试方法可供使用 (数值比较、字串比较、 glob比较、正规表示式 对应、覆盖比较，及其它)，所以并没有正式的 case叙述语法。虽然自 perl1起这就一直是许多人期盼的一个项目，但因 Larry无法决定怎样才是呈现这功能的最好方法，因此还是将它略掉。
+<P>
+
+从 Perl 5.8 开始，要使用 swtich 和 case，可以使用 Switch 扩展，就是这样：
+<P>
+
+
+
+<PRE>
+        use Switch;
+
+</PRE>
+
+
+<P>
+
+此后就可以用 switch 和 case 了.  It is not as fast as it could be
+because it's not really part of the language (it's done using source
+filters) but it is available, and it's very flexible.
+<P>
+
+But if one wants to use pure Perl, the general answer is to write a
+construct like this:
+<P>
+
+
+
+<PRE>
+    for ($variable_to_test) {
+        if    (/pat1/)  { }     # do something
+        elsif (/pat2/)  { }     # do something else
+        elsif (/pat3/)  { }     # do something else
+        else            { }     # default
+    }
+
+</PRE>
+
+
+<P>
+
+下面这个简单的 switch范例以模式对应为基础。我们将要做的是对储存在 $whatchamacallit里面的参考值 (reference)的类型进行多重条件的判断。【译注：$whatchamacallit 函意为 $what_you_might_call_it】
+<P>
+
+
+
+<PRE>
+    SWITCH: for (ref $whatchamacallit) {
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+        /^$/            &amp;&amp; die &quot;not a reference&quot;;
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+        /SCALAR/        &amp;&amp; do {
+                                print_scalar($$ref);
+                                last SWITCH;
+                        };
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+        /ARRAY/         &amp;&amp; do {
+                                print_array(@$ref);
+                                last SWITCH;
+                        };
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+        /HASH/          &amp;&amp; do {
+                                print_hash(%$ref);
+                                last SWITCH;
+                        };
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+        /CODE/          &amp;&amp; do {
+                                warn &quot;can't print function ref&quot;;
+                                last SWITCH;
+                        };
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+        # DEFAULT
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+        warn &quot;User defined type skipped&quot;;
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    }
+
+</PRE>
+
+
+<P>
+
+See <TT>&quot;perlsyn/&quot;Basic BLOCKs and Switch Statements&quot;&quot;</TT> for many other
+examples in this style.
+<P>
+
+Sometimes you should change the positions of the constant and the variable.
+For example, let's say you wanted to test which of many answers you were
+given, but in a case-insensitive way that also allows abbreviations.
+You can use the following technique if the strings all start with
+different characters or if you want to arrange the matches so that
+one takes precedence over another, as <TT>&quot;SEND&quot;</TT> has precedence over
+<TT>&quot;STOP&quot;</TT> here:
+<P>
+
+
+
+<PRE>
+    chomp($answer = &lt;&gt;);
+    if    (&quot;SEND&quot;  =~ /^\Q$answer/i) { print &quot;Action is send\n&quot;  }
+    elsif (&quot;STOP&quot;  =~ /^\Q$answer/i) { print &quot;Action is stop\n&quot;  }
+    elsif (&quot;ABORT&quot; =~ /^\Q$answer/i) { print &quot;Action is abort\n&quot; }
+    elsif (&quot;LIST&quot;  =~ /^\Q$answer/i) { print &quot;Action is list\n&quot;  }
+    elsif (&quot;EDIT&quot;  =~ /^\Q$answer/i) { print &quot;Action is edit\n&quot;  }
+
+</PRE>
+
+
+<P>
+
+A totally different approach is to create a hash of function references.
+<P>
+
+
+
+<PRE>
+    my %commands = (
+        &quot;happy&quot; =&gt; \&amp;joy,
+        &quot;sad&quot;,  =&gt; \&amp;sullen,
+        &quot;done&quot;  =&gt; sub { die &quot;See ya!&quot; },
+        &quot;mad&quot;   =&gt; \&amp;angry,
+    );
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    print &quot;How are you? &quot;;
+    chomp($string = &lt;STDIN&gt;);
+    if ($commands{$string}) {
+        $commands{$string}-&gt;();
+    } else {
+        print &quot;No such command: $string\n&quot;;
+    }
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何捕获对未定义变量，函数或方法的访问？</B>
+<P>
+
+
+<A NAME="ixABD"></A>
+在 perlsub 中的 ``Autoloading'' 和 perltoot 中的 ``<FONT SIZE="-1">AUTOLOAD:</FONT> Proxy Methods'' 里 提到的 AUTOLOAD 方法让你能捕捉对於未定义函数与方法的呼叫。
+<P>
+
+When it comes to undefined variables that would trigger a warning
+under <TT>&quot;use warnings&quot;</TT>, you can promote the warning to an error.
+<P>
+
+
+
+<PRE>
+        use warnings FATAL =&gt; qw(uninitialized);
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>为什么找不到包含在同一个文件中的方法？</B>
+<P>
+
+
+<A NAME="ixABE"></A>
+一些可能的原因：你用的继承给搞混了、你拼错了该方法的名字，或是物件的类别错误。这些事在 perltoot里都有更详尽的说明。同时你也可以用 <TT>&quot;print ref($object)&quot;</TT> 来找出 <TT>$object</TT> 这个物件是被归到哪个类别底下。
+<P>
+
+另一个可能的原因是你在 Perl还不知道这个包裹 (package)存在之前便将某个类别名称在间接式物件语法中使用 (例如 <TT>&quot;find Guru &quot;Samy&quot;&quot;</TT>)。最好是在开始使用你的包裹前，先确定都已经先把它们定义好了，如果你用的是 use 而非 require的话，这件事便会自动处理好。不然的话，确定你使用箭头式语法 (例如，<TT>&quot;Guru-&gt;find(&quot;Samy&quot;)&quot;</TT>))。在perlobj 里面对於物件的记号有详尽解释。
+<P>
+
+Make sure to read about creating modules in perlmod and
+the perils of indirect objects in ``Method Invocation'' in perlobj.
+
+<BR>
+
+
+
+<P>
+
+<B>如何找到当前的包？</B>
+<P>
+
+
+<A NAME="ixABF"></A>
+如果只是一个随意的程式的话，你可以用下面的方法找出目前正被编译的包裹为何：
+<P>
+
+
+
+<PRE>
+    my $packname = __PACKAGE__;
+
+</PRE>
+
+
+<P>
+
+但如果是一个方法的话，而且印出的错误讯息中要包含呼叫此方法的物件 (不见得就是把这个方法编译进去的那个物件)则：
+<P>
+
+
+
+<PRE>
+    sub amethod {
+        my $self  = shift;
+        my $class = ref($self) || $self;
+        warn &quot;called me from a $class object&quot;;
+    }
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何注释掉大块的 perl 代码？</B>
+<P>
+
+
+<A NAME="ixABG"></A>
+用内嵌 POD格式的方法把程式码变注解。将要注释掉的块包含在 <FONT SIZE="-1">POD</FONT> 标记内, 例如 <TT>&quot;=for nobody&quot;</TT> 和 <TT>&quot;=cut&quot;</TT>
+(标志着 <FONT SIZE="-1">POD</FONT> 块的结束).
+<P>
+
+
+
+<PRE>
+    # 这是程式
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    =for nobody
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    all of this stuff
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    接下来此处所有的文字都会被忽略
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    =cut
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    # program continues
+
+</PRE>
+
+
+<P>
+
+The pod directives cannot go just anywhere.  You must put a
+pod directive where the parser is expecting a new statement,
+not just in the middle of an expression or some other
+arbitrary grammar production.
+<P>
+
+See perlpod for more details.
+
+<BR>
+
+
+
+<P>
+
+<B>How do I clear a package?</B>
+<P>
+
+
+<A NAME="ixABH"></A>
+Use this code, provided by Mark-Jason Dominus:
+<P>
+
+
+
+<PRE>
+    sub scrub_package {
+        no strict 'refs';
+        my $pack = shift;
+        die &quot;Shouldn't delete main package&quot;
+            if $pack eq &quot;&quot; || $pack eq &quot;main&quot;;
+        my $stash = *{$pack . '::'}{HASH};
+        my $name;
+        foreach $name (keys %$stash) {
+            my $fullname = $pack . '::' . $name;
+            # Get rid of everything with that name.
+            undef $$fullname;
+            undef @$fullname;
+            undef %$fullname;
+            undef &amp;$fullname;
+            undef *$fullname;
+        }
+    }
+
+</PRE>
+
+
+<P>
+
+Or, if you're using a recent release of Perl, you can
+just use the <I>Symbol::delete_package()</I> function instead.
+
+<BR>
+
+
+
+<P>
+
+<B>How can I use a variable as a variable name?</B>
+<P>
+
+
+<A NAME="ixABI"></A>
+Beginners often think they want to have a variable contain the name
+of a variable.
+<P>
+
+
+
+<PRE>
+    $fred    = 23;
+    $varname = &quot;fred&quot;;
+    ++$$varname;         # $fred now 24
+
+</PRE>
+
+
+<P>
+
+This works <I>sometimes</I>, but it is a very bad idea for two reasons.
+<P>
+
+The first reason is that this technique <I>only works on global
+variables</I>.  That means that if <TT>$fred</TT> is a lexical variable created
+with <I>my()</I> in the above example, the code wouldn't work at all: you'd
+accidentally access the global and skip right over the private lexical
+altogether.  Global variables are bad because they can easily collide
+accidentally and in general make for non-scalable and confusing code.
+<P>
+
+Symbolic references are forbidden under the <TT>&quot;use strict&quot;</TT> pragma.
+They are not true references and consequently are not reference counted
+or garbage collected.
+<P>
+
+The other reason why using a variable to hold the name of another
+variable is a bad idea is that the question often stems from a lack of
+understanding of Perl data structures, particularly hashes.  By using
+symbolic references, you are just using the package's symbol-table hash
+(like <TT>%main::</TT>) instead of a user-defined hash.  The solution is to
+use your own hash or a real reference instead.
+<P>
+
+
+
+<PRE>
+    $USER_VARS{&quot;fred&quot;} = 23;
+    $varname = &quot;fred&quot;;
+    $USER_VARS{$varname}++;  # not $$varname++
+
+</PRE>
+
+
+<P>
+
+There we're using the <TT>%USER_VARS</TT> hash instead of symbolic references.
+Sometimes this comes up in reading strings from the user with variable
+references and wanting to expand them to the values of your perl
+program's variables.  This is also a bad idea because it conflates the
+program-addressable namespace and the user-addressable one.  Instead of
+reading a string and expanding it to the actual contents of your program's
+own variables:
+<P>
+
+
+
+<PRE>
+    $str = 'this has a $fred and $barney in it';
+    $str =~ s/(\$\w+)/$1/eeg;             # need double eval
+
+</PRE>
+
+
+<P>
+
+it would be better to keep a hash around like <TT>%USER_VARS</TT> and have
+variable references actually refer to entries in that hash:
+<P>
+
+
+
+<PRE>
+    $str =~ s/\$(\w+)/$USER_VARS{$1}/g;   # no /e here at all
+
+</PRE>
+
+
+<P>
+
+That's faster, cleaner, and safer than the previous approach.  Of course,
+you don't need to use a dollar sign.  You could use your own scheme to
+make it less confusing, like bracketed percent symbols, etc.
+<P>
+
+
+
+<PRE>
+    $str = 'this has a %fred% and %barney% in it';
+    $str =~ s/%(\w+)%/$USER_VARS{$1}/g;   # no /e here at all
+
+</PRE>
+
+
+<P>
+
+Another reason that folks sometimes think they want a variable to
+contain the name of a variable is because they don't know how to build
+proper data structures using hashes.  For example, let's say they
+wanted two hashes in their program: <TT>%fred</TT> and <TT>%barney</TT>, and that they
+wanted to use another scalar variable to refer to those by name.
+<P>
+
+
+
+<PRE>
+    $name = &quot;fred&quot;;
+    $$name{WIFE} = &quot;wilma&quot;;     # set %fred
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $name = &quot;barney&quot;;
+    $$name{WIFE} = &quot;betty&quot;;     # set %barney
+
+</PRE>
+
+
+<P>
+
+This is still a symbolic reference, and is still saddled with the
+problems enumerated above.  It would be far better to write:
+<P>
+
+
+
+<PRE>
+    $folks{&quot;fred&quot;}{WIFE}   = &quot;wilma&quot;;
+    $folks{&quot;barney&quot;}{WIFE} = &quot;betty&quot;;
+
+</PRE>
+
+
+<P>
+
+And just use a multilevel hash to start with.
+<P>
+
+The only times that you absolutely <I>must</I> use symbolic references are
+when you really must refer to the symbol table.  This may be because it's
+something that can't take a real reference to, such as a format name.
+Doing so may also be important for method calls, since these always go
+through the symbol table for resolution.
+<P>
+
+In those cases, you would turn off <TT>&quot;strict 'refs'&quot;</TT> temporarily so you
+can play around with the symbol table.  For example:
+<P>
+
+
+
+<PRE>
+    @colors = qw(red blue green yellow orange purple violet);
+    for my $name (@colors) {
+        no strict 'refs';  # renege for the block
+        *$name = sub { &quot;&lt;FONT COLOR='$name'&gt;@_&lt;/FONT&gt;&quot; };
+    }
+
+</PRE>
+
+
+<P>
+
+All those functions (<I>red()</I>, <I>blue()</I>, <I>green()</I>, etc.) appear to be separate,
+but the real code in the closure actually was compiled only once.
+<P>
+
+So, sometimes you might want to use symbolic references to directly
+manipulate the symbol table.  This doesn't matter for formats, handles, and
+subroutines, because they are always global---you can't use <I>my()</I> on them.
+For scalars, arrays, and hashes, though---and usually for subroutines---
+you probably only want to use hard references.
+
+<BR>
+
+
+
+<P>
+
+<B>What does &quot;bad interpreter&quot; mean?</B>
+<P>
+
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>What does ``bad interpreter'' mean?</B>
+<P>
+
+
+
+<A NAME="ixABJ"></A>
+The ``bad interpreter'' message comes from the shell, not perl.  The
+actual message may vary depending on your platform, shell, and locale
+settings.
+<P>
+
+If you see ``bad interpreter - no such file or directory'', the first
+line in your perl script (the ``shebang'' line) does not contain the
+right path to perl (or any other program capable of running scripts). 
+Sometimes this happens when you move the script from one machine to
+another and each machine has a different path to perl---/usr/bin/perl
+versus /usr/local/bin/perl for instance.
+<P>
+
+If you see ``bad interpreter: Permission denied'', you need to make your
+script executable.
+<P>
+
+In either case, you should still be able to run the scripts with perl
+explicitly:
+<P>
+
+
+
+<PRE>
+        % perl script.pl
+
+</PRE>
+
+
+<P>
+
+If you get a message like ``perl: command not found'', perl is not in
+your <FONT SIZE="-1">PATH</FONT>, which might also mean that the location of perl is not
+where you expect it so you need to adjust your shebang line.
+<A NAME="lbAD">&nbsp;</A>
+<H2>AUTHOR AND COPYRIGHT</H2>
+
+<A NAME="ixABK"></A>
+Copyright (c) 1997-2002 Tom Christiansen and Nathan Torkington.
+All rights reserved.
+<P>
+
+This documentation is free; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+<P>
+
+Irrespective of its distribution, all code examples in this file
+are hereby placed into the public domain.  You are permitted and
+encouraged to use this code in your own programs for fun
+or for profit as you see fit.  A simple comment in the code giving
+credit would be courteous but is not required.
+<A NAME="lbAE">&nbsp;</A>
+<H2>译者</H2>
+
+<B>陈彦铭，萧百龄，两只老虎工作室</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAD">AUTHOR AND COPYRIGHT</A><DD>
+<DT><A HREF="#lbAE">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

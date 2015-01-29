@@ -1,0 +1,165 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of KILLALL</TITLE>
+</HEAD><BODY>
+<H1>KILLALL</H1>
+Section: User (1)<BR>Updated: 1999年9月7日<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME (名称)</H2>
+
+killall - 以名字方式来杀死进程
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS (总览)</H2>
+
+
+<B>killall</B>
+
+[<B>-egiqvw</B>]
+
+[<B>-</B><I>signal</I><B></B>]
+
+<I>name ...</I>
+
+<BR>
+
+<B>killall</B>
+
+-l
+
+<BR>
+
+<B>killall</B>
+
+-V
+
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION (描述)</H2>
+
+<B>killall</B>
+
+发送一条信号给所有运行任意指定命令的进程.
+如果没有指定信号名, 则发送 SIGTERM.
+<P>
+
+信号可以以名字 (如 <B>-HUP</B> ) 或者数字 (如 <B>-1</B> ) 的方式指定.
+信号 0 (检查进程是否存在)只能以数字方式指定.
+<P>
+
+如果命令名包括斜杠 (<B>/</B>), 那么执行该特定文件的进程将被杀掉,
+这与进程名无关.
+<P>
+
+如果对于所列命令无进程可杀,
+那么 <B>killall</B> 会返回非零值.
+如果对于每条命令至少杀死了一个进程,
+<B>killall</B> 返回 0.
+<P>
+
+<B>killall</B> 进程决不会杀死自己
+(但是可以杀死其它 <B>killall</B> 进程).
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS (选项)</H2>
+
+<DL COMPACT>
+<DT><B>-e</B><DD>
+对于很长的名字, 要求准确匹配.
+如果一个命令名长于 15 个字符,
+则可能不能用整个名字 (溢出了).
+在这种情况下,
+<B>killall</B> 会杀死所有匹配名字前 15 个字符的所有进程.
+有了
+<B>-e</B> 选项,这样的记录将忽略.
+如果同时指定了 <B>-v</B> 选项,
+<B>killall</B> 会针对每个忽略的记录打印一条消息.
+<DT><B>-g</B><DD>
+杀死属于该进程组的进程.
+kill 信号给每个组只发送一次, 即使同一进程组中包含多个进程.
+<DT><B>-i</B><DD>
+交互方式，在杀死进程之前征求确认信息.
+<DT><B>-l</B><DD>
+列出所有已知的信号名.
+<DT><B>-q</B><DD>
+如果没有进程杀死, 不会提出抱怨.
+<DT><B>-v</B><DD>
+报告信号是否成功发送.
+<DT><B>-V</B><DD>
+显示版本信息.
+<DT><B>-w</B><DD>
+等待所有杀的进程死去.
+<B>killall</B> 会每秒检查一次是否任何被杀的进程仍然存在,
+仅当都死光后才返回.
+注意: 如果信号被忽略或没有起作用,
+或者进程停留在僵尸状态, <B>killall</B> 可能会永久等待.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>FILES(相关文件)</H2>
+
+<PRE>
+/proc   proc文件系统的存在位置
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>KNOWN BUGS (已知 BUGS)</H2>
+
+以文件方式杀死只对那些在执行时一直打开的可执行文件起作用,
+也即, 混杂的可执行文件不能够通过这种方式杀死.
+<P>
+
+要警告的是输入 <B>killall</B> <I>name</I>
+可能不会在非 Linux 系统上产生预期的效果,
+特别是特权用户执行时要小心.
+<P>
+
+在两次扫描的间隙, 如果进程消失了而被代之以一个有同样 PID 的新进程,
+<B>killall -w</B> 侦测不到．
+<A NAME="lbAH">&nbsp;</A>
+<H2>AUTHOR (作者)</H2>
+
+Werner Almesberger &amp;lt;<A HREF="mailto:Werner.Almesberger@epfl.ch">Werner.Almesberger@epfl.ch</A>&amp;gt;
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO (又见)</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+kill">kill</A>(1), <A HREF="/cgi-bin/man/man2html?1+fuser">fuser</A>(1), <A HREF="/cgi-bin/man/man2html?1+pidof">pidof</A>(1), <A HREF="/cgi-bin/man/man2html?1+ps">ps</A>(1), <A HREF="/cgi-bin/man/man2html?2+kill">kill</A>(2)
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/08/08</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME (名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS (总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION (描述)</A><DD>
+<DT><A HREF="#lbAE">OPTIONS (选项)</A><DD>
+<DT><A HREF="#lbAF">FILES(相关文件)</A><DD>
+<DT><A HREF="#lbAG">KNOWN BUGS (已知 BUGS)</A><DD>
+<DT><A HREF="#lbAH">AUTHOR (作者)</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO (又见)</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

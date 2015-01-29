@@ -1,0 +1,1504 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DIG</TITLE>
+</HEAD><BODY>
+<H1>DIG</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+<BR>BSD mandoc<BR>
+BSD 4
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+<B>dig</B>
+
+ - 发送域名查询信息包到域名服务器
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>dig</B>
+
+[<B>@ </B><I>server</I>
+
+
+
+
+
+]
+
+<I>domain</I>
+
+[Aq <I>query-type</I>
+
+
+
+]
+
+[Aq <I>query-class</I>
+
+
+
+]
+
+[<B>+ Aq </B><I>query-option</I>
+
+
+
+
+
+
+
+]
+
+[-<B>Aq </B><I>dig-option</I>
+
+
+
+
+
+]
+
+[<I>%comment</I>
+
+]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<B>Dig</B>
+
+(domain information groper 域名信息搜索)是一个灵活的
+命令行工具,
+它可以用来从域名系统服务器中收集信息.
+<B>Dig</B>
+
+有两种模式:简单交互模式
+用于简单的查询,而批处理模式则可以对
+包含多个查询条目的列表执行查询.
+所有查询选项都可以从命令行输入.
+<P>
+
+通常简单的
+<B>dig</B>
+
+用法为下列格式:
+<P>
+
+
+<BLOCKQUOTE>
+
+<B>dig @ </B><I>server  domain   query-type  query-class</I>
+
+
+
+
+
+</BLOCKQUOTE>
+
+<P>
+
+这里:
+<DL COMPACT>
+<P>
+
+<DT><B></B><I>server</I>
+
+
+<DD>
+可为域名或者以点分隔的Internet地址.
+如果省略该可选字段,
+<B>dig</B>
+
+会尝试使用你机器的默认域名服务器.
+<P>
+<I>注意:</I>
+
+如果指定了一个域名,那么将使用域名系统解析程序
+(即BIND)来进行解析.
+如果你的系统不支持DNS,那么可能
+<I>必须</I>
+
+指定一个以点分隔的地址.另外一种选择是,
+如果在你配置的某个地方有一台这样的服务器,
+那么你所要做的就是建立
+/etc/resolv.conf
+
+并在其中指明默认域名服务器的位置,这样
+<I>server</I>
+
+自身就可以解析了.参看
+<A HREF="/cgi-bin/man/man2html?5+resolver">resolver</A>(5)
+
+
+以获得
+/etc/resolv.conf
+
+相关的信息.
+<B>警告:</B>
+
+修改
+/etc/resolv.conf
+
+同样会对标准的解析程序库产生影响,而
+(潜在地)
+
+某些程序会要用到它.
+作为一种选择,用户可设置环境变量
+<B>LOCALRES</B>
+
+为指定的文件,这将用来取代
+/etc/resolv.conf
+
+Po Ns Ev LOCALRES
+
+是特定针对
+<B>dig</B>
+
+解析程序的,并不会牵涉到标准解析程序
+Pc .
+
+如果
+<B>LOCALRES</B>
+
+变量未设置或者指定的文件不能读,那么就使用
+/etc/resolf.conf
+
+ 
+<DT><B></B><I>domain</I>
+
+
+<DD>
+是指一个你请求信息的域名.
+参看
+-<B>x</B>
+
+选项(在该部分的
+Sx OTHER OPTIONS
+
+节中有介绍)以获知指定反向地址查询的便捷方法.
+<DT><B></B><I>query-type</I>
+
+
+<DD>
+是指你所请求的信息类型(DNS查询类型).
+如果省略,默认为
+``<I>a</I>
+
+''
+
+(<B>T_A = </B><I>address</I>
+
+
+
+)
+
+ 
+以下类型是可识别的:
+<P>
+
+<DL COMPACT>
+<P>
+
+<DT><B></B><I>a&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </I><B>T_A</B>
+
+
+
+
+<DD>
+网络地址
+<DT><B></B><I>any&nbsp;&nbsp;&nbsp;&nbsp; </I><B>T_ANY</B>
+
+
+
+
+<DD>
+所有/任何与指定域相关的信息
+<DT><B></B><I>mx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </I><B>T_MX</B>
+
+
+
+
+<DD>
+该域的邮件网关
+<DT><B></B><I>ns&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </I><B>T_NS</B>
+
+
+
+
+<DD>
+域名服务器
+<DT><B></B><I>soa&nbsp;&nbsp;&nbsp;&nbsp; </I><B>T_SOA</B>
+
+
+
+
+<DD>
+区域的授权记录
+<DT><B></B><I>hinfo&nbsp;&nbsp; </I><B>T_HINFO</B>
+
+
+
+
+<DD>
+主机信息
+<DT><B></B><I>axfr&nbsp;&nbsp;&nbsp; </I><B>T_AXFR</B>
+
+
+
+
+<DD>
+区域传输记录(必须是询问一台授权的服务器)
+<DT><B></B><I>txt&nbsp;&nbsp;&nbsp;&nbsp; </I><B>T_TXT</B>
+
+
+
+
+<DD>
+任意的字符串信息
+</DL>
+<P>
+
+<P>
+
+(参看RFC 1035以获得完整的列表.)
+<DT><B></B><I>query-class</I>
+
+
+<DD>
+是指在查询中请求的网络等级.如果省略,默认为
+``<I>in</I>
+
+''
+
+(<B>C_IN = </B><I>Internet</I>
+
+
+
+)
+
+ 
+以下的等级是可识别的:
+<P>
+
+<DL COMPACT>
+<P>
+
+<DT><B></B><I>in&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </I><B>C_IN</B>
+
+
+
+
+<DD>
+Internet等级的域
+<DT><B></B><I>any&nbsp;&nbsp;&nbsp;&nbsp; </I><B>C_ANY</B>
+
+
+
+
+<DD>
+所有/任何等级的信息
+</DL>
+<P>
+
+<P>
+
+(参看RFC 1035以获得完整的列表.)
+<P>
+
+<I>注意:</I>
+
+``<I>Any</I>
+
+''
+
+可以用来指定一个
+<I>等级</I>
+
+和/或查询的一种
+<I>类型</I>
+
+ 
+<B>Dig</B>
+
+会将第一次出现的
+``<I>any</I>
+
+''
+
+解释为
+<I>query-type = </I><B>T_ANY</B>
+
+
+
+ 
+为了指明
+<I>query-class = </I><B>C_ANY</B>
+
+
+
+ 
+你必须或者指定
+``any''
+
+两次,或者使用
+-<B>c</B>
+
+选项(见下面)设置
+<I>query-class</I>
+
+ 
+</DL>
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H3>OTHER OPTIONS(其它选项)</H3>
+
+<DL COMPACT>
+<P>
+
+<DT><B>% </B><I>ignored-comment</I>
+
+
+
+
+<DD>
+``%''
+
+用来引用一个不用作解释的参数.
+如果正以批处理的模式运行
+<B>dig</B>
+
+这可能很有用.
+因为不用对一组查询中的每个
+<I>@server-domain-name</I>
+
+进行解析,你就可以避免这样做的额外开销,
+并且仍然能够在命令行上以域名作为参数.
+例如:
+<P>
+
+
+<BLOCKQUOTE>
+
+<B>dig  @128.9.0.32  %venera.isi.edu  mx  isi.edu</B>
+
+</BLOCKQUOTE>
+
+<P>
+
+<DT><B>-Aq </B><I>dig option</I>
+
+
+
+
+
+
+<DD>
+``-
+
+''
+
+用来指定一个影响
+<B>dig</B>
+
+操作的选项.
+当前可用的选项有(尽管不能保证都有用):
+<DL COMPACT>
+<P>
+
+<DT><B>-x </B><I>dot-notation-address</I>
+
+
+
+
+<DD>
+这是指定反向地址映射的便捷的方法.
+不用写
+``<B>dig 32.0.9.128.in-addr.arpa , </B>
+
+''
+
+你可以简单地写成
+``<B>dig -x 128.9.0.32</B>
+
+''
+
+ 
+<DT><B>-f </B><I>file</I>
+
+
+
+
+<DD>
+<B>dig</B>
+
+批处理模式的文件.该文件包含了一组查询清单
+(
+<B>dig</B>
+
+
+
+命令行),它们将一个接一个地执行.以
+`; ，'
+
+`#'
+
+或
+`\n'
+
+开头的行将忽略.其它选项
+仍然可以在命令行上出现,而且对
+每个批处理查询都有效.
+<DT><B>-T </B><I>time</I>
+
+
+
+
+<DD>
+当运行于批处理模式下时,两次接着的查询之间的
+时间间隔,以秒计.
+可以用来保持两个或多个批处理
+<B>dig</B>
+
+命令大致同步运行.默认为零.
+<DT><B>-p </B><I>port</I>
+
+
+
+
+<DD>
+端口号.通过监听非标准端口号来查询
+域名服务器.默认为53.
+<DT><B>-P Bq </B><I>ping-string</I>
+
+
+
+
+
+
+
+
+<DD>
+在查询返回之后,执行一次
+<A HREF="/cgi-bin/man/man2html?8+ping">ping</A>(8)
+
+
+命令以获得响应时间的对照关系.这在调用shell上
+显得不那么自然.
+该命令显示的最后三行统计信息为:
+<P>
+
+
+<BLOCKQUOTE>
+
+<B>ping -s server_name 56 3</B>
+
+
+
+</BLOCKQUOTE>
+
+<P>
+
+如果可选的
+``<I>ping_string</I>
+
+''
+
+存在,那么
+会覆盖shell命令中的
+``<B>ping -s</B>
+
+
+
+''
+
+ 
+<DT><B>-t </B><I>query-type</I>
+
+
+
+
+<DD>
+指定查询类型.可以指定为一个将包含在类型字段
+中的整数值,也可以使用
+上面讨论的缩写助记符(即
+<I>mx  = </I><B>T_MX</B>
+
+ 
+
+ 
+<DT><B>-c </B><I>query-class</I>
+
+
+
+
+<DD>
+指定查询等级.可以指定为一个将包含在等级字段
+中的整数值,也可以使用
+上面讨论的缩写助记符(即in = C_IN).
+<DT><B>-k </B><I>keydir:keyname</I>
+
+
+
+
+<DD>
+用TSIG密钥指定的的密钥名来签署这次查询,
+该密钥名在目录keydir下.
+<DT><B>-envsav</B>
+
+
+<DD>
+该标识指定
+<B>dig</B>
+
+的环境变量
+(默认的,显示选项,等等.),在所有参数都解释了之后,
+应保存它们到
+一个文件中以使之成为默认的环境变量.
+如果你不喜欢默认的标准设置而又不想在每次使用
+<B>dig</B>
+
+时带大量的选项,那么这很有用.
+环境变量包括解析程序状态变量标识,超时和重试次数
+以及详细控制
+<B>dig</B>
+
+输出的标识(见下面).
+如果shell环境变量
+<B>LOCALDEF</B>
+
+设置为一个文件的名字,那么此即为默认的
+<B>dig</B>
+
+环境变量所保存的地方.如果没有,那么会在当前
+工作目录下创建
+``DiG.env
+
+''
+
+ 
+<P>
+
+<I>注意:</I>
+
+<B>LOCALDEF</B>
+
+是特定针对
+<B>dig</B>
+
+解析程序,
+而它不会影响标准解析程序库的操作.
+<P>
+
+每当
+<B>dig</B>
+
+执行时,它会查找
+``./DiG.env
+
+''
+
+或者在shell环境变量
+<B>LOCALDEF</B>
+
+中指定的文件.
+如果这样的文件存在而且可读,那么在解释
+任何参数之前,
+先从
+该文件中
+恢复环境变量.
+<DT><B>-envset</B>
+
+
+<DD>
+该标识只影响批处理查询的运行.当在
+<B>dig</B>
+
+的批处理文件一行上指定了
+``-<B>envset</B>
+
+''
+
+时,在参数之后的
+<B>dig</B>
+
+环境变量会被解释为批处理文件执行期间
+默认的环境变量,
+或者
+直到指定了
+``-<B>envset </B>
+
+''
+
+的下一行为止.
+<DT><B>
+</B>
+
+-<B></B>[<B>no</B>
+
+]
+
+
+
+<B>cm stick</B>
+
+<DD>
+
+该标识只影响批处理查询的运行.
+它指定
+<B>dig</B>
+
+环境变量(通过
+``-<B>envset</B>
+
+''
+
+开关变量初始化读入或设置)会在
+<B>dig</B>
+
+批处理文件每次查询(行)之前重建.
+默认的
+``-<B>nostick</B>
+
+''
+
+表示
+<B>dig</B>
+
+环境变量不是固定的,因而在
+<B>dig</B>
+
+批处理文件中单行上指定的选项将对剩余的行
+继续产生作用(也即,它们不会恢复成
+``sticky(固定的)''
+
+默认值).
+</DL>
+<P>
+
+<DT><B>+ Aq </B><I>query-option</I>
+
+
+
+
+
+
+
+
+<DD>
+``+''
+
+用来指定一个在查询信息包中需修改的或者
+需用来修改
+<B>dig</B>
+
+输出细节的选项.这些选项中的许多与
+<A HREF="/cgi-bin/man/man2html?8+nslookup">nslookup</A>(8)
+
+
+所承认的参数相同.
+如果一个选项需带参数,那么格式如下:
+<P>
+
+
+<BLOCKQUOTE>
+
+<B>+ </B>
+
+<B></B><I>keyword </I>
+
+
+
+<B></B>[= <B></B><I>value</I>
+
+
+
+]
+
+
+
+</BLOCKQUOTE>
+
+<P>
+
+绝大多数关键字可简写.
+``+''
+
+选项的解释是非常直白的 --- 值与它的关键字之间
+千万不能用空格分隔.
+当前可用的关键字有:
+<P>
+
+<DD>Keyword      Abbrev.  Meaning [default]
+<P>
+
+(关键字)     (缩写)   (含义) [默认值]
+<P>
+
+<DL COMPACT>
+<P>
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>debug&nbsp;&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>deb</B>
+
+)
+
+<DD>
+
+打开/关闭调试模式
+Bq Cm deb
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>d2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B>
+
+
+
+<DD>
+
+打开/关闭特殊的调试模式
+Bq Cm nod2
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>recurse&nbsp;&nbsp;</B>
+
+
+
+(<B>rec</B>
+
+)
+
+<DD>
+
+使用/不使用递归查询
+Bq Cm rec
+
+<DT><B>
+</B>
+
+<B>retry= </B><I>file ...</I>
+
+
+
+
+
+ 
+<B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B>
+
+(<B>ret</B>
+
+)
+
+<DD>
+
+设置重试次数为#
+Bq 4
+
+<DT><B>
+</B>
+
+<B>time= </B><I>file ...</I>
+
+
+
+
+
+ 
+<B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B>
+
+(<B>ti</B>
+
+)
+
+<DD>
+
+设置超时长度为#秒
+Bq 4
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>ko</B>
+
+
+
+<DD>
+
+保留公开的选项(keep open options)(隐含vc)
+Bq Cm noko
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>vc</B>
+
+
+
+<DD>
+
+使用/不使用虚拟电路
+Bq Cm novc
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>defname&nbsp;&nbsp;</B>
+
+
+
+(<B>def</B>
+
+)
+
+<DD>
+
+使用/不使用默认的域名
+Bq Cm def
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>search&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>sea</B>
+
+)
+
+<DD>
+
+使用/不使用域搜索列表
+Bq Cm sea
+
+<DT><B>
+</B>
+
+<B>domain= </B><I>NAME&nbsp;&nbsp;</I>
+
+
+
+
+
+(<B>do</B>
+
+)
+
+<DD>
+
+设置默认的域名为
+<I>NAME</I>
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>ignore&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>i</B>
+
+)
+
+<DD>
+
+忽略/不忽略截断(trunc.)错误
+Bq Cm noi
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>primary&nbsp;&nbsp;</B>
+
+
+
+(<B>pr</B>
+
+)
+
+<DD>
+
+使用/不使用主服务器
+Bq Cm nopr
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>aaonly&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>aa</B>
+
+)
+
+<DD>
+
+表示只包含授权查询的标识
+Bq Cm noaa
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>cmd</B>
+
+
+
+<DD>
+
+重复(echo)解释的参数
+Bq Cm cmd
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>stats&nbsp;&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>st</B>
+
+)
+
+<DD>
+
+显示查询统计信息
+Bq Cm st
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>Header&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>H</B>
+
+)
+
+<DD>
+
+显示基本的包头
+Bq Cm H
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>header&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>he</B>
+
+)
+
+<DD>
+
+显示包头的标识
+Bq Cm he
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>ttlid&nbsp;&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>tt</B>
+
+)
+
+<DD>
+
+显示TTLs(Time to Live)
+Bq Cm tt
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>cl</B>
+
+
+
+<DD>
+
+显示等级信息
+Bq Cm nocl
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>qr</B>
+
+
+
+<DD>
+
+显示向外的查询
+Bq Cm noqr
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>reply&nbsp;&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>rep</B>
+
+)
+
+<DD>
+
+显示响应信息
+Bq Cm rep
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>ques&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>qu</B>
+
+)
+
+<DD>
+
+显示询问部分
+Bq Cm qu
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>answer&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>an</B>
+
+)
+
+<DD>
+
+显示应答部分
+Bq Cm an
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>author&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>au</B>
+
+)
+
+<DD>
+
+显示授权的部分
+Bq Cm au
+
+<DT><B>
+</B>
+
+[<B>no </B>
+
+]
+
+<B>addit&nbsp;&nbsp;&nbsp;&nbsp;</B>
+
+
+
+(<B>ad</B>
+
+)
+
+<DD>
+
+显示附加的部分
+Bq Cm ad
+
+<DT><B>pfdef </B>
+
+
+<DD>
+设置为默认显示位
+<DT><B>pfmin</B>
+
+
+<DD>
+设置为最小的默认显示位
+<DT><B>pfset= </B><I># </I>
+
+
+
+
+
+
+<DD>
+设置显示位为#
+(#可以为十六进制/八进制/十进制)
+<DT><B>pfand= </B><I>file ...</I>
+
+
+
+
+
+
+<DD>
+ 
+位和显示位设为#(bitwise and print flags with #)
+<DT><B>pfor= </B><I>file ...</I>
+
+
+
+
+
+
+<DD>
+ 
+位或显示位设为#(bitwise or print flags with #)
+</DL>
+<P>
+
+<P>
+
+当发送数据报查询时,
+<B>retry</B>
+
+和
+<B>time</B>
+
+选项会影响解析程序库的重传策略.其算法如下:
+<P>
+
+
+<BLOCKQUOTE>
+<PRE>
+<DD>for i = 0 to retry - 1
+    for j = 1 to num_servers
+        send_query
+        wait((time * (2**i)) / num_servers)
+    end
+end
+</PRE>
+</BLOCKQUOTE>
+
+<P>
+
+(注意:
+<B>dig</B>
+
+通常取
+``<B>num_servers</B>
+
+''
+
+的值为1 . )
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H3>DETAILS(细节)</H3>
+
+<B>Dig</B>
+
+以前要求BIND的
+<A HREF="/cgi-bin/man/man2html?3+resolver">resolver</A>(3)
+
+
+库的版本作一些细微的修改.
+从BIND 4.9起,BIND的解析程序已经修补好
+并可以正常地与
+<B>dig</B>
+
+一起工作.
+实质上,
+<B>dig</B>
+
+在解释参数和设置适合的参数时是
+直来直去的
+(虽然并不巧妙)
+<B>Dig</B>
+
+会用到
+<A HREF="/cgi-bin/man/man2html?3+resolver">resolver</A>(3)
+
+
+的例程
+Fn res_init , 
+
+Fn res_mkquery ,
+
+Fn res_send 
+
+以及访问
+Ft _res
+
+结构.
+<A NAME="lbAG">&nbsp;</A>
+<H2>ENVIRONMENT(环境变量)</H2>
+
+<DL COMPACT>
+<P>
+
+<DT><B>LOCALRES</B>
+
+
+<DD>
+用来替换Pa /etc/resolv.conf的文件
+<DT><B>LOCALDEF</B>
+
+
+<DD>
+默认的环境变量文件
+</DL>
+<P>
+
+<P>
+
+另见上面对
+-<B>envsav</B>
+
+ 
+-<B>envset</B>
+
+ 
+和
+
+
+-<B></B>[<B>no </B>
+
+]
+
+
+
+<B>stick</B>
+
+
+
+
+
+选项的说明.
+<A NAME="lbAH">&nbsp;</A>
+<H2>FILES(相关文件)</H2>
+
+<DL COMPACT>
+<P>
+
+<DT><B>/etc/resolv.conf<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>
+
+</B>
+<DD>
+初始化的域名和域名服务器地址<BR>
+<DT><B>./DiG.env
+
+</B>
+<DD>
+默认的保存默认选项的文件
+</DL>
+<P>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<A HREF="/cgi-bin/man/man2html?8+named">named</A>(8),
+
+
+<A HREF="/cgi-bin/man/man2html?3+resolver">resolver</A>(3),
+
+
+<A HREF="/cgi-bin/man/man2html?5+resolver">resolver</A>(5),
+
+
+<A HREF="/cgi-bin/man/man2html?8+nslookup">nslookup</A>(8).
+
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>STANDARDS(标准)</H2>
+
+RFC 1035.
+<A NAME="lbAK">&nbsp;</A>
+<H2>AUTHOR(作者)</H2>
+
+Steve Hotz 
+<A HREF="mailto:hotz@isi.edu">hotz@isi.edu</A>
+<A NAME="lbAL">&nbsp;</A>
+<H2>ACKNOWLEDGMENTS(致谢)</H2>
+
+<B>Dig</B>
+
+使用了源自
+<A HREF="/cgi-bin/man/man2html?8+nslookup">nslookup</A>(8)
+
+
+的函数,
+其作者为Andrew Cherenson.
+<A NAME="lbAM">&nbsp;</A>
+<H2>BUGS</H2>
+
+<B>Dig</B>
+
+是蠕变特色(&quot;creeping featurism&quot;)的一个
+典型实例 -- 这是因在其开发
+过程中就考虑到了一些潜在应用而导致的结果.
+它可能会从这种严格的限定中受益.同样,
+他们设立的显示位以及条目的间隔尺寸
+很明显地也是一种十分特别的创意.
+<P>
+
+当问题出在解析程序身上时,
+<B>Dig</B>
+
+不会总是能够正常地退出(在适合的状况下)
+Po Sy 注意:
+
+绝大多数一般的exit情况是能够处理的
+Pc .
+
+当运行于批处理模式下时尤其恼火.
+如果不能正常退出(又无法俘获)的话,
+那么整个批处理将终止;如果俘获了这样的事件,
+<B>dig</B>
+
+就只是继续下一个查询罢了.
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;
+<A NAME="lbAO">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2001/7/19
+<A NAME="lbAP">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DL>
+<DT><A HREF="#lbAE">OTHER OPTIONS(其它选项)</A><DD>
+<DT><A HREF="#lbAF">DETAILS(细节)</A><DD>
+</DL>
+<DT><A HREF="#lbAG">ENVIRONMENT(环境变量)</A><DD>
+<DT><A HREF="#lbAH">FILES(相关文件)</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAJ">STANDARDS(标准)</A><DD>
+<DT><A HREF="#lbAK">AUTHOR(作者)</A><DD>
+<DT><A HREF="#lbAL">ACKNOWLEDGMENTS(致谢)</A><DD>
+<DT><A HREF="#lbAM">BUGS</A><DD>
+<DT><A HREF="#lbAN">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAO">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAP">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

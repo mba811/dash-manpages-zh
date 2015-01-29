@@ -1,0 +1,66 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of create_module</TITLE>
+</HEAD><BODY>
+<H1>create_module</H1>
+Section: System Calls (2)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+create_module - 生成一条可加载模块记录.
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/linux/module.h">linux/module.h</A>&gt;</B>
+
+<P>
+caddr_t create_module(const char *name, size_t size);
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+create_module试图生成一条可加载模块的记录并保留用来容纳模块的内核空间内存.该
+系统调用只对超级用户开放.
+<A NAME="lbAE">&nbsp;</A>
+<H2>返回值</H2>
+
+成功时返回模块驻留的内核空间地址,错误时返回-1,errno被相应设置.
+<A NAME="lbAF">&nbsp;</A>
+<H2>错误</H2>
+
+<DL COMPACT>
+<DT>EPERM <DD>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;用户非超级用户.
+<DT>EEXIST <DD>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;相同名字的模块已经存在.
+<DT>EINVAL<DD>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;要求的大小即使对模块的头信息来说也太小.
+<DT>ENOMEM <DD>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;内核无法给模块分配足够的连续的内存块.
+<DT>EFAULT <DD>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;越出了程序可访问的地址空间.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;雷勇&nbsp;&lt;<A HREF="mailto:nsinit@263.net">nsinit@263.net</A>&gt;</H2>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">返回值</A><DD>
+<DT><A HREF="#lbAF">错误</A><DD>
+<DT><A HREF="#lbAG"><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;雷勇&nbsp;&lt;nsinit@263.net&gt;</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

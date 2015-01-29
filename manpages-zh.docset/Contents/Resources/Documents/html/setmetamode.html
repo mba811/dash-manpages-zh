@@ -1,0 +1,98 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SETMETAMODE</TITLE>
+</HEAD><BODY>
+<H1>SETMETAMODE</H1>
+Section: Linux 用户手册 (1)<BR>Updated: 09 Oct 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+setmetamode - define the keyboard meta key handling
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>setmetamode [ </B><I>meta</I><B>|</B><I>bit</I><B>|</B><I>metabit</I><B> | </B><I>esc</I><B>|</B><I>prefix</I><B>|</B><I>escprefix</I><B> ]</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<P>
+
+没有参数时, 
+<B>setmetamode</B>
+
+将打印当前 Meta 键模式; 有参数时, 设置所指出的 Meta 键模式.
+<P>
+
+The Meta key mode is specific for each VT (and the VT
+corresponding to stdin is used).
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><I>esc prefix escprefix</I>
+
+<DD>
+The Meta key sends an Escape prefix.
+<DT><I>meta bit metabit</I>
+
+<DD>
+The Meta key sets the high order bit of the character.
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>范例</H2>
+
+<P>
+可以用
+<B>setmetamode</B>
+
+在 
+<I>/etc/rc</I>
+
+脚本中定义 Meta 键模式的初始状态. 例如, 可以如下设置: 
+<DL COMPACT><DT><DD>
+INITTY=/dev/tty[1-8]
+<BR>
+
+for tty in $INITTY; do
+<DL COMPACT><DT><DD>
+setmetamode escprefix &lt; $tty
+</DL>
+
+done
+</DL>
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>另见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+loadkeys">loadkeys</A></B>(1).
+
+<P>
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">范例</A><DD>
+<DT><A HREF="#lbAG">另见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

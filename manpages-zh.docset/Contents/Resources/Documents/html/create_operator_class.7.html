@@ -1,0 +1,141 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE OPERATOR CLASS</TITLE>
+</HEAD><BODY>
+<H1>CREATE OPERATOR CLASS</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE OPERATOR CLASS - 定义一个新的操作符类
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE OPERATOR CLASS <I>name</I> [ DEFAULT ] FOR TYPE <I>data_type</I> USING <I>index_method</I> AS
+  {  OPERATOR <I>strategy_number</I> <I>operator_name</I> [ ( <I>op_type</I>, <I>op_type</I> ) ] [ RECHECK ]
+   | FUNCTION <I>support_number</I> <I>funcname</I> ( <I>argument_type</I> [, ...] )
+   | STORAGE <I>storage_type</I>
+  } [, ... ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE OPERATOR CLASS</B> 定义一个新的操作符表。 一个操作符表定义一种特定的数据类型可以如何与一种索引一起使用。 操作符表声明特定的操作符可以为这种数据类型以及这种索引方法填充特定角色或者&quot;策略&quot;。 操作符表还声明索引方法在为一个索引字段选定该操作符表的时候要使用的支持过程。 所有操作符表使用的函数和操作符都必须在创建操作符表之前定义。
+<P>
+
+<BR>&nbsp;如果给出了模式名字，那么操作符表就在指定的模式中创建。&nbsp;否则就在当前模式中创建（在搜索路径前面的那个；参阅&nbsp;CURRENT_SCHEMA()）。&nbsp;在同一个模式中的两个操作符表可以有同样的名字，但它们必须用于不同的索引方法。
+<P>
+
+<BR>&nbsp;定义操作符表的用户成为其所有者。目前，创造者必须是超级用户。&nbsp;（作这样的限制是因为一个有问题的操作符表定义会让服务器困惑，甚至崩溃。）
+<P>
+
+<B>CREATE OPERATOR CLASS</B>  目前并不检查这个类定义是否包含所有索引方法需要操作符以及函数。 定义一个合法的操作符表是用户的责任。
+<P>
+
+<BR>&nbsp;参考&nbsp;``Interfacing&nbsp;Extensions&nbsp;to&nbsp;Indexes''&nbsp;获取更多信息。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;将要创建的操作符表的名字。名字可以用模式修饰。
+<DT><B>DEFAULT</B><DD>
+<BR>&nbsp;如果出现了这个键字，那么该操作符表将成为它的数据类型的缺省操作符表。&nbsp;对于某个数据类型和访问方式而言，最多可以有一个操作符表是缺省的。
+<DT><B></B><I>data_type</I><B></B><DD>
+<BR>&nbsp;这个操作符表处理的字段数据类型。
+<DT><B></B><I>index_method</I><B></B><DD>
+<BR>&nbsp;这个操作符表处理的索引访问方式的名字。
+<DT><B></B><I>strategy_number</I><B></B><DD>
+<BR>&nbsp;一个操作符和这个操作符表关联的索引访问方式的策略数。
+<DT><B></B><I>operator_name</I><B></B><DD>
+<BR>&nbsp;一个和该操作符表关联的操作符的名字（可以用模式修饰）。
+<DT><B></B><I>op_type</I><B></B><DD>
+<BR>&nbsp;一个操作符的输入数据类型，或者是&nbsp;NONE&nbsp;表示左目或者右目操作符。&nbsp;通常情况下可以省略输入数据类型，因为这个时候它们和操作符表的数据类型相同。
+<DT><B>RECHECK</B><DD>
+<BR>&nbsp;如果出现，那么索引对这个操作符是&quot;lossy&quot;（有损耗的），&nbsp;因此，使用这个索引检索的行必须重新检查，以保证它们真正满足和此操作符相关的条件子句。
+<DT><B></B><I>support_number</I><B></B><DD>
+<BR>&nbsp;索引方法对一个与操作符表关联的函数的支持过程数。
+<DT><B></B><I>funcname</I><B></B><DD>
+<BR>&nbsp;一个函数的名字（可以有模式修饰），这个函数是索引访问方式对此操作符表的支持过程。
+<DT><B></B><I>argument_types</I><B></B><DD>
+<BR>&nbsp;函数的参数数据类型。
+<DT><B></B><I>storage_type</I><B></B><DD>
+<BR>&nbsp;实际存储在索引里的数据类型。通常它和字段数据类型相同，&nbsp;但是一些索引方法（到目前为止只有&nbsp;GIST）允许它是不同的。&nbsp;除非索引方法允许使用一种不同的类型，否则必须省略&nbsp;STORAGE&nbsp;子句。
+</DL>
+<P>
+
+OPERATOR，FUNCTION，和 STORAGE  子句可以按照任意顺序出现。
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;下面的例子命令为数据类型&nbsp;_int4（int4&nbsp;的数组）定义了一个&nbsp;GiST&nbsp;索引操作符表。&nbsp;参阅&nbsp;contrib/intarray/&nbsp;获取完整的例子。
+<P>
+<PRE>
+CREATE OPERATOR CLASS gist__int_ops
+    DEFAULT FOR TYPE _int4 USING gist AS
+        OPERATOR        3       &amp;&amp;,
+        OPERATOR        6       =       RECHECK,
+        OPERATOR        7       @,
+        OPERATOR        8       ~,
+        OPERATOR        20      @@ (_int4, query_int),
+        FUNCTION        1       g_int_consistent (internal, _int4, int4),
+        FUNCTION        2       g_int_union (bytea, internal),
+        FUNCTION        3       g_int_compress (internal),
+        FUNCTION        4       g_int_decompress (internal),
+        FUNCTION        5       g_int_penalty (internal, internal, internal),
+        FUNCTION        6       g_int_picksplit (internal, internal),
+        FUNCTION        7       g_int_same (_int4, _int4, internal);
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>CREATE OPERATOR CLASS</B> 是一个 PostgreSQL 扩展。 在 SQL 标准中没有 CREATE OPERATOR CLASS。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+ALTER OPERATOR CLASS [<B><A HREF="/cgi-bin/man/man2html?7+alter_operator_class">alter_operator_class</A></B>(7)], DROP OPERATOR CLASS [<B><A HREF="/cgi-bin/man/man2html?l+drop_operator_class">drop_operator_class</A></B>(l)]
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

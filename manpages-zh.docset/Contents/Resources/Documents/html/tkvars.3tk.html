@@ -1,0 +1,94 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of tkvars</TITLE>
+</HEAD><BODY>
+<H1>tkvars</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: 4.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tkvars - Tk 使用或设置的变量
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+在 Tk 的执行的各个时期设置或使用下列 Tcl 变量:
+<DL COMPACT>
+<DT><B>tk_library</B><DD>
+这个变量持有一个目录的文件名字，它包含与 Tk 有关的一个 Tcl 脚本库。这些脚本包含通常在 Tk 应用启动的时候处理的一个初始化文件，加上包含实现组件缺省行为的过程的其他文件。在向一个解释其添加 Tk 的时候设置 <B>tcl_library</B> 的初始值；这是通过查找许多不同的目录直到找到包含一个适当的 Tk 启动脚本来完成的。如果存在 <B>TK_LIBRARY</B> 环境变量，则首先查找它指名的目录。如果未设置 <B>TK_LIBRARY</B> 或者未引用一个适当的目录，则基于系列位置检查其他一些目录，编辑进去(compiled-in)的缺省位置，Tcl  库目录的位置，包含应用的二进制文件的位置，和当前工作目录。应用可以修改这个变量来切换到一个不同的库上。
+<DT><B>tk_patchLevel</B><DD>
+包含给出 Tk 的当前补丁级别的一个十进制整数。补丁级别在每次新发行或修补时增加，并唯一的标识一个 Tk 的官方版本。
+<DT><B>tkPriv</B><DD>
+这个变量是一个数组，它包含 Tk 私有的许多信息。Tk 库过程和缺省绑定使用 <B>tkPriv</B> 的元素。Tk 以外的任何代码都不应该访问它。
+<DT><B>tk_strictMotif</B><DD>
+缺省的把这个变量设置为零。如果一个应用把它设置为一，则 Tk 尝试保持尽可能的与 Motif 观感标准相接近。例如，活跃元素如按钮和滚动条滑块在指针经过它们的时候不改变颜色。
+<DT><B>tk_version</B><DD>
+Tk 为每个应用在解释器中设置这个变量。这个变量持有 Tk 库的 <I>major</I>.<I>minor</I><I> </I>形式的当前版本号。 <I>Major</I> 和 <I>minor</I> 是整数。在包含不反向兼容的变更的 Tk 发行中增加主版本号(就是说，可能必须改变现存的 Tk 应用和脚本来在新发行下工作的时候)。在每次 Tk 的新发行中增加次版本号，但在主版本号变更的时候被复位为零。
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+variables, version
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/05/13</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAE">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAF">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAG">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

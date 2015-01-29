@@ -1,0 +1,225 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of STDIN</TITLE>
+</HEAD><BODY>
+<H1>STDIN</H1>
+Section: C Library Functions (3)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+<BR>BSD mandoc<BR>
+Linux 2.0
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>stdin</B>
+
+ 
+<B>stdout</B>
+
+ 
+<B>stderr</B>
+
+ - 标准 I/O 流
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+Fd #include &lt;<A HREF="file:///usr/include/stdio.h">stdio.h</A>&gt;
+
+Fd extern FILE *stdin;
+
+Fd extern FILE *stdout;
+
+Fd extern FILE *stderr;
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+通常，每个 Unix 程序在启动时都会打开三个流，一个用于输入，一个用于输出，一个用于打印诊断或错误消息。典型的，他们被连接到用户的终端 (参见
+<A HREF="/cgi-bin/man/man2html?4+tty">tty</A>(4))
+
+
+但是也有可能指向文件或是其他设备，取决于父进程选择设置了什么 (参见 
+<A HREF="/cgi-bin/man/man2html?1+sh">sh</A>(1)
+
+
+的重定向 (``Redirection'') 章节。)
+<P>
+
+输入流被称为 ``standard input''; 输出流被称为 ``standard output''; 错误流被称为 ``standard error''。这些名词通常简写为符号，用于引用这些文件，它们是
+<B>stdin</B>
+
+ 
+<B>stdout</B>
+
+ 
+和
+<B>stderr</B>
+
+ 
+<P>
+
+这些符号中，每一个都是
+<A HREF="/cgi-bin/man/man2html?3+stdio">stdio</A>(3)
+
+
+中的一个宏，类型是指向 FILE 的指针，可以用于类似
+<A HREF="/cgi-bin/man/man2html?3+fprintf">fprintf</A>(3)
+
+
+或
+<A HREF="/cgi-bin/man/man2html?3+fread">fread</A>(3)
+
+
+等函数中。
+<P>
+
+由于 FILE 是一个对 Unix 文件描述符加以缓冲的包装，下层的文件也可以使用原始的 Unix 文件接口来存取。也就是，类似
+<A HREF="/cgi-bin/man/man2html?2+read">read</A>(2)
+
+
+和
+<A HREF="/cgi-bin/man/man2html?2+lseek">lseek</A>(2)
+
+
+的函数。与流
+<B>stdin</B>
+
+ 
+<B>stdout</B>
+
+ 
+和
+<B>stderr</B>
+
+关联的整数形式的文件描述符分别是 0，1 还有 2。预处理器符号 STDIN_FILENO，STDOUT_FILENO 和 STDERR_FILENO 分别以它们为值，定义在 &lt;<A HREF="file:///usr/include/unistd.h">unistd.h</A>&gt; 中。
+<P>
+
+注意混合使用 FILE 和原始的文件描述符可能带来不可预料的结果，一般应当避免。(对于喜欢追根问底的人：POSIX.1 规范的 8.2.3 节详细地描述了这样的混合使用怎样才能不出错。) 一个简单的规则是，文件描述符由内核控制，而 stdio 仅仅是一个库。它的意思是，例如当调用 exec 之后，子进程可以继承所有打开的文件描述符，但是任何原有的流都不可再存取了。
+<P>
+
+由于符号
+<B>stdin</B>
+
+ 
+<B>stdout</B>
+
+ 
+和
+<B>stderr</B>
+
+被指定为宏，为它们赋值将导致不可移植。利用库函数
+<A HREF="/cgi-bin/man/man2html?3+freopen">freopen</A>(3)
+
+
+，标准流可以用来指向不同的文件。引进这个函数专门用来为
+<B>stdin</B>
+
+ 
+<B>stdout</B>
+
+ 
+和
+<B>stderr</B>
+
+重新赋值。标准流在调用
+<A HREF="/cgi-bin/man/man2html?3+exit">exit</A>(3)
+
+
+和程序正常中止时被关闭。
+<A NAME="lbAE">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+sh">sh</A>(1),
+
+
+<A HREF="/cgi-bin/man/man2html?1+csh">csh</A>(1),
+
+
+<A HREF="/cgi-bin/man/man2html?2+open">open</A>(2),
+
+
+<A HREF="/cgi-bin/man/man2html?3+fopen">fopen</A>(3),
+
+
+<A HREF="/cgi-bin/man/man2html?3+stdio">stdio</A>(3)
+
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>CONSIDERATIONS</H2>
+
+错误流
+<B>stderr</B>
+
+是非缓冲的。输出流
+<B>stdout</B>
+
+是行缓冲的，如果它指向一个终端。不完全的行只有在调用
+<A HREF="/cgi-bin/man/man2html?3+fflush">fflush</A>(3)
+
+
+或
+<A HREF="/cgi-bin/man/man2html?3+exit">exit</A>(3)
+
+
+，或者打印了新行符之后才会显示。这样可能带来无法预料的结果，尤其是调试输出时。标准流 (或任何其他流) 的缓冲模式可以用函数
+<A HREF="/cgi-bin/man/man2html?3+setbuf">setbuf</A>(3)
+
+
+或
+<A HREF="/cgi-bin/man/man2html?3+setvbuf">setvbuf</A>(3)
+
+
+来切换。注意当
+<B>stdin</B>
+
+与一个终端关联时，也许终端驱动中存在输入缓冲，与 stdio 缓冲完全无关。(确实如此，一般的终端输入在内核中是行缓冲的。) 内核对输入的控制可以通过对
+<A HREF="/cgi-bin/man/man2html?3+tcsetattr">tcsetattr</A>(3)
+
+
+的调用来修改，参见
+<A HREF="/cgi-bin/man/man2html?1+stty">stty</A>(1),
+
+
+和
+<A HREF="/cgi-bin/man/man2html?3+termios">termios</A>(3)
+
+
+。
+<A NAME="lbAG">&nbsp;</A>
+<H2>CONFORMING TO 标准参考</H2>
+
+宏
+<B>stdin</B>
+
+ 
+<B>stdout</B>
+
+ 
+和
+<B>stderr</B>
+
+遵循
+St -ansiC
+
+标准，这个标准同时规定了这三个流应当在程序启动时打开。
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAF">CONSIDERATIONS</A><DD>
+<DT><A HREF="#lbAG">CONFORMING TO 标准参考</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

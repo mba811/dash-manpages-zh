@@ -1,0 +1,2339 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PERLFAQ8</TITLE>
+</HEAD><BODY>
+<H1>PERLFAQ8</H1>
+Section: Perl Programmers Reference Guide (7)<BR>Updated: 2003-11-25<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+perlfaq8 - 系统交互 (2003/01/26 17:44:04 )
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<A NAME="ixAAC"></A>
+Perl FAQ 的这一节覆盖了与系统交互有关的问题。主题包括进程间通信 (IPC)，用户界面控制 (键盘，屏幕和指点设备)，以及其他与数据操作不相关的事项
+<P>
+
+阅读你系统中的 perl 自带的 FAQ 和文档 (例如，perlvms,perlplan9...)。它们会包含有关你的 perl 版本的更详细的信息。
+
+<BR>
+
+
+
+<P>
+
+<B>如何找出正在运行的操作系统？</B>
+<P>
+
+
+<A NAME="ixAAD"></A>
+
+<BR>
+
+
+
+<P>
+
+<B>为什么 exec() 不返回?</B>
+<P>
+
+
+<A NAME="ixAAE"></A>
+因为这正是它所做的：它用另一个不同的程式来取代你当时所执行的。如果你的程 式需要继续跑下去（这可能正是你问此问题的原因吧？），改用 system() 。
+
+<BR>
+
+
+
+<P>
+
+<B>如何对键盘／萤幕／滑鼠做些花样？</B>
+<P>
+
+
+<A NAME="ixAAF"></A>
+连接／控制 键盘、萤幕和指标装置（「滑鼠」）的方法因作业系统的不同而有不 同；不妨试试下列模组：
+<DL COMPACT>
+<DT>Keyboard<DD>
+<A NAME="ixAAG"></A>
+
+
+<PRE>
+    Term::Cap                   标准内建模组
+    Term::ReadKey               CPAN
+    Term::ReadLine::Gnu         CPAN
+    Term::ReadLine::Perl        CPAN
+    Term::Screen                CPAN
+
+</PRE>
+
+
+<DT>Screen<DD>
+<A NAME="ixAAH"></A>
+
+
+<PRE>
+    Term::Cap                   标准内建模组
+    Curses                      CPAN
+    Term::ANSIColor             CPAN
+
+</PRE>
+
+
+<DT>Mouse<DD>
+<A NAME="ixAAI"></A>
+
+
+<PRE>
+    Tk                          CPAN
+
+</PRE>
+
+
+</DL>
+<P>
+
+Some of these specific cases are shown below.
+
+<BR>
+
+
+
+<P>
+
+<B>How do I print something out in color?</B>
+<P>
+
+
+<A NAME="ixAAJ"></A>
+In general, you don't, because you don't know whether
+the recipient has a color-aware display device.  If you
+know that they have an <FONT SIZE="-1">ANSI</FONT> terminal that understands
+color, you can use the Term::ANSIColor module from <FONT SIZE="-1">CPAN:</FONT>
+<P>
+
+
+
+<PRE>
+    use Term::ANSIColor;
+    print color(&quot;red&quot;), &quot;Stop!\n&quot;, color(&quot;reset&quot;);
+    print color(&quot;green&quot;), &quot;Go!\n&quot;, color(&quot;reset&quot;);
+
+</PRE>
+
+
+<P>
+
+Or like this:
+<P>
+
+
+
+<PRE>
+    use Term::ANSIColor qw(:constants);
+    print RED, &quot;Stop!\n&quot;, RESET;
+    print GREEN, &quot;Go!\n&quot;, RESET;
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>How do I read just one key without waiting for a return key?</B>
+<P>
+
+
+<A NAME="ixAAK"></A>
+Controlling input buffering is a remarkably system-dependent matter.
+On many systems, you can just use the <B>stty</B> command as shown in
+``getc'' in perlfunc, but as you see, that's already getting you into
+portability snags.
+<P>
+
+
+
+<PRE>
+    open(TTY, &quot;+&lt;/dev/tty&quot;) or die &quot;no tty: $!&quot;;
+    system &quot;stty  cbreak &lt;/dev/tty &gt;/dev/tty 2&gt;&amp;1&quot;;
+    $key = getc(TTY);           # perhaps this works
+    # OR ELSE
+    sysread(TTY, $key, 1);      # probably this does
+    system &quot;stty -cbreak &lt;/dev/tty &gt;/dev/tty 2&gt;&amp;1&quot;;
+
+</PRE>
+
+
+<P>
+
+The Term::ReadKey module from <FONT SIZE="-1">CPAN</FONT> offers an easy-to-use interface that
+should be more efficient than shelling out to <B>stty</B> for each key.
+It even includes limited support for Windows.
+<P>
+
+
+
+<PRE>
+    use Term::ReadKey;
+    ReadMode('cbreak');
+    $key = ReadKey(0);
+    ReadMode('normal');
+
+</PRE>
+
+
+<P>
+
+However, using the code requires that you have a working C compiler
+and can use it to build and install a <FONT SIZE="-1">CPAN</FONT> module.  Here's a solution
+using the standard <FONT SIZE="-1">POSIX</FONT> module, which is already on your systems
+(assuming your system supports <FONT SIZE="-1">POSIX</FONT>).
+<P>
+
+
+
+<PRE>
+    use HotKey;
+    $key = readkey();
+
+</PRE>
+
+
+<P>
+
+And here's the HotKey module, which hides the somewhat mystifying calls
+to manipulate the <FONT SIZE="-1">POSIX</FONT> termios structures.
+<P>
+
+
+
+<PRE>
+    # HotKey.pm
+    package HotKey;
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    @ISA = qw(Exporter);
+    @EXPORT = qw(cbreak cooked readkey);
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    use strict;
+    use POSIX qw(:termios_h);
+    my ($term, $oterm, $echo, $noecho, $fd_stdin);
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $fd_stdin = fileno(STDIN);
+    $term     = POSIX::Termios-&gt;new();
+    $term-&gt;getattr($fd_stdin);
+    $oterm     = $term-&gt;getlflag();
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $echo     = ECHO | ECHOK | ICANON;
+    $noecho   = $oterm &amp; ~$echo;
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    sub cbreak {
+        $term-&gt;setlflag($noecho);  # ok, so i don't want echo either
+        $term-&gt;setcc(VTIME, 1);
+        $term-&gt;setattr($fd_stdin, TCSANOW);
+    }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    sub cooked {
+        $term-&gt;setlflag($oterm);
+        $term-&gt;setcc(VTIME, 0);
+        $term-&gt;setattr($fd_stdin, TCSANOW);
+    }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    sub readkey {
+        my $key = '';
+        cbreak();
+        sysread(STDIN, $key, 1);
+        cooked();
+        return $key;
+    }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    END { cooked() }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    1;
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>How do I check whether input is ready on the keyboard?</B>
+<P>
+
+
+<A NAME="ixAAL"></A>
+The easiest way to do this is to read a key in nonblocking mode with the
+Term::ReadKey module from <FONT SIZE="-1">CPAN</FONT>, passing it an argument of -1 to indicate
+not to block:
+<P>
+
+
+
+<PRE>
+    use Term::ReadKey;
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    ReadMode('cbreak');
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    if (defined ($char = ReadKey(-1)) ) {
+        # input was waiting and it was $char
+    } else {
+        # no input was waiting
+    }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    ReadMode('normal');                  # restore normal tty settings
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>How do I clear the screen?</B>
+<P>
+
+
+<A NAME="ixAAM"></A>
+If you only have do so infrequently, use <TT>&quot;system&quot;</TT>:
+<P>
+
+
+
+<PRE>
+    system(&quot;clear&quot;);
+
+</PRE>
+
+
+<P>
+
+If you have to do this a lot, save the clear string
+so you can print it 100 times without calling a program
+100 times:
+<P>
+
+
+
+<PRE>
+    $clear_string = `clear`;
+    print $clear_string;
+
+</PRE>
+
+
+<P>
+
+If you're planning on doing other screen manipulations, like cursor
+positions, etc, you might wish to use Term::Cap module:
+<P>
+
+
+
+<PRE>
+    use Term::Cap;
+    $terminal = Term::Cap-&gt;Tgetent( {OSPEED =&gt; 9600} );
+    $clear_string = $terminal-&gt;Tputs('cl');
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>How do I get the screen size?</B>
+<P>
+
+
+<A NAME="ixAAN"></A>
+If you have Term::ReadKey module installed from <FONT SIZE="-1">CPAN</FONT>,
+you can use it to fetch the width and height in characters
+and in pixels:
+<P>
+
+
+
+<PRE>
+    use Term::ReadKey;
+    ($wchar, $hchar, $wpixels, $hpixels) = GetTerminalSize();
+
+</PRE>
+
+
+<P>
+
+This is more portable than the raw <TT>&quot;ioctl&quot;</TT>, but not as
+illustrative:
+<P>
+
+
+
+<PRE>
+    require 'sys/ioctl.ph';
+    die &quot;no TIOCGWINSZ &quot; unless defined &amp;TIOCGWINSZ;
+    open(TTY, &quot;+&lt;/dev/tty&quot;)                     or die &quot;No tty: $!&quot;;
+    unless (ioctl(TTY, &amp;TIOCGWINSZ, $winsize='')) {
+        die sprintf &quot;$0: ioctl TIOCGWINSZ (%08x: $!)\n&quot;, &amp;TIOCGWINSZ;
+    }
+    ($row, $col, $xpixel, $ypixel) = unpack('S4', $winsize);
+    print &quot;(row,col) = ($row,$col)&quot;;
+    print &quot;  (xpixel,ypixel) = ($xpixel,$ypixel)&quot; if $xpixel || $ypixel;
+    print &quot;\n&quot;;
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何向使用者询问密码？</B>
+<P>
+
+
+<A NAME="ixAAO"></A>
+(这个问题跟全球资讯网一点关系也没有。如果你要找的是跟 WWW 有关的，那就 看另一份常见问题集吧。)
+<P>
+
+在 perlfunc 中的 ``crypt'' 里面有个范例。首先，将你的终端机设为「无回应」``no echo'' 模式，然後就用平常的方法将密码读入。你可以用老式的 ioctl() 函数、 POSIX 终端机控制函数（参看 POSIX ，和骆驼书第七章），或是呼叫 stty 程式，这些方法的可携性／移植性程度都不一样。
+<P>
+
+你也可以在大部份系统上使用 CPAN 里的 Term::ReadKey 模组，这个模组较易使用而且理论上也较据可携性／移植性。
+<P>
+
+
+
+<PRE>
+    use Term::ReadKey;
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    ReadMode('noecho');
+    $password = ReadLine(0);
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何读写串口？</B>
+<P>
+
+
+<A NAME="ixAAP"></A>
+这端看你在什麽作业系统上执行你的程式。以 Unix 来说，序列埠可以透过 /dev 目录下的档案来撷取; 而在其他系统上，设备的名称无疑地会不一样。以下是一些在设备互动时可能遭遇的共同问题：
+<DL COMPACT>
+<DT>lockfiles<DD>
+<A NAME="ixAAQ"></A>
+你的系统可能会使用锁档来控制多重读写的情况。确定你用的是正确的协定。因为当多个程序同时对一个装置做读取时可能会发生意想不到的情况。
+<DT>open mode<DD>
+<A NAME="ixAAR"></A>
+如果你打算对一个装置同时做读与写的动作，你得将它开到更新的模式（ 在 perlfunc 中的 open 里有更详细的解说）。如果你不希望冒着阻挡其他程序读取 这个装置的风险，那就得用 sysopen() 和 Fcntl 模组（标准 perl 的一部分）内 的 <TT>&quot;O_RDWR|O_NDELAY|O_NOCTTY&quot;</TT>。在 perlfunc 中的 sysopen 里有对此方法更 详尽的解说。
+<DT>end of line<DD>
+<A NAME="ixAAS"></A>
+有些装置会等着在每行结尾处看到一个 ``\r''，而非 ``\n''。在某些平台上的 perl， ``\r''和 ``\n'' 与它们平常（在 Unix 上）所指的 ASCII 值 ``\015'' 和 ``\012'' 有 所不同。你也许得直接给定数值，例如用八进位 (``\015'')、十六进位 (``0x0D'')， 或指定控制字元 (``\cM'')。
+
+
+<P>
+
+
+
+
+<PRE>
+    print DEV &quot;atv1\012&quot;;       # wrong, for some devices
+    print DEV &quot;atv1\015&quot;;       # right, for some devices
+
+</PRE>
+
+
+
+
+<P>
+
+
+尽管对普通的文字档案，一个 ``\n'' 便可解决断行的问题，但目前在不同作业系统 间（Unix、DOS/Win 和 Macintosh），对於断行记号仍无统一标准，而只有用 ``\015\012'' 来当成 每行的结尾，然後再视需要去掉输出中不想要的部份。这 个做法尤其常用於 socket输出／输入 与自动刷新 (autoflushing)，也是接下来 要讨论的主题。
+<DT>flushing output<DD>
+<A NAME="ixAAT"></A>
+如果你希望 print() 的时候每个字元都要送到你指定的装置去，那你应自动刷新文件句柄。可以使用 <I>select()</I> 和 <TT>$|</TT> 变量控制自动刷新，参见 perlvar 中的 &quot;$|&quot; 和 perlfunc 中的 ``select''，或 perlfaq5, ``How do I flush/unbuffer an
+output filehandle?  Why must I do this?''):
+
+
+<P>
+
+
+
+
+<PRE>
+    $oldh = select(DEV);
+    $| = 1;
+    select($oldh);
+
+</PRE>
+
+
+
+
+<P>
+
+
+你也可能看到不使用额外的暂存变数的写法，例如：
+
+
+<P>
+
+
+
+
+<PRE>
+    select((select(DEV), $| = 1)[0]);
+
+</PRE>
+
+
+
+
+<P>
+
+
+Or if you don't mind pulling in a few thousand lines
+of code just because you're afraid of a little $| variable:
+
+
+<P>
+
+
+
+
+<PRE>
+    use IO::Handle;
+    DEV-&gt;<A HREF="/cgi-bin/man/man2html?1+autoflush">autoflush</A>(1);
+
+</PRE>
+
+
+
+
+<P>
+
+
+As mentioned in the previous item, this still doesn't work when using
+socket I/O between Unix and Macintosh.  You'll need to hard code your
+line terminators, in that case.
+<DT>non-blocking input<DD>
+<A NAME="ixAAU"></A>
+如果你正在做一个阻塞的 read() 或 sysread() 动作，则你需要安排一个闹 铃把手或提供一个逾时设定（参看 alarm）。如果你是用非阻挡式的 开档，那麽就要配合非阻挡性的读取，也就是说得用到4 个参数的 select() 来确 定此装置的 输出／入 是否已准备好了（参考 perlfunc 中的 select ）。
+</DL>
+<P>
+
+While trying to read from his caller-id box, the notorious Jamie Zawinski
+&lt;<A HREF="mailto:jwz@netscape.com">jwz@netscape.com</A>&gt;, after much gnashing of teeth and fighting with sysread,
+sysopen, <FONT SIZE="-1">POSIX</FONT>'s tcgetattr business, and various other functions that
+go bump in the night, finally came up with this:
+<P>
+
+
+
+<PRE>
+    sub open_modem {
+        use IPC::Open2;
+        my $stty = `/bin/stty -g`;
+        open2( \*MODEM_IN, \*MODEM_OUT, &quot;cu -l$modem_device -s2400 2&gt;&amp;1&quot;);
+        # starting cu hoses /dev/tty's stty settings, even when it has
+        # been opened on a pipe...
+        system(&quot;/bin/stty $stty&quot;);
+        $_ = &lt;MODEM_IN&gt;;
+        chomp;
+        if ( !m/^Connected/ ) {
+            print STDERR &quot;$0: cu printed `$_' instead of `Connected'\n&quot;;
+        }
+    }
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何解码加密的口令文件？</B>
+<P>
+
+
+<A NAME="ixAAV"></A>
+花大把大把的钱去买破解专用的硬体，这会让你成为焦点话题。
+<P>
+
+说正经的，如果是碰到 Unix 密码档的话就不行 - Unix 密码系统用的是单向的加 密函数。像 Crack 之类的程式可以暴力地（并聪明地）试着猜出密码，但无法 （也不能）保证速战速决。
+<P>
+
+如果你耽心的是使用者选取不良的密码，你应该在使用者换密码时主动审核（例如说修改 <I><A HREF="/cgi-bin/man/man2html?1+passwd">passwd</A></I>(1) 程式加入这个功能）。
+
+<BR>
+
+
+
+<P>
+
+<B>如何在后台开启进程？</B>
+<P>
+
+
+<A NAME="ixAAW"></A>
+Several modules can start other processes that do not block
+your Perl program.  You can use IPC::Open3, Parallel::Jobs,
+IPC::Run, and some of the <FONT SIZE="-1">POE</FONT> modules.  See <FONT SIZE="-1">CPAN</FONT> for more
+details.
+<P>
+
+你可以使用：
+<P>
+
+
+
+<PRE>
+    system(&quot;cmd &amp;&quot;)
+
+</PRE>
+
+
+<P>
+
+或是用 fork，像 perlfunc 中的 fork 里写的（在 perlipc 里有更进一步的 范例）。如果你在 Unix 类的系统上的话，请注意以下几件事情：
+<DL COMPACT>
+<DT><FONT SIZE="-1">STDIN</FONT>, <FONT SIZE="-1">STDOUT</FONT>, and <FONT SIZE="-1">STDERR</FONT> are shared<DD>
+<A NAME="ixAAX"></A>
+主程序和背景程序（即「子」程序）共用同一个 STDIN、STDOUT 和 STDERR 档案 把手。如果两个程序想同时去读、写同一个档案把手，就可能有怪事会发生。你也 许应该替子程序关闭或重新开启这些把手。你可以用开启一个管道 (pipe) 的方法 避免这些问题（参看 open）但是在某些系统上这样做会强迫子程序 必须比父程序早死。
+<DT>信号<DD>
+<A NAME="ixAAY"></A>
+SIGCHLD、可能还有 SIGPIPE 这两个讯号要抓到。当背景程序执行完成後就会送出 SIGCHLD 讯号。而当你写入一个子程序已经关闭的档案把手时就会收到 SIGPIPE 讯号（一个未抓住的 SIGPIPE 可能导致你的程式无声无息地死去）。用 system(&quot;cmd&amp;&quot;) 的话不会有这样的问题。
+<DT>僵尸进程<DD>
+<A NAME="ixAAZ"></A>
+你得做准备，在子程序结束时「收成」它：
+
+
+<P>
+
+
+
+
+<PRE>
+    $SIG{CHLD} = sub { wait };
+
+</PRE>
+
+
+
+
+<P>
+
+
+
+
+<PRE>
+    $SIG{CHLD} = 'IGNORE';
+
+</PRE>
+
+
+
+
+<P>
+
+
+You can also use a double fork. You immediately <I>wait()</I> for your
+first child, and the init daemon will <I>wait()</I> for your grandchild once
+it exits.
+
+
+<P>
+
+
+
+
+<PRE>
+        unless ($pid = fork) {
+                unless (fork) {
+            exec &quot;what you really wanna do&quot;;
+            die &quot;exec failed!&quot;;
+                }
+        exit 0;
+        }
+    waitpid($pid,0);
+
+</PRE>
+
+
+
+
+<P>
+
+
+在 Signals 有范例程式教你怎麽做。用 system(&quot;prog &amp;&quot;) 的 话不会有僵 程序的问题。
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>如何截获控制字符/信号？</B>
+<P>
+
+
+<A NAME="ixABA"></A>
+你并不能真的 ``捕捉'' 一个控制字元。而是控制字元产生一个讯号让你捕捉。关於讯号的资料可以在 Signals 以及骆驼书第六章里找到。
+<P>
+
+要小心的是，大多 C 程式库无法重新进入 [re-entrant]。因此当你要尝试着在一 个处理器里做 print() 动作，而这个处理器是由另一个stdio 的动作所叫出来的 话，你的内部结构可能会处於失调状态，而程式可能会丢出记忆核心 (dump core)。 有的时候你可以用 syswrite() 取代 print() 以避免这个状况。
+<P>
+
+除非你极为小心，否则在一个讯号处理器中，唯一安全可做的是：设定一个变数後离开。而在第一个情况下，你在设定变数的时候应确定 malloc() 不会被叫出来 （譬如，设定一个已经有值的变数）。
+<P>
+
+例如：
+<P>
+
+
+
+<PRE>
+    $Interrupted = 0;   # 确定它有个值
+    $SIG{INT} = sub {
+        $Interrupted++;
+        syswrite(STDERR, &quot;ouch\n&quot;, 5);
+    }
+
+</PRE>
+
+
+<P>
+
+然而，因为系统呼叫会自己重新启动，你将会发现如果你用的是「慢的」呼叫，像 &lt; FH&gt;、read()、connect() 或 wait()，那麽将它们停下的唯一办法是使 用「跳远」的方式跳出来；也就是产生一个例外讯号。参看在 Signals 里对阻挡性 flock() 的逾时处理器的说明，或骆驼书第六 章。
+
+<BR>
+
+
+
+<P>
+
+<B>在 Unix 系统中如何修改 shadow 文件？</B>
+<P>
+
+
+<A NAME="ixABB"></A>
+如果你的 perl 安装正确的话，在 perlfunc 里描述的 getpw*() 函数应该就能够读取隐式密码档了（只有读取权）。要更动该档案内容，做一个新的密码档（这个档案的格式因系统而异，请看 <A HREF="/cgi-bin/man/man2html?5+passwd">passwd</A>(5) ）然後用 <A HREF="/cgi-bin/man/man2html?8+pwd_mkdb">pwd_mkdb</A>(8)（参考 <A HREF="/cgi-bin/man/man2html?5+pwd_mkdb">pwd_mkdb</A>(5)）来安装新的密码档。
+
+<BR>
+
+
+
+<P>
+
+<B>如何设置时间和日期？</B>
+<P>
+
+
+<A NAME="ixABC"></A>
+假设你有足够的权限，你应该可以用 <A HREF="/cgi-bin/man/man2html?1+date">date</A>(1) 程式来设定系统的时间与日期。 （但没有针对个别程序修改时间日期的方法）这机制在 Unix、MS-DOS、Windows 和 NT 下都能用；VMS 下则要用 set time 。
+<P>
+
+然而，如果你只是要更动你的时区，只消设定一个环境变数即可：
+<P>
+
+
+
+<PRE>
+    $ENV{TZ} = &quot;MST7MDT&quot;;                  # unixish
+    $ENV{'SYS$TIMEZONE_DIFFERENTIAL'}=&quot;-5&quot; # vms
+    system &quot;trn comp.lang.perl.misc&quot;;
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何 sleep() 或 alarm() 少于一秒的时间?</B>
+<P>
+
+
+<A NAME="ixABD"></A>
+如果你要比 sleep() 所提供的最小单位一秒更精细的话，最简单的方法就是用 select 里面写的 select() 函数。试一试 Time::HiRes 和 BSD::Itimer 模块 (可以从 CPAN 下载，从 Perl 5.8 开始 Time::HiRes 成为标准发行的一部分).
+
+<BR>
+
+
+
+<P>
+
+<B>如何测度少于一秒的时间？</B>
+<P>
+
+
+<A NAME="ixABE"></A>
+一般来说，你可能做不到。 Time::HiRes 模组（CPAN 有，从 Perl 5.8 开始成为标准发行的一部分）在某些系统上能达到此 功能。
+<P>
+
+总之，你可能做不到。但是如果你的 Perl 支援 syscall() 函数并支援类似 <A HREF="/cgi-bin/man/man2html?2+gettimeofday">gettimeofday</A>(2) 的系统呼叫，你也许可以这麽做：
+<P>
+
+
+
+<PRE>
+    require 'sys/syscall.ph';
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $TIMEVAL_T = &quot;LL&quot;;
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $done = $start = pack($TIMEVAL_T, ());
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    syscall(&amp;SYS_gettimeofday, $start, 0) != -1
+               or die &quot;gettimeofday: $!&quot;;
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+       ##########################
+       # DO YOUR OPERATION HERE #
+       ##########################
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    syscall( &amp;SYS_gettimeofday, $done, 0) != -1
+           or die &quot;gettimeofday: $!&quot;;
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    @start = unpack($TIMEVAL_T, $start);
+    @done  = unpack($TIMEVAL_T, $done);
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    # fix microseconds
+    for ($done[1], $start[1]) { $_ /= 1_000_000 }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $delta_time = sprintf &quot;%.4f&quot;, ($done[0]  + $done[1]  )
+                                            -
+                                 ($start[0] + $start[1] );
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何做 atexit()或 setjmp()/longjmp()的动作？（异常处理）</B>
+<P>
+
+
+<A NAME="ixABF"></A>
+第五版的 Perl 增加了 END 区块，可以用来模拟 atexit()的效果。当程式或执行 绪(thread) 终了时就会去呼叫该包装的 END 区块（参考 perlmod 文件）。
+<P>
+
+For example, you can use this to make sure your filter program
+managed to finish its output without filling up the disk:
+<P>
+
+
+
+<PRE>
+    END {
+        close(STDOUT) || die &quot;stdout close failed: $!&quot;;
+    }
+
+</PRE>
+
+
+<P>
+
+如果当程式被没有抓到的讯号终结了，END 区块就不会被呼叫到，所以当你用 END 时应再加上
+<P>
+
+
+
+<PRE>
+        use sigtrap qw(die normal-signals);
+
+</PRE>
+
+
+<P>
+
+Perl 的例外处理机制就是它的 eval() 运算子。你可以把 eval() 当做 setjmp 而die()当做 longjmp 来使用。更详细的说明请参考 Signals 和 Camel书第六章里关於讯号的那段，尤其是描述有关 flock() 的逾时处理器那段。
+<P>
+
+如果你只对例外处理的部分有兴趣，试试 exceptions.pl 程式库（包含在标准 perl里）。
+<P>
+
+如果你要的是 atexit() 语法（以及 rmexit()），试试 CPAN 里的 AtExit 模组。
+
+<BR>
+
+
+
+<P>
+
+<B>为何我的 sockets程式在 System V (Solaris)系统下不能用？「不支持的协议」这个错误讯息又是什麽意思？</B>
+<P>
+
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>为何我的 sockets程式在 System V (Solaris)系统下不能用？「不支持的协议」这个错误讯息又是什麽意思？</B>
+<P>
+
+
+
+<A NAME="ixABG"></A>
+有些 Sys-V 根底的系统，特别像 Solaris 2.X，已重新将一些标准的 socket常数 定义过了。由於这些常数在各种架构下都是定值，所以在 perl程式码中常被人写 死在里面。处理此问题的适当方式 是用 ``use Socket'' 来取得正确的值。
+<P>
+
+须注意尽管 SunOS 和 Solaris 在二进位执行档上相容，这些值是相异的。自己去 想为什麽吧。
+
+<BR>
+
+
+
+<P>
+
+<B>如何从 Perl里呼叫系统中独特的 C函数？</B>
+<P>
+
+
+<A NAME="ixABH"></A>
+通常是写个外部的模组来处理 - 参看「我要如何学到将 C 与 Perl 连结在一起？ [h2xs, xsubpp]」 这问题的答案。然而，如果此函数是个系统呼叫，而你的系统 有支援 syscall()，那麽可以用 syscall 函数（说明在 perlfunc 里）。
+<P>
+
+切记先查查看你的 perl 版本中所附的模组以及 CPAN 里的模组，因为也许某人已 经写了个这样的模组。
+On Windows, try Win32::API.  On Macs, try Mac::Carbon.  If no module
+has an interface to the C function, you can inline a bit of C in your
+Perl source with Inline::C.
+
+<BR>
+
+
+
+<P>
+
+<B>在哪里可以找引入档来做 ioctl()或 syscall()？</B>
+<P>
+
+
+<A NAME="ixABI"></A>
+以前这些档案会由标准 perl 发行中所附的 h2ph 工具来产生。这个程式将 C 标 头档案里的 <A HREF="/cgi-bin/man/man2html?1+cpp">cpp</A>(1)指令转换成内含副程式定义的档案，像 &amp;SYS_getitimer，你可 以把它当做函数的参数。这样做并不怎麽完美，但通常可达成任务。简单的像 errno.h 、syscall.h 和socket.h 这些档案都没问题，但像 ioctl.h 这种较难的档案总是需要人工编辑。以下是安装 *.ph 档案的步骤：
+<P>
+
+
+
+<PRE>
+    1.  成为超级用户
+    2.  cd /usr/include
+    3.  h2ph *.h */*.h
+
+</PRE>
+
+
+<P>
+
+如果你的系统支援动态载入，那麽为了可移植性、而且合理的做法是使用 h2xs（也 是 perl的标准配备）。这个工具将 C 标头档案转换成 Perl 的衍伸档案 (extensions)。 h2xs 的入门要看 perlxstut 。
+<P>
+
+如果你的系统不支援动态载入，你可能仍应使用 h2xs。参看 perlxstut 和 MakeMaker （简单来说，就是用 make perl 、而非 make 来重 建一份使用新的静态连结的 perl）。
+
+<BR>
+
+
+
+<P>
+
+<B>为何 setuid perl程式会抱怨关於系统核心的问题？</B>
+<P>
+
+
+<A NAME="ixABJ"></A>
+有些作业系统的核心有臭虫使得 setuid 程式在先天上就不安全。Perl提供你一些方法（在 perlsec 里有写）可跳过这些系统的缺陷。
+
+<BR>
+
+
+
+<P>
+
+<B>如何打开对某程式既输入又输出的管道 (pipe)？</B>
+<P>
+
+
+<A NAME="ixABK"></A>
+IPC::Open2 模组（perl 的标准配件）是个好用的方法，它在内部是藉着pipe()、 fork() 和 exec() 来完成此工作。不过切记要读它文件里关於锁死的警告 ( 参见 IPC::Open2 )。参见 perlipc 中的 ``Bidirectional Communication with Another Process'' 和
+``Bidirectional Communication with Yourself''
+<P>
+
+You may also use the IPC::Open3 module (part of the standard perl
+distribution), but be warned that it has a different order of
+arguments from IPC::Open2 (see IPC::Open3).
+
+<BR>
+
+
+
+<P>
+
+<B>为何用 system()却得不到一个指令的输出呢？</B>
+<P>
+
+
+<A NAME="ixABL"></A>
+你把 system() 和反向引号 (``) 的用法搞混了。 system() 会执行一个指令然後 传回指令结束时的状况资讯（以一个 16 进位值表示：低位元是程序中止所收到的 讯号，高位元才是真正离开时的传回值）。反向引号 (``) 执行一个指令并且把它 所送出的东西送到 STDOUT。
+<P>
+
+
+
+<PRE>
+    $exit_status   = system(&quot;mail-users&quot;);
+    $output_string = `ls`;
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何捕捉外部指令的 STDERR？</B>
+<P>
+
+
+<A NAME="ixABM"></A>
+有叁种基本方式执行外部指令：
+<P>
+
+
+
+<PRE>
+    system $cmd;                # 使用 system()
+    $output = `$cmd`;           # 使用 backticks (``)
+    open (PIPE, &quot;cmd |&quot;);       # 使用 open()
+
+</PRE>
+
+
+<P>
+
+在 system() 下，STDOUT 和 STDERR 都会输出到和 script 本身的 STDOUT, STDERR相同的出处，除非指令本身将它们导向它处。反向引号和 open() 则 只 读取指令的 STDOUT 部份。
+<P>
+
+你也可以使用 IPC::Open3 模组.  Benjamin
+Goldberg provides some sample code:
+<P>
+
+To capture a program's <FONT SIZE="-1">STDOUT</FONT>, but discard its <FONT SIZE="-1">STDERR:</FONT>
+<P>
+
+
+
+<PRE>
+    use IPC::Open3;
+    use File::Spec;
+    use Symbol qw(gensym);
+    open(NULL, &quot;&gt;&quot;, File::Spec-&gt;devnull);
+    my $pid = open3(gensym, \*PH, &quot;&gt;&amp;NULL&quot;, &quot;cmd&quot;);
+    while( &lt;PH&gt; ) { }
+    waitpid($pid, 0);
+
+</PRE>
+
+
+<P>
+
+To capture a program's <FONT SIZE="-1">STDERR</FONT>, but discard its <FONT SIZE="-1">STDOUT:</FONT>
+<P>
+
+
+
+<PRE>
+    use IPC::Open3;
+    use File::Spec;
+    use Symbol qw(gensym);
+    open(NULL, &quot;&gt;&quot;, File::Spec-&gt;devnull);
+    my $pid = open3(gensym, &quot;&gt;&amp;NULL&quot;, \*PH, &quot;cmd&quot;);
+    while( &lt;PH&gt; ) { }
+    waitpid($pid, 0);
+
+</PRE>
+
+
+<P>
+
+To capture a program's <FONT SIZE="-1">STDERR</FONT>, and let its <FONT SIZE="-1">STDOUT</FONT> go to our own <FONT SIZE="-1">STDERR:</FONT>
+<P>
+
+
+
+<PRE>
+    use IPC::Open3;
+    use Symbol qw(gensym);
+    my $pid = open3(gensym, &quot;&gt;&amp;STDERR&quot;, \*PH, &quot;cmd&quot;);
+    while( &lt;PH&gt; ) { }
+    waitpid($pid, 0);
+
+</PRE>
+
+
+<P>
+
+To read both a command's <FONT SIZE="-1">STDOUT</FONT> and its <FONT SIZE="-1">STDERR</FONT> separately, you can
+redirect them to temp files, let the command run, then read the temp
+files:
+<P>
+
+
+
+<PRE>
+    use IPC::Open3;
+    use Symbol qw(gensym);
+    use IO::File;
+    local *CATCHOUT = IO::File-&gt;new_tempfile;
+    local *CATCHERR = IO::File-&gt;new_tempfile;
+    my $pid = open3(gensym, &quot;&gt;&amp;CATCHOUT&quot;, &quot;&gt;&amp;CATCHERR&quot;, &quot;cmd&quot;);
+    waitpid($pid, 0);
+    seek $_, 0, 0 for \*CATCHOUT, \*CATCHERR;
+    while( &lt;CATCHOUT&gt; ) {}
+    while( &lt;CATCHERR&gt; ) {}
+
+</PRE>
+
+
+<P>
+
+But there's no real need for *both* to be tempfiles... the following
+should work just as well, without deadlocking:
+<P>
+
+
+
+<PRE>
+    use IPC::Open3;
+    use Symbol qw(gensym);
+    use IO::File;
+    local *CATCHERR = IO::File-&gt;new_tempfile;
+    my $pid = open3(gensym, \*CATCHOUT, &quot;&gt;&amp;CATCHERR&quot;, &quot;cmd&quot;);
+    while( &lt;CATCHOUT&gt; ) {}
+    waitpid($pid, 0);
+    seek CATCHERR, 0, 0;
+    while( &lt;CATCHERR&gt; ) {}
+
+</PRE>
+
+
+<P>
+
+And it'll be faster, too, since we can begin processing the program's
+stdout immediately, rather than waiting for the program to finish.
+<P>
+
+在上述方法中，你可以在呼叫前更改文件描述符 (file descriptor) 名称：
+<P>
+
+
+
+<PRE>
+    open(STDOUT, &quot;&gt;logfile&quot;);
+    system(&quot;ls&quot;);
+
+</PRE>
+
+
+<P>
+
+或者使用 Bourne shell 的文件描述符重导功能：
+<P>
+
+
+
+<PRE>
+    $output = `$cmd 2&gt;some_file`;
+    open (PIPE, &quot;cmd 2&gt;some_file |&quot;);
+
+</PRE>
+
+
+<P>
+
+也可以用档案描述元重导功能将 STDERR 复制为 STDOUT：
+<P>
+
+
+
+<PRE>
+    $output = `$cmd 2&gt;&amp;1`;
+    open (PIPE, &quot;cmd 2&gt;&amp;1 |&quot;);
+
+</PRE>
+
+
+<P>
+
+注意你 不能 光是将 STDERR 开成 STDOUT 的复制，而不呼叫 shell来做这个 重导的工作。这样是不行的：
+<P>
+
+
+
+<PRE>
+    open(STDERR, &quot;&gt;&amp;STDOUT&quot;);
+    $alloutput = `cmd args`;  # stderr still escapes
+
+</PRE>
+
+
+<P>
+
+失败的原因是，open() 让 STDERR 在呼叫 open() 时往 STDOUT的方向走。然後反 向引号让 STDOUT的内容跑到一个字串变数里，但是没有改变 STDERR 的去向（它 仍然往旧的 STDOUT那里跑）。
+<P>
+
+注意，在反向引号里你 必须 使用 Bourne shell (<A HREF="/cgi-bin/man/man2html?1+sh">sh</A>(1)) 重导的语法而非 <A HREF="/cgi-bin/man/man2html?1+csh">csh</A>(1)的！至於为何 Perl 的 system()、反向引号和开管道都用 Bourne shell语法的原因，可在下址找到：``Far More Than You Ever Wanted To Know''， <A HREF="http://www.cpan.org/misc/olddoc/FMTEYEWTK.tgz">http://www.cpan.org/misc/olddoc/FMTEYEWTK.tgz</A> .  要同时捕捉一个命令的 <FONT SIZE="-1">STDERR</FONT> 和 <FONT SIZE="-1">STDOUT</FONT>:
+<P>
+
+
+
+<PRE>
+    $output = `cmd 2&gt;&amp;1`;                       # either with backticks
+    $pid = open(PH, &quot;cmd 2&gt;&amp;1 |&quot;);              # or with an open pipe
+    while (&lt;PH&gt;) { }                            #    plus a read
+
+</PRE>
+
+
+<P>
+
+To capture a command's <FONT SIZE="-1">STDOUT</FONT> but discard its <FONT SIZE="-1">STDERR:</FONT>
+<P>
+
+
+
+<PRE>
+    $output = `cmd 2&gt;/dev/null`;                # either with backticks
+    $pid = open(PH, &quot;cmd 2&gt;/dev/null |&quot;);       # or with an open pipe
+    while (&lt;PH&gt;) { }                            #    plus a read
+
+</PRE>
+
+
+<P>
+
+To capture a command's <FONT SIZE="-1">STDERR</FONT> but discard its <FONT SIZE="-1">STDOUT:</FONT>
+<P>
+
+
+
+<PRE>
+    $output = `cmd 2&gt;&amp;1 1&gt;/dev/null`;           # either with backticks
+    $pid = open(PH, &quot;cmd 2&gt;&amp;1 1&gt;/dev/null |&quot;);  # or with an open pipe
+    while (&lt;PH&gt;) { }                            #    plus a read
+
+</PRE>
+
+
+<P>
+
+To exchange a command's <FONT SIZE="-1">STDOUT</FONT> and <FONT SIZE="-1">STDERR</FONT> in order to capture the <FONT SIZE="-1">STDERR</FONT>
+but leave its <FONT SIZE="-1">STDOUT</FONT> to come out our old <FONT SIZE="-1">STDERR:</FONT>
+<P>
+
+
+
+<PRE>
+    $output = `cmd 3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3 3&gt;&amp;-`;        # either with backticks
+    $pid = open(PH, &quot;cmd 3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3 3&gt;&amp;-|&quot;);# or with an open pipe
+    while (&lt;PH&gt;) { }                            #    plus a read
+
+</PRE>
+
+
+<P>
+
+To read both a command's <FONT SIZE="-1">STDOUT</FONT> and its <FONT SIZE="-1">STDERR</FONT> separately, it's easiest
+and safest to redirect them separately to files, and then read from those
+files when the program is done:
+<P>
+
+
+
+<PRE>
+    system(&quot;program args 1&gt;/tmp/program.stdout 2&gt;/tmp/program.stderr&quot;);
+
+</PRE>
+
+
+<P>
+
+Ordering is important in all these examples.  That's because the shell
+processes file descriptor redirections in strictly left to right order.
+<P>
+
+
+
+<PRE>
+    system(&quot;prog args 1&gt;tmpfile 2&gt;&amp;1&quot;);
+    system(&quot;prog args 2&gt;&amp;1 1&gt;tmpfile&quot;);
+
+</PRE>
+
+
+<P>
+
+The first command sends both standard out and standard error to the
+temporary file.  The second command sends only the old standard output
+there, and the old standard error shows up on the old standard out.
+
+<BR>
+
+
+
+<P>
+
+<B>为何当管道开启失败时 open()不会传回错误讯息？</B>
+<P>
+
+
+<A NAME="ixABN"></A>
+If the second argument to a piped <I>open()</I> contains shell
+metacharacters, perl <I>fork()</I>s, then <I>exec()</I>s a shell to decode the
+metacharacters and eventually run the desired program.  If the program
+couldn't be run, it's the shell that gets the message, not Perl. All
+your Perl program can find out is whether the shell itself could be
+successfully started.  You can still capture the shell's <FONT SIZE="-1">STDERR</FONT> and
+check it for error messages.  See ``How can I capture <FONT SIZE="-1">STDERR</FONT> from an external command?'' elsewhere in this document, or use the
+IPC::Open3 module.
+<P>
+
+If there are no shell metacharacters in the argument of <I>open()</I>, Perl
+runs the command directly, without using the shell, and can correctly
+report whether the command started.
+
+<BR>
+
+
+
+<P>
+
+<B>在忽略返回值的上下文里使用反向引号有何不对？</B>
+<P>
+
+
+<A NAME="ixABO"></A>
+严格说起来，没啥不对。但从程式写作严谨与否来说，这样无法写出较易维护的程式码。Perl 有多种方法可以运行外部命令。反引号只是其中一个；它收集命令的输出，在程序中加以应用。 <TT>&quot;system&quot;</TT> 函数是另一个，它不这样做
+<P>
+
+Writing backticks in your program sends a clear message to the readers
+of your code that you wanted to collect the output of the command.
+Why send a clear message that isn't true?
+<P>
+
+再看看下列这一行：
+<P>
+
+
+
+<PRE>
+    `cat /etc/termcap`;
+
+</PRE>
+
+
+<P>
+
+你还没有指定输出，所以它会浪费记忆体（就那麽一下子)。另外你也忘了检查 <TT>$?</TT> 看看程式是否正确的执行。即使你写成
+<P>
+
+
+
+<PRE>
+    print `cat /etc/termcap`;
+
+</PRE>
+
+
+<P>
+
+但在大部份情况下，这本来可以、而且也应该写成
+<P>
+
+
+
+<PRE>
+    system(&quot;cat /etc/termcap&quot;) == 0
+        or die &quot;cat program failed!&quot;;
+
+</PRE>
+
+
+<P>
+
+这样可快速地得到输出（一产生出来就会得到，不用等到最後），并且检查传回值。
+<P>
+
+<I>system()</I> 同时具有直接决定是否先做 shell 万用字元 (wildcard)处理的功能， 反向引号就不行。
+
+<BR>
+
+
+
+<P>
+
+<B>如何不经过 shell处理来呼叫反向引号？</B>
+<P>
+
+
+<A NAME="ixABP"></A>
+这需要些技巧。不能写成这样：
+<P>
+
+
+
+<PRE>
+    @ok = `grep @opts '$search_string' @filenames`;
+
+</PRE>
+
+
+<P>
+
+在 Perl 5.8.0 中，你可以使用有多个参数的 <I>open()</I>。类似 <I>system()</I> 和 <I>exec()</I> 的列表形式，不会进行 shell 转义。
+<P>
+
+
+
+<PRE>
+   open( GREP, &quot;-|&quot;, 'grep', @opts, $search_string, @filenames );
+   chomp(@ok = &lt;GREP&gt;);
+   close GREP;
+
+</PRE>
+
+
+<P>
+
+也可以这样：
+<P>
+
+
+
+<PRE>
+    my @ok = ();
+    if (open(GREP, &quot;-|&quot;)) {
+        while (&lt;GREP&gt;) {
+            chomp;
+            push(@ok, $_);
+        }
+        close GREP;
+    } else {
+        exec 'grep', @opts, $search_string, @filenames;
+    }
+
+</PRE>
+
+
+<P>
+
+一如 system()，当你 exec() 一个序列时不会有 shell 解译的情况发生。更多示例可以从 perlipc 的 ``Safe Pipe Opens'' 中找到。
+<P>
+
+Note that if you're use Microsoft, no solution to this vexing issue
+is even possible.  Even if Perl were to emulate <I>fork()</I>, you'd still
+be stuck, because Microsoft does not have a argc/argv-style <FONT SIZE="-1">API</FONT>.
+
+<BR>
+
+
+
+<P>
+
+<B>为何给了 EOF（Unix上是 ^D，MS-DOS上是 ^Z）後我的程式就不能从 STDIN 读取东西了呢？</B>
+<P>
+
+
+<A NAME="ixABQ"></A>
+因为某些 stdio 的 set error 和 eof 旗标需要清除。你可以用 POSIX 模组里定 义的clearerr()。这是在技术上正确的解决之道。还有一些较不保险的方法：
+<DL COMPACT>
+<DT>1<DD>
+<A NAME="ixABR"></A>
+试着保存搜寻指标然後去找它，例如：
+
+
+<P>
+
+
+
+
+<PRE>
+    $where = tell(LOG);
+    seek(LOG, $where, 0);
+
+</PRE>
+
+
+<DT>2<DD>
+<A NAME="ixABS"></A>
+如果那样行不通，试着去 seek() 档案的另一部份然後再找回来。
+<DT>3<DD>
+<A NAME="ixABT"></A>
+如果还是行不通，试着 seek() 档案另一个相异的的部份，读点东西，再回去找。
+<DT>4<DD>
+<A NAME="ixABU"></A>
+如果依然不行，放弃使用 stdio 改用 sysread。
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>如何把 shell程式转成 perl？</B>
+<P>
+
+
+<A NAME="ixABV"></A>
+学习 Perl 然後重写。说真的，没有简单的转换方式。用 shell 做起来很笨的工 作可以用 Perl 很轻松的做到，而就是这些麻烦之处使得 shell-&gt;perl 转换程式 非常不可能写得出来。在重新撰写程式的过程里，你会认清自己真正要做的工作为 何，也希望能够跳脱 shell 的管线资料流机制 [pipeline datastream paradigm]， 这东西虽对某些事情很方便，但也常造成低效率。
+
+<BR>
+
+
+
+<P>
+
+<B>perl能处理 telnet或 ftp 会话吗？</B>
+<P>
+
+
+<A NAME="ixABW"></A>
+试试 Net::FTP、TCP::Client 和 NET::Telnet 模组（CPAN 有）。 <A HREF="http://www.perl.com/CPAN/scripts/netstuff/telnet.emul.shar">http://www.perl.com/CPAN/scripts/netstuff/telnet.emul.shar</A> 也有助於模拟 telnet 协定，但是 Net::Telnet 可能较容易使用。
+<P>
+
+如果你所要做的只是假装 telnet 但又不要起始 telnet 时的沟通程序，那麽以下这个标准的双程序方式就可以满足你的需要了：
+<P>
+
+
+
+<PRE>
+    use IO::Socket;             # new in 5.004
+    $handle = IO::Socket::INET-&gt;new('<A HREF="http://www.perl.com">www.perl.com</A>:80')
+            || die &quot;can't connect to port 80 on <A HREF="http://www.perl.com">www.perl.com</A>: $!&quot;;
+    $handle-&gt;<A HREF="/cgi-bin/man/man2html?1+autoflush">autoflush</A>(1);
+    if (fork()) {               # XXX: undef means failure
+        select($handle);
+        print while &lt;STDIN&gt;;    # everything from stdin to socket
+    } else {
+        print while &lt;$handle&gt;;  # everything from socket to stdout
+    }
+    close $handle;
+    exit;
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何在 Perl里达到 Expect的功能？</B>
+<P>
+
+
+<A NAME="ixABX"></A>
+很久很久以前，有个叫做 chat2.pl 的程式库（perl 标准配备之一），但一直没 真正完工。如果遇到它的话，不要去用它。现在，你的最佳选择就是从 CPAN 来的 Expect 模块，同时它需要 CPAN 的另两个模块， IO::Pty 和 IO::Stty.
+
+<BR>
+
+
+
+<P>
+
+<B>有没有可能将 perl的指令列隐藏起来，以躲避像 ps之类的程式？</B>
+<P>
+
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>有没有可能将 perl的指令列隐藏起来，以躲避像 ``ps''之类的程式？</B>
+<P>
+
+
+
+<A NAME="ixABY"></A>
+首先要注意的是，如果你的目的是为了安全（例如避免人们偷看到密码），那你应该重写你的程式，把重要的资讯从参数中剔除。光是隐藏起来不会让你的程式变得完全安全。
+<P>
+
+如要真的把看得见的指令列改掉，你可以设定 $0 这个变数值，如同 perlvar 里写的。但这方法并非各种作业系统都适用。像 sendmail之类的背景程式 (daemons) 就将它们的状态放在那儿：
+<P>
+
+
+
+<PRE>
+    $0 = &quot;orcus [accepting connections]&quot;;
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>我在 perl script里 {更动目录，更改我的使用环境}。为何这些改变在程式执行完後就消失了呢？如何让我做的修改显露出来？</B>
+<P>
+
+
+<A NAME="ixABZ"></A>
+<DL COMPACT>
+<DT>Unix<DD>
+<A NAME="ixACA"></A>
+严格的说起来，这是做不到的－一个 script 的执行是从启动它的 shell 生出一 个不同的程序来执行。这个程序的任何变动不会反映到它的父程序，只会反映到更 改之後它自己创造出来的子程序。有个 shell 魔术可以让你藉着在 shell 里 eval()你 script 的输出来装出这种效果，在 comp.unix.questions FAQ 里有详 细内容。
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>如何关闭一个程序的文件句柄而不用等它完成呢？</B>
+<P>
+
+
+<A NAME="ixACB"></A>
+假设你的系统支援这种功能，那就只要送个适当的讯号给此程序（参看 kill）。通常是先送一个 TERM 讯号，等一下下，然後再送个 KILL 讯号去终结它。
+
+<BR>
+
+
+
+<P>
+
+<B>如何 fork 一个守护进程？</B>
+<P>
+
+
+<A NAME="ixACC"></A>
+如果你所指的是离线的程序（未与 tty 连线者），那下列的程序据说在大部份的 Unix系统都能用。非 Unix 系统的使用者应该检查 Your_OS::Process 模组看看有 没有其他的解决方案。
+<DL COMPACT>
+<DT>&bull;<DD>
+打开 /dev/tty 然後对它用 TIOCNOTTY ioctl。请参考 <A HREF="/cgi-bin/man/man2html?4+tty">tty</A>(4) 。更好的办法，你可以只用 <I>POSIX::setsid()</I> 函数，从而不必担心进程组。
+<DT>&bull;<DD>
+把目录换到 /
+<DT>&bull;<DD>
+重开 STDIN、STDOUT 和 STDERR 使它们不会与旧的 tty 连接。
+<DT>&bull;<DD>
+用下列方法把程式丢到后台：
+
+
+<P>
+
+
+
+
+<PRE>
+    fork &amp;&amp; exit;
+
+</PRE>
+
+
+</DL>
+<P>
+
+The Proc::Daemon module, available from <FONT SIZE="-1">CPAN</FONT>, provides a function to
+perform these actions for you.
+
+<BR>
+
+
+
+<P>
+
+<B>如何知道自己是否在交互地运行？</B>
+<P>
+
+
+<A NAME="ixACD"></A>
+问得好。有的时候 <TT>&quot;-t STDIN&quot;</TT>N 和 <TT>&quot;-t STDOUT&quot;</TT> 可以提供线索，有时不行。
+<P>
+
+
+
+<PRE>
+    if (-t STDIN &amp;&amp; -t STDOUT) {
+        print &quot;Now what? &quot;;
+    }
+
+</PRE>
+
+
+<P>
+
+在 POSIX 系统中，你可以用以下方法测试你自己的程序群组与现在控制你终端机 的是否相同：
+<P>
+
+
+
+<PRE>
+    use POSIX qw/getpgrp tcgetpgrp/;
+    open(TTY, &quot;/dev/tty&quot;) or die $!;
+    $tpgrp = tcgetpgrp(fileno(*TTY));
+    $pgrp = getpgrp();
+    if ($tpgrp == $pgrp) {
+        print &quot;foreground\n&quot;;
+    } else {
+        print &quot;background\n&quot;;
+    }
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何为缓慢的事件设置超时？</B>
+<P>
+
+
+<A NAME="ixACE"></A>
+如同 Signals 和 Camel 书第六章里所描述的，用 alarm() 函数， 或许再配合上一个讯号处理器。你也可以改用 CPAN 里更具弹性的 Sys::AlarmCall 模组来做。
+<P>
+
+The <I>alarm()</I> function is not implemented on all versions of Windows.
+Check the documentation for your specific version of Perl.
+
+<BR>
+
+
+
+<P>
+
+<B>如何设置 CPU 限额?</B>
+<P>
+
+
+<A NAME="ixACF"></A>
+使用 CPAN 里的 BSD::Resource 模组。
+
+<BR>
+
+
+
+<P>
+
+<B>如何避免在 Unix 系统中产生僵尸进程？</B>
+<P>
+
+
+<A NAME="ixACG"></A>
+使用 Signals 里面叫 reaper 的程式码，在接到 SIGCHLD 时会呼 叫wait()，或是用 perlfaq8 中的 ``How do I start a process in the background?'' 里面写的双 fork 技巧。
+
+<BR>
+
+
+
+<P>
+
+<B>如何使用 SQL 数据库?</B>
+<P>
+
+
+<A NAME="ixACH"></A>
+The <FONT SIZE="-1">DBI</FONT> module provides an abstract interface to most database
+servers and types, including Oracle, <FONT SIZE="-1">DB2</FONT>, Sybase, mysql, Postgresql,
+<FONT SIZE="-1">ODBC</FONT>, and flat files.  The <FONT SIZE="-1">DBI</FONT> module accesses each database type
+through a database driver, or <FONT SIZE="-1">DBD</FONT>.  You can see a complete list of
+available drivers on <FONT SIZE="-1">CPAN:</FONT> <A HREF="http://www.cpan.org/modules/by-module/DBD/">http://www.cpan.org/modules/by-module/DBD/</A> .
+You can read more about <FONT SIZE="-1">DBI</FONT> on <A HREF="http://dbi.perl.org">http://dbi.perl.org</A> .
+<P>
+
+Other modules provide more specific access: Win32::ODBC, Alzabo, iodbc,
+and others found on <FONT SIZE="-1">CPAN</FONT> Search: <A HREF="http://search.cpan.org">http://search.cpan.org</A> .
+
+<BR>
+
+
+
+<P>
+
+<B>如何使 system() 在收到 control-C 时退出?</B>
+<P>
+
+
+<A NAME="ixACI"></A>
+做不到。你需要摹仿 system() 呼叫（参看 perlipc 里的范例程式），然後设计一个讯号处理器，让它把 INT 讯号传给子程序。或者可以检测它：
+<P>
+
+
+
+<PRE>
+    $rc = system($cmd);
+    if ($rc &amp; 127) { die &quot;signal death&quot; }
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何无阻塞地打开一个文件？</B>
+<P>
+
+
+<A NAME="ixACJ"></A>
+如果你有幸使用到支援无阻塞读的系统（大部份 Unix 般的系统都有支援）， 你只需要用 Fcntl 模组里的 O_NDELAY 或 O_NONBLOCK 旗标，配合 sysopen()：
+<P>
+
+
+
+<PRE>
+    use Fcntl;
+    sysopen(FH, &quot;/tmp/somefile&quot;, O_WRONLY|O_NDELAY|O_CREAT, 0644)
+        or die &quot;can't open /tmp/somefile: $!&quot;:
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>How do I install a module from <FONT SIZE="-1">CPAN</FONT>?</B>
+<P>
+
+
+<A NAME="ixACK"></A>
+最简单的方法就是让 CPAN 这个模组替你代劳。这个模组包含在 5.004及以後的版 本中。
+<P>
+
+
+
+<PRE>
+    $ perl -MCPAN -e shell
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    cpan shell -- CPAN exploration and modules installation (v1.59_54)
+    ReadLine support enabled
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    cpan&gt; install Some::Module
+
+</PRE>
+
+
+<P>
+
+如要手动安装 CPAN 模组，或是任何按规矩发展的 CPAN模组，遵循以下步 骤：
+<DL COMPACT>
+<DT>1<DD>
+<A NAME="ixACL"></A>
+把源代码解压到临时目录
+<DT>2<DD>
+<A NAME="ixACM"></A>
+
+
+<PRE>
+    perl Makefile.PL
+
+</PRE>
+
+
+<DT>3<DD>
+<A NAME="ixACN"></A>
+
+
+<PRE>
+    make
+
+</PRE>
+
+
+<DT>4<DD>
+<A NAME="ixACO"></A>
+
+
+<PRE>
+    make test
+
+</PRE>
+
+
+<DT>5<DD>
+<A NAME="ixACP"></A>
+
+
+<PRE>
+    make install
+
+</PRE>
+
+
+</DL>
+<P>
+
+如果你用的 perl 版本在编译时没有建入动态连结的功能，那你只消把第叁步 (make)换成 make perl 然後你就会得到一个新的 perl 执行档，里头连 有你新加入的延伸。
+<P>
+
+在 ExtUtils::MakeMaker 里面有更多关於建构模组的细节，并参考下一个问题，require 和 use 的区别是什么？。
+
+<BR>
+
+
+
+<P>
+
+<B>require 和 use 的区别是什么？</B>
+<P>
+
+
+<A NAME="ixACQ"></A>
+Perl offers several different ways to include code from one file into
+another.  Here are the deltas between the various inclusion constructs:
+<P>
+
+
+
+<PRE>
+    1)  do $file is like eval `cat $file`, except the former
+        1.1: searches @INC and updates %INC.
+        1.2: bequeaths an *unrelated* lexical scope on the eval'ed code.
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    2)  require $file is like do $file, except the former
+        2.1: checks for redundant loading, skipping already loaded files.
+        2.2: raises an exception on failure to find, compile, or execute $file.
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    3)  require Module is like require &quot;Module.pm&quot;, except the former
+        3.1: translates each &quot;::&quot; into your system's directory separator.
+        3.2: primes the parser to disambiguate class Module as an indirect object.
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    4)  use Module is like require Module, except the former
+        4.1: loads the module at compile time, not run-time.
+        4.2: imports symbols and semantics from that package to the current one.
+
+</PRE>
+
+
+<P>
+
+In general, you usually want <TT>&quot;use&quot;</TT> and a proper Perl module.
+
+<BR>
+
+
+
+<P>
+
+<B>如何设置我自己的模块/库路径？</B>
+<P>
+
+
+<A NAME="ixACR"></A>
+当你建构模组时，在产生 Makefiles 时使用 PREFIX 选项：
+<P>
+
+
+
+<PRE>
+    perl Makefile.PL PREFIX=/mydir/perl LIB=/mydir/perl/lib
+
+</PRE>
+
+
+<P>
+
+然後在执行用到此 模组／程式库 的程式前先设好 PERL5LIB 环境变数（参考 perlrun ），或是用
+<P>
+
+
+
+<PRE>
+    use lib '/mydir/perl/lib';
+
+</PRE>
+
+
+<P>
+
+这样与下面几乎相同
+<P>
+
+
+
+<PRE>
+    BEGIN {
+        unshift(@INC, '/mydir/perl/lib');
+    }
+
+</PRE>
+
+
+<P>
+
+但 lib 模块检测独立于机器的子目录。参见 Perl 的 lib 模块来获取详细信息。
+
+<BR>
+
+
+
+<P>
+
+<B>如何将我自己的程序的路径加入到模块/库搜索路径中？</B>
+<P>
+
+
+<A NAME="ixACS"></A>
+
+
+<PRE>
+    use FindBin;
+    use lib &quot;$FindBin::Bin&quot;;
+    use your_own_modules;
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>如何在运行时将一个目录加入到我的 include 路径 (@INC) 中？</B>
+<P>
+
+
+<A NAME="ixACT"></A>
+以下是我们建议更动引入路径的方法：
+<P>
+
+
+
+<PRE>
+    环境变量 PERLLIB 
+    环境变量 PERL5LIB
+    perl -Idir 命令行标志
+    use lib 编用，类似
+        use lib &quot;$ENV{HOME}/myown_perllib&quot;;
+
+</PRE>
+
+
+<P>
+
+後者特别有用，因为它知道与机器相关的架构。lib.pm 机制模组是从 5.002 版开 始包含在 Perl 里面的。
+
+<BR>
+
+
+
+<P>
+
+<B>什么是 socket.ph，从哪儿可以得到它？</B>
+<P>
+
+
+<A NAME="ixACU"></A>
+It's a perl4-style file defining values for system networking
+constants.  Sometimes it is built using h2ph when Perl is installed,
+but other times it is not.  Modern programs <TT>&quot;use Socket;&quot;</TT> instead.
+<A NAME="lbAD">&nbsp;</A>
+<H2>AUTHOR AND COPYRIGHT</H2>
+
+<A NAME="ixACV"></A>
+Copyright (c) 1997-2003 Tom Christiansen and Nathan Torkington.
+All rights reserved.
+<P>
+
+This documentation is free; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+<P>
+
+Irrespective of its distribution, all code examples in this file
+are hereby placed into the public domain.  You are permitted and
+encouraged to use this code in your own programs for fun
+or for profit as you see fit.  A simple comment in the code giving
+credit would be courteous but is not required.
+<A NAME="lbAE">&nbsp;</A>
+<H2>译者</H2>
+
+<B>陈彦铭，萧百龄，两只老虎工作室</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAD">AUTHOR AND COPYRIGHT</A><DD>
+<DT><A HREF="#lbAE">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

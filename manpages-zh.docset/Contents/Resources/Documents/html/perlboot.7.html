@@ -1,0 +1,1432 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PERLBOOT</TITLE>
+</HEAD><BODY>
+<H1>PERLBOOT</H1>
+Section: Perl Programmers Reference Guide (7)<BR>Updated: 2003-11-25<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+perlboot - 初学者的面向对象教程
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<A NAME="ixAAC"></A>
+如果你对其他语言中的对象并不熟悉的话, 那么其他有关perl对象的文件可能使你感到恐惧, 比如 perlobj , 这是基础性的参考文件, 和 perltoot, 这是介绍perl对象的特性的教程.
+<P>
+
+所以, 让我们走另一条路,假定你没有任何关于对象的概念. 你需要了解子程序 (perlsub), 引用 (perlref et. seq.), 和 包(或模块) (perlmod), 如果还不清楚的话,先把他们搞清楚.
+
+<BR>
+
+
+
+<P>
+
+<B>If we could talk to the animals...如果我们能和动物交谈</B>
+<P>
+
+
+<A NAME="ixAAD"></A>
+让我们让动物讲会儿话:
+<P>
+
+
+
+<PRE>
+    sub Cow::speak {
+      print &quot;a Cow goes moooo!\n&quot;;
+    }
+    sub Horse::speak {
+      print &quot;a Horse goes neigh!\n&quot;;
+    }
+    sub Sheep::speak {
+      print &quot;a Sheep goes baaaah!\n&quot;
+    }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    Cow::speak;
+    Horse::speak;
+    Sheep::speak;
+
+</PRE>
+
+
+<P>
+
+结果是:
+<P>
+
+
+
+<PRE>
+    a Cow goes moooo!
+    a Horse goes neigh!
+    a Sheep goes baaaah!
+
+</PRE>
+
+
+<P>
+
+没什么特别的. 只是简单的子程序, 虽然来自不同的包, 并用完整的包名来调用. 那么让我们建立一个完整的牧场吧:
+<P>
+
+
+
+<PRE>
+    # Cow::speak, Horse::speak, Sheep::speak 与上同
+    @pasture = qw(Cow Cow Horse Sheep Sheep);
+    foreach $animal (@pasture) {
+      &amp;{$animal.&quot;::speak&quot;};
+    }
+
+</PRE>
+
+
+<P>
+
+结果是:
+<P>
+
+
+
+<PRE>
+    a Cow goes moooo!
+    a Cow goes moooo!
+    a Horse goes neigh!
+    a Sheep goes baaaah!
+    a Sheep goes baaaah!
+
+</PRE>
+
+
+<P>
+
+嗯. 这里的符号代码引用有些不太好. 我们正依赖于 <TT>&quot;no strict subs&quot;</TT> 模式, 在稍大些的程序中应尽量避免. 那为什么要这样呢? 因为我们要调用的子程序和它所在的包似乎是不可分的.
+<P>
+
+真的是这样吗?
+
+<BR>
+
+
+
+<P>
+
+<B>Introducing the method invocation arrow 调用方法时的箭头符号</B>
+<P>
+
+
+<A NAME="ixAAE"></A>
+现在,我们说 <TT>&quot;Class-&gt;method&quot;</TT> 是调用了包(或模块)<TT>&quot;Class&quot;</TT>中的 <TT>&quot;method&quot;</TT> 方法。(Here, ``Class'' is used in its ``category'' meaning, not its ``scholastic'' meaning.) 不是很准确,不过我们会一步一步的来做. 现在,可以这样做:
+<P>
+
+
+
+<PRE>
+    # Cow::speak, Horse::speak, Sheep::speak as before
+    Cow-&gt;speak;
+    Horse-&gt;speak;
+    Sheep-&gt;speak;
+
+</PRE>
+
+
+<P>
+
+输出为:
+<P>
+
+
+
+<PRE>
+    a Cow goes moooo!
+    a Horse goes neigh!
+    a Sheep goes baaaah!
+
+</PRE>
+
+
+<P>
+
+还不是很有趣. 一样的字符,常量,没有变量. 但是, 不同部分可以分开了. 请看:
+<P>
+
+
+
+<PRE>
+    $a = &quot;Cow&quot;;
+    $a-&gt;speak; # invokes Cow-&gt;speak
+
+</PRE>
+
+
+<P>
+
+哇! 现在包名与子程序名可以分开了, 我们可以用变量来表示包名. 这样,在使用 <TT>&quot;use strict refs&quot;</TT> 预编译指令时也可以正常工作了.
+
+<BR>
+
+
+
+<P>
+
+<B>Invoking a barnyard 创建一个牲口棚</B>
+<P>
+
+
+<A NAME="ixAAF"></A>
+现在让我们把箭头用到牲口棚的例子中，范例:
+<P>
+
+
+
+<PRE>
+    sub Cow::speak {
+      print &quot;a Cow goes moooo!\n&quot;;
+    }
+    sub Horse::speak {
+      print &quot;a Horse goes neigh!\n&quot;;
+    }
+    sub Sheep::speak {
+      print &quot;a Sheep goes baaaah!\n&quot;
+    }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    @pasture = qw(Cow Cow Horse Sheep Sheep);
+    foreach $animal (@pasture) {
+      $animal-&gt;speak;
+    }
+
+</PRE>
+
+
+<P>
+
+现在我们所有的动物都能说话了, 而且不用使用代码引用.
+<P>
+
+不过注意到那些相同的代码. 每个 <TT>&quot;speak&quot;</TT> 子程序的结构是相同的: 一个 <TT>&quot;print&quot;</TT> 操作符和一个基本相同的字符串，只有两个词不同. 如果我们可以析出相同的部分就更好了，如果将来要把 <TT>&quot;goes&quot;</TT> 替换为 <TT>&quot;says&quot;</TT> 时就简单得多了
+<P>
+
+实际上这并不困难, 不过在这之前我们应该对箭头符号了解的更多一些.
+
+<BR>
+
+
+
+<P>
+
+<B>The extra parameter of method invocation 方法调用时的额外参数</B>
+<P>
+
+
+<A NAME="ixAAG"></A>
+语句:
+<P>
+
+
+
+<PRE>
+    Class-&gt;method(@args)
+
+</PRE>
+
+
+<P>
+
+这样调用函数 <TT>&quot;Class::method&quot;</TT>：
+<P>
+
+
+
+<PRE>
+    Class::method(&quot;Class&quot;, @args);
+
+</PRE>
+
+
+<P>
+
+(如果子程序找不到,``继承，inheritance'' 开始起作用,这在后面会讲到). 这意味着我们得到的第一个参数是类名(如果没有给出其他参数，它就是调用时的唯一参数).所以我们可以象这样重写 <TT>&quot;Sheep&quot;</TT> speaking 子程序:
+<P>
+
+
+
+<PRE>
+    sub Sheep::speak {
+      my $class = shift;
+      print &quot;a $class goes baaaah!\n&quot;;
+    }
+
+</PRE>
+
+
+<P>
+
+另外的动物与此类似:
+<P>
+
+
+
+<PRE>
+    sub Cow::speak {
+      my $class = shift;
+      print &quot;a $class goes moooo!\n&quot;;
+    }
+    sub Horse::speak {
+      my $class = shift;
+      print &quot;a $class goes neigh!\n&quot;;
+    }
+
+</PRE>
+
+
+<P>
+
+每次 <TT>$class</TT>  都会得到与子程序相关的正确的值. 但是,还是有很多相似的结构. 可以再简单些吗? 是的. 可以通过在一个类中调用其它的方法来实现.
+
+<BR>
+
+
+
+<P>
+
+<B>Calling a second method to simplify things 调用另一个方法以简化操作</B>
+<P>
+
+
+<A NAME="ixAAH"></A>
+我们在 <TT>&quot;speak&quot;</TT> 中调用 <TT>&quot;sound&quot;</TT>. 这个方法提供声音的内容.
+<P>
+
+
+
+<PRE>
+    { package Cow;
+      sub sound { &quot;moooo&quot; }
+      sub speak {
+        my $class = shift;
+        print &quot;a $class goes &quot;, $class-&gt;sound, &quot;!\n&quot;
+      }
+    }
+
+</PRE>
+
+
+<P>
+
+现在, 当我们调用 <TT>&quot;Cow-&gt;speak&quot;</TT> 时, 我们在 <TT>&quot;speak&quot;</TT> 中得到 <TT>&quot;Cow&quot;</TT> 的类 <TT>$class</TT>. 他会选择 <TT>&quot;Cow-&gt;sound&quot;</TT> 方法, 然后返回 <TT>&quot;moooo&quot;</TT>. 那如果是 <TT>&quot;Horse&quot;</TT> 呢?
+<P>
+
+
+
+<PRE>
+    { package Horse;
+      sub sound { &quot;neigh&quot; }
+      sub speak {
+        my $class = shift;
+        print &quot;a $class goes &quot;, $class-&gt;sound, &quot;!\n&quot;
+      }
+    }
+
+</PRE>
+
+
+<P>
+
+仅仅包名和声音有变化. 因此我们可以在Cow和Horse中共用 <TT>&quot;speak&quot;</TT> 吗? 是的,通过继承实现!
+
+<BR>
+
+
+
+<P>
+
+<B>Inheriting the windpipes 继承气管</B>
+<P>
+
+
+<A NAME="ixAAI"></A>
+我们创建一个公共函数包,命名为 <TT>&quot;Animal&quot;</TT>,在其中定义 <TT>&quot;speak&quot;</TT>:
+<P>
+
+
+
+<PRE>
+    { package Animal;
+      sub speak {
+        my $class = shift;
+        print &quot;a $class goes &quot;, $class-&gt;sound, &quot;!\n&quot;
+      }
+    }
+
+</PRE>
+
+
+<P>
+
+然后,在每个动物那里 ``继承，inherits'' <TT>&quot;Animal&quot;</TT> 类, 同时赋予每个动物各自的声音:
+<P>
+
+
+
+<PRE>
+    { package Cow;
+      @ISA = qw(Animal);
+      sub sound { &quot;moooo&quot; }
+    }
+
+</PRE>
+
+
+<P>
+
+注意增加的数组 <TT>@ISA</TT>  . 我们马上讲到它.
+<P>
+
+现在当我们调用 <TT>&quot;Cow-&gt;speak&quot;</TT> 时会发生什麽?
+<P>
+
+首先, Perl构造参数列表. 在这种情况下, 只有 <TT>&quot;Cow&quot;</TT>. 然后Perl 查找 <TT>&quot;Cow::speak&quot;</TT>. 但是找不到, 所以Perl检查继承数组 <TT>@Cow::ISA</TT>. 找到了, 那里只有一个 <TT>&quot;Animal&quot;</TT>
+<P>
+
+Perl 然后在 <TT>&quot;Animal&quot;</TT> 中查找 <TT>&quot;speak&quot;</TT>, <TT>&quot;Animal::speak&quot;</TT>. 找到了, 然后调用该子程序, 参数在一开始就被固定了.
+<P>
+
+在子程序 <TT>&quot;Animal::speak&quot;</TT> 中, <TT>$class</TT> 是 <TT>&quot;Cow&quot;</TT> (第一个参数). 在我们调用 <TT>&quot;$class-&gt;sound&quot;</TT> 时, 首先寻找 <TT>&quot;Cow-&gt;sound&quot;</TT> , 找到了, 因此不用查看 <TT>@ISA</TT>. 成功!
+
+<BR>
+
+
+
+<P>
+
+<B>关于@ISA应该注意的几点问题</B>
+<P>
+
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>关于<TT>@ISA</TT>应该注意的几点问题</B>
+<P>
+
+
+
+<A NAME="ixAAJ"></A>
+神奇的 <TT>@ISA</TT> 变量 (读作 ``is a'' 而不是 ``ice-uh''), 声明了 <TT>&quot;Cow&quot;</TT> 是一个(``is a'') <TT>&quot;Animal&quot;</TT>。 注意它是一个数组,而不是一个单值, 因为在个别情况下, 需要在几个父类中寻找方法.
+<P>
+
+如果 <TT>&quot;Animal&quot;</TT> 也有一个 <TT>@ISA</TT>, 我们也要查看它. 寻找是递归的,深度优先,在每个 <TT>@ISA</TT> 中从左到右寻找. 一般地,每个 <TT>@ISA</TT> 只有一个元素(多元素意味着多继承和多重的头痛), 这样我们可以得到一个漂亮的继承树.
+<P>
+
+如果使用 <TT>&quot;use strict&quot;</TT>, @ISA会引起抱怨, 因为它不是含有显式包名的变量, 也不是字典变量 (``my''). 我们不能把它用做``my''变量(它必须属于所继承的包),但是也还是有几种解决的办法.
+<P>
+
+最简单的办法是加上包名:
+<P>
+
+
+
+<PRE>
+    @Cow::ISA = qw(Animal);
+
+</PRE>
+
+
+<P>
+
+或者使用包声明:
+<P>
+
+
+
+<PRE>
+    package Cow;
+    use vars qw(@ISA);
+    @ISA = qw(Animal);
+
+</PRE>
+
+
+<P>
+
+如果你希望把包放到程序内, 可以把:
+<P>
+
+
+
+<PRE>
+    package Cow;
+    use Animal;
+    use vars qw(@ISA);
+    @ISA = qw(Animal);
+
+</PRE>
+
+
+<P>
+
+简写为:
+<P>
+
+
+
+<PRE>
+    package Cow;
+    use base qw(Animal);
+
+</PRE>
+
+
+<P>
+
+这就精简多了.
+
+<BR>
+
+
+
+<P>
+
+<B>Overriding the methods 方法重载</B>
+<P>
+
+
+<A NAME="ixAAK"></A>
+让我们添上一只老鼠, 它的声音差不多听不到:
+<P>
+
+
+
+<PRE>
+    # Animal package from before
+    { package Mouse;
+      @ISA = qw(Animal);
+      sub sound { &quot;squeak&quot; }
+      sub speak {
+        my $class = shift;
+        print &quot;a $class goes &quot;, $class-&gt;sound, &quot;!\n&quot;;
+        print &quot;[but you can barely hear it!]\n&quot;;
+      }
+    }
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    Mouse-&gt;speak;
+
+</PRE>
+
+
+<P>
+
+输出为:
+<P>
+
+
+
+<PRE>
+    a Mouse goes squeak!
+    [but you can barely hear it!]
+
+</PRE>
+
+
+<P>
+
+在这里, <TT>&quot;Mouse&quot;</TT> 有它自己的speak 函数, 所以 <TT>&quot;Mouse-&gt;speak&quot;</TT> 不会调用<TT>&quot;Animal-&gt;speak&quot;</TT>. 这叫做重载 ``overriding''. 实际上, 我们甚至不用说<TT>&quot;Mouse&quot;</TT> 是 <TT>&quot;Animal&quot;</TT>, 因为 <TT>&quot;speak&quot;</TT> 所用到的所有方法在 <TT>&quot;Mouse&quot;</TT> 中都有定义.
+<P>
+
+但是有些代码与 <TT>&quot;Animal-&gt;speak&quot;</TT> 的相同 , 这在程序维护时是个问题. 我们能不能让 <TT>&quot;Mouse&quot;</TT> 与其它 <TT>&quot;Animal&quot;</TT> 作相同的事,但是给它加上特殊的部分呢? 可以!
+<P>
+
+首先,我们可以直接调用 <TT>&quot;Animal::speak&quot;</TT> 方法:
+<P>
+
+
+
+<PRE>
+    # Animal package from before
+    { package Mouse;
+      @ISA = qw(Animal);
+      sub sound { &quot;squeak&quot; }
+      sub speak {
+        my $class = shift;
+        Animal::speak($class);
+        print &quot;[but you can barely hear it!]\n&quot;;
+      }
+    }
+
+</PRE>
+
+
+<P>
+
+注意我们必须使用 <TT>$class</TT> (几乎肯定是<TT>&quot;Mouse&quot;</TT>) 作为 <TT>&quot;Animal::speak&quot;</TT> 的第一个参数, 因为我们没有用箭头符号. 那为什么不用呢? 嗯, 如果我们在那儿调用 <TT>&quot;Animal-&gt;speak&quot;</TT>, 则第一个参数是 <TT>&quot;Animal&quot;</TT> 而不是 <TT>&quot;Mouse&quot;</TT> , 这样当调用 <TT>&quot;sound&quot;</TT> 时, 就找不到正确的函数了.
+<P>
+
+虽然如此,直接调用 <TT>&quot;Animal::speak&quot;</TT> 确实不怎么好. 万一 <TT>&quot;Animal::speak&quot;</TT> 不存在, 而是继承自 <TT>@Animal::ISA</TT> 中的某个类呢? 因为没有使用箭头符号, 我们只有一次机会去调用正确的函数.
+<P>
+
+还要注意到,现在类名 <TT>&quot;Animal&quot;</TT> 直接在子程序中使用. 如果维护代码的人没有注意到这一点, 改变了 &lt;Mouse&gt; 的 <TT>@ISA</TT>，没有注意到 <TT>&quot;speak&quot;</TT> 用到了 <TT>&quot;Animal&quot;</TT> 那就会出问题. 因此, 这可能不是一个好方法.
+
+<BR>
+
+
+
+<P>
+
+<B>Starting the search from a different place 从其它地方开始寻找</B>
+<P>
+
+
+<A NAME="ixAAL"></A>
+较好的解决办法是让Perl从继承链的上一级开始寻找:
+<P>
+
+
+
+<PRE>
+    # same Animal as before
+    { package Mouse;
+      # same @ISA, &amp;sound as before
+      sub speak {
+        my $class = shift;
+        $class-&gt;Animal::speak;
+        print &quot;[but you can barely hear it!]\n&quot;;
+      }
+    }
+
+</PRE>
+
+
+<P>
+
+这就对了. 使用这一语法, 我们从 <TT>&quot;Animal&quot;</TT> 寻找 <TT>&quot;speak&quot;</TT>, 在找不到时寻找 <TT>&quot;Animal&quot;</TT> 的继承链.且第一个参数是 <TT>$class</TT>, 所以 <TT>&quot;speak&quot;</TT> 和<TT>&quot;Mouse::sound&quot;</TT> 都会被正确地调用.
+<P>
+
+但这还不是最好的方法.我们还必须调整 <TT>@ISA</TT> 的元素顺序. 更糟糕的是, 如果 <TT>&quot;Mouse&quot;</TT> 有多个父类在 <TT>@ISA</TT>, 我们还要知道哪个类定义了 <TT>&quot;speak&quot;</TT>. 那么,有没有更好的办法呢?
+
+<BR>
+
+
+
+<P>
+
+<B>The <FONT SIZE="-1">SUPER</FONT> way of doing things 使用SUPER方法</B>
+<P>
+
+
+<A NAME="ixAAM"></A>
+通过把 <TT>&quot;Animal&quot;</TT> 改成 <TT>&quot;SUPER&quot;</TT> 类, 程序可以自动在所有父类中(<TT>@ISA</TT>):
+<P>
+
+
+
+<PRE>
+    # same Animal as before
+    { package Mouse;
+      # same @ISA, &amp;sound as before
+      sub speak {
+        my $class = shift;
+        $class-&gt;SUPER::speak;
+        print &quot;[but you can barely hear it!]\n&quot;;
+      }
+    }
+
+</PRE>
+
+
+<P>
+
+<TT>&quot;SUPER::speak&quot;</TT> 意味着在当前包的 <TT>@ISA</TT> 中寻找 <TT>&quot;speak&quot;</TT>, 调用第一个找到的函数。注意它不会查找 <TT>$class</TT> 的 <TT>@ISA</TT>
+
+<BR>
+
+
+
+<P>
+
+<B>Where we're at so far...到现在为止我们学了些什麽</B>
+<P>
+
+
+<A NAME="ixAAN"></A>
+我们已经看到了箭头符号语法:
+<P>
+
+
+
+<PRE>
+  Class-&gt;method(@args);
+
+</PRE>
+
+
+<P>
+
+和它的等价形式:
+<P>
+
+
+
+<PRE>
+  $a = &quot;Class&quot;;
+  $a-&gt;method(@args);
+
+</PRE>
+
+
+<P>
+
+它们构造这样一个参数列表:
+<P>
+
+
+
+<PRE>
+  (&quot;Class&quot;, @args)
+
+</PRE>
+
+
+<P>
+
+并调用
+<P>
+
+
+
+<PRE>
+  Class::method(&quot;Class&quot;, @Args);
+
+</PRE>
+
+
+<P>
+
+但是，如果找不到 <TT>&quot;Class::method&quot;</TT>, 程序会查看 <TT>@Class::ISA</TT> (递归的) 找到一个包含 <TT>&quot;method&quot;</TT> 的包,然后执行它.
+<P>
+
+使用这种简单的语法, 我们可以有类方法,(多)继承,重载,以及其它扩展. 使用我们已经学到的东西, 我们可以析出公共的代码,以各种不同的形式重用同一工具. 这是对象能够提供的核心内容, 但是对象还能够提供实例数据, 这一点我们还没有涉及.
+
+<BR>
+
+
+
+<P>
+
+<B>A horse is a horse, of course of course --- or is it? 马就是马——真的是这样吗?</B>
+<P>
+
+
+<A NAME="ixAAO"></A>
+我们从 <TT>&quot;Animal&quot;</TT> 和 <TT>&quot;Horse&quot;</TT> 类的代码开始:
+<P>
+
+
+
+<PRE>
+  { package Animal;
+    sub speak {
+      my $class = shift;
+      print &quot;a $class goes &quot;, $class-&gt;sound, &quot;!\n&quot;
+    }
+  }
+  { package Horse;
+    @ISA = qw(Animal);
+    sub sound { &quot;neigh&quot; }
+  }
+
+</PRE>
+
+
+<P>
+
+这样使得我们调用 <TT>&quot;Horse-&gt;speak&quot;</TT>，从而向上调用 <TT>&quot;Animal::speak&quot;</TT>，然后调用 <TT>&quot;Horse::sound&quot;</TT> 来获得指定的声音，输出为:
+<P>
+
+
+
+<PRE>
+  a Horse goes neigh!
+
+</PRE>
+
+
+<P>
+
+但是我们所有的马都是相同的. 如果我增加一个子程序, 所有的马都会共享它. 这在创建相同的马时确实不错, 但是我们如何能够区分不同的马呢? 比如, 假设我想给我的第一匹马起个名字. 应该有办法使得它的名字和别的马的名字不同.
+<P>
+
+这可以通过创建一个 ``实例,instance'' 来实现. 实例是由类创建的. 在Perl中, 任何引用都可以是实例, 就让我们从最简单的引用开始吧,一个标量引用:
+<P>
+
+
+
+<PRE>
+  my $name = &quot;Mr. Ed&quot;;
+  my $talking = \$name;
+
+</PRE>
+
+
+<P>
+
+现在 <TT>$talking</TT> 是指向实例特有数据( <TT>$name</TT> )的引用。把这个引用变成真正的实例的是一个特殊的操作符,叫做 <TT>&quot;bless&quot;</TT>:
+<P>
+
+
+
+<PRE>
+  bless $talking, Horse;
+
+</PRE>
+
+
+<P>
+
+这个操作符把包名 <TT>&quot;Horse&quot;</TT> 中的所有信息存放到引用所指向的东西中. 这时,我们说 <TT>$talking</TT> 是 <TT>&quot;Horse&quot;</TT> 的一个实例 . 也就是说, 它是一匹独特的马. 引用并没有改变, 还可以用于间接引用操作符.
+
+<BR>
+
+
+
+<P>
+
+<B>Invoking an instance method 调用实例方法</B>
+<P>
+
+
+<A NAME="ixAAP"></A>
+箭头符号可以用于实例. 那么, 听听 <TT>$talking</TT> 的声音吧:
+<P>
+
+
+
+<PRE>
+  my $noise = $talking-&gt;sound;
+
+</PRE>
+
+
+<P>
+
+要调用 <TT>&quot;sound&quot;</TT>, Perl 首先注意到 <TT>$talking</TT> 是一个 blessed 引用 (因此是一个实例). 它会构造一个参数列表, 现在只有 <TT>$talking</TT>. (在后面我们会看到参数们在实例变量之后, 与使用类时相似.)
+<P>
+
+然后,是真正有意思的部分: Perl 查找实例所属的类, 这里是 <TT>&quot;Horse&quot;</TT>, 在其中寻找对应的方法. 这里, <TT>&quot;Horse::sound&quot;</TT> 直接可以找到(不用使用继承), 最后这样调用:
+<P>
+
+
+
+<PRE>
+  Horse::sound($talking)
+
+</PRE>
+
+
+<P>
+
+注意这里的第一个参数还是实例本身, 而不像前面我们学到的是类名. 最后返回值是 <TT>&quot;neigh&quot;</TT>, 它被赋值给 <TT>$noise</TT> 变量.
+<P>
+
+如果找不到 Horse::sound, 会在 <TT>@Horse::ISA</TT> 列表中查找. 类方法与实例方法的唯一区别是调用时的第一个参数是实例(一个blessed引用)还是一个类名(一个字符串).
+
+<BR>
+
+
+
+<P>
+
+<B>Accessing the instance data 访问实例数据</B>
+<P>
+
+
+<A NAME="ixAAQ"></A>
+因为我们得到的第一个参数是实例,我们可以访问实例特有的数据. 我们可以取得马的名字:
+<P>
+
+
+
+<PRE>
+  { package Horse;
+    @ISA = qw(Animal);
+    sub sound { &quot;neigh&quot; }
+    sub name {
+      my $self = shift;
+      $$self;
+    }
+  }
+
+</PRE>
+
+
+<P>
+
+现在,我们调用名字:
+<P>
+
+
+
+<PRE>
+  print $talking-&gt;name, &quot; says &quot;, $talking-&gt;sound, &quot;\n&quot;;
+
+</PRE>
+
+
+<P>
+
+在 <TT>&quot;Horse::name&quot;</TT> 中, <TT>@_</TT> 数组仅含有 <TT>$talking</TT>, shift 将 <TT>$talking</TT> 赋给了 <TT>$self</TT>. (传统上我们在处理实例方法时总是把第一个元素赋给 <TT>$self</TT>, 所以你也应该这么做, 除非你有不这样做的充分理由.) 然后, <TT>$self</TT> 被标量化,成为 <TT>&quot;Mr. Ed&quot;</TT>, 这就行了. 输出是:
+<P>
+
+
+
+<PRE>
+  Mr. Ed says neigh.
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>How to build a horse 如何创建一匹马</B>
+<P>
+
+
+<A NAME="ixAAR"></A>
+当然啦,如果我们手工创建所有的马, 我们会出很多错误. 不仅如此,我们还亵渎了面向对象编程的特性,因为在那种情况下马的&quot;内脏&quot;也可见了. 如果你是兽医的话,这倒正好, 可是如果你仅仅是个爱马者呢? 所以,我们让 Horse 类来创建一匹新马:
+<P>
+
+
+
+<PRE>
+  { package Horse;
+    @ISA = qw(Animal);
+    sub sound { &quot;neigh&quot; }
+    sub name {
+      my $self = shift;
+      $$self;
+    }
+    sub named {
+      my $class = shift;
+      my $name = shift;
+      bless \$name, $class;
+    }
+  }
+
+</PRE>
+
+
+<P>
+
+现在,我们可以用 <TT>&quot;named&quot;</TT> 方法创建一匹马:
+<P>
+
+
+
+<PRE>
+  my $talking = Horse-&gt;named(&quot;Mr. Ed&quot;);
+
+</PRE>
+
+
+<P>
+
+注意到我们有回到了类方法, 所以传递给 <TT>&quot;Horse::named&quot;</TT> 的两个参数是 <TT>&quot;Horse&quot;</TT> 和 <TT>&quot;Mr. Ed&quot;</TT>. &quot;bless&quot; 操作符不仅将 <TT>$name</TT> 实例化, 且将指向 <TT>$name</TT> 的引用作为返回值返回. 这样, 我们就创建了一匹马.
+<P>
+
+这里,我们调用了构造器 <TT>&quot;named&quot;</TT>, 它的参数就是特定的 <TT>&quot;Horse&quot;</TT> 的名字. 你可以使用不同的构造器用不同的名字建立不同的对象(比如记录它的谱系或生日). 但是, 你会发现多数使用Perl的人更喜欢把构造器命名为 <TT>&quot;new&quot;</TT>, 并使用不同的方法解释 <TT>&quot;new&quot;</TT> 的参数. 两种都挺好,只要你能创建对象就行. (你会自己创建一个,对吗?)
+
+<BR>
+
+
+
+<P>
+
+<B>Inheriting the constructor 继承构造器</B>
+<P>
+
+
+<A NAME="ixAAS"></A>
+但是那个方法中有没有什麽对于 <TT>&quot;Horse&quot;</TT> 来说比较特殊的东西呢? 没有. 因此, 从 <TT>&quot;Animal&quot;</TT> 创建其它任何东西也可以使用相同的方法,我们来试试::
+<P>
+
+
+
+<PRE>
+  { package Animal;
+    sub speak {
+      my $class = shift;
+      print &quot;a $class goes &quot;, $class-&gt;sound, &quot;!\n&quot;
+    }
+    sub name {
+      my $self = shift;
+      $$self;
+    }
+    sub named {
+      my $class = shift;
+      my $name = shift;
+      bless \$name, $class;
+    }
+  }
+  { package Horse;
+    @ISA = qw(Animal);
+    sub sound { &quot;neigh&quot; }
+  }
+
+</PRE>
+
+
+<P>
+
+好了, 但是以实例调用 <TT>&quot;speak&quot;</TT> 会产生什麽结果呢?
+<P>
+
+
+
+<PRE>
+  my $talking = Horse-&gt;named(&quot;Mr. Ed&quot;);
+  $talking-&gt;speak;
+
+</PRE>
+
+
+<P>
+
+我们得到的是:
+<P>
+
+
+
+<PRE>
+  a Horse=SCALAR(0xaca42ac) goes neigh!
+
+</PRE>
+
+
+<P>
+
+为什麽?因为 <TT>&quot;Animal::speak&quot;</TT> 希望它的第一个参数是类名, 而不是实例. 当实例被传入时,我们希望使用的是字符串而不是实例本身,显示的结果不是我们所希望的.
+
+<BR>
+
+
+
+<P>
+
+<B>Making a method work with either classes or instances 使方法同时支持类和实例</B>
+<P>
+
+
+<A NAME="ixAAT"></A>
+我们需要做的是让方法检测它是被实例调用的还是被类调用的. 最直接的方法是使用 <TT>&quot;ref&quot;</TT> 操作符. 它在参数是实例时返回字符串,在参数是类名时返回 <TT>&quot;undef&quot;</TT>. 我们首先改写 <TT>&quot;name&quot;</TT> 方法:
+<P>
+
+
+
+<PRE>
+  sub name {
+    my $either = shift;
+    ref $either
+      ? $$either # it's an instance, return name
+      : &quot;an unnamed $either&quot;; # it's a class, return generic
+  }
+
+</PRE>
+
+
+<P>
+
+在这儿, <TT>&quot;?:&quot;</TT> 操作符决定是选择间接引用(dereference)还是派生字符串. 现在我们可以同时使用类或实例了. 注意我修改了第一个参数为 <TT>$either</TT> 来表示期望的变化:
+<P>
+
+
+
+<PRE>
+  my $talking = Horse-&gt;named(&quot;Mr. Ed&quot;);
+  print Horse-&gt;name, &quot;\n&quot;; # prints &quot;an unnamed Horse\n&quot;
+  print $talking-&gt;name, &quot;\n&quot;; # prints &quot;Mr Ed.\n&quot;
+
+</PRE>
+
+
+<P>
+
+我们可以改写 <TT>&quot;speak&quot;</TT> :
+<P>
+
+
+
+<PRE>
+  sub speak {
+    my $either = shift;
+    print $either-&gt;name, &quot; goes &quot;, $either-&gt;sound, &quot;\n&quot;;
+  }
+
+</PRE>
+
+
+<P>
+
+而 <TT>&quot;sound&quot;</TT> 本来就可以工作. 那么现在就一切完成了!
+
+<BR>
+
+
+
+<P>
+
+<B>Adding parameters to a method 给方法加参数</B>
+<P>
+
+
+<A NAME="ixAAU"></A>
+让我们训练动物们吃饭:
+<P>
+
+
+
+<PRE>
+  { package Animal;
+    sub named {
+      my $class = shift;
+      my $name = shift;
+      bless \$name, $class;
+    }
+    sub name {
+      my $either = shift;
+      ref $either
+        ? $$either # it's an instance, return name
+        : &quot;an unnamed $either&quot;; # it's a class, return generic
+    }
+    sub speak {
+      my $either = shift;
+      print $either-&gt;name, &quot; goes &quot;, $either-&gt;sound, &quot;\n&quot;;
+    }
+    sub eat {
+      my $either = shift;
+      my $food = shift;
+      print $either-&gt;name, &quot; eats $food.\n&quot;;
+    }
+  }
+  { package Horse;
+    @ISA = qw(Animal);
+    sub sound { &quot;neigh&quot; }
+  }
+  { package Sheep;
+    @ISA = qw(Animal);
+    sub sound { &quot;baaaah&quot; }
+  }
+
+</PRE>
+
+
+<P>
+
+试试吧:
+<P>
+
+
+
+<PRE>
+  my $talking = Horse-&gt;named(&quot;Mr. Ed&quot;);
+  $talking-&gt;eat(&quot;hay&quot;);
+  Sheep-&gt;eat(&quot;grass&quot;);
+
+</PRE>
+
+
+<P>
+
+输出为:
+<P>
+
+
+
+<PRE>
+  Mr. Ed eats hay.
+  an unnamed Sheep eats grass.
+
+</PRE>
+
+
+<P>
+
+有参数的实例方法调用时首先得到实例的引用，然后得到参数的列表。因此第一个调用实际上是这样的:
+<P>
+
+
+
+<PRE>
+  Animal::eat($talking, &quot;hay&quot;);
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>More interesting instances 更多有趣的实例</B>
+<P>
+
+
+<A NAME="ixAAV"></A>
+如果实例需要更多的数据该怎么办呢? 更多的项目产生更有趣的实例, 每个项目可以是一个引用或者甚至是一个对象. 最简单的方法是把它们存放到哈希中. 哈希中的关键词叫做'实例变量&quot;(instance variables)或者&quot;成员变量&quot;(member variables)，相应的值也就是变量的值。
+<P>
+
+但是我们怎么把马放到哈希中呢? 回忆到对象是被实例化(blessed)的引用. 我们可以简单地创建一个祝福了的哈希引用,同时相关的的内容也作些修改就可以了.
+<P>
+
+让我们创建一只有名字有颜色的绵羊：
+<P>
+
+
+
+<PRE>
+  my $bad = bless { Name =&gt; &quot;Evil&quot;, Color =&gt; &quot;black&quot; }, Sheep;
+
+</PRE>
+
+
+<P>
+
+那么 <TT>&quot;$bad-&gt;{Name}&quot;</TT> 是 <TT>&quot;Evil&quot;</TT>, <TT>&quot;$bad-&gt;{Color}&quot;</TT> 是 <TT>&quot;black&quot;</TT>. 但是我们想通过 <TT>&quot;$bad-&gt;name&quot;</TT> 存取绵羊的名字name, 这有点的问题,因为现在它期望一个标量引用. 别担心,因为修正它很简单:
+<P>
+
+
+
+<PRE>
+  ## in Animal
+  sub name {
+    my $either = shift;
+    ref $either ?
+      $either-&gt;{Name} :
+      &quot;an unnamed $either&quot;;
+  }
+
+</PRE>
+
+
+<P>
+
+<TT>&quot;named&quot;</TT> 当然还是创建标量的绵羊, 如下修正就好了:
+<P>
+
+
+
+<PRE>
+  ## in Animal
+  sub named {
+    my $class = shift;
+    my $name = shift;
+    my $self = { Name =&gt; $name, Color =&gt; $class-&gt;default_color };
+    bless $self, $class;
+  }
+
+</PRE>
+
+
+<P>
+
+默认颜色 <TT>&quot;default_color&quot;</TT> 是什麽? 嗯, 如果 <TT>&quot;named&quot;</TT> 只有一个参数name, 我们还是希望有个颜色, 所以我们设定一个类初始化颜色. 对绵羊来说, 白色比较好:
+<P>
+
+
+
+<PRE>
+  ## in Sheep
+  sub default_color { &quot;white&quot; }
+
+</PRE>
+
+
+<P>
+
+为了避免为每个类定义颜色, 我们可以在 <TT>&quot;Animal&quot;</TT> 中定义一个 ``缺省的缺省，backstop'' 的颜色:
+<P>
+
+
+
+<PRE>
+  ## in Animal
+  sub default_color { &quot;brown&quot; }
+
+</PRE>
+
+
+<P>
+
+现在, 因为只有 <TT>&quot;name&quot;</TT> 和 <TT>&quot;named&quot;</TT> 与对象的 ``结构，structure'' 相关, 其余的部分可以保持不变, 所以 <TT>&quot;speak&quot;</TT> 工作正常.
+
+<BR>
+
+
+
+<P>
+
+<B>A horse of a different color 一匹不同颜色的马</B>
+<P>
+
+
+<A NAME="ixAAW"></A>
+但是如果所有的马都是棕色的,也挺烦人的. 所以我们可以写个方法来改变马的颜色.
+<P>
+
+
+
+<PRE>
+  ## in Animal
+  sub color {
+    $_[0]-&gt;{Color}
+  }
+  sub set_color {
+    $_[0]-&gt;{Color} = $_[1];
+  }
+
+</PRE>
+
+
+<P>
+
+注意到存取参数的不同方法了吗: <TT>$_[0]</TT> 直接使用, 而没有用 <TT>&quot;shift&quot;</TT>. (这在我们频繁存取时可以节省一些时间.) 现在我们可以把Mr. Ed的颜色变过来:
+<P>
+
+
+
+<PRE>
+  my $talking = Horse-&gt;named(&quot;Mr. Ed&quot;);
+  $talking-&gt;set_color(&quot;black-and-white&quot;);
+  print $talking-&gt;name, &quot; is colored &quot;, $talking-&gt;color, &quot;\n&quot;;
+
+</PRE>
+
+
+<P>
+
+结果是:
+<P>
+
+
+
+<PRE>
+  Mr. Ed is colored black-and-white
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>Summary 总结</B>
+<P>
+
+
+<A NAME="ixAAX"></A>
+现在我们讲了类方法,构造器,实例方法,实例数据,甚至还有存取器(accessor). 但是这些还仅仅是开始. 我们还没有讲到以两个函数 getters,setters 形式出现的存取器，析构器(destructor),间接对象(indirect object notation),子类(subclasses that add instance data),per-class data,重载(overloading),``isa'' 和 ``can'' 测试,公共类(<TT>&quot;UNIVERSAL&quot;</TT> class),等等. 这有待其它文档去讲解了. 无论如何,希望本文使你对对象有所了解.
+<A NAME="lbAD">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<A NAME="ixAAY"></A>
+更多信息可参见 perlobj (这里有更多的Perl对象的细节,而本文的是基础), perltoot (面向对象的中级教程),  perlbot  (更多的技巧), 以及书籍,比如Damian Conway的不错的书叫做《面向对象的Perl (<I>Object Oriented Perl</I>)》。
+<P>
+
+某些模块可能对你有用，它们是 Class::Accessor,
+Class::Class, Class::Contract, Class::Data::Inheritable,
+Class::MethodMaker 还有 Tie::SecureHash
+<A NAME="lbAE">&nbsp;</A>
+<H2>COPYRIGHT</H2>
+
+<A NAME="ixAAZ"></A>
+Copyright (c) 1999, 2000 by Randal L. Schwartz and Stonehenge
+Consulting Services, Inc.  Permission is hereby granted to distribute
+this document intact with the Perl distribution, and in accordance
+with the licenses of the Perl distribution; derived documents must
+include this copyright notice intact.
+<P>
+
+Portions of this text have been derived from Perl Training materials
+originally appearing in the <I>Packages, References, Objects, and
+Modules</I> course taught by instructors for Stonehenge Consulting
+Services, Inc. and used with permission.
+<P>
+
+Portions of this text have been derived from materials originally
+appearing in <I>Linux Magazine</I> and used with permission.
+<A NAME="lbAF">&nbsp;</A>
+<H2>中文版维护人</H2>
+
+<B>redcandle &lt;<A HREF="mailto:redcandle51@chinaren.com">redcandle51@chinaren.com</A>&gt;</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>中文版最新更新</H2>
+
+<B>2001年12月9日星期日</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>中文手册页翻译计划</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAD">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAE">COPYRIGHT</A><DD>
+<DT><A HREF="#lbAF">中文版维护人</A><DD>
+<DT><A HREF="#lbAG">中文版最新更新</A><DD>
+<DT><A HREF="#lbAH">中文手册页翻译计划</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

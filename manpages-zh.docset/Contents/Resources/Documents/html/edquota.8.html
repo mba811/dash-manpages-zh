@@ -1,0 +1,220 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of EDQUOTA</TITLE>
+</HEAD><BODY>
+<H1>EDQUOTA</H1>
+Section: Maintenance Commands (8)<BR>Updated: 2001年3月9日星期五<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+edquota - 编辑用户配额
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>edquota</B>
+
+[
+<B>-p</B>
+
+<I>proto-username</I>
+
+] [
+<B>-u</B>
+
+|
+<B>-g</B>
+
+]
+<I>username</I>...
+
+<P>
+
+<B>edquota</B>
+
+[
+<B>-u</B>
+
+|
+<B>-g</B>
+
+]
+<B>-t</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<A NAME="ixAAB"></A>
+<A NAME="ixAAC"></A>
+<A NAME="ixAAD"></A>
+<A NAME="ixAAE"></A>
+<A NAME="ixAAF"></A>
+<A NAME="ixAAG"></A>
+<B>edquota</B>
+
+是一个配额编辑器(如果你想在脚本中设置配额,请参看
+<B><A HREF="/cgi-bin/man/man2html?8+setquota">setquota</A></B>(8)
+
+).
+在命令行上可以指定一个或多个用户或组.对于每个用户或组,会用
+<FONT SIZE="-1">ASCII</FONT>
+形式创建一个针对该用户或组的当前磁盘配额的临时文件,并对这个文件
+调用编辑器.随后可以修改配额,添加新的配额,等等.
+设置某个配额为零表示不施加任何配额限制.
+<P>
+
+可以允许用户超出它们的软限制一段宽限期,该宽限期对每个文件系统指定.
+一旦超出此宽限期,软限制即作为硬限制来执行.
+<P>
+
+文件中列出的当前的使用信息是用于提供信息的；
+只可以修改硬和软限制.
+<P>
+
+一旦离开编辑器,
+<B>edquota</B>
+
+就读入临时文件并修改二进制配额文件以反映所作的修改.
+<P>
+
+调用的编辑器为
+<B><A HREF="/cgi-bin/man/man2html?1+vi">vi</A></B>(1)
+
+除非
+<FONT SIZE="-1"><B>VISUAL</B></FONT>
+或者
+<FONT SIZE="-1"><B>EDITOR</B></FONT>
+环境变量指定了其它的编辑器.
+<P>
+
+只有超级用户可以编辑配额.(为了在一个文件系统上建立配额,文件系统的
+root目录下必须包含一个由root所有,叫做
+<B>aquota.user</B>
+
+或
+<B>aquota.group</B>
+
+的文件.
+参看
+<B><A HREF="/cgi-bin/man/man2html?8+quotaon">quotaon</A></B>(8)
+
+以了解详情.)
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS(选项)</H2>
+
+<DL COMPACT>
+<DT><B>-u</B>
+
+<DD>
+编辑用户配额.这是默认的选项.
+<DT><B>-g</B>
+
+<DD>
+编辑组配额.
+<DT><B>-p</B>
+
+<DD>
+对每个指定的用户/组的原配额加倍.
+这是用来对一组用户/组初始化配额时常用的方法.
+<DT><B>-t</B>
+
+<DD>
+对每个文件系统编辑软时间限制.
+sec(onds),min(utes),hour(s),day(s)时间单元都是可识别的.
+时间限制显示为最大的可能时间单元,以使该值大于或等于任何值.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>FILES(相关文件)</H2>
+
+
+<DL COMPACT>
+<DT>位于文件系统root下的<DD>
+<B>aquota.user</B>
+
+或
+<B>aquota.group</B>
+
+配额文件.
+<DT><B>/etc/mtab</B>
+
+<DD>
+已挂载的文件系统表
+
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+quota">quota</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+vi">vi</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?2+quotactl">quotactl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?8+quotacheck">quotacheck</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+quotaon">quotaon</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+repquota">repquota</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+convertquota">convertquota</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+setquota">setquota</A></B>(8)
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>BUGS(漏洞)</H2>
+
+临时文件的格式是无法预测的.
+<A NAME="lbAI">&nbsp;</A>
+<H2>AUTHOR(作者)</H2>
+
+Jan Kara &lt;<A HREF="mailto:jack@atrey.karlin.mff.cuni.cz">jack@atrey.karlin.mff.cuni.cz</A>&gt;
+<BR>
+
+基于老的
+<B>edquota</B>
+
+可能作者:
+<BR>
+
+Marco van Wieringen &lt;<A HREF="mailto:mvw@planets.elm.net">mvw@planets.elm.net</A>&gt;
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001.07.09</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAE">OPTIONS(选项)</A><DD>
+<DT><A HREF="#lbAF">FILES(相关文件)</A><DD>
+<DT><A HREF="#lbAG">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAH">BUGS(漏洞)</A><DD>
+<DT><A HREF="#lbAI">AUTHOR(作者)</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

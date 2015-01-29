@@ -1,0 +1,329 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of Memory</TITLE>
+</HEAD><BODY>
+<H1>Memory</H1>
+Section: Misc. Reference Manual Pages (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ckalloc, memory, ckfree, Tcl_DisplayMemory, Tcl_InitMemory, Tcl_ValidateAllMemory - 合法的内存分配接口
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<PRE>
+<B>memory info</B>
+
+<B>memory trace</B> [<B>on|off</B>]
+
+<B>memory validate</B> [<B>on|off</B>]
+
+<B>memory trace_on_at_malloc</B> <I>nnn</I>
+
+<B>memory break_on_malloc</B> <I>nnn</I>
+
+<B>memory display</B> <I>file</I>
+
+
+#include &lt;<A HREF="file:///usr/include/tcl.h">tcl.h</A>&gt;
+
+char *
+ckalloc (unsigned size)
+
+void
+ckfree (char *ptr)
+
+int
+Tcl_DumpActiveMemory (char *fileName);
+
+void
+Tcl_ValidateAllMemory (char *file,
+                       int   line)
+
+void
+Tcl_InitMemory (interp)
+</PRE><A NAME="lbAD">&nbsp;</A>
+<H2>ARGUMENTS</H2>
+
+Tcl_Interp *fileName
+uint size in
+<P>
+char *ptr in
+Tcl_Interp *interp in
+A pointer to the Tcl interpreter.
+char *file in
+The filename of the caller of Tcl_ValidateAllMemory.
+int line in
+The line number of the caller of Tcl_ValidateAllMemory.
+char *fileName in
+File to display list of active memory.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<A NAME="lbAF">&nbsp;</A>
+<H3>ckalloc</H3>
+
+<P>
+
+This macro allocates memory, in the same manner as <B>malloc</B>, with the
+following differences: One, <B>ckalloc</B> checks the value returned from
+<B>malloc</B> (it calls <B>malloc</B> for you) and panics if the allocation
+request fails.  Two, if enabled at compile time, a version of <B>ckalloc</B>
+with special memory debugging capabilities replaces the normal version of
+<B>ckalloc</B>, which aids in detecting memory overwrites and leaks (repeated
+allocations not matched by corresponding frees).
+<P>
+
+Parameters:
+<DL COMPACT><DT><DD>
+<B>o </B><I>size</I> - The size of the memory block to be allocated.
+</DL>
+
+<P>
+
+Returns:
+<DL COMPACT><DT><DD>
+A pointer to the allocated memory block.
+</DL>
+
+<A NAME="lbAG">&nbsp;</A>
+<H3>ckfree</H3>
+
+<P>
+
+This macro frees memory allocated by <B>ckalloc</B>.  Like <B>ckalloc</B>,
+when memory debugging is enabled, <B>ckfree</B> has enhanced capabilities
+for detecting memory overwrites and leaks.
+<P>
+
+It is very important that you use <B>ckalloc</B> when you need to allocate
+memory, and that you use <B>ckfree</B> to free it.  Should you use <B>malloc</B>
+to allocate and <B>ckfree</B> to free, spurious memory validation errors will
+occur when memory debugging is enabled.  Should you use <B>free</B> to free
+memory allocated by <B>ckalloc</B>, memory corruption will occur when memory
+debugging is enabled.  Any memory that is to be become the property of the Tcl
+interpreter, such as result space, must be allocated with <B>ckalloc</B>.  If
+it is absolutely necessary for an application to pass back <B>malloc</B>ed
+memory to Tcl, it will work only if Tcl is complied with the
+<B>TCL_MEM_DEBUG</B> flag turned off.  If you convert your application to use
+this facility, it will help you find memory over runs and lost memory.  Note
+that memory allocated by a C library routine requiring freeing should still be
+freed with <B>free</B>, since it calls <B>malloc</B> rather than <B>ckalloc</B>
+to do the allocation.
+<P>
+
+Parmeters:
+<DL COMPACT><DT><DD>
+<B>o </B><I>ptr</I> - The address of a block to free, as returned by ckalloc.
+</DL>
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H3>Tcl_DumpActiveMemory</H3>
+
+<P>
+
+This function will output a list of all currently allocated memory to the
+specified file.  The following information is outputted for each allocated
+block of memory: starting and ending addresses (excluding guard zone), size,
+source file where <B>ckalloc</B> was called to allocate the block and line
+number in that file.  It is especially useful to call
+<B>Tcl_DumpActiveMemory</B> after the Tcl interpreter has been deleted.
+<P>
+
+Parameters:
+<DL COMPACT><DT><DD>
+<B>o </B><I>fileName</I> - The name of the file to output the memory list to.
+</DL>
+
+<A NAME="lbAI">&nbsp;</A>
+<H3>Tcl_ValidateAllMemory</H3>
+
+<P>
+
+Forces a validation of the guard zones of all currently allocated blocks
+of memory.  Normally validation of a block occurs when its freed, unless
+full validation is enabled, in which case validation of all blocks
+occurs when <B>ckalloc</B> and <B>ckfree</B> are called.  This function forces
+the validation to occur at any point.
+<P>
+
+Parameters:
+<DL COMPACT><DT><DD>
+<B>o </B><I>file</I> - The file that this routine is being called from, normally
+<B>__FILE__</B>.
+<BR>
+
+<B>o </B><I>line</I> - The line that this routine is being called from, normally
+<B>__LINE__</B>.
+</DL>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>ENABLING MEMORY DEBUGGING</H2>
+
+<P>
+
+To enable memory debugging, Tcl should be recompiled from scratch with
+<B>TCL_MEM_DEBUG</B> defined.  This will also compile in
+a non-stub version of <B>Tcl_InitMemory</B>
+to add the <B>memory</B> command to Tcl.
+<P>
+
+<B>TCL_MEM_DEBUG</B> must be either left defined for all modules or undefined
+for all modules that are going to be linked together.  If they are not, link
+errors will occur, with either <B>TclDbCkfree</B> and <B>Tcl_DbCkalloc</B> or
+<B>Tcl_Ckalloc</B> and <B>Tcl_Ckfree</B> being undefined.
+<A NAME="lbAK">&nbsp;</A>
+<H2>GUARD ZONES</H2>
+
+<P>
+
+When memory debugging is enabled, whenever a call to <B>ckalloc</B> is
+made, slightly more memory than requested is allocated so the memory debugging
+code can keep track
+of the allocated memory, and also 
+eight-byte ``guard zones'' are placed in front of and behind the space that 
+will be returned to the caller.  (The size of the guard zone is defined
+by the C #define <B>GUARD_SIZE</B> in <I>baseline/src/ckalloc.c</I> -- it
+can be extended if you suspect large overwrite problems, at some cost in
+performance.)  A known pattern is written into the guard zones and,
+on a call to <B>ckfree</B>, the guard zones of the space being freed
+are checked to see if either zone has been modified in any way.
+If one has been, the guard bytes and their new contents are identified,
+and a ``low guard failed'' or ``high guard failed'' message is issued.
+The ``guard failed'' message includes the address of the memory packet 
+and the file name and line number of the code that called <B>ckfree</B>.
+This allows you to detect the common sorts of one-off problems, where
+not enough space was allocated to contain the data written, for example.
+<A NAME="lbAL">&nbsp;</A>
+<H2>THE MEMORY COMMAND</H2>
+
+<DL COMPACT>
+<DT><B>memory </B><I>options</I>
+
+<DD>
+<BR>
+
+The Tcl <B>memory</B> command gives the Tcl developer control of Tcl's memory
+debugging capabilities.  The memory command has several suboptions, which are
+described below.  It is only available when Tcl has been compiled with memory
+debugging enabled.
+<DT><B>memory info</B>
+
+<DD>
+<BR>
+
+生成一个报告，包含自从 Tcl 启动以来分配和释放的(内存)总数，当前分配的包(未遇到相应的到 <B>ckfree </B>的调用的到 <B>ckalloc</B>  的调用的当前数目)的数目，当前分配的字节数，和已分配的包和字节的最大的数目。
+<DT><B>memory trace</B> [<B>on|off</B>]
+
+<DD>
+<BR>
+
+使内存跟踪开启或关闭。在开启内存跟踪的时候，对 <B>ckalloc</B>    的每次调用都导致向      <I>stderr </I>写一行跟踪信息，其组成有字 <I>ckalloc</I>，随后是返回的地址，分配的内存总数，和进行分配的 C 文件名和代码的行数。例如:...
+<P>
+<BR>&nbsp;&nbsp;&nbsp;<B>ckalloc&nbsp;40e478&nbsp;98&nbsp;tclProc.c&nbsp;1406</B>
+<P>
+Calls to <B>ckfree</B> are traced in the same manner, except that the
+word <I>ckalloc</I> is replaced by the word <I>ckfree</I>.
+<DT><B>memory validate</B> [<B>on|off</B>]
+
+<DD>
+<BR>
+
+使内存生效(validation)开启或关闭。在开启内存生效的时候，在对<B>ckalloc</B> 或 <B>ckfree </B>的每次调用上，检查用 <B>ckalloc </B>分配的每块现存的内存的守卫区(guard zone)。这有很大的性能影响而只在强烈怀疑有覆写(overwrite)问题的时候才使用。开启内存生效的益处是在覆写发生之后第一次调用 <B>ckalloc</B>   或 <B>ckfree</B>   的时候就能检测到守卫区覆写，而不是在释放有覆写守卫区的内存的时候，释放可能在内存覆写发生之后才发生。
+<DT><B>memory trace_on_at_malloc</B> <I>nnn</I>
+
+<DD>
+<BR>
+
+在进行了 <I>count</I><I> </I>数目 <B>ckalloc </B>之后启用内存跟踪。例如，如果你键入了 <B>memory trace_on_at_malloc 100</B>，在第   100 次调用 <B>ckalloc </B>之后，将对所有分配和释放的内存显示内存跟踪信息。因为在一个问题发生之前可能有许多内存活动，如果你能在问题出现( sets in)之前标识出一定数目的分配，决定(judicious)使用这个选项可以减轻跟踪导致的速度变慢(和生成的跟踪信息总数)。在发生一个守卫区错误时，输出自从 Tcl  启动以来发生的内存分配的当前数目。     
+<DT><B>memory break_on_malloc</B> <I>nnn</I>
+
+<DD>
+<BR>
+
+在进行了 <B></B><I>count</I>  数目的 <B>ckalloc</B>  分配之后，输出一个(中断)消息，表示它现在想进入 C 调试器。  Tcl  将向自身发出一个 <I>SIGINT</I>  信号。如果你在一个 C  调试器下运行 Tcl，它将接着进入调试器命令模式。     
+<DT><B>memory display</B> <I>file</I>
+
+<DD>
+<BR>
+
+向指定文件写当前所有分配的内存的一个列表。
+</DL>
+<A NAME="lbAM">&nbsp;</A>
+<H2>DEBUGGING DIFFICULT MEMORY CORRUPTION PROBLEMS</H2>
+
+<P>
+
+Normally, Tcl compiled with memory debugging enabled will make it easy to isolate
+a corruption problem.  Turning on memory validation with the memory command
+can help isolate difficult problems.
+If you suspect (or know) that corruption is 
+occurring before the Tcl interpreter comes up far enough for you to
+issue commands, you can set <B>MEM_VALIDATE</B> define, recompile 
+tclCkalloc.c and rebuild Tcl.  This will enable memory validation
+from the first call to <B>ckalloc</B>, again, at a large performance impact.
+<P>
+
+If you are desperate and validating memory on every call to <B>ckalloc</B>
+and <B>ckfree</B> isn't enough, you can explicitly call
+<B>Tcl_ValidateAllMemory</B> directly at any point.  It takes a <I>char *</I>
+and an <I>int</I> which are normally the filename and line number of the
+caller, but they can actually be anything you want.  Remember to remove
+the calls after you find the problem.
+<A NAME="lbAN">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+ckalloc, ckfree, free, memory, malloc
+<P>
+<P>
+<A NAME="lbAO">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAP">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/09/28</B>
+
+<A NAME="lbAQ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">ARGUMENTS</A><DD>
+<DT><A HREF="#lbAE">描述 DESCRIPTION</A><DD>
+<DL>
+<DT><A HREF="#lbAF">ckalloc</A><DD>
+<DT><A HREF="#lbAG">ckfree</A><DD>
+<DT><A HREF="#lbAH">Tcl_DumpActiveMemory</A><DD>
+<DT><A HREF="#lbAI">Tcl_ValidateAllMemory</A><DD>
+</DL>
+<DT><A HREF="#lbAJ">ENABLING MEMORY DEBUGGING</A><DD>
+<DT><A HREF="#lbAK">GUARD ZONES</A><DD>
+<DT><A HREF="#lbAL">THE MEMORY COMMAND</A><DD>
+<DT><A HREF="#lbAM">DEBUGGING DIFFICULT MEMORY CORRUPTION PROBLEMS</A><DD>
+<DT><A HREF="#lbAN">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAO">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAP">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAQ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

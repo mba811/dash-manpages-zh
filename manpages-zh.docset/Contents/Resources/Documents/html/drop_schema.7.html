@@ -1,0 +1,93 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DROP SCHEMA</TITLE>
+</HEAD><BODY>
+<H1>DROP SCHEMA</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+DROP SCHEMA - 删除一个模式
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+DROP SCHEMA <I>name</I> [, ...] [ CASCADE | RESTRICT ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>DROP SCHEMA</B> 从数据库中删除模式。
+<P>
+
+<BR>&nbsp;模式只能被它的所有者或者超级用户删除。请注意，&nbsp;所有者即使没有拥有模式中任何对象也可以删除模式（以及模式中的所有对象）。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;模式的名字。
+<DT><B>CASCADE</B><DD>
+<BR>&nbsp;自动删除包含在模式中的对象（表，函数，等等）。
+<DT><B>RESTRICT</B><DD>
+<BR>&nbsp;如果模式包含任何对象，则拒绝删除它。这个是缺省。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;从数据库中删除模式&nbsp;mystuff，以及它包含的所有东西：
+<P>
+<PRE>
+DROP SCHEMA mystuff CASCADE;
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>DROP SCHEMA</B> 和 SQL 标准完全兼容， 只不过标准只允许一条命令删除一个模式。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+ALTER SCHEMA [<B><A HREF="/cgi-bin/man/man2html?7+alter_schema">alter_schema</A></B>(7)], CREATE SCHEMA [<B><A HREF="/cgi-bin/man/man2html?l+create_schema">create_schema</A></B>(l)]
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,125 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of array</TITLE>
+</HEAD><BODY>
+<H1>array</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.3<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+array - 操纵数组变量
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>array </B><I>option arrayName</I> ?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<BR>&nbsp;这个命令在由&nbsp;<I>arrayName</I>&nbsp;给出的变量上进行多种操作中的某一项。除了在后面为单独的命令(专门)指定之外，<I>arrayName</I>&nbsp;必须是一个现存的数组变量的名字。<I>option</I>&nbsp;选项决定命令完成何种动作。合法的选项(可以用缩写)有:
+<DL COMPACT>
+<DT><B>array anymore </B><I>arrayName searchId</I><DD>
+如果在一次数组查找中还有元素等待处理则返回 1，如果所有元素都被返回过了则返回 0。<I>SearchId</I> 指示在 <I>arrayName</I> 上检查哪个查找，它必须是从以前的 <B>array startsearch</B> 调用返回的值。如果一个数组的某个元素有空名字时这个选项特别有用，因为从 <B>array nextelement</B> 返回的值不能指示出查找是否完成。
+<DT><B>array donesearch </B><I>arrayName searchId</I><DD>
+这个命令终止一个数组查找并销毁与这个查找有关的所有状态。<I>SearchId</I> 指示在 <I>arrayName</I> 上要要销毁哪个查找，必须时在以前调用 <B>array startsearch</B> 返回的值。返回一个空串。
+<DT><B>array exists </B><I>arrayName</I><DD>
+如果 <I>arrayName</I> 是一个数组变量返回 1，如果没有叫这个名字的变量或是一个标量变量则返回 0。
+<DT><B>array get </B><I>arrayName</I> ?<I>pattern</I>?<DD>
+返回包含成对的元素的一个列表。每对的第一个元素是在 <I>arrayName</I> 中的元素名，每对的第二个元素是数组元素的值。没定义成对元素的次序。如果没指定 <I>pattern</I>，则数组的所有元素被包括在结果中，如果指定了 <I>pattern</I>，则结果中只包括那些名字匹配 <I>pattern</I>n 的元素(使用 <B>string match</B> 的匹配规则)。如果 <I>arrayName</I> 不是一个数组变量的名字，或者数组不包含元素，则返回一个空列表。
+<DT><B>array names </B><I>arrayName</I> ?<I>pattern</I>?<DD>
+返回在一个列表，它包含数组中匹配 <I>pattern</I> 的所有元素的名字(使用 <B>string match</B> 匹配规则)。 如果省略了 <I>pattern</I> 则命令返回在数组中所有元素的名字。如果在数组中没有(匹配的)元素，或者 <I>arrayName</I>e 不是一个数组变量的名字，则返回一个空串。
+<DT><B>array nextelement </B><I>arrayName searchId</I><DD>
+返回在 <I>arrayName</I> 中下一个元素的名字，如果在这个查找中所有 <I>arrayName</I> 的元素都被已经被返回过了则返回空串。<I>searchId</I> 参数标识一个查找，并且必须是 <B>array startsearch</B> 命令的返回值。 警告: 如果从这个数组中添加或删除元素，那么自动的终止所有的查找，有如调用了 <B>array donesearch</B>，这将导致对这些查找的 <B>array nextelement</B> 操作失败。
+<DT><B>array set </B><I>arrayName list</I><DD>
+设置在 <I>arrayName</I> 中的一个或多个元素的值。list 的形式必须与 <B>array get</B> 返回的相同，由偶数个元素组成的。在 <I>list</I> 中每个奇数元素被作为在 <I>arrayName</I> 中被作为一个元素名对待，后面跟随的 <I>list</I> 中的元素被作为这个数组元素的新值使用。如果变量 <I>arrayName</I> 不存在并且 <I>list</I> 是空, 建立是空值的 <I>arrayName</I>。
+<DT><B>array size </B><I>arrayName</I><DD>
+返回一个给出在一个数组中的元素个数的一个十进制数的字符串。如果 <I>arrayName</I> 不是一个数组的名字则返回 0。
+<DT><B>array startsearch </B><I>arrayName</I><DD>
+这个命令在用 <I>arrayName</I> 给出的数组上初始化一个逐个元素的查找，调用 <B>array nextelement</B> 命令将返回在数组中单独元素的名字。在查找完成的时候，要调用 <B>array donesearch</B> 命令。返回值是一个在 <B>array nextelement</B> 和 <B>array donesearch</B> 命令中必须要用的查找标识符；对同一个数组允许多个查找同时进行。
+<P>
+
+
+
+
+
+
+
+<P>
+<DT><B>array unset </B><I>arrayName</I> ?<I>pattern</I>?<DD>
+在一个数组中删除匹配 <I>pattern</I> 的所有元素(使用 <B>string match</B> 的匹配规则)。如果 <I>arrayName</I> 不是一个数组变量的名字或在数组中没有匹配的元素，则返回一个空数组。如果是一个数组变量的名字并且省略了 <I>pattern</I> ，则命令删除整个数组。 
+<P>
+
+
+
+
+
+
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+array, element names, search
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/22</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

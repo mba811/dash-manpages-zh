@@ -1,0 +1,129 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of list</TITLE>
+</HEAD><BODY>
+<H1>list</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+list - 建立一个列表
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>list </B>?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令返回由所有 <I>arg</I> 组成的一个列表，如果未指定 <I>arg</I> 则返回一个空串。可按需要增加花括号和反斜线，这样就可以在结果上使用 <B>index</B>  命令来提取原始的参数，还可以用 <B>eval</B>  执行这个结果列表，(执行时)加上由这个命令的名字组成的 <I>arg1</I> 和又它的参数组成的其他 <I>arg</I>s 。<B>List</B>  与 <B>concat </B>生成的结果有细微的区别:  <B>concat</B>  在形成列表之前去除一层组合，而 <B>list</B>  直接用原始参数来工作。例如，命令
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>list a b {c d e} {f {g h}}</B>
+
+</PRE>
+
+</DL>
+
+
+将返回
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>a b {c d e} {f {g h}}</B>
+
+</PRE>
+
+</DL>
+
+
+而加了同样参数的 <B>concat</B>  将返回
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>a b c d e f {g h}</B>
+
+</PRE>
+
+</DL>
+
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+lappend">lappend</A>(n), <A HREF="/cgi-bin/man/man2html?n+lindex">lindex</A>(n), <A HREF="/cgi-bin/man/man2html?n+linsert">linsert</A>(n), <A HREF="/cgi-bin/man/man2html?n+llength">llength</A>(n), <A HREF="/cgi-bin/man/man2html?n+lsearch">lsearch</A>(n), <A HREF="/cgi-bin/man/man2html?n+lsort">lsort</A>(n),
+<A HREF="/cgi-bin/man/man2html?n+lrange">lrange</A>(n), <A HREF="/cgi-bin/man/man2html?n+lreplace">lreplace</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+element, list
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/09/06</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

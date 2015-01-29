@@ -1,0 +1,171 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PG_DUMPALL</TITLE>
+</HEAD><BODY>
+<H1>PG_DUMPALL</H1>
+Section: PostgreSQL Client Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+pg_dumpall - 抽出一个 PostgreSQL 数据库集群到脚本文件中
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>pg_dumpall</B> [ <B></B><I>option</I><B></B>...<B> </B>]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>pg_dumpall</B> 是一个用于写出（&quot;转储&quot;）一个数据库集群里的所有 PostgreSQL 数据库到一个脚本文件的工具。 该脚本文件包含可以用于作为 <B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1) 的输入恢复数据库的SQL命令。 它通过对数据库集群里的每个数据库调用 <B><A HREF="/cgi-bin/man/man2html?1+pg_dump">pg_dump</A></B>(1) 实现这个功能。 <B>pg_dumpall</B> 还转储出所有数据库公用的全局对象。 （<B><A HREF="/cgi-bin/man/man2html?1+pg_dump">pg_dump</A></B>(1) 并不保存这些对象。） 这些信息目前包括数据库用户和组，以及适用于整个数据库的访问权限。
+<P>
+
+<BR>&nbsp;因此，<B>pg_dumpall</B>&nbsp;是备份你的数据库的一体化解决方案。&nbsp;但是请注意它的局限性：它无法转储&quot;大对象&quot;，因为&nbsp;<B>pg_dump</B>&nbsp;&nbsp;无法把这样的对象转储到纯文本文件中。如果你的数据库里有大对象，&nbsp;那么你应该使用&nbsp;<B>pg_dump</B>&nbsp;的非文本输出格式之一转储它们。
+<P>
+
+<BR>&nbsp;因为&nbsp;pg_dumpall&nbsp;从所有数据库中读取表，&nbsp;所以你很可能需要以数据库超级用户的身份联接，这样才能生成完整的转储。&nbsp;同样，你也需要超级用户的权限执行保存下来的脚本，这些才能增加用户和组，&nbsp;以及创建数据库。
+<P>
+
+SQL脚本将写出到标准输出。你应该使用合适的 shell 操作符把它重定向到文件。
+<P>
+
+<B>pg_dumpall</B> 需要和 PostgreSQL  服务器连接多次，可能每次都问你口令。这种情况下写一个 <I>$HOME/.pgpass</I> 可能会比较方便。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<BR>&nbsp;下列命令行参数用于控制输出格式：
+<DL COMPACT>
+<DT><B>-a</B><DD>
+<DT><B>--data-only</B><DD>
+<BR>&nbsp;只转储数据，不转储模式（数据定义）。
+<DT><B>-c</B><DD>
+<DT><B>--clean</B><DD>
+<BR>&nbsp;包括那些重建之前清理（删除）数据库对象的SQL命令。
+<DT><B>-d</B><DD>
+<DT><B>--inserts</B><DD>
+<BR>&nbsp;把数据当作&nbsp;INSERT&nbsp;命令输出（而不是&nbsp;COPY）。这样将令恢复过程非常缓慢，&nbsp;但是会令输出更容易移植到其他&nbsp;SQL&nbsp;数据库包中。
+<DT><B>-D</B><DD>
+<DT><B>--column-inserts</B><DD>
+<DT><B>--attribute-inserts</B><DD>
+<BR>&nbsp;把数据以某种带着明确字段名（INSERT&nbsp;INTO&nbsp;<I>table</I>&nbsp;&nbsp;(<I>column</I>,&nbsp;...)&nbsp;VALUES&nbsp;...）的&nbsp;<B>INSERT</B>&nbsp;命令形式转储出来。&nbsp;这样会令恢复非常慢，但是如果需要重排字段顺序就是必须的。
+<DT><B>-g</B><DD>
+<DT><B>--globals-only</B><DD>
+<BR>&nbsp;只转储全局对象（用户和组），而不转储数据库。
+<DT><B>-i</B><DD>
+<DT><B>--ignore-version</B><DD>
+<BR>&nbsp;忽略&nbsp;pg_dumpall&nbsp;和数据库服务器之间的版本差别。
+<P>
+<B>pg_dumpall</B> 可以处理来自以前版本的 PostgreSQL 的数据库，但是太老的数据库就不再支持了（目前到 7.0）。 如果你需要覆盖版本检查，那么可以使用这个选项（如果 pg_dumpall  失败了，可别说我们没警告你。）
+<DT><B>-o</B><DD>
+<DT><B>--oids</B><DD>
+<BR>&nbsp;为每个表转储对象标识符（OID）。&nbsp;如果你的应用在某种角度引用了&nbsp;OID&nbsp;字段，那么使用这个选项&nbsp;（比如，在外键约束里）。否则，不应该使用这个选项。
+<DT><B>-s</B><DD>
+<DT><B>--schema-only</B><DD>
+<BR>&nbsp;只转储模式（数据定义），不转储数据。
+<DT><B>-v</B><DD>
+<DT><B>--verbose</B><DD>
+<BR>&nbsp;声明冗余模式。这样将令&nbsp;pg_dumpall&nbsp;&nbsp;向标准错误打印进度信息。
+<DT><B>-x</B><DD>
+<DT><B>--no-privileges</B><DD>
+<DT><B>--no-acl</B><DD>
+<BR>&nbsp;避免转储访问权限（授权/撤销命令）。
+</DL>
+<P>
+
+<P>
+
+<BR>&nbsp;下面的命令行参数控制数据库连接参数。
+<DL COMPACT>
+<DT><B>-h </B><I>host</I><B></B><DD>
+<BR>&nbsp;声明数据库服务器所运行的机器的主机名。&nbsp;如果数值以斜扛开头，那么就把它用做&nbsp;Unix&nbsp;域套接字的目录。&nbsp;缺省是从&nbsp;PGHOST&nbsp;环境变量里拿来的（如果设置了），&nbsp;否则使用&nbsp;Unix&nbsp;域套接字。
+<DT><B>-p </B><I>port</I><B></B><DD>
+<BR>&nbsp;声明服务器监听的&nbsp;TCP&nbsp;端口号或者&nbsp;Unix&nbsp;域套接字文件扩展。&nbsp;缺省是&nbsp;PGPORT&nbsp;环境变量（如果设置了），&nbsp;或者是编译时的缺省。
+<DT><B>-U </B><I>username</I><B></B><DD>
+<BR>&nbsp;以给定用户身分联接。
+<DT><B>-W</B><DD>
+<BR>&nbsp;强制口令提示。如果服务器需要口令认证，那么这个动作应该自动发生。
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>PGHOST</B><DD>
+<DT><B>PGPORT</B><DD>
+<DT><B>PGUSER</B><DD>
+<BR>&nbsp;缺省连接参数。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;因为&nbsp;pg_dumpall&nbsp;内部调用&nbsp;pg_dump，所以，一些诊断信息&nbsp;可以参考&nbsp;pg_dump。
+<P>
+
+<BR>&nbsp;恢复完之后，我们建议在每个已恢复的对象上运行&nbsp;<B>ANALYZE</B>。&nbsp;这样优化器就可以得到有用的统计。&nbsp;你也可以用&nbsp;<B>vacuumdb&nbsp;-a&nbsp;-z</B>&nbsp;清理所有数据库。
+<A NAME="lbAH">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;转储所有数据库：
+<P>
+<PRE>
+$ <B>pg_dumpall &gt; db.out</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;重新载入这个数据库：
+<P>
+<PRE>
+$ <B>psql -f db.out template1</B>
+
+</PRE>
+
+<BR>&nbsp;（在这里你和哪个数据库联接并不重要，因为&nbsp;pg_dumpall&nbsp;创建的脚本文件将包含合适的命令用于创建和联接保存的数据库。）
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?1+pg_dump">pg_dump</A></B>(1). Check there for details on possible
+error conditions.
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAG">NOTES 注意</A><DD>
+<DT><A HREF="#lbAH">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

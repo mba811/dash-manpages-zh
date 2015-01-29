@@ -1,0 +1,628 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MAKEDEV</TITLE>
+</HEAD><BODY>
+<H1>MAKEDEV</H1>
+Section: Linux Programmer's Manual (8)<BR>Updated: 14th August 1994<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+MAKEDEV - 建立设备
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>cd dev; ./MAKEDEV -V</B>
+
+<BR>
+
+<B>cd dev; ./MAKEDEV [ -n ] [ -v ] update</B>
+
+<BR>
+
+<B>cd dev; ./MAKEDEV [ -n ] [ -v ] [ -d ]</B><I> device ...</I>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>MAKEDEV</B>
+
+是 一个 脚本程序, 用于 在 /dev 目录下 建立 设备, 通过 这些 设备文件
+可以 访问 位于 内核 的 驱动程序.
+<P>
+
+注意, 如果 应用程序 显示 出错信息 ``ENOENT: No such file or directory'',
+一般指 设备文件 不存在, 而 ``ENODEV: No such device'' 则 表明 内核 没有
+配置 或 装载 相应的 驱动程序.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+<DL COMPACT>
+<DT><B>-V</B>
+
+<DD>
+显示 版本信息 (实际上 是 RCS 版本信息) 然后 退出.
+<DT><B>-n</B>
+
+<DD>
+并不做 真正的 更新, 只是 显示 一下 它的 执行 效果.
+<DT><B>-d</B>
+
+<DD>
+删除 设备文件. 主要 供
+<B>MAKEDEV</B>
+
+自己 用.
+<DT><B>-v</B>
+
+<DD>
+繁琐模式.  显示出 执行的 每一个 动作.  它的 输出内容 和
+<B>-n</B>
+
+选项 的 输出内容 一样.
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>自定义 (CUSTOMISATION)</H2>
+
+由于 目前 还没有 系统 用户 和 用户组 的 标准名称,
+你 可能 需要 修改
+<B>MAKEDEV</B>
+
+以 配合 你的 系统设置.
+在 这个 程序 的 开始位置, 定义了 从 设备类型 到 用户, 用户组 和 访问权限
+的 映射关系 (例如, 所有的 CD-ROM 设备 通过 $cdrom 变量 设置).  
+如果 你 打算 改变 缺省定义, 就需要 编辑 这个 部分.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>设备 (DEVICES)</H2>
+
+<DL COMPACT>
+<DT><B>基本选项 (General Option)</B>
+
+<DD>
+<DT><B>update</B>
+
+<DD>
+该选项 只用于 实现了 /proc/interrupts 的 内核(从 1.1.x 开始).
+MAKEDEV 扫描 这个文件, 检查 目前 内核 配置了 什么设备, 它 和 上次
+配置 的 设备 做 比较 (记录在 文件 DEVICES 中), 创建 新设备 或
+主设备号 不相同 的 设备, 删除 没有 配置的 设备.
+<DT><B>generic</B>
+
+<DD>
+创建 通用设备 子集. 包括 标准设备, 软驱, 各种硬驱, 伪终端,
+控制台设备, 基本串行设备, 总线鼠标 和 打印口.
+<DT><B>std</B>
+
+<DD>
+标准设备.
+它们有:
+<DL COMPACT><DT><DD>
+<B>mem</B>
+
+- 访问 物理内存;
+</DL>
+
+<DL COMPACT><DT><DD>
+<B>kmem</B>
+
+- 访问 内核虚拟内存;
+</DL>
+
+<DL COMPACT><DT><DD>
+<B>null</B>
+
+- 空设备 (无限写入 infinite sink);
+</DL>
+
+<DL COMPACT><DT><DD>
+<B>port</B>
+
+- 访问 I/O 端口;
+</DL>
+
+<DL COMPACT><DT><DD>
+<B>zero</B>
+
+- 空(0)字节 来源 (无限读出 infinite source);
+</DL>
+
+<DL COMPACT><DT><DD>
+<B>core</B>
+
+- /proc/kcore 的 符号连接 (用于 内核除错);
+</DL>
+
+<DL COMPACT><DT><DD>
+<B>full</B>
+
+- 写访问 这个设备 一定 返回 ENOSPACE;
+</DL>
+
+<DL COMPACT><DT><DD>
+<B>ram</B>
+
+- 虚拟磁盘 (ramdisk);
+</DL>
+
+<DL COMPACT><DT><DD>
+<B>tty</B>
+
+- 访问 进程 的 控制终端.
+</DL>
+
+<DT><B>local</B>
+
+<DD>
+运行
+<B>MAKEDEV.local</B>.
+
+它是个 脚本程序, 用来 创建 各种 本地设备 (local devices).
+<DT><B>虚拟终端 (Virtual Terminal)</B>
+
+<DD>
+<DT><I>console</I>
+
+<DD>
+用于 建立 关联(associate) 控制台 的 设备.  就是 虚拟终端
+tty<I>x</I>,
+
+<I>x</I>
+
+从 0 到 63.  设备 tty0 是 当前的 活动 虚拟终端, 也就是 console.  
+每个 虚拟终端 有 两个 设备, 
+vcs<I>x</I>
+
+和
+vcsa<I>x</I>,
+
+用做 虚拟终端 的 屏幕转储(screen-dump),
+<B>vcs</B><I>x</I>
+
+只有 文本,
+<B>vcsa</B><I>x</I>
+
+还包括 属性.
+<DT><B>串行设备 (Serial Device)</B>
+
+<DD>
+<DT><I>ttyS{0..63}</I>
+
+<DD>
+串行口 和 对应的 拨出设备(dial-out). 对于
+<B>ttyS</B><I>x</I>
+
+设备, 有 同样的 设备
+<B>cua</B><I>x</I>
+
+用于 拨出. 在 一些 简单 的 应用环境, 这种 形式 可以 避免 使用 协作锁.
+<DT><I>cyclades</I>
+
+<DD>
+用于 cyclades 智能 I/O 串行卡 的 拨入和拨出 设备.
+拨入设备 是
+<B>ttyC</B><I>x</I><B>,</B>
+
+对应的 拨出设备 是
+<B>cub</B><I>x</I><B>.</B>
+
+缺省情况是 创建 7线 设备, 但是 去掉 注释 可以 改成 15线.
+<DT><B>伪终端 (Pseudo Terminal)</B>
+
+<DD>
+<DT><I>pty[p-s]</I>
+
+<DD>
+参数中的 每个字符 可以 创建 一组 共 16 个 主从伪终端对.
+1.2 版本的 内核 支持 64 对. 主伪终端 是
+<B>pty[p-s][0-9a-f]</B>,
+
+从伪终端是
+<B>tty[p-s][0-9a-f]</B>.
+
+<DT><B>并行口 (Parallel Port)</B>
+
+<DD>
+<DT><I>lp</I>
+
+<DD>
+标准并行口.  创建的 设备 是 
+<B>lp0</B>,
+
+<B>lp1</B>
+
+和
+<B>lp2</B>.
+
+它们 对应的 端口 是 0x3bc, 0x378 和 0x278.
+因此, 有些 机器 上 的 第一个 打印口 是
+<B>lp1</B>.
+
+<DT><I>par</I>
+
+<DD>
+<I>lp</I>
+
+的替换. 端口 由
+<B>par</B><I>x</I>
+
+命名, 代替了
+<B>lp</B><I>x</I><B>.</B>
+
+<DT><B>总线鼠标 (Bus Mice)</B>
+
+<DD>
+<DT><I>busmice</I>
+
+<DD>
+各种 总线鼠标 设备. 有
+<B>logimouse</B>
+
+(Logitech bus mouse),
+<B>psmouse</B>
+
+(PS/2-style mouse),
+<B>msmouse</B>
+
+(Microsoft Inport bus mouse) 和
+<B>atimouse</B>
+
+(ATI XL bus mouse) 和
+<B>jmouse</B>
+
+(J-mouse).
+<DT><B>游戏杆设备 (Joystick Device)</B>
+
+<DD>
+<DT><I>js</I>
+
+<DD>
+游戏操纵杆. 创建
+<B>js0</B>
+
+和
+<B>js1</B>.
+
+<DT><B>Disk Devices</B>
+
+<DD>
+<DT><I>fd[0-7]</I>
+
+<DD>
+软驱设备. 
+<B>fd</B><I>x</I>
+
+设备 能够 自动检测 (盘面)格式, 其他设备 采用 固定格式, 在 名字中 指定 容量.
+命名格式 是
+<B>fd</B><I>xLn</I><B>,</B>
+
+字母
+<I>L</I>
+
+表明 软盘 规格 (d = 5.25&quot; DD, h = 5.25&quot; HD, D = 3.5&quot; DD, H = 3.5&quot; HD, 
+E = 3.5&quot; ED).  数字
+<I>n</I>
+
+代表 这种规格下 的 盘面 容量 (单位是K).  因此 标准的容量 是
+<B>fd</B><I>x</I><B>d360</B><I>,</I>
+
+<B>fd</B><I>x</I><B>h1200</B><I>,</I>
+
+<B>fd</B><I>x</I><B>D720</B><I>,</I>
+
+<B>fd</B><I>x</I><B>H1440</B><I>,</I>
+
+和
+fd<I>x</I>E2880<I>.</I>
+
+<DT><DD>
+更多的 内容 请参看 Alain Knaff 的 fdutils 发行包.
+<DT><DD>
+从
+<B>fd0</B><I>*</I>
+
+到
+<B>fd3</B><I>*</I>
+
+的 设备 是 第一个 控制器 上的 软驱, 而
+<B>fd4</B><I>*</I>
+
+到
+<B>fd7</B><I>*</I>
+
+则 位于 第二个 控制器 上.
+<DT><I>hd[a-d]</I>
+
+<DD>
+AT 硬盘. 设备
+<B>hd</B><I>x</I>
+
+提供 对 整个 硬盘 的 访问, 访问 分区 用
+<B>hd</B><I>x</I><B>[0-20].</B>
+
+四个 主分区 从
+<B>hd</B><I>x</I><B>1</B>
+
+到
+<B>hd</B><I>x</I><B>4,</B>
+
+它们的 逻辑分区 从
+<B>hd</B><I>x</I><B>5</B>
+
+开始 到
+<B>hd</B><I>x</I><B>20.</B>
+
+(主分区 可以 配置为 扩展分区, 扩展分区 可以 容纳 4个 逻辑分区).
+缺省情况下, 一个 设备 只创建 4个 逻辑分区.  如果 要求 更多的 逻辑分区,
+可以 在 MAKEDEV 中 去掉 相应的 注释.
+<DT><DD>
+驱动器 hda 和 hdb 位于 第一个 控制器 上. 如果 使用 新型的 IDE 驱动器
+(而非 老式的 HD 驱动器), 还会有 hdc 和 hdd, 在 第二个 磁盘控制器上.
+这些设备 同样可以 访问 IDE CDROM 驱动器.
+<DT><I>xd[a-d] </I>
+
+<DD>
+XT 硬盘. 分区结构 和 IDE 硬盘 一样.
+<DT><I>sd[a-z], sd[a-c][a-z], sdd[a-x]</I>
+
+<DD>
+SCSI 硬盘.  分区结构 和 IDE 硬盘 类似, 但是 逻辑分区 限制在 11 个 以内,
+(sd<I>x</I>5
+
+到
+sd<I>x</I>15).
+
+允许 有 128个 SCSI 硬盘.
+<DT><I>loop</I>
+
+<DD>
+自环(loopback) 磁盘设备. 允许 你 把 普通文件 当做 块设备 使用.
+这 意味着 可以 挂载(mount) 各种 文件系统 的 映像(文件), 用起来
+和 普通 的 文件系统 一样.
+一般 创建  8个 设备, loop0 到 loop7.
+<DT><B>磁带设备 (Tape Device)</B>
+
+<DD>
+<DT><I>st[0-7]</I>
+
+<DD>
+SCSI 磁带.  有 可回卷(rewinding)的 磁带设备
+<B>st</B><I>x</I>
+
+和 不可回卷(non-rewinding) 的 
+<B>nst</B><I>x</I><B>.</B>
+
+<DT><I>qic</I>
+
+<DD>
+QIC-80 磁带. 创建 的 设备 有
+<B>rmt8</B>,
+
+<B>rmt16</B>,
+
+<B>tape-d</B>
+
+和
+<B>tape-reset</B>.
+
+<DT><I>ftape</I>
+
+<DD>
+软驱磁带 (QIC-117).  
+根据 不同的 驱动方法, 有 四种 存取 方法 0, 1, 2 和 3, 
+对应 各自的 设备
+<B>rft</B><I>x</I>
+
+(可回卷) 和
+<B>nrft</B><I>x</I>
+
+(不可回卷). 另外 还提供了 兼容设备
+<B>ftape</B>
+
+和
+<B>nftape ,</B>
+
+它们是
+<B>rft0</B>
+
+和
+<B>nrft0</B>
+
+的 符号连接.
+<DT><B>CDROM 设备</B>
+
+<DD>
+<DT><I>scd[0-7]</I>
+
+<DD>
+SCSI CD 播放器.
+<DT><I>sonycd</I>
+
+<DD>
+Sony CDU-31A CD 播放器.
+<DT><I>mcd</I>
+
+<DD>
+Mitsumi CD 播放器.
+<DT><I>cdu535</I>
+
+<DD>
+Sony CDU-535 CD 播放器.
+<DT><I>lmscd</I>
+
+<DD>
+LMS/Philips CD 播放器.
+<DT><I>sbpcd{,1,2,3}</I>
+
+<DD>
+Sound Blaster CD 播放器. 内核 能够 支持 16个 CDROM,
+通过
+<B>sbpcd[0-9a-f]</B>
+
+访问. 它们 每四个 一组 分配 在 各个 控制器 上.
+<B>sbpcd</B>
+
+是
+<B>sbpcd0</B>
+
+的 符号连接.
+
+
+
+<DT><B>扫描仪 (Scanner)</B>
+
+<DD>
+<DT><I>logiscan</I>
+
+<DD>
+Logitech ScanMan32 &amp; ScanMan 256.
+<DT><I>m105scan</I>
+
+<DD>
+Mustek M105 手持式.
+<DT><I>ac4096</I>
+
+<DD>
+A4Tek 彩色手持式.
+<DT><B>音频 (Audio)</B>
+
+<DD>
+<DT><I>audio</I>
+
+<DD>
+建立 供 声音驱动程序 使用的 音频设备.  包括
+<B>mixer</B>,
+
+<B>sequencer</B>,
+
+<B>dsp</B>
+
+和
+<B>audio</B>.
+
+<DT><I>pcaudio</I>
+
+<DD>
+PC 扬声器 声音驱动程序 的 设备. 有
+<B>pcmixer</B>.
+
+<B>pxsp</B>,
+
+和
+<B>pcaudio</B>.
+
+<DT><B>杂项 (Miscellaneous)</B>
+
+<DD>
+<DT><I>sg</I>
+
+<DD>
+通用 SCSI 设备. 从
+<B>sga</B>
+
+到
+<B>sgh ,</B>
+
+<B>sg0</B>
+
+到
+<B>sg7</B>.
+
+它们 允许 对 任何 SCSI 设备 发出 任意指令. 可以 查询 设备信息, 或者 控制
+不是 磁盘, 磁带 或 CDROM 的 SCSI 设备 (例如 扫描仪, 可擦写CDROM).
+<DT><I>fd</I>
+
+<DD>
+允许 任何程序 从 文件描述符
+<I>x</I>
+
+中 获取 输入, 文件名 是
+<B>/dev/fd/</B><I>x</I><B>.</B>
+
+而且 还创建了 
+<B>/dev/stdin</B>,
+
+<B>/dev/stdout</B>,
+
+和
+<B>/dev/stderr</B>.
+
+(注意, 这些 只是 到 /proc/self/fd 的 符号连接).
+<DT><I>ibcs2</I>
+
+<DD>
+IBCS2 模拟器 所需的 设备(和符号连接).
+<DT><I>apm</I>
+
+<DD>
+电源管理设备.
+<DT><I>dcf</I>
+
+<DD>
+DCF-77 radio clock 驱动程序 用的 设备.
+<DT><I>helloworld</I>
+
+<DD>
+内核模块 的 演示设备.  见 模块 源程序.
+<DT><B>网络设备 </B>
+
+<DD>
+Linux 曾经在 /dev 下面 放了一些 设备文件, 用于 控制 网络设备, 现在 取消了. 
+想知道 内核 支持 什么 网络设备, 请 查看 /proc/net/dev.
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+Linux Allocated Devices, H.&nbsp;Peter Anvin 维护, &lt;<A HREF="mailto:Peter.Anvin@linux.org">Peter.Anvin@linux.org</A>&gt;.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>作者 (AUTHOR)</H2>
+
+Nick Holloway, &lt;Nick.Hollowa
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@iname.com">xuming@iname.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/11/03</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">自定义 (CUSTOMISATION)</A><DD>
+<DT><A HREF="#lbAG">设备 (DEVICES)</A><DD>
+<DT><A HREF="#lbAH">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAI">作者 (AUTHOR)</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

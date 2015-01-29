@@ -1,0 +1,95 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of loadTk</TITLE>
+</HEAD><BODY>
+<H1>loadTk</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: 8.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+loadTk - 把 Tk 装载到一个安全解释器中。
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>::safe::loadTk </B><I>slave</I> ?<B>-use</B> <I>windowId</I>? ?<B>-display</B> <I>displayName</I>? 
+<P>
+Safe Tk 基于 Safe Tcl 之上，它提供一种机制，允许对自动装载和安全解释器的包的受限制和有中介的访问。Safe Tk 增加为安全 Tk 操作配置解释器和把 Tk 装载到安全解释器的功能。
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>::safe::loadTk</B> 命令在指明的解释器中初始化需要的数据结构并把 Tk 装载到其中。这个命令返回这个安全解释器的名字。如果指定了 <B>-use</B>，使用由指定的系统决定的标识符 <I>windowId</I> 所标识的窗口来包含这个解释器的 ``.'' 窗口；它可以是任何有效的 id，最终引用属于另一个应用的一个窗口。出于方便，如果你想要使用的窗口是应用的一个 Tk 窗口，则你可以使用这个窗口的名字(比如: <B>.x.y</B>)来替代它的窗口 Id (<B>[winfo id .x.y]</B>)。在未指定 <B>-use</B> 的时候，为这个安全解释器的 ``.'' 窗口建立一个新的顶层窗口。在 X11 上如果你想让嵌入的窗口使用其他的显示器而不是缺省的那个，可以用 <B>-display</B> 指定它。实现的细节请参见下面的安全要点 (<B>SECURITY ISSUES</B>)  章节。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>安全要点 SECURITY ISSUES</H2>
+
+<P>
+
+请阅读 Tcl 的 <B>safe</B> 手册页来获悉对 Safe Tcl 做的基本安全考虑。
+<P>
+
+<B>::safe::loadTk</B> 把从解释器接受的 <B>tk_library</B> 的值增加到安全解释器的虚拟路径上，这样自动装载就能在安全解释器中工作了。
+<P>
+
+<P>
+
+就不信任从解释器对启动的陈述而论，Tk 初始化现在是安全的。<B>::safe::loadTk</B> 注册从解释器的名字，这样在调用 Tk 初始化(<B>Tk_SafeInit</B>)和依次调用主解释器的 <B>::safe::InitTk</B> 的时候，它将返回想要的 <B>argv</B> 等价物(<B>-use</B> <I>windowId</I>，正确的 <B>-display </B>等等...)。
+<P>
+
+在未使用 <B>-use</B> 的时候，对新建立的顶层窗口进行特殊装饰，这样用户总能意识到呈现的用户界面来自潜在不安全的代码并可以轻易的删除相应的解释器。
+<P>
+
+在 X11 上，有冲突的 <B>-use</B> 和 <B>-display</B> 将生成一个致命的 X 错误。
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+safe">safe</A>(n), <A HREF="/cgi-bin/man/man2html?n+interp">interp</A>(n), <A HREF="/cgi-bin/man/man2html?n+library">library</A>(n), <A HREF="/cgi-bin/man/man2html?n+load">load</A>(n), <A HREF="/cgi-bin/man/man2html?n+package">package</A>(n), <A HREF="/cgi-bin/man/man2html?n+source">source</A>(n), <A HREF="/cgi-bin/man/man2html?n+unknown">unknown</A>(n)
+<BR>&nbsp;
+<A NAME="lbAG">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+alias, auto-loading, auto_mkindex, load, master interpreter, safe
+interpreter, slave interpreter, source
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/05/15</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">安全要点 SECURITY ISSUES</A><DD>
+<DT><A HREF="#lbAF">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

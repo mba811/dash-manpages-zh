@@ -1,0 +1,173 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of tclsh</TITLE>
+</HEAD><BODY>
+<H1>tclsh</H1>
+Section: Tcl Applications (1)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tclsh - 包含 Tcl 解释器的简单的 shell    
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>tclsh</B> ?<I>fileName arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<P>
+
+<B>Tclsh</B> 是一个 shell     类应用程序，从它的标准输入或一个文件读 Tcl 命令并对其求值(evaluate)。     如果你不加参数的调用，则它交互式的执行，从标准输入读      Tcl     命令并向标准输出打印命令结果和出错信息。它一直运行直到调用 <B>exit</B>    命令或在它的标准输入上读到文件结束。如果在用户的主(home)目录里存在一个文件        <B>.tclshrc</B>  (或在 Windows 平台上的 <B>tclshrc.tcl</B>)，在从标准输入读第一条命令之前，<B>tclsh</B> 把这个文件作为一个 Tcl 脚本来求值。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>脚本文件 SCRIPT FILES</H2>
+
+<P>
+
+如果加参数调用 <B>tclsh </B>则第一个参数是脚本文件的名字而任何额外的参数作为给脚本使用的变量(见后)。 <B>tclsh</B>        将从指名的文件中读 Tcl      命令而不是从标准输入读取；当到达文件结束时       <B>tclsh</B>  将退出。在这种情况下不自动的对 <B>.tclshrc</B>        求值，如果需要的话，脚本文件总是可以 <B>source</B>(包含)它。
+<P>
+
+如果你建立的 Tcl       脚本文件的第一行是 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>#!/usr/local/bin/tclsh</B>
+
+</PRE>
+
+</DL>
+
+
+则如果你把它标记为可执行的，接着就可以直接在你的 shell   中调用这个脚本文件。这里假定了<B> tclsh</B>  被安装在缺省的位置 /usr/local/bin；如果它被安装在其他地方，那么你需要修改上述行来匹配之。许多 UNIX       系统不允许 <B>#!</B>  行超出     30 个字符的长度，所以要确定 <B>tclsh</B>           可执行文件能被用短文件名访问。
+<P>
+
+一个更好的途径是用下面三行来开始你的脚本文件:         
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>#!/bin/sh
+# the next line restarts using tclsh \
+exec tclsh &quot;$0&quot; &quot;$@&quot;</B>
+
+</PRE>
+
+</DL>
+
+
+这种方法比起前面的段落有三个好处。首先，<B>tclsh</B>    二进制文件的位置不需要填入(hard-wired into) 脚本中:      它可以在你的 shell 查找路径中的任何地方。其次，他超越了(get around)了上种方法的      30 字符的文件名的限制。第三，这种方法在 <B>tclsh</B>  自身也是 shell 脚本时仍可运行(一些系统要处理多体系或操作系统:      <B>tclsh</B>          脚本选择某个二进制文件来运行)。第三行导致 <B>sh</B> 和 <B>tclsh</B>      两者来处理脚本，但          <B>exec</B> 只被 <B>sh </B>执行。   <B>sh</B>      首先处理脚本文件；它把第二行作为脚本文件对待并执行第三行。<B>exec</B>      语句导致 shell 停止处理而启动 <B>tclsh</B>      来重新处理整个脚本。当 <B>tclsh</B>      启动时，因为第二行的反斜线导致第三行被作为第二行注释的一部分，它把所有三行都作为注释对待。         
+<P>
+
+
+
+
+
+
+
+
+You should note that it is also common practise to install tclsh with
+its version number as part of the name.  This has the advantage of
+allowing multiple versions of Tcl to exist on the same system at once,
+but also the disadvantage of making it harder to write scripts that
+start up uniformly across different versions of Tcl.
+
+
+
+
+
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>变量 VARIABLES</H2>
+
+<P>
+
+<B>Tclsh</B> 设置了下列 Tcl 变量:         
+<DL COMPACT>
+<DT><B>argc</B><DD>
+包含 <I>arg</I>  参数的个数(没有则为 0)，不包括脚本文件的名字。    
+<DT><B>argv</B><DD>
+包含一个 Tcl 列表，其元素依次是 <I>arg</I>  参数，如果没有 <I>arg</I>    参数则是一个空串。
+<DT><B>argv0</B><DD>
+如果指定了 <I>fileName</I>  则在此包含。否则。包含调用 <B>tclsh</B>    使用的名字。    
+<DT><B>tcl_interactive</B><DD>
+如果交互式运行 <B>tclsh</B>  则包含 1(不指定<I>fileName</I> 并且标准输入是一个终端类设备)，否则是 0。      
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>提示符 PROMPTS</H2>
+
+<P>
+
+当交互式的调用 <B>tclsh</B>  时，它通常为每条命令提示"<B>%</B>"。你可以通过设置变量 <B>tcl_prompt1</B>     和 <B>tcl_prompt2</B> 来改变提示符。如果存在变量    <B>tcl_prompt1</B>  则它必须由一个输出一个提示符的 Tcl     脚本组成；<B>tclsh</B> 对 <B>tcl_prompt1</B>     中的脚本求值而不是输出一个提示符。变量 <B>tcl_prompt2</B>      以类似的方式用在键入了换行而当前命令却不完整的时候；如果没设置     <B>tcl_prompt2</B>   则对不完整的命令不给以提示符。        
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+argument, interpreter, prompt, script file, shell
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/20</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">脚本文件 SCRIPT FILES</A><DD>
+<DT><A HREF="#lbAF">变量 VARIABLES</A><DD>
+<DT><A HREF="#lbAG">提示符 PROMPTS</A><DD>
+<DT><A HREF="#lbAH">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

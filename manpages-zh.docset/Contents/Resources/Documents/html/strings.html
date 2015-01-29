@@ -1,0 +1,224 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of strings</TITLE>
+</HEAD><BODY>
+<H1>strings</H1>
+Section: GNU Development Tools (1)<BR>Updated: 25 June 1993<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+strings - 显示文件中的可打印字符
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+
+
+<DL COMPACT>
+<DT><B>strings</B>
+
+<DD>
+[<B>-a</B>|<B>-</B>|<B>--all</B>]
+
+[<B>-f</B>|<B>--print-file-name</B>]
+
+[<B>-o</B>]
+
+[<B>--help</B>]
+
+[<B>-v</B>|<B>--version</B>]
+
+[<B>-n</B>
+
+<I>min-len</I>|<I>-min-len</I>|<B>--bytes=</B><I>min-len</I>]
+[<B>-t</B>
+
+<I>{o,x,d}</I>[<B>--target=</B><I>bfdname</I>]
+
+|<B>--radix=</B><I>{o,x,d}</I>]
+<I>file</I>
+
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+For each
+<I>file</I>
+
+given, 
+GNU <B>strings</B>
+
+显示 每个 指定的
+<I>file</I>
+
+文件里 包含的 所有 有 4个 (或者 用 选项 指定 的 数字) 以上 连续 可打印 字符 的
+字符串, 在 之后 紧跟着 一个 不可 打印 的 字符. 默认 情况 下, 它 只显示 目标
+文件 初始化 和 装载 段 的 字符串; 对于 其它 类型 的 文件 它 显示 整个 文件 里
+包含 的 所有 字符串.
+<P>
+
+<B>strings</B>
+
+一般 用来 查看 非 文本 文件 的 内容.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+在 这里 并列 的 长选项 和 短选项 都是 等价的.
+<DL COMPACT>
+<DT><B>-a</B>
+
+<DD>
+<DT><B>--all</B>
+
+<DD>
+<DT><B>-</B>
+
+<DD>
+不 只是 扫描 目标 文件 初始化 和 装载 段, 而是 扫描 整个 文件.
+<DT><B>-f</B>
+
+<DD>
+<DT><B>--print-file-name</B>
+
+<DD>
+在 显示 字符串 之前 先 显示 文件名.
+<DT><B>--help</B>
+
+<DD>
+在 标准 输出 打印
+<B>strings</B>
+
+命令 的 选项 
+<P>
+列表
+<P>
+<P>
+然后 退出.
+<DT><B>-v</B>
+
+<DD>
+<DT><B>--version</B>
+
+<DD>
+在 标准 输出 打印
+<B>strings</B>
+
+命令 的 版本号 然后 退出.
+<DT><B>-n </B><I>min-len</I>
+
+<DD>
+<DT><B>-</B><I>min-len</I>
+
+<DD>
+<DT><B>-bytes=</B><I>min-len</I>
+
+<DD>
+打印 至少
+<I>min-len</I>
+
+字符 长 的 字符串. 默认的 是 4.
+<DT><B>-t </B>{o,x,d}
+
+<DD>
+<DT><B>--radix=</B>{o,x,d}
+
+<DD>
+在 字符串 前面 显示 其在 文件 中 的 偏移量. 选项 中 的 单个 字符 指定 偏移量
+的 进制 是 八进制, 十六进制 还是 十进制.
+<DT><B>--target=</B><I>bfdname</I>
+
+<DD>
+指定 一种 目标 代码 格式 来 代替 你的 系统的 默认 格式. 关于 可用的 目标 代码
+格式 请 参见
+<B>objdump</B>(<B>1</B>).
+
+<DT><B>-o</B>
+
+<DD>
+同
+<B>-t o</B>.
+
+</DL>
+<P>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<B>info</B>; 
+<I>The GNU Binary Utilities</I>, Roland H. Pesch (October 1991)
+里的
+`<B>binutils</B>'
+
+节点.
+<B>ar</B>(<B>1</B>),
+
+<B>nm</B>(<B>1</B>),
+
+<B>objdump</B>(<B>1</B>),
+
+<B>ranlib</B>(<B>1</B>).
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>版权 (COPYING)</H2>
+
+版权所有 &#169; 1993 自由软件基金会
+<P>
+
+我们 允许 对本手册的 完全 复制, 前提 是 在所有 副本中 保留 本版权声明 和
+本权益声明.
+<P>
+
+我们 允许 对本手册的 修改版本 进行 复制 和 再分发, 前提是 遵守 上面 逐字复制的
+条款, 以及 确保 因此 所衍生出 成果 也是 使用 和这里 声明的 所有条款 相同的 版权
+和/或 权限声明 发布的.
+<P>
+
+我们 允许 复制 和 分发 本手册的 其它语言的 译文版本, 前提是 遵守 上面 修改版本
+的条款, 区别 是可以 使用 由自由 软件 基金会 批准的 本版权 和/或 权限 条款的
+译文版 代替 其英文 原文．
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/31</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAG">版权 (COPYING)</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

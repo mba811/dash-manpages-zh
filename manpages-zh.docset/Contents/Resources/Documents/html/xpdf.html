@@ -1,0 +1,649 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of xpdf</TITLE>
+</HEAD><BODY>
+<H1>xpdf</H1>
+Section: User Commands  (1)<BR>Updated: 02 Aug 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+xpdf -Portable Document Format(PDF)文件阅读器(版本0.90)
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>xpdf</B>
+
+[选项]
+[<I>PDF文件</I>
+
+[<I>page]]</I>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>Xpdf是一个 Portable Document Format(PDF) 文件阅读软件.(PDF文件也经常被称为Acrobat 文件,这种叫法来源于Adobe公司的PDF软件的名字.) Xpdf运行在UNIX,VMS和OS/2的X Window系统下.</B>
+
+<P>
+
+运行xpdf,只要键入:
+<P>
+
+<DL COMPACT><DT><DD>
+xpdf file.pdf
+</DL>
+
+<P>
+
+<I>file.pdf</I>
+
+是你的PDF文件.文件名字后面可以跟随一个数字,用于指定最先显示的页面的页码,比如:
+<P>
+
+<DL COMPACT><DT><DD>
+xpdf file.pdf 18
+</DL>
+
+<P>
+
+你当然也可以启动xpdf而不打开任何文件.
+<P>
+
+<DL COMPACT><DT><DD>
+xpdf
+</DL>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+方括弧中列出了X资源和相应的选项
+<DL COMPACT>
+<DT><B>-err</B>
+
+<DD>
+将错误信息指定送到/dev/tty而不是标准错误中(此选项当xpdf被其它程序,比如netscape,打开时,十分有用,否则,每个错误都会弹出一个令人讨厌的小窗口).
+<DT><B>-z</B><I> zoom</I>
+
+<DD>
+设定初始的放大因子.放大因子是(-5..5)之间的一个数字,其中0表示72dpi.你也可以通过`page`设定显示页面大小配合窗口大小,或者通过`width`设定显示页面宽度配合窗口宽度.
+[<B>xpdf.initialZoom]</B>
+
+<DT><B>-g</B><I> geometry</I>
+
+<DD>
+设定窗口的初始几何参数.
+(相当于<B>-geometry.)</B>
+
+[<B>xpdf.geometry]</B>
+
+<DT><B>-remote</B><I> name]</I>
+
+<DD>
+启动/连接名为name的xpdf远程服务器(参见后面的&quot;远程服务器模式&quot;部分)
+<DT><B>-raise</B>
+
+<DD>
+建立xpdf远程服务器窗口.(仅适用于-remote时)
+<DT><B>-quit</B>
+
+<DD>
+退出xpdf远程服务器.(仅适用于-remote时)
+<DT><B>-cmap</B>
+
+<DD>
+安装一个自定义的色彩地图.此选项在TrueColor模式下无效.
+[<B>xpdf.installCmap]</B>
+
+<DT><B>-rgb</B><I> number</I>
+
+<DD>
+设置xpdf将要分配的最大RGB值.缺省值是5(即RGB值5x5x5); 设置一个小数值,可以节省色彩表记录.在自定义色彩地图和TrueColor模式下,此选项无效.
+<DT><B>-papercolor</B><I> color</I>
+
+<DD>
+设置&quot;页面色彩&quot;,比如,页面的显示背景.当pdf文件出现类似在字符后填充白色等情况的时候,此选项无法正常工作.
+[<B>xpdf.paperColor]</B>
+
+<DT><B>-eucjp</B>
+
+<DD>
+复制字符时,将日文字符转换成EUC-JP编码.这是至今为止唯一的日文字符转换选项---它的唯一作用就是将非日文字符转换成7-bit的ASCII,以便于配合EUC-JP编码.(此选项只有在编译pdftotext时加上日文支持才有效)
+[<B>xpdf.eucjp</B>]
+
+<DT><B>-t1lib</B><I> font-type</I>
+
+<DD>
+设定使用t1lib类型的字体提供器.选项为`none`(完全不使用t1lib),`plain`(使用non-anti-aliased字体),`low`或`high`(使用low-level或者high-level anti-aliased 字体).
+[<B>xpdf.t1libControl]</B>
+
+<DT><B>-ps</B><I> PS-file</I>
+
+<DD>
+设定缺省的PostScript输出文件的名字.此选项也可以以`|command`的形式,通过某个命令来管道PostScript文件.
+[<B>xpdf.psFile]</B>
+
+<DT><B>-paperw</B><I> size</I>
+
+<DD>
+设定页面宽度,单位是像素点.
+[<B>xpdf.psPaperWidth]</B>
+
+<DT><B>-paperh</B><I> size</I>
+
+<DD>
+设定页面高度,单位是像素点.
+[<B>xpdf.psPaperHeight]</B>
+
+<DT><B>-level1</B>
+
+<DD>
+产生Level1 PostScript文件.输出的PostScript文件相当的大(如果它包含图片的话),但是确可以在Level 1打印机上打印输出.此选项将所有的图像转换成黑白图像.
+[<B>xpdf.psLevel1]</B>
+
+<DT><B>-cmd</B>
+
+<DD>
+打印出命令的执行结果(在调试时有用)
+<DT><B>-q</B>
+
+<DD>
+不打印任何信息或者错误
+<DT><B>-h</B>
+
+<DD>
+打印帮助信息
+(相当于<B>-help)</B>
+
+</DL>
+<P>
+
+一些其他的X选项和资源同样可以如预期的一样执行
+<DL COMPACT>
+<DT><B>-display</B><I> display</I>
+
+<DD>
+[<B>xpdf.display]</B>
+
+<DT><B>-fg</B><I> color</I>
+
+<DD>
+[<B>相当于</B>-foreground]
+
+[<B>xpdf.foreground]</B>
+
+-bg<B> color</B>
+
+(相当于<B>-background)</B>
+
+[<B>xpdf.background]</B>
+
+<DT><B>-font</B><I> font</I>
+
+<DD>
+(<B>相当于</B>-fn)
+
+[<B>xpdf.font]</B>
+
+</DL>
+<P>
+
+色彩和字体选项只影响用户界面部分,不影响PDF文件的显示.(`paper`)
+<P>
+
+下列的X资源没有对应的命令行选项
+<DL COMPACT>
+<DT><B>xpdf.urlCommand</B>
+
+<DD>
+设定,当你点击网络链接时执行的命令.详情参见后面的
+<B>网络浏览器</B>
+
+部分.
+<DT><B>xpdf.japaneseFont</B>
+
+<DD>
+设定用于使用日文字符的相应的X字体模式.缺省的是:
+</DL>
+<P>
+
+<DL COMPACT><DT><DD>
+-*-fixed-medium-r-normal-*-%s-*-*-*-*-*-jisx0208.1983-0
+</DL>
+
+<DL COMPACT>
+<DT><B>xpdf.viKeys</B>
+
+<DD>
+设定将左,右,上和下的滚动由`h`,`l`,`k`和`j`键执行.
+</DL>
+<P>
+
+下面的资源用于设定文件名字使用的14种基本的Type 1字体.
+<P>
+
+<DL COMPACT><DT><DD>
+<B>xpdf.t1TimesRoman</B>
+
+<BR>
+
+<B>xpdf.t1TimesItalic</B>
+
+<BR>
+
+<B>xpdf.t1TimesBold</B>
+
+<BR>
+
+<B>xpdf.t1TimesBoldItalic</B>
+
+<BR>
+
+<B>xpdf.t1Helvetica</B>
+
+<BR>
+
+<B>xpdf.t1HelveticaOblique</B>
+
+<BR>
+
+<B>xpdf.t1HelveticaBold</B>
+
+<BR>
+
+<B>xpdf.t1HelveticaBoldOblique</B>
+
+<BR>
+
+<B>xpdf.t1Courier</B>
+
+<BR>
+
+<B>xpdf.t1CourierOblique</B>
+
+<BR>
+
+<B>xpdf.t1CourierBold</B>
+
+<BR>
+
+<B>xpdf.t1CourierBoldOblique</B>
+
+<BR>
+
+<B>xpdf.t1Symbol</B>
+
+<BR>
+
+<B>xpdf.t1ZapfDingbats</B>
+
+</DL>
+
+<P>
+
+如果激活t1lib,这些Type 1字体将被用于取代X服务器的字体.
+<A NAME="lbAF">&nbsp;</A>
+<H2>控制</H2>
+
+<A NAME="lbAG">&nbsp;</A>
+<H3>屏幕控制在xpdf窗口的底部.</H3>
+
+<DL COMPACT>
+<DT><B>左/右箭头按键</B>
+
+<DD>
+翻到前/后一页
+<DT><B>双左/右箭头按键</B>
+
+<DD>
+向前/后翻动10页
+<DT><B>破折号左/右箭头按键</B>
+
+<DD>
+沿着历史路径向前/后翻动
+<DT><B>`Page`输入框</B>
+
+<DD>
+翻到指定的页码.通过点击激活输入框,输入页码,然后回车.
+<DT><B>放大缩小弹出菜单</B>
+
+<DD>
+调整放大因子.(参见前面-z选项的说明)
+<DT><B>望远镜按键</B>
+
+<DD>
+查找某个文本.
+<DT><B>打印机按键</B>
+
+<DD>
+弹出一个产生PostScript文件的对话框.对话框可以设定需要
+打印的页面和PostScript文件的名字.当文件名字为'-'时,代表
+标准输出,或者用'|command'通过某个命令来管道PostScript,
+比如,'|lpr'.
+<DT><B>'?'按键</B>
+
+<DD>
+弹出一个'about xpdf'窗口.
+<DT><B>链接信息</B>
+
+<DD>
+当鼠标移动到某个链接的上面,`?`和`Quit`按键之间的空间用来显示链接地址或者外部文件名.
+<DT><B>`Quit`按键</B>
+
+<DD>
+退出xpdf.
+</DL>
+<P>
+
+<A NAME="lbAH">&nbsp;</A>
+<H3>菜单</H3>
+
+按鼠标右键,会弹出一个含有以下命令的弹出菜单.
+<DL COMPACT>
+<DT><B>Open...</B>
+
+<DD>
+通过文件选择器打开一个新文件.
+<DT><B>Save PDF...</B>
+
+<DD>
+通过文件选择器保存现有文件.
+<DT><B>Rotate left</B>
+
+<DD>
+将当前页面逆时针旋转90度.
+<DT><B>Rotate right</B>
+
+<DD>
+将当前页面顺时针旋转90度.这两个旋转命令主要是为了那些没有在文件中正确指定旋转信息的PDF文件设计的,即使您的X服务器不支持字体旋转,它依然起作用.
+<DT><B>Quit</B>
+
+<DD>
+退出xpdf.
+</DL>
+<P>
+
+<A NAME="lbAI">&nbsp;</A>
+<H3>字符选择</H3>
+
+按住鼠标并拖动它,可以高亮出一个任意的矩形.任何在此矩形中的字符都会被复制到X选择缓冲中去.
+<P>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H3>链接</H3>
+
+点击一个超级链接可以跳转到此链接的目标地址中去.一个指向某个PDF文件的链接将促使xpdf打开此文件.一个指向某可执行程序的`launch`的链接将弹出一个对话框,如果您点击`ok`,就会执行此程序.URL链接调出某个外部命令.(参见下面网络浏览器部分.)
+<P>
+
+<A NAME="lbAK">&nbsp;</A>
+<H3>滚动</H3>
+
+按住鼠标中键并拖动之,可以滚动页面.
+<P>
+
+<A NAME="lbAL">&nbsp;</A>
+<H3>快捷键</H3>
+
+<DL COMPACT>
+<DT><B>o</B>
+
+<DD>
+通过文件选择器打开一个新PDF文件.
+<DT><B>f</B>
+
+<DD>
+查找字符串.
+<DT><B>n</B>
+
+<DD>
+翻到下一页.
+<DT><B>p</B>
+
+<DD>
+翻到前一页.
+<DT><B>空格键,PageDown键或者Next键</B>
+
+<DD>
+向下滚动当前页面,如果已经到达当前页面低部,则翻到下一页.
+<DT><B>Backspace键,Delete键,PageUp或者Previous键</B>
+
+<DD>
+向上滚动当前页面,如果已经到达页面顶部,则翻到前一页.
+<DT><B>Home键</B>
+
+<DD>
+滚动到当前页面顶部.
+<DT><B>End键</B>
+
+<DD>
+滚动到当前页面低部.
+<DT><B>箭头键</B>
+
+<DD>
+滚动当前页面.
+<DT><B>control-L</B>
+
+<DD>
+更新当前页面.
+<DT><B>q</B>
+
+<DD>
+退出xpdf.
+</DL>
+<A NAME="lbAM">&nbsp;</A>
+<H2>网络浏览器</H2>
+
+如果您希望点击一个指向PDF文件的链接时,从netscape或者mosaic(或者其他的浏览器)中自动启动xpdf,您需要在您的用户目录下修改(或者创建)
+<I>.mime.types</I>
+
+和
+<I>.mailcap</I>
+
+文件.
+在
+<I>.mime.types</I>
+
+中加入一行:
+<P>
+
+<DL COMPACT><DT><DD>
+application/pdf pdf
+</DL>
+
+<P>
+
+在
+<I>.mailcap</I>
+
+中加入:
+<P>
+
+<DL COMPACT><DT><DD>
+# Use xpdf to view PDF files.
+</DL>
+
+<DL COMPACT><DT><DD>
+application/pdf; xpdf -err %s
+</DL>
+
+<P>
+
+确认xpdf在您的可执行查找路径中.
+<P>
+
+当您点击一个PDF文件中的URL链接,xpdf将执行一个由xpdf.urlCommand资源指定的命令,并将资源中`%s`替换为相应的URL.比如,指定netscape打开URL,可以这样设定资源.
+<P>
+
+<DL COMPACT><DT><DD>
+xpdf.urlCommand: netscape -remote `openURL(%s)`
+</DL>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>远程服务器模式</H2>
+
+通过指定一个服务器的名字,xpdf可以以远程服务器模式打开(和文件名,页码).
+<P>
+
+<DL COMPACT><DT><DD>
+xpdf -remote myServer file.pdf
+</DL>
+
+<P>
+
+如果没有xpdf运行在以myServer为名字的服务器模式中,那么一个新的xpdf窗口会被打开.此时,如果键入另一个命令:
+<P>
+
+<DL COMPACT><DT><DD>
+xpdf -remote myServer another.pdf 9
+</DL>
+
+<P>
+
+则不会启动新的xpdf,而前一个xpdf(服务器)将会打开
+<I>another.pdf</I>
+
+并且显示第9页.如果文件名字相同:
+<P>
+
+<DL COMPACT><DT><DD>
+xpdf -remote myServer another.pdf 4
+</DL>
+
+<P>
+
+xpdf服务器将会简单的显示指定的页面.
+<P>
+
+-raise选项通知服务器唤醒它的窗口.它既可以后面跟随文件名和页码也可以单独使用.
+<P>
+
+-quit选项通知服务器关闭窗口并且退出.
+<A NAME="lbAO">&nbsp;</A>
+<H2>选项文件</H2>
+
+xpdf会从您的用户目录(如果有的话)中读取一个叫做
+<I>.xpdfrc</I>
+
+的文件.这个文件可以包含两种条目.
+<DL COMPACT>
+<DT><B>fontpath</B><I> directory</I>
+
+<DD>
+在
+<I>dicrectory</I>
+
+中寻找Type 1字体.
+Xpdf只通过此条目获得字体编码.为了显示,还要通过
+<B>fontmap</B>
+
+条目来布局字体.
+<DT><B>fontmap</B><I> PDF-font</I><B></B><I> X-font</I>
+
+<DD>
+将
+<I>PDF-font</I>
+
+(PDF文件中指定的)布局到
+<I>X-font</I>
+
+中去,X-font必须是一个在像素大小位置上含有`%s`的标准X字体描述.
+</DL>
+<P>
+
+比如,使用
+<P>
+
+<DL COMPACT><DT><DD>
+fontmap TimesCE-Roman -*-times-medium-r-*-*-%s-*-*-*-*-*-iso8859-2
+</DL>
+
+<P>
+
+来布局Central European(Latin-2)版的Times-Roman字体.这里假设您已经安装了适当的X字体(参见
+<B><A HREF="/cgi-bin/man/man2html?1+mkfontdir">mkfontdir</A>(1)</B>
+
+).
+Xpdf理解ISO8859-2编码,所以您不需要这些字体的
+<B>fontpath</B>
+
+条目.
+使用Bakoma Type 1字体,可以这样做:
+<P>
+
+<DL COMPACT><DT><DD>
+fontpath /home/derekn/fonts/bakoma
+<BR>
+
+fontmap cmb10 -bakoma-cmb10-medium-r-normal--%s-*-*-*-p-*-adobe-fontspecific
+<BR>
+
+fontmap cmbsy10 -bakoma-cmbsy10-medium-r-normal--%s-*-*-*-p-*-adobe-fontspecific
+<BR>
+
+etc...
+</DL>
+
+<P>
+
+这里假设Type 1字体在目录
+<I>/home/derekn/fonts/bakoma</I>
+
+下.
+<A NAME="lbAP">&nbsp;</A>
+<H2>臭虫</H2>
+
+不支持TypeType和Type 3字体.
+<A NAME="lbAQ">&nbsp;</A>
+<H2>作者</H2>
+
+The xpdf software and documentation are copyright 1996-1999 Derek
+B. Noonburg (<A HREF="mailto:derekn@foolabs.com">derekn@foolabs.com</A>).
+<A NAME="lbAR">&nbsp;</A>
+<H2>另见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+pdftops">pdftops</A>(1).</B>
+
+<B><A HREF="/cgi-bin/man/man2html?1+pdftotext">pdftotext</A>(1).</B>
+
+<B><A HREF="/cgi-bin/man/man2html?1+pdfinfo">pdfinfo</A>(1).</B>
+
+<B><A HREF="/cgi-bin/man/man2html?1+pdftopbm">pdftopbm</A>(1).</B>
+
+<B><A HREF="/cgi-bin/man/man2html?1+pdfimages">pdfimages</A>(1).</B>
+
+<BR>
+
+<B><A HREF="http://www.foolabs.com/xpdf/">http://www.foolabs.com/xpdf/</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">控制</A><DD>
+<DL>
+<DT><A HREF="#lbAG">屏幕控制在xpdf窗口的底部.</A><DD>
+<DT><A HREF="#lbAH">菜单</A><DD>
+<DT><A HREF="#lbAI">字符选择</A><DD>
+<DT><A HREF="#lbAJ">链接</A><DD>
+<DT><A HREF="#lbAK">滚动</A><DD>
+<DT><A HREF="#lbAL">快捷键</A><DD>
+</DL>
+<DT><A HREF="#lbAM">网络浏览器</A><DD>
+<DT><A HREF="#lbAN">远程服务器模式</A><DD>
+<DT><A HREF="#lbAO">选项文件</A><DD>
+<DT><A HREF="#lbAP">臭虫</A><DD>
+<DT><A HREF="#lbAQ">作者</A><DD>
+<DT><A HREF="#lbAR">另见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

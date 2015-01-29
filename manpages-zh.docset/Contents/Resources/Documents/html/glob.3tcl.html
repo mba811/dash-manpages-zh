@@ -1,0 +1,209 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of glob</TITLE>
+</HEAD><BODY>
+<H1>glob</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.3<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+glob - 返回匹配模式的文件名
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>glob </B>?<I>switches</I>? <I>pattern </I>?<I>pattern ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令用与 csh shell 类似的方式进行文件名的“通配符匹配”。它返回文件名匹配 <I>pattern</I> (模式)参数中的所有文件的一个列表。
+<P>
+
+如果给 <B>glob</B> 的初始参数以 <B>-</B> 开始，则它们将被作为选项来对待。当前支持下列选项开关: 
+
+
+
+
+
+
+
+<DL COMPACT>
+<DT><B>-directory</B> <I>directory</I><DD>
+在这个给定的 <I>directory </I>(目录)中开始查找匹配给定模式的文件。这允许查找名字中包含通配符敏感字符的目录而不需要显式的引用这些字符。这个选项不能与<B>-path</B> 联合使用。
+<DT><B>-join</B><DD>
+把通过剩余的模式参数用目录分隔符连接起来作为一个单一的模式来对待。  
+
+
+
+
+
+
+<DT><B>-nocomplain</B><DD>
+允许返回一个空列表而不是返回一个错误；要是没有这个开关的话，如果结果列表为空则返回一个错误。
+
+
+
+
+
+
+
+<DT><B>-path</B> <I>pathPrefix</I><DD>
+查找有给定的 <I>pathPrefix</I>  (路径前缀)的文件，名字中余下的部分匹配给定模式。这个选项允许查找与一个给定文件有类似的名字的文件，包括名字中包含通配符敏感的字符的情况。这个选项不能与<B>-directory</B> 联合使用。
+<DT><B>-types</B> <I>typeList</I><DD>
+只列出匹配 <I>typeList </I>(类型列表)的文件或目录，在这个列表中的元素有两种形式。第一种形式类似 Unix find 命令的 -type 选项:     
+<I>b</I> (块特殊文件 block special file),
+<I>c</I> (字符特殊文件 character special file),
+<I>d</I> (目录 directory),
+<I>f</I> (单纯文件 plain file),
+<I>l</I> (符号连接 symbolic link),
+<I>p</I> (命名管道 named pipe),
+or <I>s</I> (套接口 socket), 
+在这个列表中可以指定多个类型。<B>Glob</B> 返回至少匹配一个类型的所有文件。
+<DL COMPACT><DT><DD>
+<P>
+
+对于第二种形式指定的类型，所有给出的类型都必须匹配。它们是作为文件权限的 <I>r</I>、<I>w</I>、<I>x</I>和作为特殊权限的实例的 <I>readonly</I>、<I>hidden</I>。在 Macintosh 上，还支持 MacOS 类型和建立者，假定任何四个字符长的项目都是一个 MacOS  类型(例如 <B>TEXT</B>)。有<I>{macintosh type XXXX}</I> 或 <I>{macintosh creator XXXX} </I>形式的项目将分别的匹配类型或建立者。不可识别的类型，或多个 MacOS 类型/建立者指定将导致错误。
+<P>
+
+以混合两种类型，所以 <B>-types {d f r w}</B> 将找到有读<B>和</B>写权限的正规文件<B>或</B>目录。下列命令等价:    
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>glob -type d *</B>
+<B>glob */</B>
+
+</PRE>
+
+</DL>
+
+
+</DL>
+
+但第一种情况不返回尾部的 ``/'' 并且更加不依赖平台。
+</DL>
+
+
+
+
+
+
+
+<DT><B>--</B><DD>
+标志着选项的结束。此后的参数即使以 <B>- </B>开始仍将被作为<I>pattern</I>  对待。         
+</DL>
+<P>
+
+<I>pattern</I>  参数可以包含任意下列特殊字符:  
+<DL COMPACT>
+<DT><B>?</B><DD>
+匹配任何单一字符。
+<DT><B>*</B><DD>
+匹配零个或多个字符的任何序列。
+<DT><B>[</B><I>chars</I><B>]</B><DD>
+匹配在 <I>chars </I>中的任何单一字符。如果 <I>chars</I> 包含 <I>a</I><B>-</B><I>b</I>  形式的一个序列则匹配在 <I>a</I> 和 <I>b</I>  之间(包括它们在内)的任何字符。        
+<DT><B>\</B><I>x</I><DD>
+匹配字符 <I>x</I>。
+<DT><B>{</B><I>a</I><B>,</B><I>b</I><B>,</B><I>...</I>}<DD>
+匹配字符串 <I>a</I>、<I>b</I><I> </I>等中的任何一个。  
+</DL>
+<P>
+
+与 csh 一样， 在一个文件的名字的开始处或紧随“/”之后的那个“.”必须被显式的(explicit)匹配或与一个 {}  构造(construct)相匹配。额外的，所有“/”字符必须显式的匹配。
+<P>
+
+如果在一个 <I>pattern</I>中的第一个是“~”，则它参照一个用户的主目录，这个用户的名字紧随在“~”之后。如果 “~”的后面紧随着一个“/”，则使用 HOME 环境变量的值。
+<P>
+
+<B>glob</B>与 csh globbing 在两个方面有区别。首先，它不排序它的结果列表(如果你想排序的话使用 <B>lsort</B> 命令)。其次，<B>glob</B>  只返回实际存在的文件的名字；在 csh  中除非一个模式包含一个 ?、*、或 [] 构造，否则不检查文件是否存在。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>移植要点 PORTABILITY ISSUES</H2>
+
+<P>
+
+不象其他 Tcl 命令那样接受网络和本地式样的两种名字(关于如何指定本地和网络名字的详情参见 <B>filename</B>手册条目)，而 <B>glob</B>  命令只接受本地名字。
+<P>
+<DL COMPACT>
+<DT><B>Windows</B><DD>
+对于 Windows UNC 名字，路径组成部分中的服务器名和共享名不能包含?、*、或 [] 构造。在 Windows NT 上，如果 <I>pattern</I>  有 ``<B>~</B><I>username</I><B>@</B><I>domain</I>'' 的形式，则它参照一个用户的主目录，这个用户的帐号信息驻留在指定 NT  域控制器上。否则，从本地计算机获取用户帐号信息。在 Windows 95  和 98 上，<B>glob</B>  接受象“.../” 和 “..../”这样的模式，用于连续的更上层的父目录。 
+<P>
+<DT><B>Macintosh</B> <DD>
+在使用了选项 <B>-dir</B>、<B>-join</B> 或 <B>-path </B>的时候，glob 假定给整个模式的目录分隔符是标准的“:”。在不使用这些选项的时候，glob  检查每个模式参数，除非这个模式包含一个“:”，否则使用“/”。
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+file">file</A>(n)
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+exist, file, glob, pattern
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/09/03</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">移植要点 PORTABILITY ISSUES</A><DD>
+<DT><A HREF="#lbAF">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

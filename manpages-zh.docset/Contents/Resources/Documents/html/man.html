@@ -1,0 +1,389 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of man</TITLE>
+</HEAD><BODY>
+<H1>man</H1>
+Section: User Commands  (1)<BR>Updated: September 2, 1995<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+man - 格式化并显示在线帮助手册页
+<BR>
+
+manpath - 定义用户查找man手册页的路径
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+man  [-acdfFhkKtwW] [-m 系统名] [-p &lt;前处理程序&gt;]
+[-C &lt;配置文件&gt;] [-M &lt;路径&gt;] [-P &lt;浏览方式&gt;] [-S &lt;区段清单&gt;] 
+[区段名称] 帮助主题 ...
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>man</B>
+
+格式化并显示在线帮助手册页面。此版本支持
+<B>MANPATH</B>
+
+和
+<B>（MAN）PAGER</B>
+
+环境变量，因此，你可以拥有你自己的一系列
+<B>man</B>
+
+手册页并决定使用哪个程序来显示此格式的页面。如果定义了区段，
+<B>man</B>
+
+将只查找在指定区段内的文档。你也可以通过命令行或环境变量来指定查找区段
+的顺序和预定义将要执行的程序。如果主题中有"/"符号，则将其作为文件名的一部分处理
+，也就是说你可以用
+<B>man ./foo.5</B>
+
+也可以用
+<B>man /cd/foo/bar.1.gz来查看各man 文档。</B>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-C 配置文件</B>
+
+<DD>
+定义man.conf供使用；默认使用的是
+<B>/etc/man.config</B>
+
+。（参见
+<B><A HREF="/cgi-bin/man/man2html?5+man.conf">man.conf</A>(5)）。</B>
+
+<DT><B>-M 路径</B>
+
+<DD>
+定义一组查找man手册页的目录。如果没有指定此参数，系统环境变量
+<B>MANPATH将被使用。</B>
+
+如果查无到此环境变量，则按默认
+<B>/etc/man.config</B>
+
+文件中指定的查找。一个空的
+<B>MANPATH</B>
+
+子字
+符串表示使用默认清单。
+<DT><B>-P 浏览方式</B>
+
+<DD>
+定义浏览的方式。此选项将覆盖
+<B>MANPAGER</B>
+
+环境变量（此变量将覆盖
+<B>PAGER</B>
+
+变量）。若不指定
+此参数，则使用
+<B>MANPAGER</B>
+
+或
+<B>PAGER</B>
+
+环境变量中的设置。此选项的预设的显示方式为
+<B>/usr/bin/less-is。</B>
+
+<DT><B>-S 区段清单</B>
+
+<DD>
+该清单是一组用冒号分隔的欲查找的手册清单。此选项将覆盖
+<B>MANSECT</B>
+
+环境变量。
+有些指令或程序可能有一个以上的主题，它们位于不同的区段中。因此，要查看较后的区
+段，你可以在此指定
+<B>man</B>
+
+查找区段的顺序。具体区段划分如下所示：
+<DL COMPACT><DT><DD>
+区段1：用户指令
+<BR>
+
+区段2：系统调用
+<BR>
+
+区段3：程序库调用
+<BR>
+
+区段4：设备
+<BR>
+
+区段5：文件格式
+<BR>
+
+区段6：游戏
+<BR>
+
+区段7：杂项
+<BR>
+
+区段8：系统指令
+<BR>
+
+区段9：内核内部指令
+<BR>
+
+区段n：Tcl或Tk指令
+</DL>
+
+<DT><B>-a</B>
+
+<DD>
+默认情况下，man在显示完每一个所查到的man手册页时会自动退出程序。而使用此选项
+，则可使man显示所有与此主题相匹配的手册页内容，而不仅仅是第一项。
+<DT><B>-c</B>
+
+<DD>
+即使已存在最近已排版过的帮助文件（即以前曾查询过该主题的帮助文档），使用该参
+数后仍会再次执行一次排版操作。此参数适用于已排版过的帮助文件已损坏或屏幕的行列数有
+改变时。
+<DT><B>-d</B>
+
+<DD>
+不显示帮助文档的具体内容，只显示调试排错信息。
+<DT><B>-D</B>
+
+<DD>
+既显示帮助文档内容，同时又显示调试排错信息。
+<DT><B>-f</B>
+
+<DD>
+相当于运行whatis 的操作。即：显示工具指令与工具程序的简单说明。
+<DT><B>-F 或 --preformat</B>
+
+<DD>
+只进行格式化操作，而不真正的显示出来。
+<DT><B>-h</B>
+
+<DD>
+显示man的语法和参数说明，执行完成后退出程序。
+<DT><B>-k</B>
+
+<DD>
+查当于使用
+<B>apropos</B>
+
+命令。
+<DT><B>-K</B>
+
+<DD>
+在所有的帮助文件中查找包含有指定关键字的帮助文档。此操作可能很慢，所以在使用
+此参数时最好配合-s 的参数来查找指定区段。（这只是一个粗略的概念，在作者本人的机器
+上每分钟可查500个man文档。）
+<DT><B>-m</B>
+
+<DD>
+系统名
+定义所要查找的man文档所属的系统名。
+<DT><B>-p</B>
+
+<DD>
+字串
+定义在排版帮助文件这前所要执行的预处理程序的次序。不是所有的安装都有完整预处理
+程序组。一般有6个预处理程序，它们是：eqn(e)、grap(g)、pic(p)、tbl(t)、vgrind(v)和
+reger(r)。此参数将覆盖环境变量MANROFFSEQ。
+<DT><B>-t</B>
+
+<DD>
+使用
+<B>/usr/bin/groff - Tps - mandoc</B>
+
+来排版man手册页，并输出到标准输出。从
+<B>/usr/bin/groff - Tpa - madoc</B>
+
+输出的内容可能需要某些其它过滤才能真正输出到标准输出打印。
+<DT><B>-w 或 --path</B>
+
+<DD>
+不显示帮助文档的具体内容而只显示相应帮助主题文件的位置。如果没有给定参数，则将
+在标准输出显示一组由man所查到的相匹配的man 文档所在目录。如果命令manpath是一个到m
+an的链接，那么执行"manpath"就相当于执行"man --path"。
+<DT><B>-W</B>
+
+<DD>
+相当于-w参数，但所显示的内容以分行方式显示。此参数方便其它指定或程序对其输出
+做进一步处理，如：
+
+<B>man -aW man | xargs ls -l </B>
+
+
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>CAT页</H2>
+
+Man 会试着对所查的文档进行保存，为的是便于下次使用此帮助页时可节约格式化时间。传
+统上，被格式化的DIR/manX文档会被存储在DIR/catX中，但你可以在
+<B>/etc/man.config</B>
+
+配置文
+件中指定其它的目录。如果所需的cat目录不存在时，系统就不对格式化后的man文档进行保存
+。
+<P>
+
+对于使用man命令的人，man命令可能对其进行setuid的操作。因此，如果一个cat目录属于
+man并且其模式是0755（只有man对其有写的权限），而且，cat文件也属于man和其模式是064
+4或0444（只有man对其有写权限或根本就没有写权限），则普通用就不能更改cat文档页，也
+不能在此目录中存放其它文件。而如果man没有执行setuid的操作，那么，为了能使所有用户
+都能存放cat页到cat目录，则必须将这个cat目录设置成0777模式。
+<P>
+
+参数
+<B>-c</B>
+
+可以强制生成一个新的man页，既使已经有一个cat页存在。
+<A NAME="lbAG">&nbsp;</A>
+<H2>环境变量</H2>
+
+<DL COMPACT>
+<DT><B>MANPATH</B>
+
+<DD>
+如果
+<B>MANPATH</B>
+
+有定义，那么它的值将在查找man文档页时做为搜索路径来使用。
+<DT><B>MANROFFSEQ</B>
+
+<DD>
+如果
+<B>MANROFFSEQ</B>
+
+有定义，则此变量的值将用来决定在nroff或troff执行前将要执行的预处
+理程序的次序。默认情况下，手册页会在nroff处理前选取进行表格处理。
+<DT><B>MANSECT</B>
+
+<DD>
+如果
+<B>MANSECT</B>
+
+有定义，它的值将决定man有搜索时的查找区段。
+<DT><B>MANWIDTH</B>
+
+<DD>
+如果MANWIDTH有定义，它的值将决定显示man手册页时的宽度。否则，将是以全屏的方式来
+显示。
+<DT><B>MANPAGER</B>
+
+<DD>
+如果
+<B>MANPAGER</B>
+
+有定义，它的值将指定用来显示man文档的程序。如果没有在此指定，那么将
+使用由PAGER变量指定的程序。如果还是没有指定，那么会默认使用/usr/bin/less -is 。
+<DT><B>LANG</B>
+
+<DD>
+如果
+<B>LANG</B>
+
+有定义，它的值将指定man在查找文档时首先查找的子目录。因此，命令"LAN
+G=dk man 1 foo"会使man在查找man页时首先查找../dk/man1/foo.1，如果在其中没有找到相
+关文档，则查找../man/foo.1，此目录是由查找路径指定的。
+<DT><B>NLAPATH，LC_MESSAGES，LANG</B>
+
+<DD>
+环境变量
+<B>NLAPATH</B>
+
+和
+<B>LC_MESSAGES</B>
+
+（或当后一个不存在时使用
+<B>LANG</B>
+
+）充当了定位文档目录的
+角色。（但英文信息是编译进命令的，所以针对英文而言，就没有目录存在）。注意，象col
+(1)这样被man调用的程序也使用象
+<B>LC_CTYPE</B>
+
+这样的变量。
+<DT><B>PATH</B>
+
+<DD>
+变量
+<B>PATH</B>
+
+是在解释查找man手册页路径时使用的。
+<DT><B>SYSTEM</B>
+
+<DD>
+变量
+<B>SYSTEM</B>
+
+是用来得到默认的系统名（用-m参数可以得到同样的效果）。
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>另见</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+apropos">apropos</A>(1),<A HREF="/cgi-bin/man/man2html?1+whatis">whatis</A>(1),<A HREF="/cgi-bin/man/man2html?1+less">less</A>(1),<A HREF="/cgi-bin/man/man2html?1+groff">groff</A>(1).
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>BUGS</H2>
+
+选项
+<B>-t</B>
+
+只能使用在装有类troff程序的环境中。
+如果在你的显示中出现高亮度的255或&lt;AD&gt;这样的字符而不是连字符，请在你的配置文件中
+写入"LESSCHARSET=latin1"这样的环境变量。
+<A NAME="lbAJ">&nbsp;</A>
+<H2>技巧</H2>
+
+如果你在你的
+<I>.emacs</I>
+
+文件中加入(global-set-key[(f1)](lambda()(interactive)(manuale
+ntry(current-word))))这一行，则当你按F1键时会自动跳出当前鼠标指向的相应程序的man手册页。
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<DL COMPACT>
+<DT>译者：<DD>
+所罗门 &lt;<A HREF="mailto:solomen@email.com.cn">solomen@email.com.cn</A>&gt;
+</DL>
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+第一版
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">CAT页</A><DD>
+<DT><A HREF="#lbAG">环境变量</A><DD>
+<DT><A HREF="#lbAH">另见</A><DD>
+<DT><A HREF="#lbAI">BUGS</A><DD>
+<DT><A HREF="#lbAJ">技巧</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

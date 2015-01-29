@@ -1,0 +1,116 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of read</TITLE>
+</HEAD><BODY>
+<H1>read</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+read - 从一个通道读
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>read </B>?<B>-nonewline</B>? <I>channelId</I>
+<P>
+<B>read </B><I>channelId numChars</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+在第一种形式下，<B>read</B> 命令从 <I>channelId</I> 读出直到文件结束的所有数据。如果指定了 <B>-nonewline</B> 开关，那么文件的最后一个字符要是换行的话则丢弃它。
+
+
+
+
+
+
+
+在第二种情况下，额外的参数指定要读多少个字符。 实际上就读取并返回这么多字符，除非在文件中剩下的字符少于 <I>numChars</I> ；在这种情况下返回所有剩余的字符。如果通道被配置成使用多字节编码，则读的字符数可能与读的字节数不相同。
+<P>
+
+如果 <I>channelId</I> 在非阻塞模式下，这个命令读的字符可能不象要求的那样多: 一旦所有可获得的输入已经被读取了，这个命令将返回这些可获得的数据，而不是为得到更多数据而阻塞。如果通道被配置成使用多字节编码，则实际上可能有一些字节因为不能形成一个完整的字符而保留在内部缓冲区中。一直等到可获得一个完整的字符或到达文件结束，此前不返回这些字节。
+
+
+
+
+
+
+如果命令在到达文件结束之前返回则忽略 <B>-nonewline</B> 开关。
+<P>
+
+<B>Read</B> 依照给通道的 <B>-translation</B> 选项把输入中的行结束转换成换行字符。参见 <B>fconfigure</B> 手册条目来得到关于 <B>fconfigure</B> 如何改变输入的一个讨论。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+file">file</A>(n), <A HREF="/cgi-bin/man/man2html?n+eof">eof</A>(n), <A HREF="/cgi-bin/man/man2html?n+fblocked">fblocked</A>(n), <A HREF="/cgi-bin/man/man2html?n+fconfigure">fconfigure</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+blocking, channel, end of line, end of file, nonblocking, read, translation, encoding
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/18</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

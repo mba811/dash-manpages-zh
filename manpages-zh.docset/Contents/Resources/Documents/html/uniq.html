@@ -1,0 +1,135 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of UNIQ</TITLE>
+</HEAD><BODY>
+<H1>UNIQ</H1>
+Section: FSF (1)<BR>Updated: December 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+uniq - 删除排序文件中的重复行
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>../src/uniq</B>
+
+[<I>OPTION</I>]... [<I>INPUT </I>[<I>OUTPUT</I>]]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+
+<P>
+
+从 INPUT (或 标准输入) 数据 中 忽略 (但是 保留 一行) 连续的 相似行,
+结果 送入 OUTPUT (或 标准输出).
+<DL COMPACT>
+<DT><B>-c</B>, <B>--count</B><DD>
+在 行首 显示 出现 的 数目
+<DT><B>-d</B>, <B>--repeated</B><DD>
+仅显示 重复行
+<DT><B>-D</B>, <B>--all-repeated</B><DD>
+显示 全部 重复行
+<DT><B>-f</B>, <B>--skip-fields</B>=<I>N</I><DD>
+不比较 起初的 N 栏
+<DT><B>-i</B>, <B>--ignore-case</B><DD>
+比较时 忽略 大小写
+<DT><B>-s</B>, <B>--skip-chars</B>=<I>N</I><DD>
+不比较 起初的 N 个 字符
+<DT><B>-u</B>, <B>--unique</B><DD>
+仅显示 无重复行
+<DT><B>-w</B>, <B>--check-chars</B>=<I>N</I><DD>
+每行中 比较 不超过 N 个 字符
+<DT><B>-N</B><DD>
+同 <B>-f</B> N
+<DT>+N<DD>
+同 <B>-s</B> N
+<DT><B>--help</B><DD>
+显示 帮助信息, 然后 结束
+<DT><B>--version</B><DD>
+显示 版本信息, 然后 结束
+</DL>
+<P>
+
+栏(field) 指 一段 空白符(whitespace), 接下来 一段 非空白符.
+字符前 的 栏 被 忽略 (Fields are skipped before chars).
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>作者 (AUTHOR)</H2>
+
+Richard Stallman 和 David MacKenzie.
+<A NAME="lbAF">&nbsp;</A>
+<H2>报告 BUGS</H2>
+
+发现的 bug 送往 &lt;<A HREF="mailto:bug-textutils@gnu.org">bug-textutils@gnu.org</A>&gt;.
+<A NAME="lbAG">&nbsp;</A>
+<H2>版权 (COPYRIGHT)</H2>
+
+Copyright &#169; 1999 Free Software Foundation, Inc.
+<BR>
+
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B>uniq</B>
+
+的 完整文档 以 Texinfo 手册 的 格式 维护. 如果 正确 安装了
+<B>info</B>
+
+和
+<B>uniq</B>
+
+程序, 使用 命令
+<DL COMPACT>
+<DT><DD>
+<B>info uniq</B>
+
+</DL>
+<P>
+
+能够 访问到 完整 的 手册.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">作者 (AUTHOR)</A><DD>
+<DT><A HREF="#lbAF">报告 BUGS</A><DD>
+<DT><A HREF="#lbAG">版权 (COPYRIGHT)</A><DD>
+<DT><A HREF="#lbAH">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

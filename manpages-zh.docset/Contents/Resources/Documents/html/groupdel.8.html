@@ -1,0 +1,96 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of GROUPDEL</TITLE>
+</HEAD><BODY>
+<H1>GROUPDEL</H1>
+Section: Maintenance Commands (8)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+groupdel - Delete a group
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>groupdel</B> <I>group</I>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+groupdel 命令会修改系统帐号档，会删除所有指定群组的信息 . 群组名须存在。
+<P>
+
+你须手动确认一下所有的档案系统确保有没有档案还是没修正群组名变成群组ID。
+<A NAME="lbAE">&nbsp;</A>
+<H2>警告 CAVEATS</H2>
+
+如果有任何一个群组的使用者在线上的话就不能移除该群组。 最好先移除使用者后再移除群组。
+<A NAME="lbAF">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+/etc/group - group information
+<BR>
+
+/etc/gshadow - secure group information
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+chfn">chfn</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+chsh">chsh</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+passwd">passwd</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?8+groupadd">groupadd</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+groupmod">groupmod</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+useradd">useradd</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+userdel">userdel</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+usermod">usermod</A></B>(8)
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+Julianne Frances Haugh (<A HREF="mailto:jockgrrl@ix.netcom.com">jockgrrl@ix.netcom.com</A>)
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Best Linux</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>1999-11-29</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">警告 CAVEATS</A><DD>
+<DT><A HREF="#lbAF">文件 FILES</A><DD>
+<DT><A HREF="#lbAG">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

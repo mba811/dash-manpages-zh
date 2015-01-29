@@ -1,0 +1,102 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of proc</TITLE>
+</HEAD><BODY>
+<H1>proc</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+proc - 建立一个 Tcl 过程   
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>proc </B><I>name args body</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>proc</B> 命令建立一个叫做<I>name </I>的新的 Tcl 过程，替换已经叫这个名字的任何现存的命令或过程。 当调用这个新命令的时候，Tcl 解释器将执行 <I>body</I> 的内容。通常，<I>name</I>  是未限定的(unqualified)(不包括任何包含(这个过程)的名字空间的名字)，在当前名字空间中建立这个新过程。如果 <I>name</I> 包含任何名字空间限定符(qualifier)，则在指定的名字空间中建立这个过程。<I>Args</I>  指定给这个过程的形式参数。它由一个列表组成，可以为空，它的每个元素指定一个参数。每个参数指定符(specifier)也可以是有一个或两个字段(field)的一个列表。如果在指定符中只有一个单一字段则它是参数的名字；如果有两个字段，则第一个是参数名而第二个是它的缺省值。
+<P>
+
+在调用 <I>name</I> 时，为过程的每个形式参数建立一个局部变量；它的值将是在调用命令中相应的(实际)参数的值或这个参数的缺省值。在过程调用中可以不指定有缺省值的参数。但是，必须有足够的实际参数给所有没有缺省值的形式参数，并且没有多余的实际参数。有一种特殊情况可以允许过程有可变数目的参数。如果最后的形式参数的名字是 <B>args</B>，则到这个过程的一个调用包含的实际参数可以多于过程拥有的形式参数。此时，把开始于应当被赋给 <B>args </B>的那个实际参数的所有实际参数组合成一个列表(有如使用了 <B>list</B> 命令)；把这个组合后的值赋给局部变量 <B>args</B>。
+<P>
+
+在执行 <I>body</I>  的时候，变量名一般引用局部变量，在被引用时自动建立它们，在过程退出时(自动)删除它们。为过程的每个参数自动的建立一个局部变量。只能通过调用 <B>global</B> 命令或 <B>upvar</B> 命令来访问全局变量。只能通过调用 <B>variable</B> 命令或 <B>upvar</B>  命令来访问名字空间变量。
+<P>
+
+<B>proc</B>  命令返回一个空串。在调用一个过程的时候，在一个  <B>return</B> 命令中指定这个过程的返回值。如果过程不执行一个显式的<B>return </B>命令，则它的返回值是在过程体中执行的最后一条命令的值。如果在执行过程体期间发生了一个错误，则作为一个整体的过程将返回相同的错误。      
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+info">info</A>(n), <A HREF="/cgi-bin/man/man2html?n+unknown">unknown</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+argument, procedure
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/17</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

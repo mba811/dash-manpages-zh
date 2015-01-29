@@ -1,0 +1,234 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of makemap</TITLE>
+</HEAD><BODY>
+<H1>makemap</H1>
+Section: Maintenance Commands (8)<BR>Updated: BSD 4.4<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+1992年11月16日
+
+
+BSD 4.4
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+<B>makemap</B>
+
+ - 为sendmail创建数据库映像表
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B></B>
+
+
+[-<B>N</B>
+
+]
+
+
+[-<B>d</B>
+
+]
+
+[-<B>f</B>
+
+]
+
+
+[-<B>o</B>
+
+]
+
+[-<B>r</B>
+
+]
+
+[-<B>s</B>
+
+]
+
+[-<B>v</B>
+
+]
+
+<I>maptype</I>
+
+<I>mapname</I>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<B></B>
+
+
+创建
+<A HREF="/cgi-bin/man/man2html?8+sendmail">sendmail</A>(8)
+
+
+中关键字式映像查询所使用的数据库映像表.
+它从标准输入设备读取输入并输出到指定的
+<I>mapname</I>
+
+ 
+<P>
+
+根据其编译的方式不同,
+<B></B>
+
+
+可以处理多达三种不同的数据库格式,
+这些格式由
+<I>maptype</I>
+
+参数确定.
+它们可能为:
+<DL COMPACT>
+<P>
+
+<DT><B>btree</B>
+
+
+<DD>
+B-Tree格式映像表.
+这需要新的Berkeley DB库.
+<DT><B>hash</B>
+
+
+<DD>
+Hash格式映像表.
+这也需要Berkeley DB库.
+</DL>
+<P>
+
+<P>
+
+普遍而言,
+<B></B>
+
+
+从标准输入设备读取行，这些行由以空格分隔的两个单词组成.
+第一个为数据库关键字,
+第二个为数值.
+数值可能包含
+``%<I>n</I>''
+字符串用来标明参数替换.
+如果包含文本式的百分符号，则应该重复写
+(``%%'').
+忽略空行和以``#''开头的行.
+<A NAME="lbAE">&nbsp;</A>
+<H3>Flags(标识)</H3>
+
+<DL COMPACT>
+<P>
+
+<DT><B>-N</B>
+
+
+<DD>
+包含null字节用来结束映像表中的字符串.
+这必须与sendmail.cf中``K''行的-N标识匹配.
+
+<DT><B>-d</B>
+
+
+<DD>
+允许映像表中的关键字重复.
+这只能在B-Tree格式的映像表中允许.
+如果读入两个相同的关键字,
+那么它们都会插入到映像表中.
+<DT><B>-f</B>
+
+
+<DD>
+通常所有关键字中的大写字母都会转换成小写字母.
+这个标识可以屏蔽这种功能.
+这是为了配合sendmail.cf中
+<B>K</B>
+行的-f标识的使用.
+数值永远不作字母大小写的转换.
+
+<DT><B>-o</B>
+
+
+<DD>
+添加到一个旧的文件中.
+允许你增大一个已存在的文件.
+<DT><B>-r</B>
+
+
+<DD>
+允许替换已存在的关键字.
+如果你重复一个关键字,
+通常
+<B></B>
+
+
+会抱怨，而且不进行插入.
+<DT><B>-s</B>
+
+
+<DD>
+忽略正在创建的映像表的安全性检查.
+这包括对完全可写目录中硬链接或者符号链接的检查.
+<DT><B>-v</B>
+
+
+<DD>
+详尽地打印出正在执行什么.
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<A HREF="/cgi-bin/man/man2html?8+sendmail">sendmail</A>(8)
+
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>HISTORY(历史)</H2>
+
+<B>makemap</B>
+
+命令出现于 BSD 4.4v
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新] </H2>
+
+<B>2001/2/25</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》: </H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DL>
+<DT><A HREF="#lbAE">Flags(标识)</A><DD>
+</DL>
+<DT><A HREF="#lbAF">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAG">HISTORY(历史)</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新] </A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》: </A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

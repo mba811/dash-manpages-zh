@@ -1,0 +1,176 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of UMOUNT</TITLE>
+</HEAD><BODY>
+<H1>UMOUNT</H1>
+Section: Linux 程序员手册 (8)<BR>Updated: 26 July 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME 名字</H2>
+
+umount - 卸载文件系统
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>umount [-hV]</B>
+
+<P>
+
+<B>umount -a [-nrv] [-t </B><I>vfstype</I><B>]</B>
+
+<BR>
+
+<B>umount [-nrv] </B><I>device </I><B>|</B><I> dir </I><B>[...]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>umount</B>
+
+可以卸除当前挂载在文件层次目录中的文件系统。
+文件系统形式可以是以它所在的目录的形式指定，
+也可以是以它所在的特殊设备的形式来指定。
+<P>
+请注意当文件系统正处于使用状态时，不能进行卸载操作，
+必须等工作完成后才能进行卸除。例如，如果在当前文件系统中
+有打开的文件或某些进程正工作在该文件系统的某个目录下时，
+或者是它上面的一个交换文件正在使用。
+干涉的进程甚至可以是
+<B>umount</B>
+
+本身 - 它打开 libc，而随后 libc 可能会打开本地文件．
+<P>
+<B>umount</B>
+
+命令的选项：
+<DL COMPACT>
+<DT><B>-V</B>
+
+<DD>
+打印版本信息并退出。
+<DT><B>-h</B>
+
+<DD>
+显示帮助信息并退出。
+<DT><B>-v</B>
+
+<DD>
+以冗长模式运行。
+<DT><B>-n</B>
+
+<DD>
+在卸载后不将相应信息写入
+<I>/etc/mtab</I>
+
+文件。
+<DT><B>-r</B>
+
+<DD>
+如果卸载失败，试图以只读方式进行重新挂载。
+<DT><B>-a</B>
+
+<DD>
+卸载所有在
+<I>/etc/mtab</I>
+
+文件中描述的文件系统。（在
+<B>umount</B>
+
+版本或以后的版本中，不会卸载
+<I>proc</I>
+
+文件系统）
+<DT><B>-t</B><I> vfstype</I>
+
+<DD>
+只卸载指定类型的文件系统。如果要一次指定多个文件系统，
+可以用逗号分隔。如在指定文件系统前加
+<B>no</B>
+
+，则可卸载除些文件系统以外的其它文件系统。
+<DT><B>-f</B>
+
+<DD>
+强制卸载（比如不可达的 NFS ）。
+（此选项须在高于 2.1.116 的版本上使用）
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>环路设备</H2>
+
+如果在
+<I>/etc/mtab</I>
+
+文件中存在有 `loop=...' 这样的参数，
+<B>umount</B>
+
+命令将释放与挂载相关联的环路设备．
+任何挂起的环路设备可以用 `losetup -d' 命令来释放。
+参阅
+<B><A HREF="/cgi-bin/man/man2html?8+losetup">losetup</A></B>(8)．
+
+<P>
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>相关文件</H2>
+
+<I>/etc/mtab</I>
+
+已挂载文件系统的清单。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>另见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+umount">umount</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?8+mount">mount</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+losetup">losetup</A></B>(8).
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>历史</H2>
+
+<B>umount</B>
+
+命令最早出现在版本 6 的 AT&amp;T UNIX.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>所罗门 &lt;<A HREF="mailto:solomen@email.com.cn">solomen@email.com.cn</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>Nov 20 2000</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME 名字</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">环路设备</A><DD>
+<DT><A HREF="#lbAF">相关文件</A><DD>
+<DT><A HREF="#lbAG">另见</A><DD>
+<DT><A HREF="#lbAH">历史</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

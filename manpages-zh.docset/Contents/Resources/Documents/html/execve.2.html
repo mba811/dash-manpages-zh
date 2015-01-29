@@ -1,0 +1,236 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of EXECVE</TITLE>
+</HEAD><BODY>
+<H1>EXECVE</H1>
+Section: Linux Programmer's Manual (2)<BR>Updated: 3 September 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+execve - 执行程序
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/unistd.h">unistd.h</A>&gt;</B>
+
+<P>
+<B>int execve (const char *</B><I>filename</I><B>, char *const </B><I>argv</I>
+
+<B>[], char *const </B><I>envp</I><B>[]);</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>execve()</B> 执行 <I>filename</I> 指出的 程序. <I>filename</I> 必须 是
+二进制可执行文件, 或者 以 &quot;<B>#! </B><I>interpreter </I>[arg]&quot; 行 开始的 脚本文件.
+后者的 interpreter 必须是 某个 可执行文件 的 有效 路径, 这个 可执行文件 自身
+不能是 脚本程序, 调用 形式 是 &quot;<B>interpreter</B> [arg] <I>filename</I>&quot;.
+<P>
+<B>execve()</B> 调用 成功 后 不会 返回, 其 进程 的 正文(text), 数据(data), 
+bss 和 堆栈(stack) 段 被 调入程序 覆盖. 调入程序 继承了 调用程序 的 PID 和
+所有 打开的 文件描述符, 他们 不会 因为 exec 过程 而 关闭. 父进程 的 未决 信号
+被 清除. 所有 被 调用进程 设置过 的 信号 重置为 缺省行为.
+<P>
+如果 当前程序 正在 被 ptrace 跟踪, 成功的 调用 <B>execve()</B> 后 将 收到
+一个 <B>SIGTRAP</B> 信号.
+<P>
+如果 可执行文件 是 动态连接 的 a.out 二进制程序, 含有 共享库 的 stub,
+开始 执行 程序 的 时候, Linux 动态 连接器(linker)
+<I><A HREF="/cgi-bin/man/man2html?8+ld.so">ld.so</A></I>(8)
+
+把 所需的 共享库 调入 核心, 并且 和 程序 相连.
+<P>
+如果 可执行文件 是 动态连接 的 ELF 二进制程序, 定义在 PT_INTERP 字段 的
+解释器(interpreter) 调入 所需的 共享库.
+连接 libc5 的 程序 的 典型 解释器 是 <I>/lib/ld-linux.so.1</I>,
+而 连接 GNU libc2 (libc6) 的 程序 则为 <I>/lib/ld-linux.so.2</I>.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>返回值 (RETURN VALUE)</H2>
+
+调用成功 的 时候 <B>execve()</B> 不会 返回, 调用失败 时 返回 -1, 并 设置
+<I>errno </I>
+
+为 相应的 值.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>错误 (ERRORS)</H2>
+
+<DL COMPACT>
+<DT><B>EACCES</B>
+
+<DD>
+文件 或 脚本解释器 不正确.
+<DT><B>EACCES</B>
+
+<DD>
+没有 文件 或 脚本解释器 的 执行 权限.
+<DT><B>EACCES</B>
+
+<DD>
+文件系统 挂载(mount) 为
+<I>noexec</I>.
+
+<DT><B>EPERM</B>
+
+<DD>
+文件系统 挂载为
+<I>nosuid</I>,
+
+使用者 不是 超级用户, 以及 文件 设置了 SUID 或 SGID 位.
+<DT><B>EPERM</B>
+
+<DD>
+进程 正 被跟踪, 使用者 不是 超级用户, 以及 文件 设置了 SUID 或 SGID 位.
+<DT><B>E2BIG</B>
+
+<DD>
+参数列表 过长.
+<DT><B>ENOEXEC</B>
+
+<DD>
+可执行文件 的 文件格式 无法 识别, 误用在 不同的 体系结构, 或者 其他 格式
+错误 导致 程序 无法 执行.
+<DT><B>EFAULT</B>
+
+<DD>
+<I>filename</I>
+
+指针 超出 可访问 的 地址空间.
+<DT><B>ENAMETOOLONG</B>
+
+<DD>
+<I>filename</I>
+
+太长.
+<DT><B>ENOENT</B>
+
+<DD>
+<I>filename ,</I>
+
+脚本解释器, 或 ELF 解释器 不存在.
+<DT><B>ENOMEM</B>
+
+<DD>
+内核 空间 不足.
+<DT><B>ENOTDIR</B>
+
+<DD>
+在
+<I>filename ,</I>
+
+脚本解释器 或 ELF 解释器 的 前缀 路径 中, 某些 成员 不是 目录.
+<DT><B>EACCES</B>
+
+<DD>
+在
+<I>filename</I>
+
+或 脚本解释器 的 前缀 路径 中, 对 某些 目录 没有 访问许可.
+<DT><B>ELOOP</B>
+
+<DD>
+解析
+<I>filename ,</I>
+
+脚本解释器 或 ELF 解释器 时 遇到 过多的 符号连接.
+<DT><B>ETXTBUSY</B>
+
+<DD>
+可执行文件 被 一个 或 多个 进程 以 写方式 打开.
+<DT><B>EIO</B>
+
+<DD>
+发生 I/O 错误.
+<DT><B>ENFILE</B>
+
+<DD>
+达到 系统 定义的 同时打开文件数 限制. 
+<DT><B>EMFILE</B>
+
+<DD>
+进程 打开了 最大数量 的 文件.
+<DT><B>EINVAL</B>
+
+<DD>
+该 ELF 可执行文件 拥有 多个 PT_INTERP 字段 (就是说, 试图 定义 多个 解释器).
+<DT><B>EISDIR</B>
+
+<DD>
+ELF 解释器 是 目录.
+<DT><B>ELIBBAD</B>
+
+<DD>
+无法 识别 ELF 解释器 的 格式.
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>CONFORMING TO</H2>
+
+SVr4, SVID, X/OPEN, BSD 4.3.  POSIX 没有 对 #! 行为 的 文档, 但有 其他的
+兼容 形式. SVr4 记录了 额外的 错误情况 EAGAIN, EINTR, ELIBACC, ENOLINK, 
+EMULTIHOP; POSIX 没有 关于 ETXTBSY, EPERM, EFAULT, ELOOP, EIO, ENFILE,
+EMFILE, EINVAL, EISDIR 或 ELIBBAD 错误情况 的 文档.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>注意 (NOTES)</H2>
+
+SUID and SGID processes can not be <B>ptrace()</B>d SUID or SGID.
+<P>
+在 #! 格式的 shell 可执行脚本 中, 第一行 的 长度 不得 超过 127 字节.
+<P>
+Linux 忽略 脚本程序 的 SUID 和 SGID 位.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+ld.so">ld.so</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?3+execl">execl</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?2+fork">fork</A></B>(2)
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">返回值 (RETURN VALUE)</A><DD>
+<DT><A HREF="#lbAF">错误 (ERRORS)</A><DD>
+<DT><A HREF="#lbAG">CONFORMING TO</A><DD>
+<DT><A HREF="#lbAH">注意 (NOTES)</A><DD>
+<DT><A HREF="#lbAI">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

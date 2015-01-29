@@ -1,0 +1,59 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PG_CONTROLDATA</TITLE>
+</HEAD><BODY>
+<H1>PG_CONTROLDATA</H1>
+Section: PostgreSQL Server Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+pg_controldata - 显示一个 PostgreSQL 集群的控制信息
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>pg_controldata</B> [ <B></B><I>datadir</I><B> </B>]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>pg_controldata</B> 打印那些在 initdb  过程中初始化的信息，比如表版本和服务器的区域等。它还显示有关预写日志和检查点处理相关的信息。 这些信息是集群范围内有效的，并不和某个数据库相关。
+<P>
+
+<BR>&nbsp;这个命令只应该有安装服务器的用户运行，因为它要求对数据目录的读访问权限。&nbsp;你可以在命令行上声明数据目录，或者使用环境变量&nbsp;&nbsp;<B>PGDATA</B>。
+<A NAME="lbAE">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>PGDATA</B><DD>
+<BR>&nbsp;缺省数据目录位置
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAF">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

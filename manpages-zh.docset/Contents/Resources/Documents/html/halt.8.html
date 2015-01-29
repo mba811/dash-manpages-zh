@@ -1,0 +1,152 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of HALT</TITLE>
+</HEAD><BODY>
+<H1>HALT</H1>
+Section: Linux 系统管理员手册 (8)<BR>Updated: Aug 24, 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+halt, reboot, poweroff - 中止系统运行
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<B>/sbin/halt</B>
+
+[<B>-n</B>]
+
+[<B>-w</B>]
+
+[<B>-d</B>]
+
+[<B>-f</B>]
+
+[<B>-i</B>]
+
+[<B>-p</B>]
+
+<BR>
+
+<B>/sbin/reboot</B>
+
+[<B>-n</B>]
+
+[<B>-w</B>]
+
+[<B>-d</B>]
+
+[<B>-f</B>]
+
+[<B>-i</B>]
+
+<BR>
+
+<B>/sbin/poweroff</B>
+
+[<B>-n</B>]
+
+[<B>-w</B>]
+
+[<B>-d</B>]
+
+[<B>-f</B>]
+
+[<B>-i</B>]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>Halt</B> 将系统正在关机的信息写入
+<I>/var/log/wtmp</I> 文件，然后通知内核停止重启或关机系统。
+如果 <B>halt</B> 或 <B>reboot</B> 是在系统
+<I>没有</I> 运行在运行级别 <B>0</B> 或 <B>6</B> ，
+系统将调用
+<B><A HREF="/cgi-bin/man/man2html?8+shutdown">shutdown</A></B>(8) 命令（使用参数 <B>-h</B> 或 <B>-r</B> ）。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-n</B><DD>
+在关机或重启之前不对系统缓存进行同步。
+<DT><B>-w</B><DD>
+不真正重启或关机，而仅仅将关机信息写入 wtmp
+（在 <I>/var/log/wtmp</I> 文件里）。
+<DT><B>-d</B><DD>
+不记录此次关机情况。当使用 <B>-n</B> 参数时隐含 <B>-d</B>。
+<DT><B>-f</B><DD>
+强制执行 halt 或 reboot 而不去调用 <B><A HREF="/cgi-bin/man/man2html?8+shutdown">shutdown</A></B>(8)。
+<DT><B>-i</B><DD>
+在关闭或重启系统之前关闭所有网络界面。
+<DT><B>-p</B><DD>
+当关闭系统时执行关闭电源操作。当以 <B>poweroff</B> 方式调用
+halt 时，此为缺省参数。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>DIAGNOSTICS</H2>
+
+If you're not the superuser, you will get the message `must be superuser'.
+<A NAME="lbAG">&nbsp;</A>
+<H2>注意</H2>
+
+在先前的 <B>sysvinit</B> 发布中，<B>reboot</B> 和 <B>halt</B> 不能直接调用。
+从版本 2.74 开始，当系统不是运行在运行级别0或6的时侯，执行
+<B>halt</B> 和 <B>reboot</B> 后实际调用的是 <B><A HREF="/cgi-bin/man/man2html?8+shutdown">shutdown</A></B>(8) 。
+这就意味着如果在当前运行级别的环境中无法找到
+<BR>&nbsp;<B>halt</B>&nbsp;或&nbsp;<B>reboot</B>&nbsp;的时候（比如，在&nbsp;<I>/var/run/utmp</I>&nbsp;
+还没有正确初始化的时候），将会调用 <B>shutdown</B>，这个结果也许非你所想。
+如果你想做一此硬的 <B>halt</B> 或 <B>reboot</B>，那么使用 <B>-f</B> 参数。
+<P>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者</H2>
+
+Miquel van Smoorenburg, <A HREF="mailto:miquels@cistron.nl">miquels@cistron.nl</A>
+<A NAME="lbAI">&nbsp;</A>
+<H2>参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+shutdown">shutdown</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?1+init">init</A></B>(1)
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>所罗门 &lt;<A HREF="mailto:solomen@email.com.cn">solomen@email.com.cn</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/05/01</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">DIAGNOSTICS</A><DD>
+<DT><A HREF="#lbAG">注意</A><DD>
+<DT><A HREF="#lbAH">作者</A><DD>
+<DT><A HREF="#lbAI">参见</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国Linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,137 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of RMDIR</TITLE>
+</HEAD><BODY>
+<H1>RMDIR</H1>
+Section: Linux Programmer's Manual (1)<BR>Updated: 24 July 1993<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+rmdir －删除空目录
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>rmdir</B><I>[</I><B>options</B><I>]</I><B>directory...</B>
+
+<P>
+POSIX 选项：
+<B>[-p]</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>GNU 选项（缩写）：</H2>
+
+<B>[-p] [--ignore-fail-on-non-empty] [--help] [--version] [--]</B>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>描述</H2>
+
+<B>rmdir</B>
+
+删除空目录。如果所给出的目录不为空，则报错
+<A NAME="lbAF">&nbsp;</A>
+<H2>POSIX 选项</H2>
+
+<DL COMPACT>
+<DT><B>-p</B>
+
+<DD>
+如果目录由多个路径名组成，从最后一个路径名开始依次删除，
+直到所有的路径名都被删完。例如：命令'rmdir -p a/b/c'按
+照'rmdir /a/b/c'; 'rmdir a/b'; 'rmdir a'的顺序删除目录。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>GNU 选项</H2>
+
+<DL COMPACT>
+<DT><B>--ignore-fail-on-non-empty</B>
+
+<DD>
+通常，rmdir拒绝删除非空目录。
+这个选项将使命令忽略非空目录而进行删除操作。
+（更新见fileutils-4.0）
+<DT><B>-p, --parents</B>
+
+<DD>
+同上。
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>GNU 标准选项</H2>
+
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+在标准输出上显示使用信息并顺利退出。
+<DT><B>--version</B>
+
+<DD>
+在标准输出上显示版本信息并顺利退出
+<DT><B>--</B>
+
+<DD>
+终端选项列表。
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>环境变量</H2>
+
+变量LANG，LC_ALL，LC_CTYPE，LC_MESSAGES按常规定义。
+<A NAME="lbAJ">&nbsp;</A>
+<H2>遵循</H2>
+
+POSIX 1003.2
+<A NAME="lbAK">&nbsp;</A>
+<H2>应用举例</H2>
+
+命令'rmdir foo'将删除空目录foo。要删除一个非空目录，
+并且包括其下属所有内容，可以使用命令'rm -rfoo'。
+<A NAME="lbAL">&nbsp;</A>
+<H2>注意</H2>
+
+本文出自 fileutils－4.0，其他版本肯会有微小差别。任
+何添加或纠错意见请寄：<A HREF="mailto:aeb@cwi.nl">aeb@cwi.nl</A>，程序Bugs
+请告知：<A HREF="mailto:fileutils-bugs@gnu.ai.mit.edu">fileutils-bugs@gnu.ai.mit.edu</A>
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Surran &lt;email&gt;</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2000/10/19
+<A NAME="lbAO">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">GNU 选项（缩写）：</A><DD>
+<DT><A HREF="#lbAE">描述</A><DD>
+<DT><A HREF="#lbAF">POSIX 选项</A><DD>
+<DT><A HREF="#lbAG">GNU 选项</A><DD>
+<DT><A HREF="#lbAH">GNU 标准选项</A><DD>
+<DT><A HREF="#lbAI">环境变量</A><DD>
+<DT><A HREF="#lbAJ">遵循</A><DD>
+<DT><A HREF="#lbAK">应用举例</A><DD>
+<DT><A HREF="#lbAL">注意</A><DD>
+<DT><A HREF="#lbAM">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAN">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAO">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,177 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of WRITE</TITLE>
+</HEAD><BODY>
+<H1>WRITE</H1>
+Section: Linux Programmer's Manual (2)<BR>Updated: 13 January 1996<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+write -在一个文件描述符上执行写操作
+<A NAME="lbAC">&nbsp;</A>
+<H2>概述</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/unistd.h">unistd.h</A>&gt;</B>
+
+<P>
+<B>ssize_t write(int </B><I>fd</I><B>, const void *</B><I>buf</I><B>, size_t </B><I>count</I><B>);</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>write</B>
+
+向文件描述符
+<I>fd</I>
+
+所引用的文件中写入
+从
+<I>buf</I>
+
+开始的缓冲区中
+<I>count</I>
+
+字节的数据.
+POSIX规定,当使用了<B>write()</B>之后再使用
+<B>read()</B>,那么读取到的应该是更新后的数据.
+但请注意并不是所有的文件系统都是
+POSIX兼容的.
+<A NAME="lbAE">&nbsp;</A>
+<H2>返回值</H2>
+
+成功时返回所写入的字节数(若为零则表示没有写入数据).
+错误时返回-1,并置<I>errno</I>为相应值.
+若<I>count</I>为零,对于普通文件无任何影响,但对特殊文件
+将产生不可预料的后果.
+<A NAME="lbAF">&nbsp;</A>
+<H2>错误代码</H2>
+
+<DL COMPACT>
+<DT><B>EBADF</B>
+
+<DD>
+<I>fd</I>
+
+不是一个合法的文件描述符或者没有以写方式打开.
+<DT><B>EINVAL</B>
+
+<DD>
+<I>fd</I>
+
+所指向的对象不可写.
+<DT><B>EFAULT</B>
+
+<DD>
+<I>buf</I>
+
+不在用户可访问地址空间内.
+<DT><B>EPIPE</B>
+
+<DD>
+<I>fd</I>
+
+连接到一个管道,或者套接字的读方向一端已关闭.此时写进程
+将接收到
+<B>SIGPIPE</B>
+
+信号;如果此信号被捕获,阻塞或忽略,那么将返回错误
+<B>EPIPE.</B>
+
+<DT><B>EAGAIN</B>
+
+<DD>
+读操作阻塞,但使用
+<B>O_NONBLOCK</B>
+
+指定了非阻塞式输入输出.
+<DT><B>EINTR</B>
+
+<DD>
+在写数据以前调用被信号中断.
+<DT><B>ENOSPC</B>
+
+<DD>
+<I>fd</I>
+
+指向的文件所在的设备无可用空间.
+<DT><B>EIO</B>
+
+<DD>
+当编辑一个节点时发生了底层输入输出错误.
+</DL>
+<P>
+
+可能发生了其他错误,取决于
+<I>fd</I>
+
+所连接的对象.
+<A NAME="lbAG">&nbsp;</A>
+<H2>兼容于</H2>
+
+SVr4, SVID, POSIX, X/OPEN, 4.3BSD.
+SVr4文档添加了以下错误代码:
+EDEADLK, EFBIG, ENOLCK, ENOLNK, ENOSR,
+ENXIO, EPIPE,或者ERANGE.
+对于SVr4有可能在写入部分数据时发生中断并返回EINTR. 
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+open">open</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+read">read</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+fcntl">fcntl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+close">close</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+lseek">lseek</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+select">select</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+ioctl">ioctl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+fsync">fsync</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?3+fwrite">fwrite</A></B>(3)
+
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>byeyear &lt;<A HREF="mailto:love_my_love@263.net">love_my_love@263.net</A> &gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002.02.07</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">概述</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">返回值</A><DD>
+<DT><A HREF="#lbAF">错误代码</A><DD>
+<DT><A HREF="#lbAG">兼容于</A><DD>
+<DT><A HREF="#lbAH">参见</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

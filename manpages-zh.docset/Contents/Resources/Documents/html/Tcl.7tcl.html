@@ -1,0 +1,202 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of Tcl</TITLE>
+</HEAD><BODY>
+<H1>Tcl</H1>
+Section: Tcl Built-In Commands (7tcl)<BR>Updated: 8.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+Tcl - 语言语法总结.
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+<P>
+
+<BR>&nbsp;下面的规则定义&nbsp;Tcl&nbsp;语言的语法和语义:
+<BR>&nbsp;
+<DL COMPACT>
+<DT>[1]<DD>
+一个 Tcl 脚本是一个包含一个或多个命令的字符串。除了象后面描述的那样被引用(quote)之外，分号(Semi-colon)和换行(newline)是命令分隔符。除了被引用(quote)之外，右方括号(Close bracket)在命令替换期间是命令终结符(见后)。
+<P>
+<DT>[2]<DD>
+命令的求值分两步。 首先，Tcl 解释器把命令分解成字 (<I>words</I>) 并按下面描述的那样完成替换。对所有命令都以同样的方式进行替换。第一个字用于定位完成这个命令的一个命令过程，接着命令的所有的字被传递给命令过程。命令过程以它喜欢的任何方式自由的解释命令的字，如一个整数、变量名、列表、或 Tcl 脚本。不同的命令以不同的方式解释它们的字。
+<P>
+<DT>[3]<DD>
+一个命令的字(word)由白空格(不包括作为命令分隔符的换行)来分隔。
+<P>
+<DT>[4]<DD>
+如果一个字的第一个字符是双引号 (``&quot;'',double-quote) 则字终结于下一个双引号字符。如果是分号，右方括号，或白空格字符(包括换行)出现在引号之间则被作为普通的字符对待并包含在字里。象下面描述的那样，在引号之间的字符上进行命令替换、变量替换、和反斜杠替换。双引号不作为字的一部分而保留。
+<P>
+<DT>[5]<DD>
+如果一个字的第一个字符是左花括号 (“{”,open brace) 则字终结于相匹配的右花括号 (“}”,close brace)。花括号在字中嵌套: 对于每个增加的(additional)左花括号都必须有一个增加的右花括号(但是，如果 在一个字中的左括号或右括号被用一个反斜杠引用起来则在匹配右花括号时不计在内)。除了下面描述的反斜杠-换行替换之外，在花括号之间的字符上不进行替换，对分号、换行、右方括号、或白空格不做特殊的解释。字由外侧的花括号之间的字符精确的组成，不包括花括号自身。
+<P>
+<DT>[6]<DD>
+如果一个字包含一个左方括号 ("[",open bracket ) 则 Tcl 进行命令替
+换 (<I>command substitution</I>)。为此将递归调用 Tcl 解释器来把左方括号后
+面的字符作为一个 Tcl 脚本处理。脚本可以包含任意数目的命令并且必须用一个
+右方括号 ("]",close bracket) 来终结。脚本的结果(例如，最后的一条命令的结
+果)将被替换到字中方括号和它们中间所有字符的位置上。在一个单一的字中可以
+有任意数目的命令替换。在由花括号包起来(enclose)的字上不进行命令替换。
+<P>
+<DT>[7]<DD>
+如果一个字包含一个美元符(``$'')则 Tcl 进行变量替换 (<I>variable
+substitution</I>): 字中的美元符号和跟随的字符被一个变量的值所替换。接受下面几种形式(form)的变量替换:
+<P>
+<DL COMPACT><DT><DD>
+<P>
+<DL COMPACT>
+<DT><B>$</B><I>name</I><DD>
+<I>Name</I> 是一个标量(scalar)变量的名字；名字终结于任何不是字母、数字、或下划线(underscore)的字符。
+<P>
+<DT><B>$</B><I>name</I><B>(</B><I>index</I><B>)</B><DD>
+<I>Name</I> 给出一个数组变量的名字，<I>index</I> 给出在这个数组中的一个元素的名字. <I>Name</I> 只能包含字母、数字、和下划线。<I>index</I> 的字符将被进行命令替换、变量替换、和反斜杠替换。
+<P>
+<DT><B>${</B><I>name</I><B>}</B><DD>
+<I>Name</I> 是一个标量( scalar)变量的名字。它可以包含除了右括号之外的任何字符。
+<P>
+</DL>
+<P>
+
+一个单一的字中可以有任意数目的变量替换。在由花括号包起来(enclose)的字上不进行命令替换。
+<P>
+</DL>
+
+<P>
+<DT>[8]<DD>
+如果在一个字中出现一个反斜杠("\")则发生反斜杠替换 (<I>backslash
+substitution</I>)。除了下面描述的这些情况之外，反斜杠 (backslash)被删除
+(drop)，跟随的字符被作为普通字符对待。这就允许在字中包含象双引号、右方括
+号、和美元符号等字符而不触发特殊的处理。下表列出的要特殊处理的反斜杠序列
+，跟着的是每个序列被替换成的值。
+<P>
+<DL COMPACT><DT><DD>
+<P>
+<DL COMPACT>
+<DT>\<B>a</B><DD>
+声音警告 (振铃) (0x7).
+<P>
+<DT>\<B>b</B><DD>
+退格 (0x8).
+<P>
+<DT>\<B>f</B><DD>
+换页 (0xc).
+<P>
+<DT>\<B>n</B><DD>
+换行 (0xa).
+<P>
+<DT>\<B>r</B><DD>
+回车 (0xd).
+<P>
+<DT>\<B>t</B><DD>
+跳格(Tab) (0x9).
+<P>
+<DT>\<B>v</B><DD>
+纵向跳格 (0xb).
+<P>
+<DT>\<B>&lt;newline&gt;</B><I>whiteSpace</I><DD>
+一个单一的空格字符替换反斜杠、换行和在换行后面的所有空格和跳格。这个反斜杠序列是唯一一个在命令被实际分析之前在一次独立的预处理(pre- pass)中被替换的。这意味着即使在花括号之间这个替换也发生，并且不在花括号和引号之间时作为结果的空格被作为一个字分隔符对待。
+<P>
+<DT>\\<DD>
+反斜杠 (``'').
+<P>
+
+<BR>
+
+
+
+
+
+
+
+<P>
+<DT>\<I>ooo</I> <DD>
+数字<I>ooo</I>(它们中的一个、两个、或三个)给出一个八进制数，是要插入的 Unicode 字符的八位值。 Unicode 字符的高位(upper)将是 0.
+<P>
+<DT>\<B>x</B><I>hh</I> <DD>
+十六进制数 <I>hh</I> 给出要插入的 Unicode 字符的八位值。可以提供任意数目的十六进制数字 ；但除了最后两位之外都被忽略(结果总是一个一字节的数量)。Unicode 字符的高位(upper)将是 0.
+<P>
+<DT>\<B>u</B><I>hhhh</I> <DD>
+十六进制数 <I>hhhh</I> (它们中的一个、两个、三个、或四个)给出要插入的 Unicode 字符的十六位值。
+
+
+
+
+
+
+</DL>
+<P>
+
+除了前面描述的反斜杠-换行，在由花括号包起来(enclose)的字上不进行反斜杠替换。
+</DL>
+
+<P>
+<DT>[9]<DD>
+如果一个升音符 “#” (sharp / hash) 出现在 Tcl 希望是一个命令的第一个字的地方(point),则升音符和其后面跟随的、一直到下一个换行的所有字符，被作为一个注释对待并被忽略。注释字符只有出现在一个命令开始时才有意义(significance)。
+<P>
+<DT>[10]<DD>
+每个字符作为建立的一个命令的某个字的一部分，被 Tcl 解释器精确的处理一次。例如，如果发生了变量替换则在变量的值上不进行进一步的替换；值被原封不动的(verbatim)插入字中。如果发生了命令替换则嵌套的命令被对 Tcl 解释器的递归调用整个的处理；在做递归调用之前不进行替换并且对嵌套的脚本的结果不进行额外的(additional)替换。
+<P>
+<DT>[11]<DD>
+替换不影响一个命令的字边界(boundary)。例如，即使变量的值包含空格，在变量替换期间变量的整个的值成为一个单一的字的一部分。
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/21</B>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAE">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAF">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,144 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CLUSTERDB</TITLE>
+</HEAD><BODY>
+<H1>CLUSTERDB</H1>
+Section: PostgreSQL Client Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+clusterdb - 对一个PostgreSQL数据库进行建簇
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>clusterdb</B> [ <B></B><I>connection-option</I><B></B>...<B> </B>] [ <B>--table | -t </B><I>table</I><B>  </B>] [ <B></B><I>dbname</I><B> </B>]
+<P>
+<B>clusterdb</B> [ <B></B><I>connection-option</I><B></B>...<B> </B>] [ <B>--all</B> | <B>-a</B> ]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>clusterdb</B> 是一个用于对某个 PostgreSQL  数据库中的表进行重新建簇的工具。它寻找以前建过簇的表，然后在上次用过的同一个索引上再次建簇。将不会动那些从未建簇的表。
+<P>
+
+<B>clusterdb</B> 是对 SQL 命令 CLUSTER[<B><A HREF="/cgi-bin/man/man2html?7+cluster">cluster</A></B>(7)] 的封装。 使用这两种方法对数据库建簇实际上没有任何区别。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<B>clusterdb</B> 接受下列命令行参数：
+<DL COMPACT>
+<DT><B>-a</B><DD>
+<DT><B>--all</B><DD>
+<BR>&nbsp;对所有数据库建簇。
+<DT><B>[-d] </B><I>dbname</I><B></B><DD>
+<DT><B>[--dbname] </B><I>dbname</I><B></B><DD>
+<BR>&nbsp;声明要建簇的数据库名字。如果没有声明这个并且没有使用&nbsp;-a（或者&nbsp;--all），&nbsp;那么数据库名从环境变量&nbsp;PGDATABASE&nbsp;中读取。&nbsp;如果那个也没有设置，那么使用用于连接的用户名。
+<DT><B>-e</B><DD>
+<DT><B>--echo</B><DD>
+<BR>&nbsp;回显&nbsp;clusterdb&nbsp;生成并发送给服务器的命令。
+<DT><B>-q</B><DD>
+<DT><B>--quiet</B><DD>
+<BR>&nbsp;不要显示响应。
+<DT><B>-t </B><I>table</I><B></B><DD>
+<DT><B>--table </B><I>table</I><B></B><DD>
+<BR>&nbsp;只对表&nbsp;table&nbsp;建簇。
+</DL>
+<P>
+
+<P>
+
+<B>clusterdb</B> 还接受下列命令行参数获取连接参数：
+<DL COMPACT>
+<DT><B>-h </B><I>host</I><B></B><DD>
+<DT><B>--host </B><I>host</I><B></B><DD>
+<BR>&nbsp;声明服务器运行所在的机器的主机名。如果值以斜杠开头，&nbsp;那么就用作&nbsp;Unix&nbsp;域套接字的目录。
+<DT><B>-p </B><I>port</I><B></B><DD>
+<DT><B>--port </B><I>port</I><B></B><DD>
+<BR>&nbsp;声明服务器监听的网际网&nbsp;TCP&nbsp;端口或者本地&nbsp;Unix&nbsp;域套接字文件扩展。
+<DT><B>-U </B><I>username</I><B></B><DD>
+<DT><B>--username </B><I>username</I><B></B><DD>
+<BR>&nbsp;进行连接的用户名
+<DT><B>-W</B><DD>
+<DT><B>--password</B><DD>
+<BR>&nbsp;强制提示口令。
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>PGDATABASE</B><DD>
+<DT><B>PGHOST</B><DD>
+<DT><B>PGPORT</B><DD>
+<DT><B>PGUSER</B><DD>
+<BR>&nbsp;缺省连接参数。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>DIAGNOSTICS 诊断</H2>
+
+<P>
+
+<BR>&nbsp;出现困难的时候，参阅&nbsp;CLUSTER&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+cluster">cluster</A></B>(7)]&nbsp;和&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1)&nbsp;获取有关可能的错误和错误信息的讨论。&nbsp;数据库服务器必须在目标主机上运行。同样，任何缺省连接设置和&nbsp;libpq&nbsp;前端库使用的环境变量都将得以应用。
+<A NAME="lbAH">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;对数据库&nbsp;test&nbsp;建簇：
+<P>
+<PRE>
+$ <B>clusterdb test</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;对一个叫做&nbsp;xyzzy&nbsp;的数据库里的表&nbsp;foo&nbsp;建簇：
+<P>
+<PRE>
+$ <B>clusterdb --table foo xyzzy</B>
+
+</PRE>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+CLUSTER [<B><A HREF="/cgi-bin/man/man2html?7+cluster">cluster</A></B>(7)]
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAG">DIAGNOSTICS 诊断</A><DD>
+<DT><A HREF="#lbAH">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

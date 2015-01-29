@@ -1,0 +1,145 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of trace</TITLE>
+</HEAD><BODY>
+<H1>trace</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+trace - 监视变量访问
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>trace </B><I>option</I> ?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令导致在调用了特定操作的时候执行 Tcl 命令。现在只实现了变量跟踪。合法的 <I>option</I> (选项) (可以是缩写)有:
+<DL COMPACT>
+<DT><B>trace variable </B><I>name ops command</I><DD>
+安排 <I>command</I> 在变量 <I>name</I> 被以用 <I>ops </I>给出的方式访问的时候执行。<I>Name</I>     可以引用一个普通变量、数组的一个元素，或整个的一个数组(就是说，<I>name</I>     可以只是一个数组的名字，而不加在圆括号中的索引)。如果     <I>name</I>     引用整个的一个数组，则在操纵了这个数组的任何元素的时候调用     <I>command</I>     。如果这个变量不存在，则建立它但不给它值，所以对 <B>namespace     which</B> 查询是可见的，但对 <B>info exists</B>     不是。
+<DL COMPACT><DT><DD>
+<P>
+
+<I>Ops</I>     指示要进行何种操作，它由下列字母中的一个或多个组成:
+<DL COMPACT>
+<DT><B>r</B><DD>
+在读这个变量的时候调用 <I>command</I>。
+<DT><B>w</B><DD>
+在写这个变量的时候调用 <I>command</I>。
+<DT><B>u</B><DD>
+在删除这个变量的时候调用 <I>command</I>。可以使用 <B>unset</B>  命令显式的删除变量，或者在过程返回的时候隐式的删除(所有它们的局部变量)。在删除解释器的时候也删除变量，因为没有在其中执行命令的解释器所以不调用跟踪。
+</DL>
+<P>
+
+当触发跟踪的时候，向 <I>command</I>     添加三个参数，所以实际上的命令如下:
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<I>command name1 name2 op</I>
+
+</PRE>
+
+</DL>
+
+
+<I>Name1</I> 和 <I>name2</I> 给出被访问了的变量的名字:     如果这个变量是个标量，则 <I>name1</I> 给出变量的名字而 <I>name2</I>     是一个空串；如果变量是一个数组元素，则 <I>name1</I>     给出数组的名字而 <I>name2</I>     给出在这个数组中的索引；如果整个数组被删除并且跟踪注册在整个数组上，而不是在一个单一元素上，则     <I>name1</I> 给出这个数组的名字而 <I>name2</I> 是一个空串。<I>Name1</I>     和 <I>name2</I> 不是必须与在 <B>trace variable</B>     命令中使用的名字相同: <B>upvar</B>     命令允许一个过程在不同的名字下引用一个变量。<I>Op</I>     指示在这个变量上进行了何种操作，它是上面定义的 <B>r</B>、<B>w</B>、或     <B>u</B> 中的一个。
+<P>
+
+<I>Command</I>     在与调用跟踪操作的代码的相同的上下文中执行:     如果被访问的变量是一个 Tcl 过程的一部分，则 <I>command</I>     将访问到与过程中的代码相同的局部变量。这个上下文可能与在其中建立跟踪的上下文不同。如果     <I>command</I> 调用一个过程(它经常这么做)，则过程要想访问被跟踪的变量必须使用     <B>upvar</B> 或 <B>uplevel</B>。还要注意     <I>name1</I>     不是必须与用来在变量上设置跟踪的那个名字相同；如果通过用     <B>upvar</B>     定义的一个变量进行访问，则可能发生不同。
+<P>
+
+对于读和写跟踪，<I>command</I>     可以修改变量来影响被跟踪的操作的结果。如果<I>command</I>     在读写跟踪期间修改了一个变量的值，则这个新值将被返回为跟踪操作的结果。除非从     <I>command</I>     返回的值是一个某种错误，此时跟踪的操作返回的错误与跟踪命令返回的错误消息相同，否则忽略它(例如，可使用这种机制实现只读变量)。对于写跟踪，在这个变量的值被改变之后调用     <I>command</I>     ；它把一个新值写到这个变量中来屏弃在这次写操作中指定的原始值。要实现只读变量，<I>command</I>     必须存储这个变量的旧值。
+<P>
+
+当 <I>command</I>     在一个读或写跟踪期间执行的时候，在变量上的跟踪被暂时禁用。这意味着     <I>command</I> 调用的读和写将直接发生，不用再次调用 <I>command</I>     (或任何其他跟踪)。但是，如果 <I>command</I>     删除了这个变量则调用删除跟踪。
+<P>
+
+在调用一个删除跟踪的时候，这个变量已经被删除了:     它将出现为未定义的而不加以跟踪。如果因为一个过程返回而发生一个删除，则在返回到的那个过程的变量上下文中调用跟踪:     返回的过程的栈桢已经不存在了。在删除跟踪期间不禁止跟踪，所以如果一个删除跟踪命令建立了一个新的跟踪并访问了这个变量，则调用这个跟踪。忽略删除跟踪的任何错误。
+<P>
+
+如果在一个变量上有多个跟踪，则以建立的次序调用它们，先处理最新的。如果一个跟踪返回一个错误，则不对这个变量调用进一步的跟踪。如果一个数组元素有一个跟踪设置，并且还有一个在整个数组上的跟踪设置，调用在整个数组上的跟踪先于在这个元素上的跟踪。
+<P>
+
+一旦建立了，跟踪保持有效直到用下面描述的 <B>trace vdelete</B> 命令删除这个跟踪、直到删除了这个变量，或直到删除了这个解释器为止。删除数组的一个元素将删除在这个元素上的任何跟踪，但不删除在整个数组上的跟踪。
+<P>
+
+这个命令返回一个空串。
+</DL>
+
+<DT><B>trace vdelete </B><I>name ops command</I><DD>
+如果在变量 <I>name</I> 上设置了一个用 <I>ops</I>     给出操作和用 <I>command</I>     给出命令的跟踪，则删除这个跟踪，这样将永不再次调用 <I>command</I>     。返回一个空串。
+<DT><B>trace vinfo </B><I>name</I><DD>
+返回一个列表，为每个在变量 <I>name </I>设置的当前跟踪包含一个元素。这个列表的每个元素自身是一个包含两个元素的列表，它们是与这个跟踪相关的     <I>ops</I> 和 <I>command</I> 。如果 <I>name</I>     不存在或没有跟踪设置，则命令的结果是一个空串。
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+read, variable, write, trace, unset
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/11/21</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,113 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of error</TITLE>
+</HEAD><BODY>
+<H1>error</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+error - 产生一个错误
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>error </B><I>message</I> ?<I>info</I>? ?<I>code</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+返回一个 TCL_ERROR 代码，这个代码将终止(unwind ? 松开)命令解释。向应用返回<I>Message</I>        
+<BR>&nbsp;，用来指示出了什么错误的一个字符串
+<P>
+
+如果提供了非空的 <I>info</I> 参数，它被用于初始化全局变量 <B>errorInfo</B>。<B>errorInfo</B>  用于积累关于在发生错误时正在处理什么的一个栈追踪；在嵌套命令终止的同时，Tcl 解释器向 <B>errorInfo</B> 添加信息。如果存在 <I>info</I> 参数，则用它来初始化 <B>errorInfo</B>   并且 Tcl 解释器不向它添加终止信息的第一个增长。换句话说，包含 <B>error</B> 命令的命令将不出现在 <B>errorInfo</B> 中，在它的位置上的将是 <I>info</I>。这个特征与 <B>catch</B>命令联合使用很有用: 如果一个捕捉到的错误不能被正确处理，使用 <I>info</I>返回一个栈追踪来反映错误发生的原始点:        
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>catch {...} errMsg
+set savedInfo $errorInfo
+...
+error $errMsg $savedInfo</B>
+
+</PRE>
+
+</DL>
+
+
+<P>
+
+如果存在 <I>code</I>  参数，则在 <B>errorCode</B>  全局变量中存储它的值。在可获得错误信息的情况下，要用这个变量来持有一个机器可读的错误描述；参见 <B>tclvars</B> 手册页来得到关于这个变量的正确格式的信息。如果不存在 <I>code</I>  参数，则 <B>errorCode</B>  被 Tcl 解释器作为处理命令生成的错误的一部分而自动的重置为“NONE”。   
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+catch">catch</A>(n), <A HREF="/cgi-bin/man/man2html?n+tclvars">tclvars</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+error, errorCode, errorInfo
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/21</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

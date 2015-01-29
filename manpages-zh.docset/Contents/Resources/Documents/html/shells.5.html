@@ -1,0 +1,85 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SHELLS</TITLE>
+</HEAD><BODY>
+<H1>SHELLS</H1>
+Section: Linux Programmer's Manual (5)<BR>Updated: November 21, 1993<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME [命令名]</H2>
+
+shells - 有效登录 shell 的路径名
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述</H2>
+
+<B>/etc/shells </B>
+
+是一个文本文件，其中包含有效登录 shell 的路径全名。
+<B><A HREF="/cgi-bin/man/man2html?1+chsh">chsh</A>(1)</B>
+
+需要参考这个文件，并且其他程序也可以查询该文件。
+有些程序从这个文件判断用户是不是标准用户。比如: ftp 守护进程
+一般不会允许那些所用的 shell 没有在该文件中注明用户访问。
+<A NAME="lbAD">&nbsp;</A>
+<H2>实例</H2>
+
+<B>/etc/shells</B>
+
+可能包含以下路径: 
+<P>
+<DL COMPACT><DT><DD>
+<B>/bin/sh</B>
+
+<BR>
+
+<B>/bin/csh </B>
+
+</DL>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>相关文件</H2>
+
+<I>/etc/shells   </I>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>又见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+chsh">chsh</A>(1),</B><A HREF="/cgi-bin/man/man2html?3+getusershell">getusershell</A>(3)
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Redcandle &lt;<A HREF="mailto:redcandle51@chinaren.com">redcandle51@chinaren.com</A> &gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000.10.29</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME [命令名]</A><DD>
+<DT><A HREF="#lbAC">描述</A><DD>
+<DT><A HREF="#lbAD">实例</A><DD>
+<DT><A HREF="#lbAE">相关文件</A><DD>
+<DT><A HREF="#lbAF">又见</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

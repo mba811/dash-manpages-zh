@@ -1,0 +1,248 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LN</TITLE>
+</HEAD><BODY>
+<H1>LN</H1>
+Section: User Commands  (1)<BR>Updated: November 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ln -在文件之间建立连接
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>ln [options] source [dest]</B>
+
+<BR>
+
+<B>ln [options] source...directory</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>POSIX 选项：</H2>
+
+<B>[-f]</B>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>GNU 选项（缩写）：</H2>
+
+<B>[-bdfinsvF] </B>
+
+<B>[-S backup-suffix]</B>
+
+<B>[-V {numbered, existing, simple}]</B>
+
+<B>[--help] [--version] [--]</B>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>描述</H2>
+
+在Unix世界里有两个'link'（连接）概念，一般称之为硬连接和软连接。一个硬连
+接仅仅是一个文件名。（一个文件可以有好几个文件名，只有将最后一个文件名从
+磁盘上删除，才能把这个文件删掉。文件名的个数是由<A HREF="/cgi-bin/man/man2html?1+ls">ls</A>(1)来确定的。所有的文件
+名都处于同一个状态，也就没有什么"源名字" 之说。通常文件系统里的一个
+文件的所有名字包含着一样的数据信息，不过这样也不是必需的。）一个软连接
+（或符号连接）是完全不同的：它是一个包含了路径信息的小小的指定文件。因此，
+软连接可以指向不同文件系统里的文件（比如由NFS装载的不同机器文件系统上的文
+件），甚至可以指向一个不一定确实存在的文件。在软连接文件被访问（系统调用
+<A HREF="/cgi-bin/man/man2html?2+open">open</A>(2) 或<A HREF="/cgi-bin/man/man2html?2+stat">stat</A>(2)）的时候，操作系统用该文件所包含的路径替换该文件的访问介
+入点，从而实现对所指文件的访问。（用命令<A HREF="/cgi-bin/man/man2html?1+rm">rm</A>(1)和<A HREF="/cgi-bin/man/man2html?2+unlink">unlink</A>(2)可以删除连接，但
+不是删除该文件所指向的文件。系统指定调用<A HREF="/cgi-bin/man/man2html?2+lstat">lstat</A>(2)和<A HREF="/cgi-bin/man/man2html?2+readlink">readlink</A>(2) 来读取连接
+文件与其所指文件的状态。到底是对软连接文件操作，还是对被指向文件操作，由
+于不同操作系统件存在不同的系统调用，而存在着差异。）
+<P>
+ln 在文件间产生连接。缺省时，产生硬连接，有-s选项，则产生符号（软）连接。
+<P>
+如果仅仅只给出一个文件名，那么ln将在当前目录里产生这个文件的连接，
+也就是说，以该文件（的最后一个）名称等同的名字在当前目录里产生一个连接
+（GNU范围内）；
+如果最后一个参数是一个已存在的目录名，
+ln 将在那个目录里给每一个源文件用以与源文件相同的文件名产生连接，
+（不同情况见以下--no-dereference的描述）；
+如果只给出两个文件名，ln将产生源文件的连接；
+如果最后一个参数不是一个目录名或多于两个文件名，则报错。
+<P>
+缺省时，ln不删除已存在的文件或符号连接。
+（因此，它可以被用来锁定目标文件，即当dest已经不存在时）
+但选项-f可以强制执行。
+<P>
+在已存在的实现中，只有超级用户才能建立目录的硬连接。
+POSIX 禁止系统调用<A HREF="/cgi-bin/man/man2html?2+link">link</A>(2)和ln建立目录的硬连接
+（但是允许在不同的文件系统间建立硬连接）。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>POSIX 选项</H2>
+
+<DL COMPACT>
+<DT><B>-f </B>
+
+<DD>
+删除已存在的目的文件。
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>GNU 选项</H2>
+
+<DL COMPACT>
+<DT><B>-d, -F, --directory</B>
+
+<DD>
+允许超级用户建立目录硬连接。
+<DT><B>-f, --force</B>
+
+<DD>
+删除已存在的目的文件。
+<DT><B>-i, --interactive</B>
+
+<DD>
+提示是否删除已存在的目的文件。
+<DT><B>-n, --no-dereference</B>
+
+<DD>
+当所给出的目的文件名是一个目录的符号连接时，将其视为一般文件处理。
+<P>
+当目的目录名是一个确实存在的目录（不是一个符号连接）时，
+不进行模糊处理，而在那个目录里建立连接。
+但是当所指定的目的目录名是一个符号连接时，
+有两种方式来对待用户的要求。
+ln 会视目的为一个普通目录，并且在里面建立连接。
+或者如同符号连接本身一样地视其为一个非目录。
+这种情况下，ln 将在建立新连接之前删除或备份这个符号连接。
+缺省地，把符号连接视为普通目录来对待。
+<DT><B>-s, --symbolic</B>
+
+<DD>
+建立符号连接以替代硬连接。
+在不支持符号连接的系统上，这个选项仅仅会产生一个错误提示而已。
+<DT><B>-v, --verbose</B>
+
+<DD>
+在建立连接前显示所操作的文件名。
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>GNU 备份选项</H2>
+
+对于想备份那些有可能被覆盖、改写或者被破坏的文件，
+GNU提供了比如：cp, mv, ln, install和patch等命令。
+可以使用-b参数生成备份文件。备份文件的名称由-V参数指定。
+假如备份文件的名称是通过原文件名加后缀而得到，
+那么要用-S参数来指定这个后缀。
+<DL COMPACT>
+<DT><B>-b, --backup</B>
+
+<DD>
+备份文件。
+<DT><B>-S SUFFIX，-suffix=SUFFIX</B>
+
+<DD>
+在备份文件后添加&quot;SUFFIX&quot;(你的后缀)。如果不使用该参数，则使用环境变量
+SIM_PLE_BACHUP_SUFFIX，如果该环境变量没有设置，则缺省地使用'～'。
+<DT><B>-V METHOD，-version-control=METHOD</B>
+
+<DD>
+指定备份文件如何命名。
+参数&quot;METHOD&quot;可以是'numbered'(或't')，
+'existing'(或'nil')，或'never'(或'simple')。
+如果不使用该参数，则使用环境变量VERSION_CONTROL，
+如果该环境变量没有设置，则缺省地使用 'existing'。
+<P>
+正确有效的METHOD参数对应于Emacs变量'version-control'。(唯一被承认的缩写)：
+<P>
+t, numbered
+产生数字标记形式的备份文件。
+<P>
+nil, existiong
+对已有数字标记备份的文件进行数字备份，而简单备份其他类型文件。
+<P>
+never, simple
+总是进行简单备份。
+<P>
+<P>
+</DL>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>GNU 标准参数</H2>
+
+<DL COMPACT>
+<DT><B>-help</B>
+
+<DD>
+在标准输出上显示使用信息并顺利退出。
+<DT><B>-version</B>
+
+<DD>
+在标准输出上显示版本信息并顺利退出
+<DT><B>--</B>
+
+<DD>
+终端参数列表。
+<P>
+<P>
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H2>环境变量</H2>
+
+变量LANG, LC_ALL, LC_COLLATE, LC_CTYPE和LC_MESSAGES具有通常意义。
+在GNU版本里，变量
+SIMPLE_BACKUP_SUFFIX和VERSION_CONTROL控制备份文件的命名。
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>遵循</H2>
+
+POSIX 1003.2，尽管POSIX 1003.2(1996)没有讨论软连接。
+软连接在BSD中有介绍，在System V release3（或更老版本）系统中不出现。
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>另见</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+ls">ls</A>(1), <A HREF="/cgi-bin/man/man2html?1+rm">rm</A>(1), <A HREF="/cgi-bin/man/man2html?2+link">link</A>(2), <A HREF="/cgi-bin/man/man2html?2+lstat">lstat</A>(2), <A HREF="/cgi-bin/man/man2html?2+open">open</A>(2), <A HREF="/cgi-bin/man/man2html?2+readlink">readlink</A>(2), <A HREF="/cgi-bin/man/man2html?2+stat">stat</A>(2), <A HREF="/cgi-bin/man/man2html?2+unlink">unlink</A>(2)
+<P>
+<A NAME="lbAN">&nbsp;</A>
+<H2>注意</H2>
+
+本文出自应用文档－4.0，其他版本肯定会有微小差别。
+任何添加或纠错意见请寄：<A HREF="mailto:aeb@cwi.nl">aeb@cwi.nl</A>。
+程序Bugs请告知：<A HREF="mailto:fileutils-bugs@gnu.ai.mit.edu">fileutils-bugs@gnu.ai.mit.edu</A>
+<P>
+<A NAME="lbAO">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Surran &lt;email&gt;</B>
+
+<A NAME="lbAP">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2000/10/19
+<A NAME="lbAQ">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">POSIX 选项：</A><DD>
+<DT><A HREF="#lbAE">GNU 选项（缩写）：</A><DD>
+<DT><A HREF="#lbAF">描述</A><DD>
+<DT><A HREF="#lbAG">POSIX 选项</A><DD>
+<DT><A HREF="#lbAH">GNU 选项</A><DD>
+<DT><A HREF="#lbAI">GNU 备份选项</A><DD>
+<DT><A HREF="#lbAJ">GNU 标准参数</A><DD>
+<DT><A HREF="#lbAK">环境变量</A><DD>
+<DT><A HREF="#lbAL">遵循</A><DD>
+<DT><A HREF="#lbAM">另见</A><DD>
+<DT><A HREF="#lbAN">注意</A><DD>
+<DT><A HREF="#lbAO">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAP">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAQ">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

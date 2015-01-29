@@ -1,0 +1,98 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of lsearch</TITLE>
+</HEAD><BODY>
+<H1>lsearch</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+lsearch - 查看一个列表是否包含一个特定的元素
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>lsearch </B>?<I>mode</I>? <I>list pattern</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令在 <I>list</I>   的元素中进行查找，看它们中是否有一个匹配 <I>pattern</I>。如果有，命令返回第一个匹配的元素的索引。如果没有，命令返回 <B>-1</B>。<I>mode</I>  参数指示这个列表的元素以何种方式与 <I>pattern</I>  相匹配，它必须是下列值中的某一个: 
+<DL COMPACT>
+<DT><B>-exact</B><DD>
+列表中的元素必须精确的包含与 <I>pattern </I>相同的字符串。 
+<DT><B>-glob</B><DD>
+<I>Pattern</I> 是一个通配符式样的模式，它匹配使用与 <B>string match</B>  命令相同的规则的每个列表元素。 
+<DT><B>-regexp</B><DD>
+<I>Pattern</I> 被作为一个正则表达式来对待，它匹配使用在 <B>re_syntax</B>   参考页中描述的规则的每个列表元素。 
+</DL>
+<P>
+
+如果省略了 <I>mode</I>  则它缺省为 <B>-glob</B>。 
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+list, match, pattern, regular expression, search, string
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/09/06 </B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

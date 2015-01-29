@@ -1,0 +1,196 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MKTEMP</TITLE>
+</HEAD><BODY>
+<H1>MKTEMP</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+<BR>BSD mandoc<BR>
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>mktemp</B>
+
+ - 产生唯一的临时文件名
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>mktemp</B>
+
+[-<B>q</B>
+
+]
+
+[-<B>u</B>
+
+]
+
+<I>template</I>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>mktemp</B>
+
+根据 给定的 文件名模板, 改变 其中的 一部分, 从而 生成 临时文件名.
+该文件名 是 唯一的, 可以 让 其他程序 使用. 模板 为 任意 文件名,
+后接 六个
+`X'
+
+例如
+/tmp/temp.XXXXXX
+
+ 
+这些
+`X'
+
+将被 当前进程号 以及/或者 某个 唯一的 字母组合 替代.
+<P>
+
+如果
+<B></B>
+
+
+成功 产生了 唯一文件名, 就 以
+访问模式 0600 (除非 使用了
+-<B>u</B>
+
+选项) 创建 文件, 并且 在 标准输出 显示 这个 文件名.
+<P>
+
+<B>mktemp</B>
+
+用于 让 shell 脚本程序 使用 可靠的 临时文件.
+多数 shell 程序 的 传统做法 是 程序名 加上 PID 做 后缀, 产生的
+文件名 就是 临时文件名.
+这种 命名策略 容易 预测, 产生的 竞争条件 易于 遭到 攻击.
+使用 相同 命名策略 的 另一个 方法 是 建立 临时目录, 这种 做法 相对 安全 一些.
+它 可以 保证 临时文件 不被 破坏, 但是 容易 遭到 简单的 拒绝服务 攻击.
+所以 建议 改用
+<B>mktemp</B>
+
+ 
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+<DL COMPACT>
+<P>
+
+有效选项有:
+<DT><B>-q</B>
+
+
+<DD>
+出错时 不显示 信息. 用于 禁止 错误信息 输出到 标准错误.
+<DT><B>-u</B>
+
+
+<DD>
+以
+``不安全''
+
+模式 运行. 
+<B></B>
+
+
+在 退出前 会 删除 临时文件.  它 比 
+Fn mktemp 3
+
+稍微 好些, 但 仍然 会 引入 竞争条件. 不鼓励 使用 这个 选项.
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>返回值 (RETURN VALUES)</H2>
+
+<B></B>
+
+
+成功时 返回 0, 否则 返回 1.
+<A NAME="lbAG">&nbsp;</A>
+<H2>例子 (EXAMPLES)</H2>
+
+下列的
+<A HREF="/cgi-bin/man/man2html?1+sh">sh</A>(1)
+
+
+片断 展示了
+<B></B>
+
+
+的 简单用法, 如果 无法 获得 可靠的 临时文件, 程序 就 退出.
+
+<BLOCKQUOTE>
+<PRE>
+TMPFILE=`mktemp /tmp/$0.XXXXXX` || exit 1
+echo &quot;program output&quot; &gt;&gt; $TMPFILE
+</PRE>
+</BLOCKQUOTE>
+
+<P>
+
+照上例, 我们 打算 让 脚本程序 自己 捕获 这个 错误.
+
+<BLOCKQUOTE>
+<PRE>
+TMPFILE=`mktemp -q /tmp/$0.XXXXXX`
+if [ $? -ne 0 ]; then
+        echo &quot;$0: Can't create temp file, exiting...&quot;
+        exit 1
+fi
+</PRE>
+</BLOCKQUOTE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<A HREF="/cgi-bin/man/man2html?3+mkstemp">mkstemp</A>(3),
+
+
+<A HREF="/cgi-bin/man/man2html?3+mktemp">mktemp</A>(3)
+
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>历史 (HISTORY)</H2>
+
+源于
+BSD Open 
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2003/05/13
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">返回值 (RETURN VALUES)</A><DD>
+<DT><A HREF="#lbAG">例子 (EXAMPLES)</A><DD>
+<DT><A HREF="#lbAH">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAI">历史 (HISTORY)</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

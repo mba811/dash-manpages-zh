@@ -1,0 +1,873 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PERLDATA</TITLE>
+</HEAD><BODY>
+<H1>PERLDATA</H1>
+Section: Perl Programmers Reference Guide (7)<BR>Updated: 2003-11-25<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+perldata- Perl 数据类型
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+
+<A NAME="lbAD">&nbsp;</A>
+<H3>Variable names 变量名</H3>
+
+
+Perl 有三种内建的数据类型：标量，数组和关联数组（即"哈希表，
+hash"）。数组以数字为索引，通常以0开始，升序排列。哈希表以与值相关联
+的字符串为索引，内部排列是无序的。
+<P>
+
+值通常通过一个变量名（或变量名的引用）来引用。变量名的前缀字符显示了值的
+数据类型。其余部分指明了引用的是哪一个特定的值。通常变量名是一个唯一的标
+识符，以字母或下划线开始，包括字母、下划线和数字。某些情况下，也可以是以
+`::' 分隔的一串标识符(或者是过时的`'')；除了最后一
+个，其它都是包名，用来定位最后一个标识符所在的位置(详情参见 perlmod 中的
+Packages)。可以用一个简单的标识符来替代它，利用引用就可以。下文有详述，
+也可参见 perlref .
+<P>
+
+Perl 也有内建的变量，其名称不遵循这一规则。它们名称古怪，这样可以避免与你的变量名冲突。模式匹配中被匹配到的字符串是以`$' 加一个数字的变量名来存放的(参见 the perlop manpage 和 the perlre manpage)。 另外，还有几个使你可以介入perl 内部工作的特殊变量，其名称中包含标点和控制字符（参见 perlvar ）
+<P>
+
+标量以 '$'开始, 即使它是数组或哈希的元素也是如此。可以把 '$' 理解为`s' 
+，表示scalar（标量）。（译者注：此处根据有关文档，做了改动，下面的@处也
+是这样）
+<P>
+
+<PRE>
+    $days               # 简单标量 &quot;days&quot;
+    $days[28]           # 数组 @days的第29个元素
+    $days{'Feb'}        # 哈希 %days的 `Feb' 所对应的值
+    $#days              # 数组 @days的最后一个元素的索引值
+</PRE>
+
+<P>
+
+整个数组（或数组和哈希的局部）以 '@'开始, 它类似英文中的"these" 
+或"those" (这些...那些...)，表示期望有多个值。
+<P>
+
+<PRE>
+    @days               # ($days[0], $days[1],... $days[n])
+    @days[3,4,5]        # 即 ($days[3],$days[4],$days[5])
+    @days{'a','c'}      # 即 ($days{'a'},$days{'c'})
+</PRE>
+
+<P>
+
+整个哈希以 '%' 开始:
+<P>
+
+<PRE>
+    %days               # (key1, val1, key2, val2 ...)
+</PRE>
+
+<P>
+
+另外，子程序以'&amp;'来表示, 但有时在不引起误解的情况下也可以不用, 就象
+"do" 在英语中常常省略一样。 符号表项以 '*' 作为开始字符, 不过你
+现在还不用关心这个 (if ever ;-)
+<P>
+
+每一种数据类型都有它自己的名字空间，常量标识符也一样。这意味着你可以使用
+同一个名字来命名标量、数组、哈希、文件句柄、目录句柄、子程序、格式或标签。
+即$foo 和@foo 是不同的变量。也即意味着$foo[1] 是
+@foo 的一部分, 而不是$foo的一部分. 这看来有些怪异，不过很
+正常，因为它本来就怪异。
+<P>
+
+因为变量名以 '$', '@', 或 '%'开始, 保留词对变量没有什麽影响。保留词影响
+的是标签和文件句柄，因为它们不是以特殊字符前缀开始的。你不能用"log"
+来命名文件句柄，因为它是保留词（提示：你可以用
+`open(LOG,'logfile')' 而不是
+`open(log,'logfile')'). 使用大写的文件句柄既增加了可读性，
+又减少了冲突的发生。大小写是有意义的--"<FONT SIZE="-1">FOO</FONT>","Foo",
+和"foo" 是不同的名称。以字母或下划线开始的名称可以包含数字和下划线。
+<P>
+
+可以用一个返回相关引用的表达式来替换这样的变量名。参见 perlref
+<P>
+
+以数字开始的变量名只能包含数字。不是以字母、下划线或数字开始的变量名只能
+含有一个字符，如：$% 或$$. (大部分这样的变量都有特殊的意
+义。例如，$$ 是当前进程的id。)
+<A NAME="lbAE">&nbsp;</A>
+<H3>Context 上下文</H3>
+
+
+在 Perl 中有时操作或值的意义取决于该操作或值所处的上下文。有两个主要的上
+下文：列表和标量上下文。相当一部分操作在需要列表的上下文中返回列表，在需
+要标量的上下文中返回标量。这在有关该操作的文档中会提到。换句话讲，Perl会
+重载这些操作符。英语中的某些词，如`fish'和`sheep'与此类似。
+<P>
+
+操作可以根据不同的上下文返回不同的值。例如，如果这样写：
+<P>
+
+<PRE>
+    int( &lt;STDIN&gt; )
+</PRE>
+
+<P>
+
+integer 操作提供标量上下文给 &lt;&gt; 操作符, &lt;&gt; 会从STDIN 读入一行返回给 integer 操作，然后它返回其中的整型量。但如果你这样写：
+<P>
+
+<PRE>
+    sort( &lt;STDIN&gt; )
+</PRE>
+
+<P>
+
+sort操作提供列表上下文给&lt;&gt;, &lt;&gt;会读入STDIN中的每一行直到结束，然后将其传递给sort，sort然后将其排序输出。
+<P>
+
+赋值比较特殊，左侧的参数决定了右侧的参数的上下文。赋值给标量，则右侧参数的上下文是标量上下文；赋值给数组或哈希，则右侧参数的上下文是列表上下文。赋值给列表（或片段，其实也是列表），右侧的上下文也是列表上下文。
+<P>
+
+当你使用`use warnings' 编译指示或 Perl 的<B>-w</B> 参数时，
+你可能会看到这样的警告：在"无效的上下文，void context" 中使用了常量
+或函数。无效上下文的意思是值被丢弃不用，比如只包含有&quot;fred&quot;;
+ 的语句; 或是`getpwuid(0);';. 在要求列表上下文的函数
+被标量上下文环境调用时,也会出现这个警告.
+<P>
+
+用户定义的子程序可能会需要查看上下文是无效，标量，还是列表。不过，大多数并
+不需要这么做。因为标量和列表会自动插入到一个列表中。参见 perlfunc 中的
+"wantarray" 以了解如何辨明你的函数调用时的上下文。
+<A NAME="lbAF">&nbsp;</A>
+<H3>Scalar values 标量</H3>
+
+
+Perl 中的所有数据都是标量, 标量的数组,标量的哈希. 标量可以是三种不同的值: 数字, 字符(串), 引用. 通常, 不同值之间的转换是透明的. 虽然一个标量不可能有多个值, 但是它可以是一个包含多个值的数组或哈希的引用.
+<P>
+
+标量不一定非此即彼. 不需要声明变量的类型是&quot;字符串&quot;,&quot;数字&quot;,&quot;引用&quot;或其它什麽. 因为标量会自动转换, 所以其类型不用关心. Perl 是上下文多形语言,它的标量可以是字符串,数字或引用(包括对象). 其中字符串和数字在大多数情况下并没有什麽不同, 引用是强化的,不可变的带有内建引用计数和析构器的指针.
+<P>
+
+标量在不是空字符串和数字0的时候被解释为真 TRUE. 布尔上下文是这样一种上下文, 这时不会发生数字或字符串的自动转换.
+<P>
+
+有两种空字符串(有时以&quot;empty&quot;表示), 定义了的和未定义的. 定义了的空字符串就是长度为零的字符串,如&quot;&quot;. 未定义的空字符串是一个值,这个值表示某事物并没有真实值与它对应, 比如出错, 或到达文件尾, 或者你引用一个未定义的数组或哈希的元素时,都会返回一个未定义的空字符串. 虽然在早期Perl 中,在要求已定义变量的上下文中使用未定义的变量可以使得该变量得到定义, 现在却只有在特殊的情况下才会出现这种结果,参见the perlref manpage. 可以用defined() 函数来检测标量是否已经定义(对数组和哈希无效),也可以用undef() 去除对变量的定义.
+<P>
+
+要弄清楚一个字符串是否是有效的非0数字,只要看它是不是数字0和字母"0" 就足够了(不过这在使用-w参数时,会显示警告). 因为非数字的字符串被看作0, 与awk中相似:
+<P>
+
+<PRE>
+    if ($str == 0 &amp;&amp; $str ne &quot;0&quot;)  {
+        warn &quot;That doesn't look like a number&quot;;
+    }
+</PRE>
+
+<P>
+
+这种方法可能是最好的,因为如若不然你不会正确对待<FONT SIZE="-1">IEEE</FONT> 的注释,比如`NaN' 和无穷大. 别的时候, 你可能更愿意用<I>POSIX::strtod()</I> 函数或是正则表达式来检测字符串是否能用做数字(参见perlre).
+<P>
+
+<PRE>
+    warn &quot;has nondigits&quot;        if     /\D/;
+    warn &quot;not a natural number&quot; unless /^\d+$/;             # rejects -3
+    warn &quot;not an integer&quot;       unless /^-?\d+$/;           # rejects +3
+    warn &quot;not an integer&quot;       unless /^[+-]?\d+$/;
+    warn &quot;not a decimal number&quot; unless /^-?\d+\.?\d*$/;     # rejects .2
+    warn &quot;not a decimal number&quot; unless /^-?(?:\d+(?:\.\d*)?|\.\d+)$/;
+    warn &quot;not a C float&quot;
+        unless /^([+-]?)(?=\d|\.\d)\d*(\.\d*)?([Ee]([+-]?\d+))?$/;
+</PRE>
+
+<P>
+
+数组的长度是标量. 通过$#days你可以知道@days的长度. 技术上讲,这不是数组的长度; 而是最后一个元素的下标,因为第一个元素的下标是0. 对$#days 赋值会改变数组的长度. 以这种方式减少数组的话, 会破坏其中的值, 再增加其长度也不能恢复. (Perl 4中是可以的, 我们改变了它以确保析构器被及时调用.)
+<P>
+
+你可以使用一些小技巧来预扩展一个数组(如果你知道它将会变得很大的话). 可以用给超出数组范围的元素赋值的方法扩展数组. 可以给数组赋值一个空列表以清空数组. 下面语句等价:
+<P>
+
+<PRE>
+    @whatever = ();
+    $#whatever = -1;
+</PRE>
+
+<P>
+
+数组处于标量上下文中时, 返回值是数组的长度. (列表在标量上下文中,返回值是列表的最后一个元素,像是C中的逗号操作符, 而内建函数的返回值由它们自己决定.) 以下语句为真:
+<P>
+
+<PRE>
+    scalar(@whatever) == $#whatever - $[ + 1;
+</PRE>
+
+<P>
+
+Perl 5 改变了$[ 的意义: 不必担心别的程序改变了$[ 的值. (换言之,不推荐使用$[ ) 所以,可以写成这样:
+<P>
+
+<PRE>
+    scalar(@whatever) == $#whatever + 1;
+</PRE>
+
+<P>
+
+有些程序员为了明确起见, 会使用显式的转换:
+<P>
+
+<PRE>
+    $element_count = scalar(@whatever);
+</PRE>
+
+<P>
+
+当哈希处于标量上下文中时, 如果哈希为空, 返回值为假, 如果非空, 返回值为真; 说得更精确些, 返回值是个字符串, 由已经使用的存储段和分配的全部存储段组成,二者之间以斜杠分隔. 这可以用来反映Perl的哈希算法的好坏. 例如, 你的哈希中有10,000个元素,但是%HASH 的标量值为&quot;1/16&quot;, 则说明仅用到了16个存储段中的一个, 也许10,000个元素都在这一个存储段中. 最好不要发生这种情况.
+<P>
+
+你可以预先为哈希分配空间, 这要使用给<I>keys()</I> 函数赋值的方法来实现. 实际分配的空间是大于所给值的二的幂：
+<P>
+
+<PRE>
+    keys(%users) = 1000;                # 分配 1024 空间
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H3>Scalar value constructors 标量数据构造</H3>
+
+
+数值常量有以下浮点和整数格式:
+<P>
+
+<PRE>
+    12345
+    12345.67
+    .23E-10             # a very small number
+    3.14_15_92          # a very important number
+    4_294_967_296       # underscore for legibility
+    0xff                # hex
+    0xdead_beef         # more hex   
+    0377                # octal
+    0b011011            # binary
+</PRE>
+
+<P>
+
+在数字常量中可以在数字间插入下划线来增加可读性。例如，可以三位一组 (Unix 样式的分组，例如 0b110_110_100)，或者四位一组 (来表示 nibbles，例如 0b1010_0110)，或者其他分组。
+<P>
+
+字符串通常以单引号或双引号括起. 与标准Unix shells中的引号相似: 双引号可以接收转义和变量; 单引号不可以 (除了`\'' 和`\\')). C 样式的转义字符可以用来输入新行，跳格等字符，转义字符的列表可以参见 perlop 中的"Quote and Quote-like Operators"
+<P>
+
+十六进制,八进制,或二进制以字符串形式表示(如:'0xff'),不能自动转换为十进制形式. hex() 和 oct() 函数可以实现转换. 参见 perlfunc 中的 hex 和 oct 了解详情.
+<P>
+
+可以在字符串中直接加入新行. 字符串中的变量只能是标量,数组和数组或哈希的片段 (换言之, 以$或@开始, 后跟下标.).
+以下语句打印``The price is $100.''
+<P>
+
+<PRE>
+    $Price = '$100';    # not interpolated
+    print &quot;The price is $Price.\n&quot;;     # interpolated
+</PRE>
+
+<P>
+
+perl 中没有 double interpolation，因此$100 保持不变。
+<P>
+
+正如在有些shell中一样, 你可以用花括号括起变量名, 以便区分变量名和其后的字母及下划线. 如果要将一个变量改写为字符串时，必须这样做，以避免与后面的双冒号或单引号连接起来，否则会被当作包名：
+<P>
+
+<PRE>
+    $who = &quot;Larry&quot;;
+    print PASSWD &quot;${who}::0:0:Superuser:/:/bin/perl\n&quot;;
+    print &quot;We use ${who}speak when ${who}'s here.\n&quot;;
+</PRE>
+
+<P>
+
+如果没有花括号, Perl会寻找 $whospeak, $who::0, 和 $who's 变量. 后两个是不存在的 who 包中的$0 和 $s.
+<P>
+
+实际上, 花括号中的标识符必须是字符串, 哈希的下标也必须是字符串. 都不需要引号, 前面的例子$days{'Feb'} 可以写作 $days{Feb} 引号会自动加上. 但是下标中的其它复杂内容被解释为表达式.
+<P>
+
+<I>Version Strings</I>
+
+<P>
+
+<B>注意:</B> Version Strings (v-strings) have been deprecated.  They will
+not be available after Perl 5.8.  The marginal benefits of v-strings
+were greatly outweighed by the potential for Surprise and Confusion.
+<P>
+
+类似`v1.20.300.4000' 这样的形式被解释为一个字符串. 这种形式称为 v-strings，提供了更易读的方法来构造字符串，比起&quot;\x{1}\x{14}\x{12c}\x{fa0}&quot; 更加易读. 这在表示 Unicode 字符串时很有用, 在使用字符串比较命令(`cmp',`gt',`lt' 等)比较版本号时也非常有用. 如果其中的点号多于两个, 则开始的`v' 可以省略.
+<P>
+
+<PRE>
+    print v9786;              # prints UTF-8 encoded SMILEY, &quot;\x{263a}&quot;
+    print v102.111.111;       # prints &quot;foo&quot;
+    print 102.111.111;        # same
+</PRE>
+
+<P>
+
+这种形式可以用于require 和 use 中作版本检查."$^V" 特殊变量中的Perl版本号就是以这种形式保存的. 参见 perlvar 中的"$^V"
+注意使用 v-strings 来保存 IPv4 地址是不可移植的，除非同时使用 Socket 包的<I>inet_aton()</I>/<I>inet_ntoa()</I> 函数。
+<P>
+
+注意从 Perl 5.8.1 开始单个数字的 v-strings (类似`v65') 如果在`=&gt;' 操作符(通常用来从 hash 值中区分开 hash 键) 之前，不是一个 v-strings，而是解释为字符串 ('v65')。在 Perl 5.6.0 到 Perl 5.8.0 它一直是 v-strings，但是这样带来了更多混淆和错误而不是优点。多个数字的 v-strings，类似`v65.66' 和65.66.67，继续总是被当作 v-strings
+<P>
+
+<I>特殊常量</I>
+
+<P>
+
+特殊变量 __FILE__, __LINE__, 和 __PACKAGE__ 代表当前文件名,行号,和包名. 它们只能作为单独的符号来使用; 不能用于字符串中内插. 如果没有当前包(用`package;' 指令来实现), 则__PACKAGE__ 是一个未定义的值.
+<P>
+
+控制字符 ^D 和 ^Z, 以及 __END__ 和 __DATA__ 变量可以表示文件的逻辑结束. 其后的文本被忽略.
+<P>
+
+__DATA__ 之后的文本可以通过文件句柄`PACKNAME::DATA' 读取,`PACKNAME' 是 __DATA__ 所在的包的名称. 句柄指向__DATA__ 后面的文本. 读取结束程序会自动关闭该句柄`close DATA'. 为了与 __DATA__ 还没有出现以前已经存在的程序兼容, __END__ 在顶级脚本中与 __DATA__ 性质相同(在用`require' 或`do' 调用时是不同的) 不过可以通过`main::DATA' 来调用其中的内容.
+<P>
+
+参见 SelfLoader 详细了解 __DATA__, 其中还有例子. 要注意在BEGIN 块中无法读取DATA句柄: 因为BEGIN 块在编译时即被执行, 而此时 __DATA__ (或 __END__) 还未被程序看到.
+<P>
+
+<I>裸词</I>
+
+<P>
+
+在文法上没有特殊意义的词语都被看作字符串. 称之为 &quot;裸词&quot;. 和文件句柄以及标签一样, 仅包含小写字母的裸词有可能在将来与程序中的保留词发生冲突, 实际上,当你使用`use warnings' 语句,或是<B>-w</B> 选项时, Perl会对此提出警告. 一些人可能希望完全禁止这样的词. 如果有如下语句:
+<P>
+
+<PRE>
+    use strict 'subs';
+</PRE>
+
+<P>
+
+那么不能被解释为子程序的裸词会引起编译时错误. 这种限制到块结束时终止. 而内部的块可以撤消这一限制, 用`no strict 'subs''
+<P>
+
+<I>数组合并分隔符</I>
+
+<P>
+
+数组和序列被合并为双引号引用的字符串时，以变量$&quot; 指定的值 (如果指定了"use English;" 那么是$LIST_SEPARATOR 的值) 作为分隔符，默认是空格。下列语句等价：
+<P>
+
+<PRE>
+    $temp = join($&quot;, @ARGV);
+    system &quot;echo $temp&quot;;
+</PRE>
+
+<P>
+
+<PRE>
+    system &quot;echo @ARGV&quot;;
+</PRE>
+
+<P>
+
+在搜索模式中(在双引号字符串中也是)有一个易混淆之处:`/$foo[bar]/' 应该是`/${foo}[bar]/' (`[bar]' 是正则表达式的字符类) 还是`/${foo[bar]}/'/ (`[bar]' 是数组@foo 的下标) 呢? 如果@foo 不存在, 那很明显它应该是字符类. 如果@foo 存在, Perl 会尽力猜测`[bar]' 的含义, 且它几乎总是对的. 如果它猜错了, 或者你比较偏执, 你可以使用花括号.
+<P>
+
+here-document 的语法已经被移动到 perlop 中的"Quote and Quote-like Operators"
+<A NAME="lbAH">&nbsp;</A>
+<H3>List value constructors 列表值构造</H3>
+
+
+列表是用逗号分开的各个值组成的(如果优先级需要的话,外面还要用圆括号包围):
+<P>
+
+<PRE>
+    (LIST)
+</PRE>
+
+<P>
+
+在不需要列表的上下文中, 列表的值是最后一个元素的值, 这与C中的逗号操作符类似. 例如:
+<P>
+
+    @foo = ('cc', '-E', $bar);
+<P>
+
+将列表赋给数组@foo, 但是
+<P>
+
+    $foo = ('cc', '-E', $bar);
+<P>
+
+将$bar 的值赋给$foo. 注意, 数组在标量上下文中的值是数组的长度; 下例将3赋给$foo:
+<P>
+
+<PRE>
+    @foo = ('cc', '-E', $bar);
+    $foo = @foo;                # $foo gets 3
+</PRE>
+
+<P>
+
+列表的最后可以输入逗号, 所以这样也是正确的:
+<P>
+
+<PRE>
+    @foo = (
+        1,
+        2,
+        3,
+    );
+</PRE>
+
+<P>
+
+要将here-document 赋给数组, 一行作为一个元素, 可以这样作:
+<P>
+
+<PRE>
+    @sauces = &lt;&lt;End_Lines =~ m/(\S.*\S)/g;
+        normal tomato
+        spicy tomato
+        green chile
+        pesto
+        white wine
+    End_Lines
+</PRE>
+
+<P>
+
+列表会自动插入子列表. 也即, 下例将展开数组,哈希等, 并将其中的每一个元素作为该新列表的一个元素. 数组或哈希失去其原来的身份.列表
+<P>
+
+    (@foo,@bar,&amp;SomeSub,%glarch)
+<P>
+
+包括@foo,@bar的每一个元素,包括函数 SomeSub 返回值列表的每一个元素, 包括 %glarch 的每一个字值对. 要想使用不内插的列表, 可以参见 perlref
+<P>
+
+空列表可以表示为(). 在列表中插入空列表没有意义. ((),(),()) 与()相同. 同样, 内插一个空数组也没有意义.
+<P>
+
+合并的语法表示开和闭括号都是可选的 (除非为表示优先级需要)；而列表可以以可选的逗号结束表示列表中的多个逗号是合法的语法。列表`1,,3' 是两个列表的并置，`1,' 还有3, 第一个以可选的逗号结束。`1,,3' 是`(1,),(3)' 也是`1,3' (类似的，`1,,,3' 是`(1,),(,),3' 也是`1,3' 等等) 不过我们不建议你使用这么混乱的写法
+<P>
+
+列表也可以象数组一样使用下标. 为了避免歧义需要在列表外使用括号. 例如:
+<P>
+
+<PRE>
+    # Stat returns list value.
+    $time = (stat($file))[8];
+</PRE>
+
+<P>
+
+<PRE>
+    # SYNTAX ERROR HERE.
+    $time = stat($file)[8];  # OOPS, FORGOT PARENTHESES
+</PRE>
+
+<P>
+
+<PRE>
+    # Find a hex digit.
+    $hexdigit = ('a','b','c','d','e','f')[$digit-10];
+</PRE>
+
+<P>
+
+<PRE>
+    # A &quot;reverse comma operator&quot;.
+    return (pop(@foo),pop(@foo))[0];
+</PRE>
+
+<P>
+
+可以给列表赋值, 当然列表中的每个元素必须合法才行:
+<P>
+
+    ($a, $b, $c) = (1, 2, 3);
+<P>
+
+    ($map{'red'}, $map{'blue'}, $map{'green'}) = (0x00f, 0x0f0, 0xf00);
+<P>
+
+特例是可以赋值为`undef'。当忽略程序的某些返回值时这很有用:
+<P>
+
+    ($dev, $ino, undef, undef, $uid, $gid) = stat($file);
+<P>
+
+列表赋值处于标量上下文中时, 返回值是等号右侧的表达式的元素个数:
+<P>
+
+<PRE>
+    $x = (($foo,$bar) = (3,2,1));       # set $x to 3, not 2
+    $x = (($foo,$bar) = f());           # set $x to f()'s return count
+</PRE>
+
+<P>
+
+这在布尔上下文中很方便, 因为多数列表函数在结束时返回空列表, 这时列表赋值会返回0, 被解释为FALSE.
+<P>
+
+它也是一个有用的习惯的来源，就是在列表上下文中执行一个函数或操作，然后记录返回值的个数，方法是为一个空列表赋值，然后在标量上下文中使用这个值。例如，如下代码：
+<P>
+
+    $count = () = $string =~ /\d+/g;
+<P>
+
+将置$count 为$string 中找到的数字组数量。这样能行的原因是模式匹配是列表上下文 (因为它被赋予一个空列表)，因此返回所有匹配部分的列表。在标量上下文中的列表赋值将它转换为元素的个数 (这里是模式被匹配的数量)，然后赋值给$count。注意简单地使用
+<P>
+
+    $count = $string =~ /\d+/g;
+<P>
+
+没有作用，因为在标量上下文中的模式匹配只会返回 true 或 false，而不是所有的匹配。
+<P>
+
+最后一个元素可以是数组或哈希:
+<P>
+
+<PRE>
+    ($a, $b, @rest) = split;
+    my($a, $b, %rest) = @_;
+</PRE>
+
+<P>
+
+当然可以在任何位置使用数组或哈希, 不过第一个数组或哈希会将所有的值都据为己有, 其它的元素都会变为undefined.这在my() 或 local()中或许有用.
+<P>
+
+哈希可以用含有字值对的列表来初始化:
+<P>
+
+<PRE>
+    # same as map assignment above
+    %map = ('red',0x00f,'blue',0x0f0,'green',0xf00);
+</PRE>
+
+<P>
+
+列表和数组交互性很强, 哈希则不然. 你可以象使用数组时一样对列表使用下标并不意味着可以象使用哈希一样使用列表. 同样,处于列表中的哈希总是以字值对的形式展开. 因此有时使用引用要更好一些.
+<P>
+
+通常在字值对中使用`=&gt;' 操作符会更易读.`=&gt;' 与逗号作用相同, 不过它
+还有一个作用, 那就是可以使它左侧的对象被解释为字符串: 如果该对象是裸
+字的话,将是合法的标识符 (`=&gt;' 不引用包含双冒号的复合标识符). 这在初始
+化哈希时棒极了:
+<P>
+
+<PRE>
+    %map = (
+                 red   =&gt; 0x00f,
+                 blue  =&gt; 0x0f0,
+                 green =&gt; 0xf00,
+   );
+</PRE>
+
+<P>
+
+或者初始化哈希的引用:
+<P>
+
+<PRE>
+    $rec = {
+                witch =&gt; 'Mable the Merciless',
+                cat   =&gt; 'Fluffy the Ferocious',
+                date  =&gt; '10/31/1776',
+    };
+</PRE>
+
+<P>
+
+or for using call-by-named-parameter to complicated functions:
+<P>
+
+<PRE>
+   $field = $query-&gt;radio_group(
+               name      =&gt; 'group_name',
+               values    =&gt; ['eenie','meenie','minie'],
+               default   =&gt; 'meenie',
+               linebreak =&gt; 'true',
+               labels    =&gt;\%labels
+   );
+</PRE>
+
+<P>
+
+注意哈希初始化时的顺序和输出时的顺序并不一定相同. 要得到顺序的输出可以参见 perlfunc 中的"sort"
+<A NAME="lbAI">&nbsp;</A>
+<H3>Subscripts 下标</H3>
+
+
+数组可以用一个美元符号，加上它的名字(不包括前导的`@')，加上方括号和其中包含的下标来取得值。例如：
+<P>
+
+<PRE>
+    @myarray = (5, 50, 500, 5000);
+    print &quot;Element Number 2 is&quot;, $myarray[2], &quot;\n&quot;;
+</PRE>
+
+<P>
+
+数组下标从 0 开始。负值下标返回从尾部开始数的值。在我们的例子中，$myarray[-1] 将是 5000,$myarray[-2] 是 500。
+<P>
+
+Hash 下标与此类似，但是不使用方括号而是花括号。例如：
+<P>
+
+<PRE>
+    %scientists = 
+    (
+        &quot;Newton&quot; =&gt; &quot;Isaac&quot;,
+        &quot;Einstein&quot; =&gt; &quot;Albert&quot;,
+        &quot;Darwin&quot; =&gt; &quot;Charles&quot;,
+        &quot;Feynman&quot; =&gt; &quot;Richard&quot;,
+    );
+</PRE>
+
+<P>
+
+    print &quot;Darwin's First Name is &quot;, $scientists{&quot;Darwin&quot;}, &quot;\n&quot;;
+<A NAME="lbAJ">&nbsp;</A>
+<H3>Slices 片段</H3>
+
+
+通常对哈希或数组一次访问一个元素. 也可以使用下标对列表元素进行访问.
+<P>
+
+<PRE>
+    $whoami = $ENV{&quot;USER&quot;};             # one element from the hash
+    $parent = $ISA[0];                  # one element from the array
+    $dir    = (getpwnam(&quot;daemon&quot;))[7];  # likewise, but with list
+</PRE>
+
+<P>
+
+片段可以一次访问列表,数组或哈希中的几个元素, 这是通过列表下标来实现的. 这比分别写出每个值要方便一些.
+<P>
+
+<PRE>
+    ($him, $her)   = @folks[0,-1];              # array slice
+    @them          = @folks[0 .. 3];            # array slice
+    ($who, $home)  = @ENV{&quot;USER&quot;, &quot;HOME&quot;};      # hash slice
+    ($uid, $dir)   = (getpwnam(&quot;daemon&quot;))[2,7]; # list slice
+</PRE>
+
+<P>
+
+既然可以给列表赋值, 当然也可以哈希或数组的片段赋值.
+<P>
+
+<PRE>
+    @days[3..5]    = qw/Wed Thu Fri/;
+    @colors{'red','blue','green'} 
+                   = (0xff0000, 0x0000ff, 0x00ff00);
+    @folks[0, -1]  = @folks[-1, 0];
+</PRE>
+
+<P>
+
+上面的操作与下列语句等价:
+<P>
+
+<PRE>
+    ($days[3], $days[4], $days[5]) = qw/Wed Thu Fri/;
+    ($colors{'red'}, $colors{'blue'}, $colors{'green'})
+                   = (0xff0000, 0x0000ff, 0x00ff00);
+    ($folks[0], $folks[-1]) = ($folks[-1], $folks[0]);
+</PRE>
+
+<P>
+
+既然改变片段就会改变数组或哈希的原始值, 那么`foreach' 结构可以部分或全部地改变数组或哈希的值.
+<P>
+
+    foreach (@array[ 4 .. 10 ]) { s/peter/paul/ }
+<P>
+
+<PRE>
+    foreach (@hash{qw[key1 key2]}) {
+        s/^\s+//;           # trim leading whitespace
+        s/\s+$//;           # trim trailing whitespace
+        s/(\w+)/\u\L$1/g;   # &quot;titlecase&quot; words
+    }
+</PRE>
+
+<P>
+
+空列表的片段还是空列表, 因此:
+<P>
+
+<PRE>
+    @a = ()[1,0];           # @a has no elements
+    @b = (@a)[0,1];         # @b has no elements
+    @c = (0,1)[2,3];        # @c has no elements
+</PRE>
+
+<P>
+
+但是:
+<P>
+
+<PRE>
+    @a = (1)[1,0];          # @a has two elements
+    @b = (1,undef)[1,0,2];  # @b has three elements
+</PRE>
+
+<P>
+
+下例利用了这一特性,当返回空列表时循环终止:
+<P>
+
+<PRE>
+    while ( ($home, $user) = (getpwent)[7,0]) {
+        printf &quot;%-8s %s\n&quot;, $user, $home;
+    }
+</PRE>
+
+<P>
+
+我们在前面说过, 标量上下文中的列表赋值返回值是右侧的元素个数. 空列表没有元素, 所以当口令文件读完后, 返回值是0而不是2.
+<P>
+
+为什么对哈希的片段使用'@'而不是'%'呢. 因为括号的类型(方括号或花括号)决定了它是数组还是哈希. 而数组或哈希的开始字符('$'或'@')表示返回值是单个值还是多个值(列表).
+<A NAME="lbAK">&nbsp;</A>
+<H3>Typeglobs and Filehandles 全局类型和文件句柄</H3>
+
+
+Perl 使用叫做 全局类型 的类型来支持整个符号表项. 全局类型的前缀是*, 因为它表示所有的类型. 这在过去通常用来给函数传递数组或哈希的引用, 但是现在有了真正的引用, 这就几乎不需要了.
+<P>
+
+现在,全局类型的主要用途是创建符号表别名. 如下赋值:
+<P>
+
+    *this = *that;
+<P>
+
+使得$this 成为 $that的别名, @this 成为 @that的别名,%this 成为 %that的别名, &amp;this 成为 &amp;that的别名, 等等. 使用引用会更安全. 这样:
+<P>
+
+    local *Here::blue =\$There::green;
+<P>
+
+暂时使 $Here::blue 成为 $There::green的别名, 但不会使 @Here::blue 成为 @There::green的别名, 也不会使 %Here::blue 成为 %There::green的别名, 等等. 参见 perlmod 中的 Symbol Tables 有多个例子. 看起来可能有些怪异, 不过这却是整个import/export系统的基础.
+<P>
+
+全局类型的其它用途还有, 给函数传输文件句柄或是创建新的文件句柄. 如果你要使用全局类型代替文件句柄, 可以这样做:
+<P>
+
+    $fh = *STDOUT;
+<P>
+
+或者使用真正的引用, 象这样:
+<P>
+
+<PRE>
+    $fh =\*STDOUT;
+</PRE>
+
+<P>
+
+参见 perlsub 有关于间接句柄的多个例子.
+<P>
+
+全局类型也是使用local() 创建局部文件句柄的一种方法. 作用范围在当前块之内, 但是可以被传回.例如:
+<P>
+
+<PRE>
+    sub newopen {
+        my $path = shift;
+        local  *FH;  # not my!
+        open   (FH, $path)          or  return undef;
+        return *FH;
+    }
+    $fh = newopen('/etc/passwd');
+</PRE>
+
+<P>
+
+既然我们有*foo{THING} 这样的记法, 全局类型不再多用于文件句柄,但在从函数传出或向函数传入新的文件句柄时它还是必需的.因为*HANDLE{IO} 只有在HANDLE 已经是文件句柄时才起作用. 换言之, 在建立新符号表项时必须使用 *FH; *foo{THING} 是不行的. 不知道该用谁时, 使用 *FH
+<P>
+
+所有能创建文件句柄的函数 (open(), opendir(), pipe(), socketpair(), sysopen(), socket(), 和 accept()) ,在传递给它们的句柄是标量时,会自动创建一个匿名句柄. 这使得象open(my $fh, ...) 和 open(local $fh,...) 这样的结构可以创建一个在超出范围时可以自动关闭的句柄,如果没有另外的对它们的引用的话. 这大大减少了全局类型的使用,当需要打开一个可以到处使用的句柄时, 可以这样做：
+<P>
+
+<PRE>
+    sub myopen {
+        open my $fh, &quot;@_&quot;
+             or die &quot;Can't open '@_': $!&quot;;
+        return $fh;
+    }
+</PRE>
+
+<P>
+
+<PRE>
+    {
+        my $f = myopen(&quot;&lt;/etc/motd&quot;);
+        print &lt;$f&gt;;
+        # $f implicitly closed here
+    }
+</PRE>
+
+<P>
+
+注意如果使用了初始化的标量，那么结果会有不同：`my $fh='zzz'; open($fh, ...)' 与`open( *{'zzz'}, ...)' 等价。`use strict 'refs'' 禁止了这样做。
+<P>
+
+另一个创建匿名句柄的方法是用Symbol 模块或IO::Handle 模块或诸如此类的东西. These modules have the advantage of not hiding different types of the same name during the local(). 在 open() in the perlfunc manpage 的文末有个例子.(译者注:说实话,对匿名句柄我现在也是一头雾水,翻译的不当之处,请高手指出.)
+<A NAME="lbAL">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+
+参见 the perlvar manpage 了解 Perl的内建变量和合法变量。参见the perlref manpage, the perlsub manpage, 和 Symbol Tables in the perlmod manpage 了解全局类型和 *foo{THING} 语法。
+<A NAME="lbAM">&nbsp;</A>
+<H2>中文版维护人</H2>
+
+<B>redcandle &lt;<A HREF="mailto:redcandle51@nospam.chinaren.com">redcandle51@nospam.chinaren.com</A>&gt;</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>中文版最新更新</H2>
+
+<B>2001年12月4日星期二</B>
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>中文手册页翻译计划</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION 描述</A><DD>
+<DL>
+<DT><A HREF="#lbAD">Variable names 变量名</A><DD>
+<DT><A HREF="#lbAE">Context 上下文</A><DD>
+<DT><A HREF="#lbAF">Scalar values 标量</A><DD>
+<DT><A HREF="#lbAG">Scalar value constructors 标量数据构造</A><DD>
+<DT><A HREF="#lbAH">List value constructors 列表值构造</A><DD>
+<DT><A HREF="#lbAI">Subscripts 下标</A><DD>
+<DT><A HREF="#lbAJ">Slices 片段</A><DD>
+<DT><A HREF="#lbAK">Typeglobs and Filehandles 全局类型和文件句柄</A><DD>
+</DL>
+<DT><A HREF="#lbAL">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAM">中文版维护人</A><DD>
+<DT><A HREF="#lbAN">中文版最新更新</A><DD>
+<DT><A HREF="#lbAO">中文手册页翻译计划</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,312 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of TOUCH</TITLE>
+</HEAD><BODY>
+<H1>TOUCH</H1>
+Section: User Commands  (1)<BR>Updated: November 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+touch - 修改文件的时间戳记.
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>touch</B>
+
+<B>[-acm][-r </B><I>ref_file(参照文件)</I><B>|-t </B><I>time(时间值)</I><B>] </B><I>file(文件名)...</I>
+
+<P>
+被废弃的版本:
+<BR>
+
+<B>touch</B>
+
+<B>[-acm][</B><I>ugly_time</I><B>] </B><I>file(文件)...</I>
+
+<P>
+GNU版本:
+<BR>
+
+<B>touch</B>
+
+<B>[-acfm] [-r </B><I>file(参照文件)</I><B>] [-t </B><I>decimtime(时间值)</I><B>]</B>
+
+<B>[-d </B><I>time(时间值)</I><B>] [--time={atime,access,use,mtime,modify}]</B>
+
+<B>[--date=</B><I>time</I><B>] [--reference=</B><I>file</I><B>]</B>
+
+<B>[--no-create] [--help] [--version] [--] </B><I>file(文件)...</I>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>用法描述</H2>
+
+<B>touch</B>
+
+修改每个指定文件
+<I>file</I>
+
+的存取(access)和／或修改(modification)时间戳记．
+除非使用-r或-t选项，这些时间戳记都将修改为当前的时间．
+使用-r选项时，这些戳记将按照文件
+<I>ref_file</I>
+
+的时间戳记来修改(即变得和ref_file时间戳记值相同)．
+使用-t选项，则这些戳记将按照给定的时间值
+<I>time</I>
+
+进行修改．同时使用或
+同时不使用选项-a和-m，存取和修改两个戳记都将被更改．若只使
+用选项-a，则只修改存取戳记．同样，只使用选项-m，则只修改修
+改戳记．若要修改戳记的文件尚不存在，除非使用-c选项，touch
+将创建它(作为空文件，并赋予0666的模式且受umask值的限制)．
+<A NAME="lbAE">&nbsp;</A>
+<H2>POSIX标准定义的选项</H2>
+
+<DL COMPACT>
+<DT><B>-a</B>
+
+<DD>
+修改文件
+<I>file</I>
+
+的存取时间．
+<DT><B>-c</B>
+
+<DD>
+不创建文件
+<I>file</I>.
+
+<DT><B>-m</B>
+
+<DD>
+修改文件
+<I>file</I>
+
+<I>file</I>
+
+<P>
+<DT><B>-r </B><I>ref_file</I>
+
+<DD>
+将参照文件
+<I>ref_file</I>
+
+相应的时间戳记的数值作为指定文件
+<I>file</I>
+
+时间戳记的新值．
+<DT><B>-t </B><I>time</I>
+
+<DD>
+使用指定的时间值
+<I>time</I>
+
+作为指定文件
+<I>file</I>
+
+相应时间戳记的新值．此处的
+<I>time</I>
+
+规定为如下形式的十进制数:
+<BR>
+
+<PRE>
+[[CC]YY]MMDDhhmm[.SS]
+<BR>
+</PRE>
+
+这里，CC为年数中的前两位，即"世纪数"；YY为年数的
+后两位，即某世纪中的年数．如果不给出CC的值，则touch
+将把年数CCYY限定在1969--2068之内．MM为月数，DD为天
+将把年数CCYY限定在1969--2068之内．MM为月数，DD为天
+数，hh为小时数(几点)，mm为分钟数，SS为秒数．此处秒
+的设定范围是0--61，这样可以处理闰秒．这些数字组成
+的时间是环境变量TZ指定的时区中的一个时间．由于系统
+的限制，早于1970年1月1日的时间是错误的．
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>POSIX标准的细节</H2>
+
+已被废弃的touch版本使用时会出现模棱两可的情况:
+<I>ugly_time</I>
+
+到底是时间值还是文件名？由于此种版本尚未提供-r或-t选项，
+所以使用时至少要有两个命令行参数，作为时间值，
+<I>ugly_time</I>
+
+必须为第一个参数．这里的
+<I>ugly_time</I>
+
+是一个形为MMDDhhmm[yy]的八
+位或十位整数．其中，yy是介于69--99之间表示1969--1999之间某
+一年的两位数，如果不给，表示当前这一年．
+<A NAME="lbAG">&nbsp;</A>
+<H2>GNU版本的细节</H2>
+
+如果第一个指定文件
+<I>file</I>
+
+的名子从形式上说是选项
+<B>-t</B>
+
+的有效参
+数，并且没有给出选项
+<B>-d</B>,
+
+<B>-r</B>
+
+或
+<B>-t</B>
+
+<B>-t</B>
+
+<P>
+数，也没有给`--'选项，那么这个文件名将被解释成时间值．
+<P>
+
+一般情况下，利用
+<B>touch</B>
+
+修改文件的时间戳记时要求用户时该文
+件的所有者．除非只是把文件的存取和修改两种时间戳记修改为当
+前的时刻，这种情况只要求用户拥有对该文件`写'的权利就行了．
+<A NAME="lbAH">&nbsp;</A>
+<H2>GNU版本选项用法简介</H2>
+
+<DL COMPACT>
+<DT><B>-a, --time=atime, --time=access, --time=use</B>
+
+<DD>
+只修改存取时间．
+<DT><B>-c, --no-create</B>
+
+<DD>
+如果要修改的文件不存在，此选项使touch不去创建它．
+<DT><B>-d, --date=</B><I>time</I>
+
+<DD>
+使用时间值
+<I>time</I>
+
+代替指定文件的戳记值．可以包含月份
+名，时区名以及`am'和
+`pm'等等．
+<DT><B>-f</B>
+
+<DD>
+此选项用于兼容BSD版本的
+<B><A HREF="/cgi-bin/man/man2html?1+touch">touch</A></B>(1).
+
+<DT><DT><B>-m, --time=mtime, --time=modify</B>
+
+<DD>
+<DD>
+只修改修改时间．
+<DT><B>-r </B><I>file</I><B>, --reference=</B><I>file</I>
+
+<DD>
+使用参照文件
+<I>file</I>
+
+的时间戳记值修改指定文件的时间戳
+记．
+<DT><B>-t </B><I>decimtime</I>
+
+<DD>
+这里时间值
+<I>decimtime</I>
+
+的格式为MMDDhhmm[[CC]YY][.ss]
+从左至右分别是月份，日期，小时，分钟，可选的世纪和
+年，以及可选的秒．
+<B>touch</B>
+
+将用这组数值修改指定文件的
+时间戳记．请注意，这个格式与POSIX标准所规定的格式并
+不一样．
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>GNU版本通用选项</H2>
+
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+使程序在标准输出上显示该程序的用法信息．
+<DT><B>--version</B>
+
+<DD>
+使程序在标准输出上打印其版本信息．
+<DT></DL>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>GNU版本通用选项</H2>
+
+<DD>
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+使程序在标准输出上显示该程序的用法信息．
+<DT><B>--version</B>
+
+<DD>
+使程序在标准输出上打印其版本信息．
+<DT><B>--</B>
+
+<DD>
+用于使程序终止对选项的解析．
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H2>运行环境</H2>
+
+环境变量TZ一般用来表明所给时刻是哪个时区的．而环境变量LANG,
+LC_ALL, LC_CTYPE 和 LC_MESSAGES还是一般情况下的意义．
+<A NAME="lbAL">&nbsp;</A>
+<H2>遵循</H2>
+
+GNU版touch的-t选项的参数所用格式并不符合POSIX标准1003.2的描述．
+<A NAME="lbAM">&nbsp;</A>
+<H2>用法实例</H2>
+
+如果文件<I>foo</I>并不存在，那么命令`<I>touch foo</I>'将创建它，并把最
+后的修改时间改到现在的时刻．这一特点经常用来引导
+<B>make</B>
+
+的执行．
+<A NAME="lbAN">&nbsp;</A>
+<H2>注意</H2>
+
+这篇说明描述了fileutils-4.0程序包中的
+<B>touch．</B>
+
+其它版本的touch可能与此有稍许不同．
+对本文的修正和增补请致信<A HREF="mailto:aeb@cwi.nl">aeb@cwi.nl</A>．
+程序缺陷请向<A HREF="mailto:fileutils-bugs@gnu.ai.mit.edu">fileutils-bugs@gnu.ai.mit.edu</A>报告
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">用法描述</A><DD>
+<DT><A HREF="#lbAE">POSIX标准定义的选项</A><DD>
+<DT><A HREF="#lbAF">POSIX标准的细节</A><DD>
+<DT><A HREF="#lbAG">GNU版本的细节</A><DD>
+<DT><A HREF="#lbAH">GNU版本选项用法简介</A><DD>
+<DT><A HREF="#lbAI">GNU版本通用选项</A><DD>
+<DT><A HREF="#lbAJ">GNU版本通用选项</A><DD>
+<DT><A HREF="#lbAK">运行环境</A><DD>
+<DT><A HREF="#lbAL">遵循</A><DD>
+<DT><A HREF="#lbAM">用法实例</A><DD>
+<DT><A HREF="#lbAN">注意</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,126 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of smbsh</TITLE>
+</HEAD><BODY>
+<H1>smbsh</H1>
+Section: User Commands  (1)<BR>Updated: Samba<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>smbsh - 允许用UNIX命令访问NT文件系统 </B>
+
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>smbsh </B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+此程序是<B>Samba</B>套件的一部分。 
+<P>
+<B>smbsh</B>允许你用UNIX命令诸如<B>ls</B>，<B>egrep</B>和<B>rcp</B>等来访问NT文件系统。必须用动态链接的shell以便使<B>smbsh</B>工作正常。
+<P>
+从命令提示上执行<B>smbsh</B>命令，并输入用户账号和口令以便在NT操作系统中验证你的身份。 
+<P>
+<PRE>
+system% smbsh
+Username: user
+Password:
+</PRE>
+
+<P>
+从shell上执行任何动态链接的命令都会用smb协议来访问/smb目录。例如命令：
+<P>
+<PRE>
+ls /smb 
+</PRE>
+
+<P>
+会显示你工作组里的所有主机。而命令： 
+<P>
+<PRE>
+ls /smb/&lt;machine-name&gt; 
+</PRE>
+
+<P>
+会显示指定主机上的共享名。当然也可以用<B>cd</B>命令来改变目录，<B>vi</B>来编辑文件，<B>rcp</B>来拷贝文件。 
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>版本</H2>
+
+此手册页是针对samba套件版本2.0的。 
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>错误</H2>
+
+<B>smbsh</B>通过动态装入的<I>smbwrapper.o</I>截获标准libc调用来工作。但并不是所有的调用都可以被截获，所以有些程序可能在smbsh下工作得不太正常。
+<P>
+非动态链接的程序并不能使用<B>smbsh</B>的功能。很多版本的UNIX有一个<B>file</B>命令会描述程序如何被链接。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>另见 SEE ALSO</H2>
+
+<P>
+
+<B>smb.conf</B> (5), <B>smbd</B> (8).
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+<P>
+<P>
+
+samba软件和相关工具最初由Andrew Tridgell创建。samba现在由Samba Team 作为开源软件来发展，类似linux内核的开发方式。
+<P>
+<P>
+
+最初的samba手册页是 Karl Auer写的。
+手册页源码已经转换为YODL格式(另一种很好的开源软件，可以在<A HREF="ftp://ftp.ice.rug.nl/pub/unix找到)，由Jeremy">ftp://ftp.ice.rug.nl/pub/unix找到)，由Jeremy</A> Sllison 更新到Samba2.0 版本。
+Gerald Carter 在Samba2.2中将它转化为DocBook 格式。
+Alexander Bokovoy 在Samba 3.0中实现了DocBook XML4.2 格式的转换。
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">版本</A><DD>
+<DT><A HREF="#lbAF">错误</A><DD>
+<DT><A HREF="#lbAG">另见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

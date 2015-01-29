@@ -1,0 +1,99 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of TZSELECT</TITLE>
+</HEAD><BODY>
+<H1>TZSELECT</H1>
+Section: Maintenance Commands (8)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tzselect - 选择一个时区
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>tzselect</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>tzselect</B>
+
+程序向用户询问当前位置的信息，把时区描述作为结果输出到标准输出。
+此结果适合作为环境变量 TZ 的值。
+<P>
+
+所有与用户的交互是通过标准输入和标准错误输出完成的。
+<A NAME="lbAE">&nbsp;</A>
+<H2>环境变量</H2>
+
+<DL COMPACT>
+<DT><B>AWK</B><DD>
+一个 Posix 兼容的
+<I>awk</I>
+
+程序的名字(缺省:
+<B>awk</B>).
+
+<DT><B>TZDIR</B><DD>
+包含时区数据文件的目录的名字 (缺省:
+<B>/usr/local/etc/zoneinfo</B>).
+
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>文件</H2>
+
+<DL COMPACT>
+<DT><I>TZDIR</I><B>/iso3166.tab</B><DD>
+包含国家(地区)编码和名称的 ISO 3166 2-字母表。
+<DT><I>TZDIR</I><B>/zone.tab</B><DD>
+国家(地区)代码表，包含经度和纬度，TZ(时区)值，描述性的注释。
+<DT><I>TZDIR</I><B>/</B><I>TZ</I><DD>
+关于时区的时区数据文件 <I>TZ</I>.
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>退出状态</H2>
+
+若从用户获得了正确的时区退出状态返回 0，否则非 0。
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见</H2>
+
+<A HREF="/cgi-bin/man/man2html?3+newctime">newctime</A>(3), <A HREF="/cgi-bin/man/man2html?5+tzfile">tzfile</A>(5), <A HREF="/cgi-bin/man/man2html?8+zdump">zdump</A>(8), <A HREF="/cgi-bin/man/man2html?8+zic">zic</A>(8)
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+mhss  &lt;<A HREF="mailto:jijingzhisheng@up369.com">jijingzhisheng@up369.com</A>&gt;
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2000/10/15
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">环境变量</A><DD>
+<DT><A HREF="#lbAF">文件</A><DD>
+<DT><A HREF="#lbAG">退出状态</A><DD>
+<DT><A HREF="#lbAH">参见</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

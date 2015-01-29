@@ -1,0 +1,109 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of NOTIFY</TITLE>
+</HEAD><BODY>
+<H1>NOTIFY</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+NOTIFY - 生成一个通知
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+NOTIFY <I>name</I>        
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>NOTIFY</B> 命令向当前数据库中所有执行过 LISTEN name， 正在监听特定通知条件的前端应用发送一个通知事件。
+<P>
+
+<BR>&nbsp;传递给前端的通知事件包括通知条件名和发出通知的后端进程PID。&nbsp;数据库设计者有责任定义用于某个数据库的条件名和每个通知条件的含义。
+<P>
+
+<BR>&nbsp;通常，通知条件名与数据库里的表的名字相同，&nbsp;通知时间实际上意味着&quot;我修改了此数据库，请看一眼有什么新东西&quot;。&nbsp;NOTIFY&nbsp;和&nbsp;LISTEN&nbsp;&nbsp;命令并不强制这种联系。例如，数据库设计者可以使用几个不同的条件名来标志一个表的几种不同改变。
+<P>
+
+<B>NOTIFY</B> 为访问同一个 PostgreSQL  数据库的一组进程提供了一种简单的信号形式或进程间通讯机制。 更高级的机制（除了一个简单的通知名以外）可以通过使用数据库中的表从通知者传递数据到被通知者。
+<P>
+
+<BR>&nbsp;当NOTIFY用于通知某一特定表修改的动作的发生，&nbsp;一个实用的编程技巧是将&nbsp;NOTIFY&nbsp;放在一个由表更新触发的规则里。用这种方法，&nbsp;通知将在表更新的时候自动触发，而且应用程序员不会碰巧忘记处理它。
+<P>
+
+<B>NOTIFY</B> 和 SQL 事务用某种重要的方法进行交换。首先，如果 NOTIFY 在事务内部执行，通知事件直到事务提交才会送出。 这么做是有道理的，因为如果事务退出了， 那么在它里面的所有命令都没有效果 － 包括 NOTIFY。但如果有人希望通知事件立即发送，这就不太好了。 其次，当一个正在监听的会话在一次事务内收到一个通知信号， 直到本次事务完成（提交或退出）之前，该通知事件将不被送到与之相连的客户端。 同样，如果一个通知在事务内部发送出去了， 而该事务稍后又退出了，我们就希望通知可以在某种程度上被撤消－ －但通知一旦发送出去，服务器便不能从客户端&quot;收回&quot;通知。 所以通知时间只是在事务之间传递。这一点就要求使用 NOTIFY 作为实时信号的应用应该确保他们的事务尽可能短。
+<P>
+
+<B>NOTIFY</B> 在一方面的行为象 Unix 的信号： 如果同一条件名在短时间内发出了多条信号，接收者几次执行 NOTIFY 可能只回收到一条通知信息。 所以依赖于收到的通知条数的方法是很不可靠的。因而，使用 NOTIFY唤醒需要关注某事的应用， 同时还要使用数据库对象（如序列号）来跟踪事件发生了几次。
+<P>
+
+<BR>&nbsp;客户端经常会自己发送与正在监听的通知名一样的&nbsp;NOTIFY。&nbsp;这时它（客户端）也和其他正在监听的会话一样收到一个通知事件。&nbsp;这样可能导致一些无用的工作（与应用逻辑有关）－－&nbsp;例如，&nbsp;对客户端刚写过的表又进行一次读操作以发现是否有更新。&nbsp;我们可以通过检查服务器进程的PID（在通知事件中提供）&nbsp;是否与自己的后端的PID一致（从&nbsp;libpq&nbsp;中取得）。当他们一样时，&nbsp;说明这是其自身回弹的信息，可以忽略。（不管前面章节是如何讲的，这是一个安全的技巧。&nbsp;PostgreSQL&nbsp;保持自身的通知和其他到来的通知区分开。&nbsp;所以你屏蔽了自己的通知后不会略过外部的通知。）
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;生成信号（通知）的通知条件（任何标识符）。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;在&nbsp;<B>psql</B>&nbsp;里配置和执行一个监听/通知对：
+<P>
+<PRE>
+LISTEN virtual;
+NOTIFY virtual;
+Asynchronous notification &quot;virtual&quot; received from server process with PID 8448.
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;在&nbsp;SQL&nbsp;标准里没有&nbsp;NOTIFY&nbsp;语句。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+LISTEN [<B><A HREF="/cgi-bin/man/man2html?7+listen">listen</A></B>(7)], UNLISTEN [<B><A HREF="/cgi-bin/man/man2html?l+unlisten">unlisten</A></B>(l)]
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

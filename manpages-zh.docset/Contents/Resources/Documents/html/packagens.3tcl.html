@@ -1,0 +1,113 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of pkg::create</TITLE>
+</HEAD><BODY>
+<H1>pkg::create</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.3<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+pkg::create - 为一个给定的包指定构造一个适当的<B>package ifneeded</B> 命令
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>::pkg::create </B><I>-name packageName</I> <I>-version packageVersion</I> ?<I>-load filespec</I>? ... ?<I>-source filespec</I>? ...
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>::pkg::create</B>  是标准 Tcl 库中的一个实用过程。它被用来为一个给定的包指定建立一个适当的 
+<B>package ifneeded</B>  命令。可用它构造用于 <B>package</B>  机制的一个 <B>pkgIndex.tcl</B>  文件。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+支持的参数有:
+<DL COMPACT>
+<DT><B>-name</B>&nbsp;<I>packageName</I><DD>
+这个参数指定包的名字。它是必须的。
+<DT><B>-version</B>&nbsp;<I>packageVersion</I><DD>
+这个参数指定包的版本。它是必须的。
+<DT><B>-load</B>&nbsp;<I>filespec</I><DD>
+这个参数指定必须用 <B>load</B>  命令装载的一个二进制库。<I>filespec</I>  是有两个元素的一个列表。第一个元素是要装载的文件的名字。第二个可选的元素是装载的这个文件提供命令的一个列表。如果这个过程的列表是空或被省略了，<B>::pkg::create</B>  将为直接装载而设置这个库(参见 <B>pkg_mkIndex</B>)。可以指定任何数目的 <B>-load</B>  参数。
+<DT><B>-source</B>&nbsp;<I>filespec</I><DD>
+除了指定必须用 <B>source</B>  命令装载的一个 Tcl 库之外，这个参数类似于 <B>-load</B>  参数。可以指定任何数目的 <B>-load</B>  参数。
+</DL>
+<P>
+
+必须给出至少一个 <B>-load</B> 或 <B>-source</B>  参数。
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+package">package</A>(n)
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+auto-load, index, package, version
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/09/01</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

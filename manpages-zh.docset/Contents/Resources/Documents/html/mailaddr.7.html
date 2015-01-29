@@ -1,0 +1,210 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MAILADDR</TITLE>
+</HEAD><BODY>
+<H1>MAILADDR</H1>
+Section: Linux User's Manual (7)<BR>Updated: June 24, 1995<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+mailaddr - 关于邮件地址的描述
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+本手册给出的是 Internet 使用的 SMTP 邮件地址的简要描述。
+这些地址的通常的格式是
+<P>
+
+<A HREF="mailto:user@domain">user@domain</A>
+<P>
+
+这里的域 (domain) 是分级的子域的列表，子域间用点来分隔。
+例如下面的地址
+<P>
+
+<A HREF="mailto:eric@monet.berkeley.edu">eric@monet.berkeley.edu</A>
+<BR>
+
+Eric Allman 
+<BR>
+
+<A HREF="mailto:eric@monet.berkeley.edu">eric@monet.berkeley.edu</A> (Eric Allman)
+<P>
+
+都是同一个地址的有效的格式。
+<P>
+
+地址中的域部分 (``monet.berkeley.edu'') 
+可以是一个 internet 上的主机的名字，
+或者是一个逻辑上的邮件地址。域的部分大小写不敏感。
+<P>
+
+地址中的本地部分 (``eric'') 通常是一个用户名，
+但它的实际意义是由本地软件定义的。
+这部分可以大小写敏感，但通常大小写不敏感。
+如果你发现某个地址的本地部分象一堆乱码，
+原因通常是在不同的内部的电子邮件 (e-mail) 系统和网络
+间存在着网关。下面是一些例子:
+<P>
+
+&quot;surname/admd=telemail/c=us/o=hp/prmd=hp&quot;@some.where
+<A HREF="mailto:USER%SOMETHING@some.where">USER%SOMETHING@some.where</A>
+machine!machine!<A HREF="mailto:name@some.where">name@some.where</A>
+<A HREF="mailto:I2461572@some.where">I2461572@some.where</A>
+<P>
+
+(它们分别是：一个 X.400 网关，一个到任意的没有适当的 internet 支持的内
+部邮件系统的网关 ，一个 UUCP 网关，最后一个是令人讨厌的用户命名策略)
+<P>
+
+真实姓名部分 (``Eric Allman'') 可放在最前面，在 &lt; &gt; 的外面；也可以在最后面
+在 ( ) 的里面。(严格的说两者是不一样的，但是论述两者的不同超出了本手册页的
+范围。)如果名字包含某些特定的字符，可以用&quot; &quot;括起来。特定的字符中最常见的
+是``.'':
+<P>
+
+&quot;Eric P. Allman&quot; 
+<A NAME="lbAD">&nbsp;</A>
+<H3>Abbreviation. 缩略写法.</H3>
+
+<P>
+
+许多邮件系统允许用户略写域名。举个实例，在 berkeley.edu 的用户可以用
+``<A HREF="mailto:eric@monet">eric@monet</A>''来给 Eric Allman 发邮件并侥幸成功。<I>这种做法是废弃了的。</I>
+<A NAME="lbAE">&nbsp;</A>
+<H3>路由地址</H3>
+
+<P>
+
+在某些环境下，可能必须给出一个消息到达最终目的地所要经过的主机的路径。
+正常的情况下这是自动的和不可见的，但有时不是，特别是在一些老的和破损的
+软件上出现。显示这些中继的地址在术语上叫``路由地址''。路由地址使用下面
+的语法：
+<P>
+
+&lt;@hosta,@hostb:<A HREF="mailto:user@hostc">user@hostc</A>&gt;
+<P>
+
+这指定消息要被送到 hosta，从 hosta 到 hostb，最后到达 hostc。一些主机
+忽略路由地址并直接发送的 hostc。
+<P>
+
+路由地址经常发生在返回地址上，因为通常路过的每个主机上的软件都要增补路
+由地址。最常见的可能是忽略地址中除了``<A HREF="mailto:user@hostc">user@hostc</A>''的部分，``<A HREF="mailto:user@hostc">user@hostc</A>''
+部分确定了真正的发送者。
+<A NAME="lbAF">&nbsp;</A>
+<H3>邮件主管.</H3>
+
+<P>
+
+要求每一个站点都要有一个用户或用户别名被指定为&quot;邮件主管&quot;，对于邮件系
+统的问题可以向此&quot;邮件主管&quot;发表。&quot;邮件主管&quot;的地址是大小写不敏感的。
+<A NAME="lbAG">&nbsp;</A>
+<H3>FREQUENTLY ASKED QUESTIONS 常见问题</H3>
+
+rtfm.mit.edu 和许多镜像站点存储了一系列常见问题。请找到并使用这些文档，
+这些文档遍布世界。
+<I>mail/inter-network-guide</I>
+
+解说如何在不同的网络间发送邮件。
+<I>mail/country-codes</I>
+
+顶级域的列表(例如 ``no'' 是 Norway ，``ea'' 是 Eritrea).
+<I>mail/college-email/part*</I>
+
+给出一些关于怎样找出邮件地址的位置的小技巧。
+<A NAME="lbAH">&nbsp;</A>
+<H2>FILES 相关文件</H2>
+
+<I>/etc/aliases</I>
+
+<BR>
+
+<I>~/.forward</I>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+binmail">binmail</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+mail">mail</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+mconnect">mconnect</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?5+forward">forward</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?5+aliases">aliases</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?8+sendmail">sendmail</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+vrfy">vrfy</A></B>(8),
+
+RFC822 (Arpa Internet 文本消息格式的标准).
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>mhss &lt;<A HREF="mailto:jijingzhisheng@up369.com">jijingzhisheng@up369.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/15</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION 描述</A><DD>
+<DL>
+<DT><A HREF="#lbAD">Abbreviation. 缩略写法.</A><DD>
+<DT><A HREF="#lbAE">路由地址</A><DD>
+<DT><A HREF="#lbAF">邮件主管.</A><DD>
+<DT><A HREF="#lbAG">FREQUENTLY ASKED QUESTIONS 常见问题</A><DD>
+</DL>
+<DT><A HREF="#lbAH">FILES 相关文件</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,359 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SEND</TITLE>
+</HEAD><BODY>
+<H1>SEND</H1>
+Section: Linux Programmer's Manual (2)<BR>Updated: July 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+send, sendto, sendmsg - 从套接字发送消息
+<A NAME="lbAC">&nbsp;</A>
+<H2>概述</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/sys/types.h">sys/types.h</A>&gt;</B>
+
+<BR>
+
+<B>#include &lt;<A HREF="file:///usr/include/sys/socket.h">sys/socket.h</A>&gt;</B>
+
+<P>
+<B>int send(int </B><I>s</I><B>, const void *</B><I>msg</I><B>, size_t </B><I>len</I><B>,</B>
+
+<B>int </B><I>flags</I><B>);</B>
+
+<BR>
+
+<B>int sendto(int </B><I>s</I><B>, const void *</B><I>msg</I><B>, size_t </B><I>len</I><B>,</B>
+
+<B>int </B><I>flags</I><B>, const struct sockaddr *</B><I>to</I><B>, socklen_t </B><I>tolen</I><B>);</B>
+
+<BR>
+
+<B>int sendmsg(int </B><I>s</I><B>, const struct msghdr *</B><I>msg</I><B>,</B>
+
+<B>int </B><I>flags</I><B>);</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>Send</B>,
+
+<B>sendto</B>,
+
+和
+<B>sendmsg</B>
+
+用于向另一个套接字传递消息.
+<B>Send</B>
+
+仅仅用于连接套接字,而 
+<B>sendto</B>
+
+和
+<B>sendmsg</B>
+
+可用于任何情况下.
+<P>
+
+目标地址用
+<I>to</I>
+
+指定,
+<I>tolen</I>
+
+定义其长度.消息的长度用
+<I>len</I>
+
+指定.
+如果消息太长不能通过下层协议,函数将返回
+<B>EMSGSIZE</B>
+
+错误,消息也不会被送出.
+<P>
+
+在数据传送过程中所产生的错误不会返回给
+<B>send.</B>
+
+如果发生本地错误,则返回-1.
+<P>
+
+当要发送的消息长度大于套接字当前可用缓冲区时,
+<B>send</B>
+
+将阻塞,除非在套接字上设置了非阻塞式输入输出模式.
+对于非阻塞模式,这种情况下将返回
+<B>EAGAIN</B>
+
+错误.
+The
+系统调用
+<B><A HREF="/cgi-bin/man/man2html?2+select">select</A></B>(2)
+
+可以用来检测何时可以发送更多的数据.
+<P>
+
+参数
+<I>flags</I>
+
+是一个标志字,可以包含下列标志:
+
+<DL COMPACT>
+<DT>对于支持带外数据的套接字,<DD>
+<B>MSG_OOB</B>
+
+将送出
+<I>out-of-band</I>
+
+(带外)数据(比如,
+<B>SOCK_STREAM</B>
+
+类型的套接字);
+下层协议也必须支持.
+<I>带外</I>
+
+数据.
+<DT><B>MSG_DONTROUTE</B>
+
+<DD>
+在送出分组时不使用网关.只有直接连接在网络上的主机
+才能接收到数据.这个标志通常仅用于诊断和路由程序.
+可路由的协议族才能使用这个标志;包套接字不可以.
+<DT><B>MSG_DONTWAIT</B>
+
+<DD>
+使用非阻塞式操作;如果操作需要阻塞,将返回
+<B>EAGAIN </B>
+
+错误(也可以用
+<B>F_SETFL</B>
+
+<B><A HREF="/cgi-bin/man/man2html?2+fcntl">fcntl</A>(2)</B>
+
+设置
+<B>O_NONBLOCK</B>
+
+实现这个功能.)
+<DT><B>MSG_NOSIGNAL</B>
+
+<DD>
+当流式套接字的另一端中断连接时不发送 
+<B>SIGPIPE </B>
+
+信号,但仍然返回 
+<B>EPIPE</B>
+
+错误.
+<DT><B>MSG_CONFIRM</B> (仅用于Linux 2.3以上版本)
+
+<DD>
+通知链路层发生了转发过程:得到了另一端的成功应答.
+如果链路层没有收到通知,它将按照常规探测网络上的相邻
+主机(比如通过免费arp). 
+只能用于 
+<B>SOCK_DGRAM</B>
+
+和
+<B>SOCK_RAW</B>
+
+类型的套接字,且仅对IPv4和IPv6有效.详情参见
+<B><A HREF="/cgi-bin/man/man2html?7+arp">arp</A></B>(7)
+
+</DL>
+<P>
+
+结构体
+<I>msghdr</I>
+
+的定义如下.详情参见 
+<B><A HREF="/cgi-bin/man/man2html?2+recv">recv</A></B>(2)
+
+和下文.
+<DL COMPACT>
+<DT><DD>
+<DL COMPACT><DT><DD>
+<PRE>
+
+struct msghdr {
+    void         * msg_name;     /*地址选项*/
+    socklen_t    msg_namelen;    /*地址长度*/
+    struct iovec * msg_iov;      /*消息数组*/
+    size_t       msg_iovlen;     /*msg_iov中的元素个数*/
+    void         * msg_control;  /*辅助信息,见下文*/
+    socklen_t    msg_controllen; /*辅助数据缓冲区长度*/
+    int          msg_flags;      /*接收消息标志*/
+};
+
+</PRE>
+
+</DL>
+
+</DL>
+<P>
+
+可以使用 
+<I>msg_control </I>
+
+和
+<I>msg_controllen </I>
+
+成员发送任何控制信息.内核所能处理的最大控制消息缓冲区长度由
+<B>net.core.optmem_max </B>
+
+sysctl对每个套接字进行限定;参见
+<B><A HREF="/cgi-bin/man/man2html?7+socket">socket</A></B>(7).
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>返回值</H2>
+
+成功时返回发送的字符个数,否则返回-1.
+<A NAME="lbAF">&nbsp;</A>
+<H2>错误代码</H2>
+
+其中一些是套接字层产生的标准错误.其他的是下层协议模块产生的;参见
+各自的man手册.
+<DL COMPACT>
+<DT><B>EBADF</B>
+
+<DD>
+指定了非法描述符.
+<DT><B>ENOTSOCK</B>
+
+<DD>
+参数
+<I>s</I>
+
+不是一个套接字.
+<DT><B>EFAULT</B>
+
+<DD>
+参数指定的用户地址空间非法.
+<DT><B>EMSGSIZE</B>
+
+<DD>
+消息长度越界.
+<DT><B>EAGAIN</B>或者<B>EWOULDBLOCK</B>
+
+<DD>
+套接字设置为非阻塞式,但所请求的操作需要阻塞.
+<DT><B>ENOBUFS</B>
+
+<DD>
+网络接口输出队列已满.这通常表明接口已停止发送,也有可能是
+暂时性的拥挤(这不会发生在linux下,当设备队列溢出时数据报
+只是被简单丢弃.
+<DT><B>EINTR</B>
+
+<DD>
+接收到信号.
+<DT><B>ENOMEM</B>
+
+<DD>
+没有可用内存.
+<DT><B>EINVAL</B>
+
+<DD>
+传递的参数非法. 
+<DT><B>EPIPE</B>
+
+<DD>
+连接套接字的本地端已关闭.这种情况下进程还会接收到
+<B>SIGPIPE</B>
+
+信号,除非设置了
+<B>MSG_NOSIGNAL </B>
+
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>兼容于</H2>
+
+4.4BSD,SVr4,POSIX1003.1g草案(这些系统调用首次出现于4.2BSD).
+<B>MSG_CONFIRM </B>
+
+是Linux所做的扩展.
+<A NAME="lbAH">&nbsp;</A>
+<H2>注意</H2>
+
+上面给出的函数原型遵循Single Unix Specification,
+glibc2也是这么做的;
+<I>flags</I>
+
+参数在BSD4.*中是`int',但在libc4和libc5中是`unsigned int';
+参数
+<I>len</I>
+
+在BSD4.*和libc4中是`int',但在libc5中是'size_t';
+参数
+<I>tolen</I>
+
+在BSD4.*,libc4和libc5中都是`int'.
+参见
+<B><A HREF="/cgi-bin/man/man2html?2+accept">accept</A></B>(2).
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+fcntl">fcntl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+recv">recv</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+select">select</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+getsockopt">getsockopt</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+sendfile">sendfile</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+socket">socket</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+write">write</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?7+socket">socket</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?7+ip">ip</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?7+tcp">tcp</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?7+udp">udp</A></B>(7)
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>byeyear &lt;<A HREF="mailto:love_my_love@263.net">love_my_love@263.net</A> &gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002.02.27</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">概述</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">返回值</A><DD>
+<DT><A HREF="#lbAF">错误代码</A><DD>
+<DT><A HREF="#lbAG">兼容于</A><DD>
+<DT><A HREF="#lbAH">注意</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

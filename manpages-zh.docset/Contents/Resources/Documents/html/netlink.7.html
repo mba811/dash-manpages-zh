@@ -1,0 +1,345 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of NETLINK</TITLE>
+</HEAD><BODY>
+<H1>NETLINK</H1>
+Section: Linux Programmer's Manual (7)<BR>Updated: 27 Apr 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME 名称</H2>
+
+netlink, PF_NETLINK - 内核与用户之间的通讯
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总揽</H2>
+
+<PRE>
+<B>#include &lt;<A HREF="file:///usr/include/asm/types.h">asm/types.h</A>&gt;</B>
+<BR>
+<B>#include &lt;<A HREF="file:///usr/include/sys/socket.h">sys/socket.h</A>&gt;</B>
+<BR>
+<B>#include &lt;<A HREF="file:///usr/include/linux/netlink.h">linux/netlink.h</A>&gt; </B>
+<BR>
+
+<B>netlink_socket = socket(PF_NETLINK, </B><I>socket_type</I><B>, </B><I>netlink_family</I><B>);</B>
+</PRE><A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+Netlink 用于在内核模块与在用户地址空间中的进程之间传递消息的。它包
+含了用于用户进程的基于标准套接字的接口和用于内核模块的一个内部核心
+API。有关这个内部核心接口的资料没有包含在此手册页中。同样还有
+一个过时的通过 netlink 字符设备的接口也没有包含在此，它只是提供
+向下兼容特性。
+<P>
+Netlink 是一个面向数据包的服务。
+<B>SOCK_RAW</B>
+
+和
+<B>SOCK_DGRAM</B>
+
+都是
+<I>socket_type</I>
+
+的有效值。然而 netlink 协议对数据包 datagram 和原套接字（raw sockets）
+并不作区分。
+<P>
+<I>netlink_family</I>
+
+选择核心模块或 netlink 组进行通讯。现有可指定的 netlink 的种类有： 
+<DL COMPACT>
+<DT><B>NETLINK_ROUTE</B>
+
+<DD>
+接收路由更新信息，可以用来修改 IPv4 的路由表。(参见
+<B><A HREF="/cgi-bin/man/man2html?7+rtnetlink">rtnetlink</A></B>(7))。
+
+<DT><B>NETLINK_FIREWALL</B>
+
+<DD>
+接收 IPv4 防火墙编码发送的数据包。
+<DT><B>NETLINK_ARPD</B>
+
+<DD>
+用以维护用户地址空间里的 arp 表
+<DT><B>NETLINK_ROUTE6</B>
+
+<DD>
+接收和发送 IPv6 路由表更新消息。
+<DT><B>NETLINK_IP6_FW</B>
+
+<DD>
+接收未通过 IPv6 防火墙检查的数据包(尚未实现)
+<DT><B>NETLINK_TAPBASE</B>...<B>NETLINK_TAPBASE+15</B>
+
+<DD>
+是
+<B>ethertap</B>
+
+设备实例。Ethertap 是从用户程序空间对以太网驱动程序进行
+仿真的“伪”网络通道设备。
+<DT><B>NETLINK_SKIP</B>
+
+<DD>
+Enskip 的保留选项。
+<DT><B>NETLINK_USERSOCK</B>
+
+<DD>
+为今后用户程序空间协议用保留选项。
+</DL>
+<P>
+
+Netlink 数据信息由具有一个或多个
+<B>nlmsghdr</B>
+
+数据报头及其有效数据的字节流组成。对于分成多个数据包的 Netlink 信息，
+数据报头中的
+<B>NLM_F_MULTI</B>
+
+标志位将被设置，除了最后一个包的报头具有标志
+<B>NLMSG_DONE</B>外。
+
+字节流应只能用标准的
+<B>NLMSG_*</B>
+
+宏来访问，参阅
+<B><A HREF="/cgi-bin/man/man2html?3+netlink">netlink</A></B>(3).
+
+<P>
+Netlink 不是可靠的协议。它只是尽可能地将信息传输到目的地，但在内存耗
+尽或发生其他错误时，它会丢失信息。为保证信息可靠传输，可以设置标志
+<B>NLM_F_ACK</B>
+
+来要求接收方确认。数据接收确认是一个
+<B>NLMSG_ERROR</B>
+
+数据包，包中的出错字段设置为 0。应用程序必须自己创建收到信息确认消息。
+在信息传送过程中，内核一直(尝试)对每个出错的数据包发送
+<B>NLMSG_ERROR</B>
+
+消息。用户进程也应当遵循这一个惯例。
+<P>
+每一个 netlink 数据类都有一个32位广播分组，当
+对套接字调用
+<B><A HREF="/cgi-bin/man/man2html?2+bind">bind</A></B>(2)
+
+时， 
+<B>sockaddr_nl</B>
+
+中的
+<B>nl_groups</B>
+
+字段设置成所要侦听的广播组的位掩码。其默认值为 0，表示不接收任何广播。
+<P>
+一个套接字可以对任意一个多址广播组广播消息，只要在调用
+<B><A HREF="/cgi-bin/man/man2html?2+sendmsg">sendmsg</A></B>(2)
+
+或调用
+<B><A HREF="/cgi-bin/man/man2html?2+connect">connect</A></B>(2)
+
+时，将位掩码
+<B>nl_groups</B>
+
+设置成要发送消息的广播组的值就可以了。
+只有具有有效 uid 为 0 的用户或具有
+<P>
+<B>CAP_NET_ADMIN</B>
+
+权限的用户才可能发送或侦听针对 netlink 多址广播组的消息。
+任何一个对多址广播组消息的响应需发回进程标识 pid 和广播组地址。
+<P>
+<DL COMPACT><DT><DD>
+<PRE>
+
+struct nlmsghdr
+{
+__u32 nlmsg_len; /* 包括报头在内的消息长度*/
+__u16 nlmsg_type; /* 消息正文 */
+__u16 nlmsg_flags; /* 附加标志*/
+__u32 nlmsg_seq; /* 序列号*/
+__u32 nlmsg_pid; /* 发送进程号 PID */
+};
+
+
+struct nlmsgerr
+{
+int error; /* 负数表示的出错号 errno 或为 0 要求确认 acks*/ 
+struct nlmsghdr msg; /* 造成出错的消息报头*/ 
+};
+
+</PRE>
+
+</DL>
+
+<P>
+在每个
+<B>nlmsghdr</B>
+
+后跟随着有效数据。
+<B>nlmsg_type</B>
+
+可以成为标准消息的类型：
+<B>NLMSG_NOOP</B>
+
+可以忽略的消息，
+<B>NLMSG_ERROR</B>
+
+发出错误发生的消息，有关数据中包含一个 
+<I>nlmsgerr </I>
+
+结构，
+<B>NLMSG_DONE</B>
+
+一个多数据包消息结束的信息。
+
+
+
+<P>
+一个 netlink 类通常指定更多的消息类型，请参阅有关手册页，如
+<I>NETLINK_ROUTE</I>.
+
+中的 
+<B><A HREF="/cgi-bin/man/man2html?7+rtnetlink">rtnetlink</A></B>(7)
+
+<P>
+<TABLE>
+<TR VALIGN=top><TD><B>nlmsg_flags 的标准标志位</B><BR></TD></TR>
+<TR VALIGN=top><TD COLSPAN=2>NLM_F_REQUEST: 设置全部请求消息<BR></TD></TR>
+<TR VALIGN=top><TD>NLM_F_MULTI:T{<BR></TD><TD><BR></TD></TR>
+<TR VALIGN=top><TD>此消息是多数据包消息之一，通过标志<BR></TD><TD><BR></TD></TR>
+<TR VALIGN=top><TD>结束。<BR></TD><TD><BR></TD></TR>
+<TR VALIGN=top><TD>T}<BR></TD><TD><BR></TD></TR>
+<TR VALIGN=top><TD>NLM_F_ACK: 数据成功接收返回确认消息<BR></TD><TD><BR></TD></TR>
+<TR VALIGN=top><TD>NLM_F_ECHO: 要求响应请求信息<BR></TD><TD><BR></TD></TR>
+</TABLE>
+
+<P>
+<TABLE>
+<TR VALIGN=top><TD COLSPAN=2>为 GET 请求设立的附加标志位<BR></TD></TR>
+<TR VALIGN=top><TD>NLM_F_ROOT</TD><TD> 返回对象表而不是单个数据项<BR></TD></TR>
+<TR VALIGN=top><TD>NLM_F_MATCH</TD><TD> 尚未实现<BR></TD></TR>
+<TR VALIGN=top><TD>NLM_F_ATOMIC</TD><TD> 返回对象表的原子快照(atomic snapshot) <BR></TD></TR>
+<TR VALIGN=top><TD>NLM_F_DUMP</TD><TD> 尚未列入文档<BR></TD></TR>
+</TABLE>
+
+<P>
+<TABLE>
+<TR VALIGN=top><TD COLSPAN=2>对新建 NEW 请求设立的附加标志位<BR></TD></TR>
+<TR VALIGN=top><TD>NLM_F_REPLACE</TD><TD> 替换现有的对象<BR></TD></TR>
+<TR VALIGN=top><TD>NLM_F_EXCL</TD><TD> 如对象已存在，不作替换<BR></TD></TR>
+<TR VALIGN=top><TD>NLM_F_CREATE</TD><TD> 创建对象，如果对象不存在<BR></TD></TR>
+<TR VALIGN=top><TD>NLM_F_APPEND</TD><TD> 对象表添加对象项<BR></TD></TR>
+</TABLE>
+
+<P>
+注 NLM_F_ATOMIC 要求用户有 CAP_NET_ADMIN 或超级用户权。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>地址格式</H2>
+
+<P>
+<B>sockaddr_nl</B>
+
+描述了在用户空间或在核心空间里一个 netlink 客户对象的数据结构。
+一个 sockaddr_nl 对象可以是单址广播或对一个 netlink 多址组
+(nl_groups 不为 0).
+<P>
+<DL COMPACT><DT><DD>
+<PRE>
+struct sockaddr_nl
+{
+sa_family_t nl_family; /* AF_NETLINK */
+unsigned short nl_pad; /* 零 */
+pid_t nl_pid; /* 进程标识号pid */
+__u32 nl_groups; /* 多址广播组掩码*/
+};
+</PRE>
+
+</DL>
+
+<P>
+<B>nl_pid </B>
+
+是用户空间中 netlink 的进程标识号 pid，如果是在内核时此值为 0。
+<B>nl_groups </B>
+
+是一个代表 neltlink 组号的位掩码。
+
+<P>
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>BUGS</H2>
+
+本手册页并不完整。
+<P>
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+通过
+<B>libnetlink</B>
+
+调用 netlink 功能通常比通过低层内核接口要来得好些。
+<P>
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>VERSIONS 版本</H2>
+
+netlink 套接字接口是 Linux 2.2 新特性
+<P>
+Linux 2.0 支持更多的基于netlink接口的原始设备(作为向下兼容特性，
+这些设备目前仍可使用。旧接口特性没有在此叙述。
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>另见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?3+cmsg">cmsg</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?7+rtnetlink">rtnetlink</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?3+netlink">netlink</A></B>(3).
+
+<P>
+
+<B><A HREF="ftp://ftp.inr.ac.ru/ip-routing/iproute2*">ftp://ftp.inr.ac.ru/ip-routing/iproute2*</A></B>
+
+有关 libnetlink 部分
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>LetBright &lt;<A HREF="mailto:letbright@netease.com">letbright@netease.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/11/09</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME 名称</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总揽</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">地址格式</A><DD>
+<DT><A HREF="#lbAF">BUGS</A><DD>
+<DT><A HREF="#lbAG">NOTES 注意</A><DD>
+<DT><A HREF="#lbAH">VERSIONS 版本</A><DD>
+<DT><A HREF="#lbAI">另见</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

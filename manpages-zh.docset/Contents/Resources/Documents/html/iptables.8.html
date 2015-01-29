@@ -1,0 +1,713 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of Iptables</TITLE>
+</HEAD><BODY>
+<H1>Iptables</H1>
+Section: Maintenance Commands (8)<BR>Updated: iptables 中文手册<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME </H2>
+
+iptables - IP包过滤器管理
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+iptables -ADC  指定链的规则  [-A  添加 -D 删除 -C 修改]
+<BR>
+
+iptables - RI 
+<BR>
+
+iptables -D chain rule num[option]
+<BR>
+
+iptables -LFZ 链名 [选项]
+<BR>
+
+iptables -[NX] 指定链
+<BR>
+
+iptables -P chain target[options]
+<BR>
+
+iptables -E old-chain-name new-chain-name
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>说明</H2>
+
+Iptalbes 是用来设置、维护和检查Linux内核的IP包过滤规则的。 
+<P>
+可以定义不同的表，每个表都包含几个内部的链，也能包含用户定义的链。
+每个链都是一个规则列表，对对应的包进行匹配：每条规则指定应当如何处
+理与之相匹配的包。这被称作'target'（目标），也可以跳向同一个表内的用
+户定义的链。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>TARGETS</H2>
+
+防火墙的规则指定所检查包的特征，和目标。如果包不匹配，将送往该链中
+下一条规则检查；如果匹配,那么下一条规则由目标值确定.该目标值可以是
+用户定义的链名,或是某个专用值,如ACCEPT[通过], DROP[删除],
+QUEUE[排队],或者 RETURN[返回]。
+<P>
+
+<I>ACCEPT</I>
+
+<BR>&nbsp;表示让这个包通过。
+<BR>
+
+<I>DROP</I>
+
+<BR>&nbsp;表示将这个包丢弃。
+<BR>
+
+<I>QUEUE</I>
+
+<BR>&nbsp;表示把这个包传递到用户空间。
+<BR>
+
+<I>RETURN</I>
+
+<BR>&nbsp;表示停止这条链的匹配，到前一个链的规则重新开始。如果到达了一个内建的
+<BR>&nbsp;链(的末端)，或者遇到内建链的规则是&nbsp;RETURN，包的命运将由链准则指定的
+<BR>&nbsp;目标决定。
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>TABLES</H2>
+
+当前有三个表（哪个表是当前表取决于内核配置选项和当前模块)。
+<DL COMPACT>
+<DT><B>-t table</B>
+
+<DD>
+这个选项指定命令要操作的匹配包的表。如果内核被配置为自动加载模块，这时
+若模块没有加载，(系统)将尝试(为该表)加载适合的模块。
+<P>
+这些表如下：
+<DT><B>filter</B>
+
+<DD>
+,这是默认的表，包含了内建的链INPUT（处理进入的包）、FORWORD（处理通
+过的包）和OUTPUT（处理本地生成的包）。
+<DT><B>nat</B>
+
+<DD>
+这个表被查询时表示遇到了产生新的连接的包,由三个内建的链构成：PREROUTING
+<BR>&nbsp;(修改到来的包)、OUTPUT（修改路由之前本地的包）、POSTROUTING
+<BR>&nbsp;（修改准备出去的包）。
+<DT><B>mangle</B>
+
+<DD>
+<BR>&nbsp;这个表用来对指定的包进行修改。它有两个内建规则：PREROUTING（修改路由之
+<BR>&nbsp;前进入的包）和OUTPUT（修改路由之前本地的包）。
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>OPTIONS</H2>
+
+这些可被iptables识别的选项可以区分不同的种类。
+<A NAME="lbAH">&nbsp;</A>
+<H3>COMMANDS</H3>
+
+这些选项指定执行明确的动作：若指令行下没有其他规定,该行只能指定一个选项.
+对于长格式的命令和选项名,所用字母长度只要保证iptables能从其他选项中区
+分出该指令就行了。
+<DL COMPACT>
+<DT><B>-A -append</B>
+
+<DD>
+在所选择的链末添加一条或更多规则。当源（地址）或者/与 目的（地址）转换
+为多于一个(多个)地址时，这条规则会加到所有可能的地址(组合)后面。
+<DT><B>-D -delete</B>
+
+<DD>
+从所选链中删除一条或更多规则。这条命令可以有两种方法：可以把被删除规则
+指定为链中的序号(第一条序号为1),或者指定为要匹配的规则。
+<DT><B>-R -replace</B>
+
+<DD>
+从选中的链中取代一条规则。如果源（地址）或者/与 目的（地址）被转换为多地
+址，该命令会失败。规则序号从1开始。
+<DT><B>-I -insert</B>
+
+<DD>
+根据给出的规则序号向所选链中插入一条或更多规则。所以，如果规则序号为1，
+规则会被插入链的头部。这也是不指定规则序号时的默认方式。
+<DT><B>-L -list</B>
+
+<DD>
+显示所选链的所有规则。如果没有选择链，所有链将被显示。也可以和z选项一起
+使用，这时链会被自动列出和归零。精确输出受其它所给参数影响。
+<DT><B>-F -flush</B>
+
+<DD>
+清空所选链。这等于把所有规则一个个的删除。
+<DT><B>--Z -zero</B>
+
+<DD>
+把所有链的包及字节的计数器清空。它可以和 -L配合使用，在清空前察看计数器，请参见前文。
+<DT><B>-N -new-chain</B>
+
+<DD>
+根据给出的名称建立一个新的用户定义链。这必须保证没有同名的链存在。
+<DT><B>-X -delete-chain</B>
+
+<DD>
+删除指定的用户自定义链。这个链必须没有被引用，如果被引用，在删除之前你必须删
+除或者替换与之有关的规则。如果没有给出参数，这条命令将试着删除每个非
+内建的链。
+<DT><B>-P -policy</B>
+
+<DD>
+设置链的目标规则。
+<DT><B>-E -rename-chain</B>
+
+<DD>
+根据用户给出的名字对指定链进行重命名，这仅仅是修饰，对整个表的结构没有影响。
+TARGETS参数给出一个合法的目标。只有非用户自定义链可以使用规则，而且内建链和用
+户自定义链都不能是规则的目标。
+<DT><B>-h Help.</B>
+
+<DD>
+帮助。给出当前命令语法非常简短的说明。
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H3>参数</H3>
+
+以下参数构成规则详述，如用于add、delete、replace、append 和 check命令。
+<DL COMPACT>
+<DT><B>-p -protocal [!]protocol</B>
+
+<DD>
+规则或者包检查(待检查包)的协议。指定协议可以是tcp、udp、icmp中的一个或
+者全部，也可以是数值，代表这些协议中的某一个。当然也可以使用在/etc/pro
+tocols中定义的协议名。在协议名前加上&quot;!&quot;表示相反的规则。数字0相当于所有
+all。Protocol all会匹配所有协议，而且这是缺省时的选项。在和check命令结合
+时，all可以不被使用。
+<DT><B>-s -source [!] address[/mask]</B>
+
+<DD>
+指定源地址，可以是主机名、网络名和清楚的IP地址。mask说明可以是网络掩码
+或清楚的数字，在网络掩码的左边指定网络掩码左边”1”的个数，因此，mask
+值为24等于255.255.255.0。在指定地址前加上&quot;!&quot;说明指定了相反的地址段。标志
+<BR>&nbsp;--src&nbsp;是这个选项的简写。
+<DT><B>-d --destination [!] address[/mask]</B>
+
+<DD>
+指定目标地址，要获取详细说明请参见 -s标志的说明。标志 --dst 是这个选项的简写。
+<DT><B>-j --jump target</B>
+
+<DD>
+(-j 目标跳转)指定规则的目标；也就是说，如果包匹配应当做什么。目标可以是用
+户自定义链（不是这条规则所在的），某个会立即决定包的命运的专用内建目标，
+或者一个扩展（参见下面的EXTENSIONS）。如果规则的这个选项被忽略，那么匹
+配的过程不会对包产生影响，不过规则的计数器会增加。
+<DT><B>-i -in-interface [!] [name]</B>
+
+<DD>
+(i -进入的（网络）接口 [!][名称])这是包经由该接口接收的可选的入口名称，包通过
+该接口接收（在链INPUT、FORWORD和PREROUTING中进入的包）。当在接口名
+前使用&quot;!&quot;说明后，指的是相反的名称。如果接口名后面加上&quot;+&quot;，则所有以此接口名
+开头的接口都会被匹配。如果这个选项被忽略，会假设为&quot;+&quot;，那么将匹配任意接口。
+<DT><B>-o --out-interface [!][name]</B>
+
+<DD>
+(-o --输出接口[名称])这是包经由该接口送出的可选的出口名称，包通过该口输出（在
+链FORWARD、OUTPUT和POSTROUTING中送出的包）。当在接口名前使用&quot;!&quot;说明
+后，指的是相反的名称。如果接口名后面加上&quot;+&quot;，则所有以此接口名开头的接口都会
+被匹配。如果这个选项被忽略，会假设为&quot;+&quot;，那么将匹配所有任意接口。
+<DT><B>[!] -f, --fragment</B>
+
+<DD>
+( [!] -f --分片)这意味着在分片的包中，规则只询问第二及以后的片。自那以后由于无
+法判断这种把包的源端口或目标端口（或者是ICMP类型的），这类包将不能匹配任
+何指定对他们进行匹配的规则。如果&quot;!&quot;说明用在了&quot;-f&quot;标志之前，表示相反的意思。
+TP
+<B>-c, --set-counters  PKTS BYTES</B>
+
+This enables the administrater to initialize the packet and byte
+counters of a rule (during
+<B>INSERT,</B>
+
+<B>APPEND,</B>
+
+<B>REPLACE</B>
+
+operations)
+<P>
+</DL>
+<A NAME="lbAJ">&nbsp;</A>
+<H3>其他选项</H3>
+
+还可以指定下列附加选项：
+<DL COMPACT>
+<DT><B>-v --verbose</B>
+
+<DD>
+详细输出。这个选项让list命令显示接口地址、规则选项（如果有）和TOS
+（Type of Service）掩码。包和字节计数器也将被显示，分别用K、M、G
+(前缀)表示1000、1,000,000和1,000,000,000倍（不过请参看-x标志改变它），
+对于添加,插入,删除和替换命令，这会使一个或多个规则的相关详细信息被打印。
+<DT><B>-n --numeric</B>
+
+<DD>
+数字输出。IP地址和端口会以数字的形式打印。默认情况下，程序试显
+示主机名、网络名或者服务（只要可用）。
+<DT><B>-x -exact</B>
+
+<DD>
+扩展数字。显示包和字节计数器的精确值，代替用K,M,G表示的约数。
+这个选项仅能用于 -L 命令。
+<DT><B>--line-numbers</B>
+
+<DD>
+当列表显示规则时，在每个规则的前面加上行号，与该规则在链中的位置相对应。
+<P>
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H2>对应的扩展</H2>
+
+iptables能够使用一些与模块匹配的扩展包。以下就是含于基本包内的
+扩展包，而且他们大多数都可以通过在前面加上!来表示相反的意思。
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H3>tcp</H3>
+
+当 --protocol tcp 被指定,且其他匹配的扩展未被指定时,这些扩展被装载。它提供以下选项：
+<DL COMPACT>
+<DT><B>--source-port [!] [port[:port]]</B>
+
+<DD>
+源端口或端口范围指定。这可以是服务名或端口号。使用格式端口：端口也可以
+指定包含的（端口）范围。如果首端口号被忽略，默认是&quot;0&quot;，如果末端口号被忽
+略，默认是&quot;65535&quot;，如果第二?龆丝诤糯笥诘谝桓觯?敲此?腔岜唤换弧Ｕ飧鲅∠羁梢允褂? --sport的别名。
+<DT><B>--destionation-port [!] [port:[port]]</B>
+
+<DD>
+目标端口或端口范围指定。这个选项可以使用 --dport别名来代替。
+<DT><B>--tcp-flags [!] mask comp</B>
+
+<DD>
+匹配指定的TCP标记。第一个参数是我们要检查的标记，一个用逗号分开的列表，
+第二个参数是用逗号分开的标记表,是必须被设置的。标记如下：SYN ACK FIN
+<BR>&nbsp;RST&nbsp;URG&nbsp;PSH&nbsp;ALL&nbsp;NONE。因此这条命令：iptables&nbsp;-A&nbsp;FORWARD&nbsp;-p&nbsp;tcp&nbsp;--tcp-flags&nbsp;SYN,&nbsp;ACK,
+<BR>&nbsp;FIN,&nbsp;RST&nbsp;SYN只匹配那些SYN标记被设置而ACK、FIN和RST标记没有设置的包。
+<DT><B>[!] --syn</B>
+
+<DD>
+只匹配那些设置了SYN位而清除了ACK和FIN位的TCP包。这些包用于TCP连接初始
+化时发出请求；例如，大量的这种包进入一个接口发生堵塞时会阻止进入的TCP连接
+，而出去的TCP连接不会受到影响。这等于 --tcp-flags SYN, RST, ACK SYN。如果
+&quot;--syn&quot;前面有&quot;!&quot;标记，表示相反的意思。
+<DT><B>--tcp-option [!] number</B>
+
+<DD>
+匹配设置了TCP选项的。
+<P>
+</DL>
+<A NAME="lbAM">&nbsp;</A>
+<H3>udp</H3>
+
+当protocol udp 被指定,且其他匹配的扩展未被指定时,这些扩展被装载,它提供以下选项：
+<DL COMPACT>
+<DT><B>--source-port [!] [port:[port]]</B>
+
+<DD>
+源端口或端口范围指定。详见 TCP扩展的--source-port选项说明。
+<DT><B>--destination-port [!] [port:[port]]</B>
+
+<DD>
+目标端口或端口范围指定。详见 TCP扩展的--destination-port选项说明。
+<P>
+</DL>
+<A NAME="lbAN">&nbsp;</A>
+<H3>icmp</H3>
+
+当protocol icmp被指定,且其他匹配的扩展未被指定时,该扩展被装载。它提供以下选项：
+<DL COMPACT>
+<DT><B>--icmp-type [!] typename</B>
+
+<DD>
+这个选项允许指定ICMP类型，可以是一个数值型的ICMP?嘈停?蛘呤悄掣鲇擅??
+<BR>
+
+iptables -p icmp -h
+<BR>
+
+所显示的ICMP类型名。
+<P>
+</DL>
+<A NAME="lbAO">&nbsp;</A>
+<H3>mac</H3>
+
+<DL COMPACT>
+<DT><B>--mac-source [!] address</B>
+
+<DD>
+匹配物理地址。必须是XX:XX:XX:XX:XX这样的格式。注意它只对来自以太设备并
+进入PREROUTING、FORWORD和INPUT链的包有效。
+<P>
+</DL>
+<A NAME="lbAP">&nbsp;</A>
+<H3>limit</H3>
+
+这个模块匹配标志用一个标记桶过滤器一一定速度进行匹配,它和LOG
+目标结合使用来给出有限的登陆数.当达到这个极限值时,使用这个扩展
+包的规则将进行匹配.(除非使用了
+”!”标记)
+<DL COMPACT>
+<DT><B>--limit rate</B>
+
+<DD>
+最大平均匹配速率：可赋的值有'/second', '/minute', '/hour', or '/day'这样的单位，默认是3/hour。
+<DT><B>--limit-burst number</B>
+
+<DD>
+待匹配包初始个数的最大值:若前面指定的极限还没达到这个数值,则概数字加1.默认值为5
+<DT><B>multiport</B>
+
+<DD>
+这个模块匹配一组源端口或目标端口,最多可以指定15个端口。只能和-p tcp 或者 -p udp 连着使用。
+<DT><B>--source-port [port[, port]]</B>
+
+<DD>
+如果源端口是其中一个给定端口则匹配
+<DT><B>--destination-port [port[, port]]</B>
+
+<DD>
+如果目标端口是其中一个给定端口则匹配
+<DT><B>--port [port[, port]]</B>
+
+<DD>
+若源端口和目的端口相等并与某个给定端口相等,则匹配。
+<P>
+</DL>
+<A NAME="lbAQ">&nbsp;</A>
+<H3>mark</H3>
+
+这个模块和与netfilter过滤器标记字段匹配（就可以在下面设置为使用MARK标记）。
+<DL COMPACT>
+<DT><B>--mark value [/mask]</B>
+
+<DD>
+匹配那些无符号标记值的包（如果指定mask，在比较之前会给掩码加上逻辑的标记）。
+<P>
+</DL>
+<A NAME="lbAR">&nbsp;</A>
+<H3>owner</H3>
+
+此模块试为本地生成包匹配包创建者的不同特征。
+只能用于OUTPUT链，而且即使这样一些包（如ICMP ping应答）还
+可能没有所有者，因此永远不会匹配。
+<DL COMPACT>
+<DT><B>--uid-owner userid</B>
+
+<DD>
+如果给出有效的user id，那么匹配它的进程产生的包。
+<DT><B>--gid-owner groupid</B>
+
+<DD>
+如果给出有效的group id，那么匹配它的进程产生的包。
+<DT><B>--sid-owner seessionid</B>
+
+<DD>
+根据给出的会话组匹配该进程产生的包。
+<P>
+</DL>
+<A NAME="lbAS">&nbsp;</A>
+<H3>state</H3>
+
+此模块，当与连接跟踪结合使用时，允许访问包的连接跟踪状态。
+<DL COMPACT>
+<DT><B>--state state</B>
+
+<DD>
+这里state是一个逗号分割的匹配连接状态列表。可能的状态是:INVALID
+表示包是未知连接，ESTABLISHED表示是双向传送的连接，NEW表示包
+为新的连接，否则是非双向传送的，而RELATED表示包由新连接开始，但
+是和一个已存在的连接在一起，如FTP数据传送，或者一个ICMP错误。
+<P>
+</DL>
+<A NAME="lbAT">&nbsp;</A>
+<H3>unclean</H3>
+
+此模块没有可选项，不过它试着匹配那些奇怪的、不常见的包。处在实验中。
+<P>
+<A NAME="lbAU">&nbsp;</A>
+<H3>tos</H3>
+
+此模块匹配IP包首部的8位tos（服务类型）字段（也就是说，包含在优先位中）。
+<DL COMPACT>
+<DT><B>--tos tos</B>
+
+<DD>
+这个参数可以是一个标准名称，（用iptables -m tos -h 察看该列表），或者数值。
+<P>
+</DL>
+<A NAME="lbAV">&nbsp;</A>
+<H2>TARGET EXTENSIONS</H2>
+
+iptables可以使用扩展目标模块：以下都包含在标准版中。
+<P>
+<A NAME="lbAW">&nbsp;</A>
+<H3>LOG</H3>
+
+为匹配的包开启内核记录。当在规则中设置了这一选项后，linux内核会通
+过printk()打印一些关于全部匹配包的信息（诸如IP包头字段等）。
+<DL COMPACT>
+<DT><B>--log-level level</B>
+
+<DD>
+记录级别（数字或参看 <A HREF="/cgi-bin/man/man2html?5+syslog.conf">syslog.conf</A>(5)）。
+<DT><B>--log-prefix prefix</B>
+
+<DD>
+在纪录信息前加上特定的前缀：最多14个字母长，用来和记录中其他信息区别。
+<DT><B>--log-tcp-sequence</B>
+
+<DD>
+记录TCP序列号。如果记录能被用户读取那么这将存在安全隐患。
+<DT><B>--log-tcp-options</B>
+
+<DD>
+记录来自TCP包头部的选项。
+<DT><B>--log-ip-options</B>
+
+<DD>
+记录来自IP包头部的选项。
+<P>
+</DL>
+<A NAME="lbAX">&nbsp;</A>
+<H3>MARK</H3>
+
+用来设置包的netfilter标记值。只适用于mangle表。
+<DL COMPACT>
+<DT><B>--set-mark mark</B>
+
+<DD>
+<P>
+</DL>
+<A NAME="lbAY">&nbsp;</A>
+<H3>REJECT</H3>
+
+作为对匹配的包的响应，返回一个错误的包：其他情况下和DROP相同。
+此目标只适用于INPUT、FORWARD和OUTPUT链，和调用这些链的用
+户自定义链。这几个选项控制返回的错误包的特性：
+<DL COMPACT>
+<DT><B>--reject-with type</B>
+
+<DD>
+Type可以是icmp-net-unreachable、icmp-host-unreachable、icmp-port-nreachable、icmp-prot
+o-unreachable、 icmp-net-prohibited 或者
+<BR>&nbsp;icmp-host-prohibited，该类型会返回相应的ICMP错误信息（默认是port-unreachable）。选项
+<BR>&nbsp;echo-reply也是允许的；它只能用于指定ICMP
+<BR>&nbsp;ping包的规则中，生成ping的回应。最后，选项tcp-reset可以用于在INPUT链中,或
+<BR>&nbsp;自INPUT链调用的规则，只匹配TCP协议：将回应一个TCP
+<BR>&nbsp;RST包。
+<P>
+</DL>
+<A NAME="lbAZ">&nbsp;</A>
+<H3>TOS</H3>
+
+用来设置IP包的首部八位tos。只能用于mangle表。
+<DL COMPACT>
+<DT><B>--set-tos tos</B>
+
+<DD>
+你可以使用一个数值型的TOS 值，或者用iptables -j TOS -h 来查看有效TOS名列表。
+</DL>
+<A NAME="lbBA">&nbsp;</A>
+<H3>MIRROR</H3>
+
+这是一个试验示范目标，可用于转换IP首部字段中的源地址和目标地址，
+再传送该包,并只适用于INPUT、FORWARD和OUTPUT链，以及只调用它们的用户自定义链
+。
+<P>
+<A NAME="lbBB">&nbsp;</A>
+<H3>SNAT</H3>
+
+这个目标只适用于nat表的POSTROUTING链。它规定修改包的源地
+址（此连接以后所有的包都会被影响），停止对规则的检查，它包含选项：
+<DL COMPACT>
+<DT><B>--to-source &lt;ipaddr&gt;[-&lt;ipaddr&gt;][:port-port]</B>
+
+<DD>
+可以指定一个单一的新的IP地址，一个IP地址范围，也可以附加一个端口范围
+（只能在指定-p tcp 或者-p udp的规则里）。如果未指定端口范围，源端口中
+512以下的（端口）会被安置为其他的512以下的端口；512到1024之间的端口
+会被安置为1024以下的，其他端口会被安置为1024或以上。如果可能，
+端口不会被修改。
+<DT><B>--to-destiontion &lt;ipaddr&gt;[-&lt;ipaddr&gt;][:port-port]</B>
+
+<DD>
+可以指定一个单一的新的IP地址，一个IP地址范围，也可以附加一个端口范围（只能在指定-p tcp 或者-p
+<BR>&nbsp;udp的规则里）。如果未指定端口范围，目标端口不会被修改。
+<P>
+</DL>
+<A NAME="lbBC">&nbsp;</A>
+<H3>MASQUERADE</H3>
+
+只用于nat表的POSTROUTING链。只能用于动态获取IP（拨号）连接：如果你拥有静态IP
+地址，你要用SNAT。伪装相当于给包发出时所经过接口的IP地址设置一个映像，当接口关
+闭连接会终止。这是因为当下一次拨号时未必是相同的接口地址（以后所有建立的连接都将
+关闭）。它有一个选项：
+<DL COMPACT>
+<DT><B>--to-ports &lt;port&gt;[-port&gt;]</B>
+
+<DD>
+指定使用的源端口范围，覆盖默认的SNAT源地址选择（见上面）。这个选项只适用于指定
+了-p tcp或者-p udp的规则。
+<P>
+</DL>
+<A NAME="lbBD">&nbsp;</A>
+<H3>REDIRECT</H3>
+
+只适用于nat表的PREROUTING和OUTPUT链，和只调用它们的用户自定义链。它修改包的
+目标IP地址来发送包到机器自身（本地生成的包被安置为地址127.0.0.1）。它包含一
+个选项：
+<DL COMPACT>
+<DT><B>--to-ports &lt;port&gt;[&lt;port&gt;]</B>
+
+<DD>
+指定使用的目的端口或端口范围：不指定的话，目标端口不会被修改。只能用于指定了-p tcp 或 -p udp的规则。
+<P>
+</DL>
+<A NAME="lbBE">&nbsp;</A>
+<H2>诊断</H2>
+
+不同的错误信息会打印成标准错误：退出代码0表示正确。类似于不对的或者滥用的命令
+行参数错误会返回错误代码2，其他错误返回代码为1。
+<P>
+<A NAME="lbBF">&nbsp;</A>
+<H2>臭虫</H2>
+
+检查还未完成。
+<P>
+<A NAME="lbBG">&nbsp;</A>
+<H2>COMPATIBILITY WITH IPCHAINS</H2>
+
+与ipchains的兼容性
+<P>
+This iptables is very similar to ipchains by Rusty Russell. The main difference
+<BR>&nbsp;is&nbsp;that&nbsp;the&nbsp;chains&nbsp;INPUT&nbsp;and&nbsp;OUTPUT&nbsp;are&nbsp;only&nbsp;traversed&nbsp;for&nbsp;packets&nbsp;coming&nbsp;into
+<BR>&nbsp;the&nbsp;local&nbsp;host&nbsp;and&nbsp;originating&nbsp;from&nbsp;the&nbsp;local&nbsp;host&nbsp;respectively.&nbsp;Hence&nbsp;every
+<BR>&nbsp;pack&nbsp;only&nbsp;passes&nbsp;through&nbsp;one&nbsp;of&nbsp;the&nbsp;three&nbsp;chains;&nbsp;previously&nbsp;a&nbsp;forwarded&nbsp;packet
+<BR>&nbsp;would&nbsp;pass&nbsp;through&nbsp;all&nbsp;three.&nbsp;The&nbsp;other&nbsp;main&nbsp;difference&nbsp;is&nbsp;that&nbsp;-I&nbsp;refers&nbsp;to
+<BR>&nbsp;input&nbsp;interface;&nbsp;-o&nbsp;refers&nbsp;to&nbsp;the&nbsp;output&nbsp;interface,&nbsp;and&nbsp;both&nbsp;are&nbsp;available&nbsp;for
+<BR>&nbsp;packets&nbsp;entering&nbsp;the&nbsp;FORWARD&nbsp;chain.&nbsp;iptables&nbsp;is&nbsp;a&nbsp;pure&nbsp;packet&nbsp;filter&nbsp;when&nbsp;using
+<BR>&nbsp;the&nbsp;default&nbsp;filter'&nbsp;table,&nbsp;with&nbsp;optional&nbsp;extension&nbsp;modules.&nbsp;This&nbsp;should
+<BR>&nbsp;simplify&nbsp;much&nbsp;of&nbsp;the&nbsp;previous&nbsp;confusion&nbsp;over&nbsp;the&nbsp;combination&nbsp;of&nbsp;IP&nbsp;masquerading
+<BR>&nbsp;and&nbsp;packet&nbsp;filtering&nbsp;seen&nbsp;previously.&nbsp;So&nbsp;the&nbsp;following&nbsp;options&nbsp;are&nbsp;handled
+<BR>&nbsp;differently:
+-j MASQ
+-M -S
+-M -L
+There are several other chaines in iptables
+iptables和Rusty Russell的ipchains非常相似。主要区别是INPUT 链只用于进入本
+地主机的包,而OUTPUT只用于自本地主机生成的包。因此每个包只经过三个链的
+一个；以前转发的包会经过所有三个链。其他主要区别是 -i 引用进入接口；-o引
+用输出接口，两者都适用于进入FORWARD链的包。当和可选扩展模块一起使用
+默认过滤器表时，iptables是一个纯粹的包过滤器。这能大大减少以前对IP伪装和
+包过滤结合使用的混淆，所以以下选项作了不同的处理：
+-j MASQ
+-M -S
+-M -L
+在iptables中有几个不同的链。
+<P>
+<A NAME="lbBH">&nbsp;</A>
+<H2>参见</H2>
+
+iptables-HOWTO有详细的iptables用法,对netfilter-hacking-HOWTO也有详细的本质说明。
+<P>
+<A NAME="lbBI">&nbsp;</A>
+<H2>作者</H2>
+
+Rusty Russell wrote iptables, in early consultation with Michael Neuling.
+Marc  Boucher  made Rusty abandon ipnatctl by lobbying for a generic packet
+<BR>&nbsp;selection&nbsp;framework&nbsp;in&nbsp;iptables,&nbsp;then&nbsp;wrote&nbsp;the&nbsp;mangle&nbsp;table,&nbsp;the&nbsp;owner&nbsp;match,
+<BR>&nbsp;the&nbsp;&nbsp;mark&nbsp;&nbsp;stuff,&nbsp;&nbsp;and&nbsp;&nbsp;ranaround&nbsp;doing&nbsp;cool&nbsp;stuff&nbsp;everywhere.
+James Morris wrote the TOS target, and tos match.
+Jozsef Kadlecsik wrote the REJECT target.
+The Netfilter Core Team is: Marc Boucher, Rusty Russell.
+<DL COMPACT>
+<DT><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mar&nbsp;20,&nbsp;2000<DD>
+<BR>
+
+<P>
+</DL>
+<A NAME="lbBJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>杨鹏·NetSnake &lt;<A HREF="mailto:netsnake@963.net">netsnake@963.net</A>&gt;</B>
+
+
+
+
+<A NAME="lbBK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003.11.20</B>
+
+<A NAME="lbBL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME </A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">说明</A><DD>
+<DT><A HREF="#lbAE">TARGETS</A><DD>
+<DT><A HREF="#lbAF">TABLES</A><DD>
+<DT><A HREF="#lbAG">OPTIONS</A><DD>
+<DL>
+<DT><A HREF="#lbAH">COMMANDS</A><DD>
+<DT><A HREF="#lbAI">参数</A><DD>
+<DT><A HREF="#lbAJ">其他选项</A><DD>
+</DL>
+<DT><A HREF="#lbAK">对应的扩展</A><DD>
+<DL>
+<DT><A HREF="#lbAL">tcp</A><DD>
+<DT><A HREF="#lbAM">udp</A><DD>
+<DT><A HREF="#lbAN">icmp</A><DD>
+<DT><A HREF="#lbAO">mac</A><DD>
+<DT><A HREF="#lbAP">limit</A><DD>
+<DT><A HREF="#lbAQ">mark</A><DD>
+<DT><A HREF="#lbAR">owner</A><DD>
+<DT><A HREF="#lbAS">state</A><DD>
+<DT><A HREF="#lbAT">unclean</A><DD>
+<DT><A HREF="#lbAU">tos</A><DD>
+</DL>
+<DT><A HREF="#lbAV">TARGET EXTENSIONS</A><DD>
+<DL>
+<DT><A HREF="#lbAW">LOG</A><DD>
+<DT><A HREF="#lbAX">MARK</A><DD>
+<DT><A HREF="#lbAY">REJECT</A><DD>
+<DT><A HREF="#lbAZ">TOS</A><DD>
+<DT><A HREF="#lbBA">MIRROR</A><DD>
+<DT><A HREF="#lbBB">SNAT</A><DD>
+<DT><A HREF="#lbBC">MASQUERADE</A><DD>
+<DT><A HREF="#lbBD">REDIRECT</A><DD>
+</DL>
+<DT><A HREF="#lbBE">诊断</A><DD>
+<DT><A HREF="#lbBF">臭虫</A><DD>
+<DT><A HREF="#lbBG">COMPATIBILITY WITH IPCHAINS</A><DD>
+<DT><A HREF="#lbBH">参见</A><DD>
+<DT><A HREF="#lbBI">作者</A><DD>
+<DT><A HREF="#lbBJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbBK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbBL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,194 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SWAPON</TITLE>
+</HEAD><BODY>
+<H1>SWAPON</H1>
+Section: Linux Programmer's Manual (8)<BR>Updated: 25 September 1995<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+swapon, swapoff - 使用/关闭用于分页和交换的文件和设备
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>/sbin/swapon [-h -V]</B>
+
+<BR>
+
+<B>/sbin/swapon -a [-v]</B>
+
+<BR>
+
+<B>/sbin/swapon [-v] [-p </B><I>priority</I><B>] </B><I> specialfile </I><B>...</B>
+
+<BR>
+
+<B>/sbin/swapon [-s]</B>
+
+<BR>
+
+<B>/sbin/swapoff [-h -V]</B>
+
+<BR>
+
+<B>/sbin/swapoff -a</B>
+
+<BR>
+
+<B>/sbin/swapoff</B><I> specialfile </I><B>...</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>Swapon</B>
+
+指出 用于 分页和交换 的 设备.
+一般 在 系统 多用户运行级 的 初始化文件
+<I>/etc/rc</I>
+
+中 调用
+<B>swapon ,</B>
+
+使 所有的 交换设备 生效, 因此 分页和交换 活动 可以 在 多个 设备和文件
+之中 进行.
+<P>
+常用的形式有:
+<DL COMPACT>
+<DT><B>-h</B>
+
+<DD>
+显示帮助
+<DT><B>-V</B>
+
+<DD>
+显示版本
+<DT><B>-s</B>
+
+<DD>
+显示交换设备的使用情况.这个选项需要
+<I>/proc/swaps</I>
+
+(小于 2.1.25 的 内核 可能没有).
+<DT><B>-a</B>
+
+<DD>
+使
+<I>/etc/fstab</I>
+
+中, 所有 标记了 'sw' 的 交换设备 生效.
+<DT><B>-p</B><I> priority</I>
+
+<DD>
+指定
+<B>swapon</B>
+
+的 优先级. 这个 选项 要求
+<B>swapon</B>
+
+在 1.3.2 或 更高 的 内核 上 编译 和 使用.
+<I>priority</I>
+
+介于 0 和 32767 之间. 关于 交换优先级 的 完整 描述 请 参看
+<B><A HREF="/cgi-bin/man/man2html?2+swapon">swapon</A></B>(2)<B>.</B>
+
+在
+<I>/etc/fstab</I>
+
+文件 中, 交换设备 的 选项域 里 加上
+<B>pri=</B><I>value</I><B>,</B>
+
+用
+<B>swapon -a</B>
+
+可以 使其 生效.
+</DL>
+<P>
+
+<B>Swapoff</B>
+
+禁止 在 指定的 设备和文件 上 做 交换, 如果 指定了
+<B>-a</B>
+
+选项, 
+<I>/etc/fstab</I>
+
+中 所有的 交换设备 皆被 关闭.
+<A NAME="lbAE">&nbsp;</A>
+<H2>注意 (NOTE)</H2>
+
+别在 包含 空洞(hole) 的 文件 上 使用
+<B>swapon .</B>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+swapon">swapon</A></B>(2), <B><A HREF="/cgi-bin/man/man2html?2+swapoff">swapoff</A></B>(2), <B><A HREF="/cgi-bin/man/man2html?5+fstab">fstab</A></B>(5), <B><A HREF="/cgi-bin/man/man2html?8+init">init</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?8+mkswap">mkswap</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+rc">rc</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?8+mount">mount</A></B>(8)
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>文件 (FILES)</H2>
+
+<I>/dev/hd??</I>
+
+标准分页设备
+<BR>
+
+<I>/dev/sd??</I>
+
+标准 (SCSI) 分页设备
+<BR>
+
+<I>/etc/fstab</I>
+
+ascii 格式的 文件系统 描述表
+<A NAME="lbAH">&nbsp;</A>
+<H2>历史 (HISTORY)</H2>
+
+<B>swapon</B>
+
+命令 源于 4.0BSD.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@iname.com">xuming@iname.com</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/11/18</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">注意 (NOTE)</A><DD>
+<DT><A HREF="#lbAF">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAG">文件 (FILES)</A><DD>
+<DT><A HREF="#lbAH">历史 (HISTORY)</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,140 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LOCK</TITLE>
+</HEAD><BODY>
+<H1>LOCK</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+LOCK - 明确地锁定一个表
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+LOCK [ TABLE ] <I>name</I> [, ...] [ IN <I>lockmode</I> MODE ]
+
+where <I>lockmode</I> is one of:
+
+    ACCESS SHARE | ROW SHARE | ROW EXCLUSIVE | SHARE UPDATE EXCLUSIVE
+    | SHARE | SHARE ROW EXCLUSIVE | EXCLUSIVE | ACCESS EXCLUSIVE
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>LOCK TABLE</B> 获取一个表级锁，必要时等待任何冲突的锁释放。 一旦获取了这个锁，它就会在当前事务的余下部分一直保持。 （没有 UNLOCK TABLE 命令；锁总是在事务结尾释放。）
+<P>
+
+<BR>&nbsp;在为那些引用了表的命令自动请求锁的时候，PostgreSQL&nbsp;总是尽可能使用最小限制的锁模式。LOCK&nbsp;TABLE&nbsp;&nbsp;是为你在需要更严格的锁的场合提供的。&nbsp;例如，假设一个应用在读已提交隔离级别上运行事务，&nbsp;并且它需要保证在表中的数据在事务的运行过程中都存在。要实现这个目的，&nbsp;你可以在查询之前对表使用&nbsp;SHARE&nbsp;锁模式进行锁定。&nbsp;这样将保护数据不被并行修改并且为任何更进一步的对表的读操作提供实际的当前状态的数据，&nbsp;因为&nbsp;SHARE&nbsp;锁模式与任何写操作需要的&nbsp;ROW&nbsp;EXCLUSIVE&nbsp;模式冲突，&nbsp;并且你的&nbsp;LOCK&nbsp;TABLE&nbsp;name&nbsp;IN&nbsp;SHARE&nbsp;MODE&nbsp;&nbsp;语句将等到所有并行的写操作提交或回卷后才执行。因此，一旦你获得该锁，那么就不会存在未提交的写操作．
+<P>
+
+<BR>&nbsp;如果运行在可串行化隔离级别并且你需要读取真实状态的数据时，&nbsp;你必须在执行任何数据修改语句之前运行一个&nbsp;LOCK&nbsp;TABLE&nbsp;语句。&nbsp;一个可串行化事务的数据图象将在其第一个数据修改语句开始的时候冻结住。&nbsp;稍后的&nbsp;LOCK&nbsp;TABLE&nbsp;将仍然阻止并发的写&nbsp;－－－&nbsp;但它不能保证事务读取的东西对应最近提交的数值。
+<P>
+
+<BR>&nbsp;如果一个此类的事务准备修改一个表中的数据，那么应该使用&nbsp;SHARE&nbsp;ROW&nbsp;EXCLUSIVE&nbsp;锁模式，而不是&nbsp;SHARE&nbsp;模式。&nbsp;这样就保证任意时刻只有一个此类的事务运行。不这样做就可能会死锁：&nbsp;当两个并行的事务可能都请求&nbsp;SHARE&nbsp;模式，然后试图更改表中的数据时，&nbsp;两个事务在实际执行更新的时候都需要&nbsp;ROW&nbsp;EXCLUSIVE&nbsp;锁模式，&nbsp;但是它们无法再次获取这个锁。（请注意，一个事务自己的锁是从不冲突的，&nbsp;因此一个事务可以在持有&nbsp;SHARE&nbsp;模式的锁的时候请求&nbsp;ROW&nbsp;EXCLUSIVE&nbsp;模式－－但是不能在任何其它事务持有&nbsp;SHARE&nbsp;&nbsp;模式的时候请求。）&nbsp;为了避免死锁，所有事务应该保证以相同的顺序对相同的对象请求锁，&nbsp;并且，如果涉及多种锁模式，那么事务应该总是最先请求最严格的锁模式。
+<P>
+
+<BR>&nbsp;有关锁模式和锁定策略的更多信息，请参考&nbsp;Section&nbsp;12.3&nbsp;``Explicit&nbsp;Locking''&nbsp;。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;要锁定的现存表的名字（可以有模式修饰）。
+<P>
+<BR>&nbsp;命令&nbsp;LOCK&nbsp;a,&nbsp;b;&nbsp;等效于&nbsp;LOCK&nbsp;a;&nbsp;LOCK&nbsp;b;。&nbsp;表是按照&nbsp;LOCK&nbsp;命令中声明的顺序一个接一个顺序上锁的。
+<DT><B></B><I>lockmode</I><B></B><DD>
+<BR>&nbsp;锁模式声明这个锁和那些锁冲突。锁模式在&nbsp;Section&nbsp;12.3&nbsp;``Explicit&nbsp;Locking''&nbsp;里描述。
+<P>
+<BR>&nbsp;如果没有声明锁模式，那么使用最严格的模式&nbsp;ACCESS&nbsp;EXCLUSIVE。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+LOCK ... IN ACCESS SHARE MODE 需要在目标表上有 SELECT 权限。所有其它形式的 LOCK 需要 UPDATE 和/或 DELETE 权限。
+<P>
+
+<B>LOCK</B> 只是在一个事务块的内部有用 （BEGIN...COMMIT），因为锁在事务结束的时候马上被释放。 出现在任意事务块外面的 LOCK 都自动生成一个自包含的事务，因此该锁在获取之后马上被丢弃。
+<P>
+
+<B>LOCK TABLE</B> 只处理表级的锁，因此那些有 ROW  字样的锁都是用词不当。这些模式名字通常应该应该理解为用户视图在一个被锁定的表中获取行级的锁。 同样 ROW EXCLUSIVE 模式也是一个可共享的表级锁。 我们一定要记住，只要是涉及到 LOCK TABLE， 那么所有锁模式都有相同的语意，区别只是它们与哪种锁冲突的规则。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;演示在往一个外键表上插入时在有主键的表上使用&nbsp;SHARE&nbsp;的锁：
+<P>
+<PRE>
+BEGIN WORK;
+LOCK TABLE films IN SHARE MODE;
+SELECT id FROM films 
+    WHERE name = 'Star Wars: Episode I - The Phantom Menace';
+-- Do ROLLBACK if record was not returned
+INSERT INTO films_user_comments VALUES 
+    (_id_, 'GREAT! I was waiting for it for so long!');
+COMMIT WORK;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;在执行删除操作时对一个有主键的表进行&nbsp;SHARE&nbsp;ROW&nbsp;EXCLUSIVE&nbsp;锁：
+<P>
+<PRE>
+BEGIN WORK;
+LOCK TABLE films IN SHARE ROW EXCLUSIVE MODE;
+DELETE FROM films_user_comments WHERE id IN
+    (SELECT id FROM films WHERE rating &lt; 5);
+DELETE FROM films WHERE rating &lt; 5;
+COMMIT WORK;
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;在&nbsp;SQL&nbsp;标准里面没有LOCK&nbsp;TABLE&nbsp;，可以使用&nbsp;SET&nbsp;TRANSACTION&nbsp;来声明当前事务的级别。&nbsp;PostgreSQL&nbsp;也支持这个，参阅&nbsp;SET&nbsp;TRANSACTION&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+set_transaction">set_transaction</A></B>(7)]&nbsp;获取详细信息。
+<P>
+
+<BR>&nbsp;除了&nbsp;ACCESS&nbsp;SHARE，ACCESS&nbsp;EXCLUSIVE，和&nbsp;SHARE&nbsp;UPDATE&nbsp;EXCLUSIVE&nbsp;&nbsp;锁模式外，&nbsp;PostgreSQL&nbsp;锁模式和&nbsp;LOCK&nbsp;TABLE&nbsp;语句都与那些在&nbsp;Oracle&nbsp;里面的兼容。
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

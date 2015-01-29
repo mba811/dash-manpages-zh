@@ -1,0 +1,196 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of YACC</TITLE>
+</HEAD><BODY>
+<H1>YACC</H1>
+Section: User Commands  (1)<BR>Updated: July&nbsp;15,&nbsp;1990<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+Yacc - 一个生成 <A HREF="/cgi-bin/man/man2html?1+LALR">LALR</A>(1) 文法分析器的程序
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<B>yacc [ -dlrtv ] [ -b</B>
+
+<I>file_prefix</I>
+
+<B>] [ -p</B>
+
+<I>symbol_prefix</I>
+
+<B>]</B>
+
+<I>filename</I>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+Yacc 从 filename 所指定的文件中读出文法(grammar)定义，并为之生成
+一个 <A HREF="/cgi-bin/man/man2html?1+LR">LR</A>(1) 分析器。分析器是由一系列 <A HREF="/cgi-bin/man/man2html?1+LALR">LALR</A>(1)分析表和用 C 语言写的
+驱动例程组成。通常把分析表和驱动例程写到文件 y.tab.c 中。
+<P>
+译注：余在翻译有关编译原理的东西时，总是区别语法(Syntax)和文法
+(grammar)。驱动例程指的是自动生成的 yyparse 函数和相关函数的源代
+码。Yacc和 Lex 自动生成的常量、变量、结构，函数等的名称通常以 yy
+为前缀，目的是不与用户自己的 C 程序定义的名称冲突。<A HREF="/cgi-bin/man/man2html?1+LALR">LALR</A>(1)文法的
+分析是通过在堆栈上通过移进(shift)和归约(reduce)实现的，任何经过良
+好设计的语言(例如 Lisp,C,Perl,C++,Java)，用<A HREF="/cgi-bin/man/man2html?1+LALR">LALR</A>(1)实现起来是容易，
+高效和可靠的。
+<P>
+<P>
+
+可得到下面的参数：
+<DL COMPACT><DT><DD>
+<P>
+<DL COMPACT>
+<DT><B>-b </B><I>file_prefix</I><DD>
+-b 选项改变的是为输出的文件名准备的前缀，这个字符串用 file_prefix
+指定，缺省的前缀是 y.。
+<P>
+<DT><B>-d</B>
+
+<DD>
+<B>-d</B> 
+-d 选项导致多写一个 y.tab.h 头文件。(包含一些词法定义)
+<P>
+<DT><B>-l</B>
+
+<DD>
+如果没有指定 -l 选项，则 yacc 将在生成的代码中插入 #line 宏命令
+(directive)。 #line 宏命令用于让 C 编译器把在生成的 C 代码中的
+错误与用户的原始 yacc 代码联系起来。如果指定了 -l 选项，yacc 将
+不插入 #line 宏命令。用户指定的 #line 宏命令还是将被保留的。
+<P>
+<DT><B>-p </B><I>symbol_prefix</I><DD>
+-p 选项改变的是为 Yacc生成的符号(symbols)准备的前缀，这个字符串用
+symbol_prefix 指定，缺省的前缀是 yy。
+<P>
+<DT><B>-r</B>
+
+<DD>
+-r 选项导致 yacc 生成生成分开的代码和表文件。代码文件名是 y.code.c，
+表文件名是 y.tab.c。
+<P>
+<DT><B>-t</B>
+
+<DD>
+-t 选项更改 Yacc 生成的预处理宏命令，这样调试语句就会被结合到编译后的
+代码中。
+<P>
+<DT><B>-v</B>
+
+<DD>
+-v 选项导致在文件 y.output 中写出可被人阅读的对生成的分析器的描述。
+<P>
+</DL>
+</DL>
+
+<P>
+
+如果设置了环境变量TMPDIR，TMPDIR 所指定的字符串将被用作生成临时文件
+的路径名。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>FILES 相关文件</H2>
+
+<I>y.code.c</I>
+
+<BR>
+
+<I>y.tab.c</I>
+
+<BR>
+
+<I>y.tab.h</I>
+
+<BR>
+
+<I>y.output</I>
+
+<BR>
+
+<I>/tmp/yacc.aXXXXXX</I>
+
+<BR>
+
+<I>/tmp/yacc.tXXXXXX</I>
+
+<BR>
+
+<I>/tmp/yacc.uXXXXXX</I>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>DIAGNOSTICS 诊断</H2>
+
+如果有些规则永不归约，在标准错误输出上报告这些规则的数目。
+如果有任何 <A HREF="/cgi-bin/man/man2html?1+LALR">LALR</A>(1) 冲突，在标准错误输出上报告这些冲突的数目。
+<P>
+译注：规则永不归约通常出现在文法有二义性规则的时候，术语叫
+归约-归约冲突。<A HREF="/cgi-bin/man/man2html?1+LALR">LALR</A>(1) 冲突术语上叫移进-归约冲突，解决的方法
+一种是 Lisp 风格的语言的括号总动员，一种是 C 风格的语言的优先
+级排座次，还有一种是结构化的解决方法例如 Fortran77 的IF...ENDIF
+及 Algol68 的if...fi。C 风格语言的一个标志就是至少有一个
+从 Algol60 至今死不改悔的移进-归约冲突--都是else(悬挂)惹的祸。
+只要你清楚并让用户知道，有移进-归约冲突可以是正常的，不象
+归约-归约冲突那样必须避免。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>mhss</B>
+
+<P>
+
+推荐：
+编译原理及实践/(美)Kenneth C. Louden著. -北京: 机械工业出版社,
+2000.3 ￥39。
+实践出真知，无有捷径。读 byacc 的源程序是艰苦的事情, 但能澄清
+一些似是而非的认识, 亲历编程的精真妙明的境界, 虽无大的实际利益,
+毕竟是聊胜于无。在娑婆世界中, 一个完整的美梦是十分珍贵的。
+仁者, 何妨一试。
+<P>
+
+推荐： 
+编译原理/吕映芝等著. -北京: 清华大学出版社,1998.1 ￥21。
+余见到 <A HREF="/cgi-bin/man/man2html?2+LL">LL</A>(2) 感到很欣慰。余以为是改进消除左递归和提取左因子的
+算法就可以解决的事情，故不应是学术问题。余不懂学术，若妄言之，
+大人有大量，请海涵了。
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2000/11/13
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">FILES 相关文件</A><DD>
+<DT><A HREF="#lbAF">DIAGNOSTICS 诊断</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国Linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

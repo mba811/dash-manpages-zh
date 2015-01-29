@@ -1,0 +1,309 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PG_DUMP</TITLE>
+</HEAD><BODY>
+<H1>PG_DUMP</H1>
+Section: PostgreSQL Client Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+pg_dump - 将一个PostgreSQL数据库抽出到一个脚本文件或者其它归档文件中
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>pg_dump</B> [ <B></B><I>option</I><B></B>...<B> </B>] [ <B></B><I>dbname</I><B> </B>]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>pg_dump</B> 是一个用于备份 PostgreSQL  数据库的工具。它甚至可以在数据库正在并发使用的时候进行完整一致的备份。 pg_dump 并不阻塞其它用户对数据库的访问（读或者写）。
+<P>
+
+<BR>&nbsp;转储格式可以是一个脚本或者归档文件。&nbsp;这个脚本文件的格式是纯文本，它包含许多&nbsp;SQL&nbsp;命令，&nbsp;这些&nbsp;SQL&nbsp;命令可以用于重建该数据库并将之恢复到保存成脚本的时候的状态。&nbsp;要恢复这些脚本，使用&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1)。&nbsp;它们甚至可以用于在其它机器甚至是其它硬件体系的机器上重建该数据库，&nbsp;通过对脚本进行一些修改，甚至可以在其它&nbsp;SQL&nbsp;数据库产品上重建该数据库。
+<P>
+
+<BR>&nbsp;另外，还有候选的归档文件格式可以和&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+pg_restore">pg_restore</A></B>(1)&nbsp;一起使用重建数据库，&nbsp;并且它们也允许&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+pg_restore">pg_restore</A></B>(1)&nbsp;对恢复什么东西进行选择，&nbsp;或者甚至是在恢复之前对需要恢复的条目进行重新排序。&nbsp;归档文件也是设计成可以跨平台移植的。
+<P>
+
+<BR>&nbsp;如果一种候选文件格式和&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+pg_restore">pg_restore</A></B>(1)&nbsp;&nbsp;结合，那么pg_dump就能提供一种灵活的归档和传输机制。&nbsp;pg_dump&nbsp;可以用于备份整个数据库，&nbsp;然后就可以使用&nbsp;pg_restore&nbsp;检查这个归档和/或选择要恢复的数据库部分。&nbsp;最灵活等输出文件格式是&nbsp;``custom(客户化)''&nbsp;格式（<B>-Fc</B>）。&nbsp;它允许对归档元素进行选取和重新排列，&nbsp;并且缺省时是压缩的。tar&nbsp;格式（-Ft）不是压缩的并且我们在装载等时候不可能重排列，&nbsp;不过它也很灵活；还有，它可以用其它工具，比如&nbsp;tar&nbsp;处理。
+<P>
+
+<BR>&nbsp;在运行&nbsp;pg_dump&nbsp;的时候，我们应该检查输出，&nbsp;看看是否有任何警告存在（在标准错误上打印），特别是下面列出的限制。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<BR>&nbsp;下面的命令行参数用于控制输出格式。
+<DL COMPACT>
+<DT><B></B><I>dbname</I><B></B><DD>
+<BR>&nbsp;声明将要转储的数据库名。&nbsp;如果没有声明这个参数，那么使用环境变量&nbsp;PGDATABASE。&nbsp;如果那个环境变量也没声明，那么用发起连接的用户名。
+<DT><B>-a</B><DD>
+<DT><B>--data-only</B><DD>
+<BR>&nbsp;只输出数据，不输出结构（表定义）。
+<P>
+<BR>&nbsp;这个选项只是对纯文本格式有意义。对于其它格式，你可以在调用&nbsp;pg_restore&nbsp;的时候声明选项。
+<DT><B>-b</B><DD>
+<DT><B>--blobs</B><DD>
+<BR>&nbsp;在转储中包含大对象。
+<DT><B>-c</B><DD>
+<DT><B>--clean</B><DD>
+<BR>&nbsp;输出在创建数据库创建命令之前先清理（删除）该数据库对象的命令。
+<P>
+<BR>&nbsp;这个选项只是对纯文本格式有意义。对于其它格式，你可以在调用&nbsp;<B>pg_restore</B>&nbsp;的时候声明选项。
+<DT><B>-C</B><DD>
+<DT><B>--create</B><DD>
+<BR>&nbsp;以一条创建该数据库本身并且与这个数据库联接等命令开头进行输出。&nbsp;（如果是这种形式的脚本，那么你在运行脚本之前和哪个数据库联接就不重要了。）
+<P>
+<BR>&nbsp;这个选项只对纯文本格式有意义。对于其它格式，你可以在调用&nbsp;<B>pg_restore</B>&nbsp;的时候声明该选项。
+<DT><B>-d</B><DD>
+<DT><B>--inserts</B><DD>
+<BR>&nbsp;将数据输出为的&nbsp;<B>INSERT</B>&nbsp;命令（而不是&nbsp;<B>COPY</B>）。&nbsp;这样会导致恢复非常缓慢。但却令归档更容易移植到其它&nbsp;SQL&nbsp;数据库。
+<DT><B>-D</B><DD>
+<DT><B>--column-inserts</B><DD>
+<DT><B>--attribute-inserts</B><DD>
+<BR>&nbsp;把数据转储为带有明确字段名的&nbsp;<B>INSERT</B>&nbsp;命令。&nbsp;（INSERT&nbsp;INTO&nbsp;<I>table</I>(<I>column</I>,&nbsp;...)&nbsp;VALUES&nbsp;...）。&nbsp;这样会导致恢复非常缓慢，但是如果你想重新排列字段的顺序，那么它是必须的。
+<DT><B>-f </B><I>file</I><B></B><DD>
+<DT><B>--file=</B><I>file</I><B></B><DD>
+<BR>&nbsp;把输出发往指定的文件。如果忽略这些，则使用标准输出。
+<DT><B>-F </B><I>format</I><B></B><DD>
+<DT><B>--format=</B><I>format</I><B></B><DD>
+<BR>&nbsp;选择输出的格式。format可以是下列之一：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>p</B><DD>
+<BR>&nbsp;输出纯文本SQL脚本文件（缺省）
+<DT><B>t</B><DD>
+<BR>&nbsp;输出适合输入到&nbsp;<B>pg_restore</B>&nbsp;&nbsp;里的tar归档文件。&nbsp;使用这个归档允许在恢复数据库时重新排序和/或把表结构排除在外。&nbsp;同时也可能可以在恢复的时候限制对哪些数据进行恢复。
+<DT><B>c</B><DD>
+<BR>&nbsp;输出适于给&nbsp;pg_restore&nbsp;用的客户化归档。&nbsp;这是最灵活的格式，它允许对装载的数据和纲要元素进行重新排列。&nbsp;这个格式缺省的时候是压缩的。
+</DL>
+</DL>
+
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-i</B><DD>
+<DT><B>--ignore-version</B><DD>
+<BR>&nbsp;忽略在&nbsp;pg_dump&nbsp;&nbsp;和数据库服务器之间的版本差别。
+<P>
+<B>pg_dump</B> 可以处理来自以前版本的PostgreSQL  的数据库，但是太老的版本则不被支持了（目前是支持到 7.0）。 如果你需要跨越版本检查时才使用这个选项（ 而且如 pg_dump 失效，别说我没警告你）。
+<DT><B>-n </B><I>namespace</I><B></B><DD>
+<DT><B>--schema=</B><I>schema</I><B></B><DD>
+<BR>&nbsp;只转储&nbsp;schema&nbsp;的内容。&nbsp;如果没有声明这个选项，所有目标数据库中的非系统模式都会被转储出来。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  在这个模式里，pg_dump 并不试图转储任何其它选定模式可能依赖的数据库对象。 因此，系统不保证单一的一个模式的转储就可以成功地恢复到一个干净的数据库中去。
+</DL>
+
+<P>
+<DT><B>-o</B><DD>
+<DT><B>--oids</B><DD>
+<BR>&nbsp;为每个表都输出对象标识（OID）。&nbsp;如果你的应用在某种程度上引用了OID字段的话，（比如，在外键约束中用到）。&nbsp;那么使用这个选项。否则，不应该使用这个选项。
+<DT><B>-O</B><DD>
+<DT><B>--no-owner</B><DD>
+<BR>&nbsp;不把对象的所有权设置为对应源数据库。&nbsp;
+By default, <B>pg_dump</B> issues
+<B>SET SESSION AUTHORIZATION</B>
+statements to set ownership of created schema elements.
+These statements
+will fail when the script is run unless it is started by a superuser
+(or the same user that owns all of the objects in the script).
+To make a script that can be restored by any user, but will give
+that user ownership of all the objects, specify <B>-O</B>.
+<P>
+<BR>&nbsp;这个选项只是对纯文本格式有意义。对于其它格式，在你调用&nbsp;pg_restore&nbsp;的时候你可以声明该选项。
+<DT><B>-R</B><DD>
+<DT><B>--no-reconnect</B><DD>
+<BR>&nbsp;这个选项已经过时，但是出于向下兼容的考虑，仍然接受这个选项。
+<DT><B>-s</B><DD>
+<DT><B>--schema-only</B><DD>
+<BR>&nbsp;只输出表纲要（定义），不输出数据。
+<DT><B>-S </B><I>username</I><B></B><DD>
+<DT><B>--superuser=</B><I>username</I><B></B><DD>
+<BR>&nbsp;声明关闭触发器时需要用到的超级用户名。&nbsp;它只有使用了&nbsp;<B>--disable-triggers</B>&nbsp;的时候才有关系。&nbsp;（通常，我们最好不要输入这个参数，而是用超级用户启动生成的脚本。）
+<DT><B>-t </B><I>table</I><B></B><DD>
+<DT><B>--table=</B><I>table</I><B></B><DD>
+<BR>&nbsp;只输出表&nbsp;<I>table</I>&nbsp;的数据。&nbsp;很可能是在不同模式里面有多个同名表；如果这样，那么所有匹配的表都将被转储出来。&nbsp;同时声明&nbsp;<B>--schema</B>&nbsp;和&nbsp;<B>--table</B>&nbsp;则只选择一个表。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+<BR>&nbsp;注意:&nbsp;&nbsp;在这个模式里，pg_dump&nbsp;并不试图转储任何其它选定表可能依赖的数据库对象。&nbsp;因此，系统不保证单一的一个表的转储就可以成功地恢复到一个干净的数据库中去。&nbsp;
+</DL>
+
+<P>
+<DT><B>-v</B><DD>
+<DT><B>--verbose</B><DD>
+<BR>&nbsp;声明冗余模式。&nbsp;这样将令&nbsp;pg_dump&nbsp;在标准错误上打印进度信息。
+<DT><B>-x</B><DD>
+<DT><B>--no-privileges</B><DD>
+<DT><B>--no-acl</B><DD>
+<BR>&nbsp;避免输出&nbsp;ACL（赋予/撤消&nbsp;命令）和表的所有者关系信息。
+<DT><B>-X use-set-session-authorization</B><DD>
+<DT><B>--use-set-session-authorization</B><DD>
+<BR>&nbsp;这个选项废弃了，保留它是为了向下兼容。&nbsp;pg_dump&nbsp;现在表现得总是想正式选取了这个选项一样。
+<DT><B>-X disable-triggers</B><DD>
+<DT><B>--disable-triggers</B><DD>
+<BR>&nbsp;这个选项只是和创建仅有数据的转储相关。它告诉&nbsp;pg_dump&nbsp;&nbsp;包含在恢复数据时，临时关闭目标表上面的触发器的命令。&nbsp;如果你在表上有参考完整性检查或者其它触发器，而恢复数据的时候你不想重载他们，那么你就应该使用这个选项。
+<P>
+<BR>&nbsp;目前，为&nbsp;<B>--disable-triggers</B>&nbsp;发出的命令必须用超级用户来做。&nbsp;因此，你应该同时用&nbsp;-S&nbsp;声明一个超级用户名，或者最好是用一个超级用户的身份来启动这个生成的脚本。
+<P>
+<BR>&nbsp;这个选项只对纯文本格式有意义。对于其它格式，你可以在调用&nbsp;pg_restore&nbsp;的时候声明这个选项。
+<DT><B>-Z </B><I>0..9</I><B></B><DD>
+<DT><B>--compress=</B><I>0..9</I><B></B><DD>
+<BR>&nbsp;声明在那些支持压缩的格式中使用的压缩级别。&nbsp;（目前只有客户化格式支持压缩）。
+</DL>
+<P>
+
+<P>
+
+<BR>&nbsp;下面的命令行参数控制数据库为联接参数。
+<DL COMPACT>
+<DT><B>-h </B><I>host</I><B></B><DD>
+<DT><B>--host=</B><I>host</I><B></B><DD>
+<BR>&nbsp;声明运行服务器的机器的主机名。&nbsp;如果数值以斜扛开头，则它被用做到&nbsp;Unix&nbsp;域套接字的路径。&nbsp;缺省是从&nbsp;PGHOST&nbsp;环境变量中取得的，如果设置了这个环境变量的话，否则，尝试一个&nbsp;Unix&nbsp;域套接字连接。
+<DT><B>-p </B><I>port</I><B></B><DD>
+<DT><B>--port=</B><I>port</I><B></B><DD>
+<BR>&nbsp;声明服务器正在侦听并等待联接的&nbsp;TCP&nbsp;端口或本地&nbsp;Unix&nbsp;主控套接字文件句柄。&nbsp;缺省时使用环境变量&nbsp;PGPORT&nbsp;的值（如果存在），或者是编译时的缺省值。
+<DT><B>-U </B><I>username</I><B></B><DD>
+<BR>&nbsp;以给出用户身分联接。
+<DT><B>-W</B><DD>
+<BR>&nbsp;强制口令提示。如果服务器需要口令认证，那么这个动作应该自动发生。
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>PGDATABASE</B><DD>
+<DT><B>PGHOST</B><DD>
+<DT><B>PGPORT</B><DD>
+<DT><B>PGUSER</B><DD>
+<BR>&nbsp;缺省连接参数
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>DIAGNOSTICS 诊断</H2>
+
+<P>
+
+<B>pg_dump</B> 在内部使用 SELECT 语句。如果你运行 pg_dump 时碰到问题，确认你能够使用象  <B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1) 这样的程序从数据库选取信息。
+<A NAME="lbAH">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;如果你的数据库给template1数据库增加了任何你自己的东西，&nbsp;那么请注意把&nbsp;pg_dump&nbsp;的输出恢复到一个真正空的数据库中；&nbsp;否则你可能会收到因为重复定义所追加的对象而造成的错误信息。要制作一个没有任何本地附属物的数据库，&nbsp;可以从template0而不是template1拷贝，比如：
+<P>
+<PRE>
+CREATE DATABASE foo WITH TEMPLATE template0;
+
+</PRE>
+
+<P>
+
+<B>pg_dump</B> 有几个限制：
+<DL COMPACT>
+<DT>&bull;<DD>
+<BR>&nbsp;在转储一个表或者作为纯文本转储时，pg_dump&nbsp;无法操作大对象。&nbsp;大对象必须整数据库地使用非文本归档格式之一进行转储。
+<DT>&bull;<DD>
+<BR>&nbsp;在进行纯数据转储时，并且使用了选项&nbsp;<B>--disable-triggers</B>&nbsp;&nbsp;的时候，<B>pg_dump</B>&nbsp;发出一些查询先关闭在用户表上面的触发器，&nbsp;然后插入数据，数据插入完成后再发出查询打开触发器。&nbsp;如果恢复动作在中间停止，那么系统表可能就会处于一种错误状态。
+</DL>
+<P>
+
+<P>
+
+<BR>&nbsp;tar&nbsp;归档的成员的大小限制于&nbsp;8&nbsp;GB。（这个限制是&nbsp;tar&nbsp;文件格式的固有限制。）&nbsp;因此这个格式无法用于那些一个表的大小超过这个尺寸的原文表现。&nbsp;tar&nbsp;归档和任何其它输出格式的总大小是不受限制的，只是可能会又操作系统的限制。
+<P>
+
+<BR>&nbsp;恢复完之后，我们建议在每个已恢复的对象上运行&nbsp;ANALYZE。&nbsp;这样优化器就可以得到有用的统计。
+<A NAME="lbAI">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;转储一个数据库：
+<P>
+<PRE>
+$ <B>pg_dump mydb &gt; db.out</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;重载这个数据库：
+<P>
+<PRE>
+$ <B>psql -d database -f db.out</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;输出一个叫&nbsp;mydb&nbsp;的包含BLOB&nbsp;&nbsp;的数据库到一个&nbsp;tar&nbsp;文件：
+<P>
+<PRE>
+$ <B>pg_dump -Ft -b mydb &gt; db.tar</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;把这个数据库（连同BLOB）一起恢复到一个现有的叫&nbsp;newdb&nbsp;的数据库：
+<P>
+<PRE>
+$ <B>pg_restore -d newdb db.tar</B>
+
+</PRE>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>HISTORY 历史</H2>
+
+<P>
+
+<B>pg_dump</B> 工具最早出现在 Postgres95 版本 0.02。 非纯文本输出格式在 PostgreSQL 版本 7.1 时引入。
+<A NAME="lbAK">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+pg_dumpall">pg_dumpall</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+pg_restore">pg_restore</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1)
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAG">DIAGNOSTICS 诊断</A><DD>
+<DT><A HREF="#lbAH">NOTES 注意</A><DD>
+<DT><A HREF="#lbAI">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAJ">HISTORY 历史</A><DD>
+<DT><A HREF="#lbAK">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAL">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

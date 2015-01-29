@@ -1,0 +1,762 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SOCKET</TITLE>
+</HEAD><BODY>
+<H1>SOCKET</H1>
+Section: Linux Programmer's Manual (7)<BR>Updated: 7 May 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+socket - Linux 套接字
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>#include  &lt;<A HREF="file:///usr/include/sys/socket.h">sys/socket.h</A>&gt;</B>
+
+<BR>
+
+<I>mysocket</I><B> = socket(int </B><I>socket_family</I><B>, int </B><I>socket_type</I><B>, int </B><I>protocol</I><B>);</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+本手册页介绍了 Linux 套接字的用户接口. 这个 BSD 兼容套接字是介于用
+户进程与内核网络协议栈之间的统一接口, 各协议模块属于不同的
+<I>协议族</I>
+
+,如
+<B>PF_INET</B>, <B>PF_IPX</B>, <B>PF_PACKET</B>
+
+和
+<I>套接字类型</I>
+
+,如
+<B>字节流（SOCK_STREAM）</B>
+
+或
+<B>数据报（SOCK_DGRAM）.</B>
+
+关于协议族和套接字类型请参考
+<B><A HREF="/cgi-bin/man/man2html?2+socket">socket</A></B>(2)<B>.</B>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>套接层函数</H2>
+
+用户通过这些套接字函数发送和接收包, 以及其他套接字操作.
+详细说明参看他们各自的手册页.
+<P>
+<B><A HREF="/cgi-bin/man/man2html?2+socket">socket</A></B>(2)
+
+创建套接字，
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?2+connect">connect</A></B>(2)
+
+与远程套接字地址建立连接
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?2+bind">bind</A></B>(2)
+
+把套接字和一个本地套接字地址绑定在一起（为套接字分配一个本地协议地址）
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?2+listen">listen</A></B>(2)
+
+通知套接字接受新的连接
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?2+accept">accept</A></B>(2)
+
+为新的已完成连接获得新的描述字
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?2+socketpair">socketpair</A></B>(2)
+
+返回两个连接的匿名套接字（仅在某些本地族中才有实现,如
+<B>PF_UNIX</B>）
+
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?2+send">send</A></B>(2),
+
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?2+sendto">sendto</A></B>(2),
+
+和
+<B><A HREF="/cgi-bin/man/man2html?2+sendmsg">sendmsg</A></B>(2)
+
+通过套接字发送数据，而
+<B><A HREF="/cgi-bin/man/man2html?2+recv">recv</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+recvfrom">recvfrom</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+recvmsg">recvmsg</A></B>(2)
+
+从套接字接收数据.
+<B><A HREF="/cgi-bin/man/man2html?2+poll">poll</A></B>(2)
+
+和
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?2+select">select</A></B>(2)
+
+等待数据到来或准备好接收数据. 除此之外, 标准 I/O 操作如
+<B><A HREF="/cgi-bin/man/man2html?2+write">write</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+writev">writev</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+sendfile">sendfile</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+read">read</A></B>(2),
+
+和
+<B><A HREF="/cgi-bin/man/man2html?2+readv">readv</A></B>(2)
+
+也可用来读入（接收）和写出（发送）数据.
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?2+getsockname">getsockname</A></B>(2)
+
+用于获得本地套接字地址
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?2+getpeername">getpeername</A></B>(2)
+
+用于获得远端套接字地址.
+<B><A HREF="/cgi-bin/man/man2html?2+getsockopt">getsockopt</A></B>(2)
+
+和
+<B><A HREF="/cgi-bin/man/man2html?2+setsockopt">setsockopt</A></B>(2)
+
+用于设置或取得套接字或协议选项. 
+<B><A HREF="/cgi-bin/man/man2html?2+ioctl">ioctl</A></B>(2)
+
+也可以用来设置或读取一些其他选项.
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?2+close">close</A></B>(2)
+
+关闭套接字.
+<B><A HREF="/cgi-bin/man/man2html?2+shutdown">shutdown</A></B>(2)
+
+关闭全双工套接字连接的一部分.
+<P>
+
+套接字不支持搜索，也不支持调用
+<B><A HREF="/cgi-bin/man/man2html?2+pread">pread</A></B>(2)
+
+或
+<B><A HREF="/cgi-bin/man/man2html?2+pwrite">pwrite</A></B>(2)
+
+进行非 0 位置的操作.
+可以用
+<B><A HREF="/cgi-bin/man/man2html?2+fcntl">fcntl</A></B>(2).
+
+设置
+<B>O_NONBLOCK</B>
+
+标志来实现对套接字的非阻塞 I/O 操作
+<B>O_NONBLOCK</B>
+
+是从 accept 继承来的，然后原来所有会阻塞的操作会返回
+<B>EAGAIN</B>.
+
+<B><A HREF="/cgi-bin/man/man2html?2+connect">connect</A></B>(2)
+
+在此情况下返回
+<B>EINPROGRESS</B>
+
+错误.
+用户可以通过
+<B><A HREF="/cgi-bin/man/man2html?2+poll">poll</A></B>(2)
+
+或者
+<B><A HREF="/cgi-bin/man/man2html?2+select">select</A></B>(2)
+
+等待各种事件.
+<P>
+<P>
+
+<TABLE BORDER>
+<TR VALIGN=top><TD ALIGN=center COLSPAN=3>I/O 事件<BR></TD></TR>
+<TR VALIGN=top><TD>事件</TD><TD>轮询标志</TD><TD>发生事件<BR></TD></TR>
+<TR VALIGN=top><TD>读</TD><TD>POLLIN</TD><TD>
+新数据到达.
+<BR></TD></TR>
+<TR VALIGN=top><TD>读</TD><TD>POLLIN</TD><TD>
+(对面向连接的套接字)建立连接成功
+<BR></TD></TR>
+<TR VALIGN=top><TD>读</TD><TD>POLLHUP</TD><TD>
+另一端套接字发出断开连接请求.
+<BR></TD></TR>
+<TR VALIGN=top><TD>读</TD><TD>POLLHUP</TD><TD>
+(仅对面向连接协议)套接字写的时候连接断开. 同时发送
+<B>SIGPIPE.</B>
+
+<BR></TD></TR>
+<TR VALIGN=top><TD>写</TD><TD>POLLOUT</TD><TD>
+套接字有充足的发送缓冲区用于写入新数据.
+<BR></TD></TR>
+<TR VALIGN=top><TD>读/写</TD><TD>
+POLLIN|
+<BR>
+
+POLLOUT
+</TD><TD>
+发出的
+<B><A HREF="/cgi-bin/man/man2html?2+connect">connect</A></B>(2)
+
+结束.
+<BR></TD></TR>
+<TR VALIGN=top><TD>读/写</TD><TD>POLLERR</TD><TD>产生一个异步错误.<BR></TD></TR>
+<TR VALIGN=top><TD>读/写</TD><TD>POLLHUP</TD><TD>对方已经单向关闭连接.<BR></TD></TR>
+<TR VALIGN=top><TD>例外</TD><TD>POLLPRI</TD><TD>
+紧急数据到达.然后发送
+<B>SIGURG.</B>
+
+<BR></TD></TR>
+</TABLE>
+
+<P>
+<P>
+
+另外一个的 poll/select 方法是让内核用
+<B>SIGIO</B>
+
+信号来通知应用程序. 要这么用的话你必须用
+<B><A HREF="/cgi-bin/man/man2html?2+fcntl">fcntl</A></B>(2)
+
+设置套接字文件描述符的
+<B>FASYNC</B>
+
+标志，并用
+<B><A HREF="/cgi-bin/man/man2html?2+sigaction">sigaction</A></B>(2).
+
+给
+<B>SIGIO</B>
+
+信号设置一个的有效信号处理句柄.参看下面的
+<I>SIGNALS</I>
+
+的讨论.
+<A NAME="lbAF">&nbsp;</A>
+<H2>套接字选项</H2>
+
+套接字选项可以用
+<B><A HREF="/cgi-bin/man/man2html?2+setsockopt">setsockopt</A></B>(2)
+
+来设置，用
+<B><A HREF="/cgi-bin/man/man2html?2+getsockopt">getsockopt</A></B>(2)
+
+读取所有套接字级别设为
+<B>SOL_SOCKET </B>
+
+的套接字的套接字选项:
+<DL COMPACT>
+<DT><B>SO_KEEPALIVE</B>
+
+<DD>
+允许在面向连接的套接字上发送 keep-alive 消息的功能.是一个布尔整数.
+<DT><B>SO_OOBINLINE</B>
+
+<DD>
+如果打开这个选项，带外（Out-of-Band）数据可以直接放入接收数据流。
+否则，只有接收时打开
+<B>MSG_OOB </B>
+
+标志, 才接收带外数据.
+
+
+<DT><B>SO_RCVLOWAT</B> 和 <B>SO_SNDLOWAT</B>
+
+<DD>
+声明在开始向协议
+(<B>SO_SNDLOWAT</B>)
+
+或正在接收数据的用户
+(<B>SO_RCVLOWAT</B>).
+
+传递数据之前缓冲区内的最小字节数. 在 Linux 中这两个值是不可改变的,
+固定为 1 字节.
+可以用
+<B>getsockopt </B>
+
+用来读取它们的值; 
+<B>setsockopt </B>
+
+总是返回
+<B>ENOPROTOOPT</B>.
+
+<DT><B>SO_RCVTIMEO</B> 和 <B>SO_SNDTIMEO</B>
+
+<DD>
+发送和接收时的超时设定, 并在超时时报错. 在 Linux 中由
+协议指定, 不能被读写. 它们的功能可用
+<B><A HREF="/cgi-bin/man/man2html?2+alarm">alarm</A></B>(2)
+
+或者
+<B><A HREF="/cgi-bin/man/man2html?2+setitimer">setitimer</A></B>(2).
+
+来模拟.
+<DT><B>SO_BSDCOMPAT</B>
+
+<DD>
+允许 BSD 的 bug-to-bug 兼容. 这一项只能在 UDP 协议模块中使用而
+且今后将要取消. 如果允许的话, UDP 套接字接收到的 ICMP 错误将不
+会被传送至用户程序. Linux 2.0 中对于原始套接字也允许 BSD 
+bug-to-bug 兼容（报头随机改变,省略广播标识）,但在 Linux 2.2
+中取消了这一项. 修改用户程序的方式比较好.
+<DT><B>SO_PASSCRED</B>
+
+<DD>
+允许或关闭
+<B>SCM_CREDENTIALS</B>
+
+控制消息的接收.
+更多信息参见
+<B><A HREF="/cgi-bin/man/man2html?7+unix">unix</A></B>(7).
+
+<DT><B>SO_PEERCRED</B>
+
+<DD>
+返回连接至此套接字的外部进程的身份验证. 只在 
+<B>PF_UNIX </B>
+
+套接字中有用.参见 
+<B><A HREF="/cgi-bin/man/man2html?7+unix">unix</A></B>(7).
+
+参数为
+<B>ucred </B>
+
+结构.只在
+<B>getsockopt</B>.
+
+中有效.
+<DT><B>SO_BINDTODEVICE</B>
+
+<DD>
+将此套接字绑定到一个特定的设备上, 如"eth0",
+做为指定的接口名字传递. 如果名称是空字符串或此项长度为 0,
+则套接字设备绑定被取消. 过去的选项是一个变长的空零结尾的
+接口名称的字符串, 其最大长度为
+<B>IFNAMSIZ</B>.
+
+如果一个套接字被绑定至一接口,
+只有由这个特定接口接收的信息包可以由此套接字处理.
+<DT><B>SO_DEBUG </B>
+
+<DD>
+允许套接字调试.只对有
+<B>CAP_NET_ADMIN</B>
+
+功能或有效用户标识为 0 的进程有效.
+<DT><B>SO_REUSEADDR</B>
+
+<DD>
+表示在一个
+<B><A HREF="/cgi-bin/man/man2html?2+bind">bind</A></B>(2)
+
+调用中对提供给它的地址使用的确认规则应该允许重复使用本地地址. 对于
+<B>PF_INET</B>
+
+套接字, 这表示该套接字可以绑定, 除非已有一个活跃的侦听套
+接口绑定到此地址上. 如果这个侦听套接字和一个指定端口绑定为
+<B>INADDR_ANY</B>
+
+时, 它就不能再绑定到任何本地地址的此端口.
+<DT><B>SO_TYPE</B>
+
+<DD>
+按整数返回套接字类型（如
+<B>SOCK_STREAM</B>）
+
+只能通过
+<B>getsockopt</B>
+
+读取. 
+<DT><B>SO_DONTROUTE</B>
+
+<DD>
+不通过网关发送, 只能发送给直接连接的主机.可以通过在套接字的
+<B><A HREF="/cgi-bin/man/man2html?2+send">send</A></B>(2)
+
+操作上设置
+<B>MSG_DONTROUTE</B>
+
+标志来实现相同的效果. 其值为布尔型整数的标识.
+<DT><B>SO_BROADCAST</B>
+
+<DD>
+设置或获取广播标识. 当选择此选项时, 数据报套接字接收向
+广播地址发送的数据包, 并且可以向广播地址发送数据包. 这一
+选项对于面向流的套接字无效.
+<DT><B>SO_SNDBUF </B>
+
+<DD>
+设置或得到套接字发送缓冲区的最大字节数. 其默认值由 
+<B>wmem_default </B>
+
+sysctl 设置,最大允许值由
+<B>wmem_max</B>
+
+sysctl 设置.
+<DT><B>SO_RCVBUF</B>
+
+<DD>
+设置或得到套接字接收缓冲区的最大字节数。其默认值由 
+<B>rmem_default </B>
+
+sysctl设置,最大允许值由
+<B>rmem_max</B>
+
+sysctl 设置.
+<DT><B>SO_LINGER</B>
+
+<DD>
+设置或获取
+<B>SO_LINGER </B>
+
+选项的值. 其参数为
+<B>linger </B>
+
+结构.
+</DL>
+<P>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+struct linger {
+    int   l_onoff;    /* 延时状态（打开/关闭） */
+    int   l_linger;   /* 延时多长时间 */
+};
+
+</PRE>
+
+</DL>
+
+<DL COMPACT>
+<DT><DD>
+如果选择此选项,
+<B><A HREF="/cgi-bin/man/man2html?2+close">close</A></B>(2)
+
+或
+<B><A HREF="/cgi-bin/man/man2html?2+shutdown">shutdown</A></B>(2)
+
+将等到所有套接字里排队的消息成功发送或到达延迟时间后
+才会返回. 否则, 调用将立即返回. 而 closing 操作将在后台
+进行. 如果套接字是
+<B><A HREF="/cgi-bin/man/man2html?2+exit">exit</A></B>(2),
+
+的一部分关闭时, 它总是在后台延迟进行的.
+<DT><B>SO_PRIORITY</B>
+
+<DD>
+设置在此套接字发送的所有包的协议定义优先权.
+Linux 通过这一值来排列网络队列: 根据所选设备排队规则, 
+具有更高优先权的包可以先被处理.对于
+<B><A HREF="/cgi-bin/man/man2html?7+ip">ip</A></B>(7),
+
+同时也设置了输出包的 IP 服务类型（TOS）的域.
+<DT><B>SO_ERROR</B>
+
+<DD>
+取得并清除未解决的套接字错误. 只有在
+<B>getsockopt</B>.
+
+时有效. 是一个整数值.
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>SIGNALS</H2>
+
+当向一个已关闭（被本地或远程终端）的面向联接的套接字写入时,
+将向该写入进程发送
+<B>SIGPIPE</B>
+
+信号，并返回
+<B>EPIPE</B>
+
+如果写入命令声明了
+<B>MSG_NOSIGNAL </B>
+
+标识时, 不会发出此信号.
+<P>
+
+如果与
+<B>FIOCSETOWN </B>
+
+fcntl 或 
+<B>SIOCSPGRP </B>
+
+ioctl 一起请求，那么当发生 I/O 事件时发出
+<B>SIGIO</B>
+
+这样我们就可以在信号句柄里使用
+<B><A HREF="/cgi-bin/man/man2html?2+poll">poll</A></B>(2)
+
+或
+<B><A HREF="/cgi-bin/man/man2html?2+select">select</A></B>(2)
+
+找出发生事件的套接字.
+另一种选择（在 Linux 2.2 中）是用
+<B>F_SETSIG</B>
+
+fcntl 设置一个实时信号:
+实时信号的处理程序被调用时还会收到它的
+<I>siginfo_t</I>
+
+的
+<I>si_fd </I>
+
+区域中的文件描述符.
+更多信息参见
+<B><A HREF="/cgi-bin/man/man2html?2+fcntl">fcntl</A></B>(2)
+
+<P>
+
+在某些环境中（例如:多个进程访问单个套接字）,
+引发
+<B>SIGIO</B>
+
+的东西在进程对信号作出反应时可能已经消失了.
+如果这样的话, 进程应该再次等待, 因为 Linux 稍后会重发此信号.
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>SYSCTLS </H2>
+
+可以通过目录
+<B>/proc/sys/net/core/* </B>
+
+下的文件或者用
+<B><A HREF="/cgi-bin/man/man2html?2+sysctl">sysctl</A></B>(2)
+
+系统调用来访问内核套接字的网络系统控制（sysctl）信息.
+<DL COMPACT>
+<DT><B>rmem_default</B>
+
+<DD>
+指明套接字接收缓冲区的默认字节数.
+<DT><B>rmem_max</B>
+
+<DD>
+指明套接字接收缓冲区的最大字节数, 用户可以通过使用
+<B>SO_RCVBUF</B>
+
+套接字选项来设置此值.
+<DT><B>wmem_default</B>
+
+<DD>
+指明套接字发送缓冲区的默认字节数.
+<DT><B>wmem_max</B>
+
+<DD>
+指明发送缓冲区的最大字节数，用户可以通过使用套接字的
+<B>SO_SNDBUF</B>
+
+选项来设置它的值.
+<DT><B>message_cost</B> 和 <B>message_burst</B>
+
+<DD>
+设定记号存储桶过滤器, 在存储桶中保存一定数量的外部网络
+事件导致的警告消息.
+<DT><B>netdev_max_backlog </B>
+
+<DD>
+在全局输入队列中包的最大数目.
+<DT><B>optmem_max</B>
+
+<DD>
+每个套接字的象 iovecs 这样的辅助数据和用户控制数据的最大长度.
+
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>IOCTLS</H2>
+
+以上的 IO 控制值可以通过
+<B><A HREF="/cgi-bin/man/man2html?2+ioctl">ioctl</A></B>(2)
+
+来访问:
+<P>
+<DL COMPACT><DT><DD>
+<PRE>
+<I>error</I><B> = ioctl(</B><I>ip_socket</I><B>, </B><I>ioctl_type</I><B>, </B><I>&amp;value_result</I><B>);</B>
+</PRE>
+
+</DL>
+
+<P>
+<DL COMPACT>
+<DT><B>SIOCGSTAMP</B>
+
+<DD>
+返回
+<B>timeval </B>
+
+类型的结构，其中包括有发送给用户的最后一个包接收时的时间戳。
+被用来测量精确的 RTT （round trip time） 时间.
+<B>struct timeval</B>.
+
+结构说明请参考
+<B><A HREF="/cgi-bin/man/man2html?2+setitimer">setitimer</A></B>(2)
+
+
+<DT><B>SIOCSPGRP</B>
+
+<DD>
+在异步 IO 操作结束或者接收到紧急数据时，用来设置进程或进程组，
+向它（它们）发送
+<B>SIGIO</B>
+
+或者
+<B>SIGURG</B>
+
+信号, 参数为指向
+<B>pid_t</B>.
+
+类型的指针。如果参数为正，则发送信号到相应的进程。如果参数为
+负，则发送信号到此参数绝对值 id 所属的进程组的所有进程。
+如果它没有
+<B>CAP_KILL</B>
+
+功能或者它的有效 UID 不是 0, 进程只能选择它自己或自己的进程组来
+接收信号.
+<DT><B>FIOASYNC</B>
+
+<DD>
+改变
+<B>O_ASYNC</B>
+
+标志来打开或者关闭套接字的异步 IO 模式。异步IO模式指的是：当
+新的 I/O 事件发生时，将发出
+<B>SIGIO </B>
+
+信号或者用
+<B>F_SETSIG</B>
+
+设置的信号.
+<DT><DD>
+参数为整形布尔量. 
+
+<DT><B>SIOCGPGRP</B>
+
+<DD>
+获得当前接收
+<B>SIGIO </B>
+
+或者
+<B>SIGURG</B>
+
+信号的进程或者进程组, 
+如果两个信号都没有设置, 则为 0.
+</DL>
+<P>
+
+有效的 fcntl:
+<DL COMPACT>
+<DT><B>FIOCGETOWN</B>
+
+<DD>
+与 IO 控制中的 SIOCGPGRP 相同.
+<DT><B>FIOCSETOWN</B>
+
+<DD>
+与 IO 控制中的 SIOCSPGRP 相同.
+</DL>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>注意</H2>
+
+Linux 假设有一半的发送/接收缓冲区是用来处理内核结构, 因此, 
+系统控制的缓冲区是网络可访问的缓冲区的两倍.
+<A NAME="lbAK">&nbsp;</A>
+<H2>缺陷</H2>
+
+<B>CONFIG_FILTER </B>
+
+没有介绍
+<B>SO_ATTACH_FILTER </B>
+
+和
+<B>SO_DETACH_FILTER </B>
+
+套接字选项. 在 libpcap 库有此接口的说明
+<A NAME="lbAL">&nbsp;</A>
+<H2>VERSIONS 版本</H2>
+
+<B>SO_BINDTODEVICE </B>
+
+在 Linux 2.0.30 中引入. 
+<B>SO_PASSCRED </B>
+
+是在 Linux 2.2 中引入的新选项.
+sysctl 是在 Linux 2.2. 中引入的新概念。 
+<A NAME="lbAM">&nbsp;</A>
+<H2>作者</H2>
+
+本手册页由 Andi Kleen 编写.
+<P>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>又见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+socket">socket</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?7+ip">ip</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?2+setsockopt">setsockopt</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+getsockopt">getsockopt</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?7+packet">packet</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?7+ddp">ddp</A></B>(7)
+
+<P>
+<A NAME="lbAO">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>liguoping &lt;<A HREF="mailto:liguoping_11@sina.com">liguoping_11@sina.com</A>&gt;</B>
+
+<A NAME="lbAP">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/11/06</B>
+
+<A NAME="lbAQ">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">套接层函数</A><DD>
+<DT><A HREF="#lbAF">套接字选项</A><DD>
+<DT><A HREF="#lbAG">SIGNALS</A><DD>
+<DT><A HREF="#lbAH">SYSCTLS </A><DD>
+<DT><A HREF="#lbAI">IOCTLS</A><DD>
+<DT><A HREF="#lbAJ">注意</A><DD>
+<DT><A HREF="#lbAK">缺陷</A><DD>
+<DT><A HREF="#lbAL">VERSIONS 版本</A><DD>
+<DT><A HREF="#lbAM">作者</A><DD>
+<DT><A HREF="#lbAN">又见</A><DD>
+<DT><A HREF="#lbAO">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAP">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAQ">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

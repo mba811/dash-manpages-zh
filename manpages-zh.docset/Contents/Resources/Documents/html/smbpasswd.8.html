@@ -1,0 +1,234 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SMBPASSWD</TITLE>
+</HEAD><BODY>
+<H1>SMBPASSWD</H1>
+Section:  (8)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+smbpasswd - 改变用户的SMB口令 
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<P>
+<P>
+<B>smbpasswd</B> [-a] [-x] [-d] [-e] [-D debuglevel] [-n] [-r &lt;remote machine&gt;] [-R &lt;name resolve order&gt;] [-m] [-U username[%password]] [-h] [-s] [-w pass] [-i] [-L] [username]
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+<P>
+
+此程序是<B><A HREF="/cgi-bin/man/man2html?7+Samba">Samba</A></B>(7)套件的一部分。 
+<P>
+<P>
+
+smbpasswd程序有几个不太一样的功能，这取决于它被<B>root</B>账号还是其它账号来使用。当普通用户运行它时，用户可以通过SMB会话在任何保存SMB口令的机器上改变他们的口令。
+<P>
+<P>
+
+默认情况下(不带参数运行)它会尝试在本地改变当前用户的SMB口令。这和<B><A HREF="/cgi-bin/man/man2html?1+passwd">passwd</A></B>(1)程序的工作方式类似。不过，<B> smbpasswd</B>和具有<B>setuid root</B> 特性的passwd还是不一样的，它工作在客户机-服务器模式, 并且与本地运行中的<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8)通信。为了运行成功，smbd守护程序必须正在本地主机上运行。在UNIX主机上通常用<B><A HREF="/cgi-bin/man/man2html?5+smbpasswd">smbpasswd</A></B>(5) 来存放SMB的加密口令。
+<P>
+<P>
+
+当普通用户不带选项来运行这个程序时，smbpasswd会向他们提示输入原SMB口令并询问所需的新口令两次，来确保输入正确. 输入时屏幕并不回显。如果你用了一个空SMB口令(在smbpasswd文件中会指定字串“NO PASSWORD”)的话，在程序提示输入原口令时可以直接输入&lt;Enter&gt;键。
+<P>
+<P>
+
+普通用户也可以在远程主机(例如Windows NT主域控制器)上用smbpasswd来改他们的SMB口令。详细情况请参见以下的(<I>-r</I>)和<I>-U</I>两个选项。
+<P>
+<P>
+
+当root运行这个程序时，smbpasswd可以在smbpasswd文件中增删用户，也可以改变用户属性。这时，<B> smbpasswd</B> 会直接访问本地smbpasswd文件，即使smbd并没有在运行时也可以。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+<P>
+<DL COMPACT>
+<DT>-a<DD>
+在这个选项后跟上用户名用来实现在本地smbpasswd文件中增加用户，并且同时设置口令(提示原口令时用&lt;Enter&gt;)。如果smbpasswd文件中已经存在了这个用户时，命令就变成通常的修改口令模式。注意，默认的passdb后端要求所要加入的SMB用户必须是系统口令文件中(通常是<I>/etc/passwd</I>)已经存在的用户否则加入操作将会失败。
+<P>
+只有root运行smbpasswd程序时才可以使用这个选项。 
+<P>
+<DT>-x<DD>
+This option specifies that the username following should be deleted from the local smbpasswd file.
+<P>
+<P>
+This option is only available when running smbpasswd as root.
+<P>
+<P>
+<DT>-d<DD>
+这个选项后跟用户名用来<B>禁止</B>存在于smbpasswd文件中的这个账号。通过在smbpasswd文件的账号控制部分写入 <B>'D'</B>标志来实现这个功能。一旦账号被禁止，所有使用这个账号作SMB身份验证的尝试都将失败。
+<P>
+如果smbpasswd文件还是旧格式的话(比如Samba 2.0之前版本)，在用户口令项中没有这样的账号控制部分可以作任何标志，这个命令会*失败*。关于口令文件的新格式和旧格式细节可以参见<B><A HREF="/cgi-bin/man/man2html?5+smbpasswd">smbpasswd</A></B>(5) 。
+<P>
+只有root运行smbpasswd程序时才可以使用这个选项。
+<P>
+<DT>-e<DD>
+这个选项后跟用户名用来在本地smbpasswd文件中的这个账号被禁止时重新<B>允许</B>使用。如果账号并未被禁止的话，使用这个选项不会有什么结果。被允许的账号将可以通过SMB的身份验证。
+<P>
+使用老格式的口令文件时，<B> smbpasswd</B> 将运行失败。关于口令文件的新格式和旧格式细节可以参见<B><A HREF="/cgi-bin/man/man2html?5+smbpasswd">smbpasswd</A></B>(5)。 
+<P>
+只有root运行smbpasswd程序时才可以使用这个选项。 
+<P>
+<DT>-D debuglevel<DD>
+<I>debuglevel</I> 是一个从0到10的整数。如果没有指定此参数则默认的值是0。 
+<P>
+如果这个值越高，越多关于smbpasswd的详细活动信息将被记录到文件中。在0调试级时，只记录紧急错误和严重警告。
+<P>
+1以上的调试级将产生相当多的记录数据，并且只在解决问题时才有用。3以上的调试级只被设计为让开发者使用并会产生极大数量的记录数据，而且其中很多部分非常难以理解。
+<P>
+<DT>-n<DD>
+用这个选项后跟用户名来把这个账号的口令设为空(也就是没有口令)。程序会把本地smbpasswd文件中该口令项的第一部分改为“NO PASSWORD”。
+<P>
+注意如果设置了&quot;NO PASSWORD&quot;之后，要允许用户以空口令登录到Samba服务器，管理员必须在<I>smb.conf</I>配置文件的[global]段中设置以下的参数：
+<P>
+<B>null passwords = yes</B>
+<P>
+只有root运行smbpasswd程序时才可以使用这个选项。 
+<P>
+<DT>-r remote machine name<DD>
+使用这个选项来让用户指定他们所希望改变口令的主机，不用此参数时默认对本地更改口令。SMB/CIFS服务器会试图联接以<I>remote machine name</I>作为NetBIOS名字的主机以更改口令。Samba套件中的所有程序都使用标准的名字解析机制来把这样的名字转换成IP地址。参见<I>-R name resolve order</I>参数来获得改变解析机制的详细信息。
+<P>
+用这个选项更改密码的账号就是当前登录UNIX的账号。要改变其它帐号的密码可以参见<I>-U username</I>参数。
+<P>
+注意，如果要改变一个NT域账号，指定的远程主机必须是域中的主域控制器，因为备份域控制器只维护用户账号数据库的只读复本，而不能更改。
+<P>
+<B>注意</B>的是Windows 95/98实际根本没有口令数据库，所以不可能更改远程Win95/98主机上的口令
+<P>
+<DT>-R name resolve order<DD>
+用这个选项来让使用smbclient的用户在查询主机NetBIOS名字用于联接时，决定使用怎样的名字解析服务。
+<P>
+这些名字解析选项是：&quot;lmhosts&quot;,&quot;host&quot;,&quot;wins&quot;和&quot;bcast&quot;.它们决定了名字解析是以如下方式的：
+<P>
+<B>lmhosts</B> : 在samba的lmhosts文件中查找IP地址.如果lmhosts文件的内容行中没有名字类型附加在NetBIOS名上时(参见<B>lmhosts</B> (5)中的详细描述),任何类型的名字都可以匹配这个查询.
+<P>
+<B>host</B> : 执行标准的主机名到IP地址的解析操作,此操作会使用系统的<I>/etc/hosts</I>,NIS或者是DNS来查询.具体方法取决于操作系统,在IRIX和Solaris中解析名字的方法可能是由<I>/etc/nsswitch.conf</I>文件来控制的.注意此方法只适用于对被查询的NetBIOS名字类型为0x20(服务器)时才有用,其它类型都会被忽略.
+<P>
+<B>wins</B> : 向列在<I>wins server</I>选项中的服务器查询一个名字对应的IP地址.如果没有指定WINS服务器,那么此方法就被略过了.
+<P>
+<B>bcast</B> : 向在<I>interfaces</I>选项中列出的每一个已知本地网络接口进行广播来作查询.这是最不可信的名字解析方法,除非目标主机就在本地子网中.
+<P>
+默认的顺序是 <B>lmhosts, host, wins, bcast</B>。如果没有这个参数，<B><A HREF="/cgi-bin/man/man2html?5+smb.conf">smb.conf</A></B>(5) 文件中也没有选项，将尝试这个顺序的名字解析。
+<P>
+<DT>-m<DD>
+这个选项来把账号改为一个MACHINE账号。通常当Samba作为Windows NT主域控制器的时候可以使用它。
+<P>
+只有root运行smbpasswd程序时才可以使用这个选项。 
+<P>
+<DT>-U username<DD>
+这个选项只能和 <I>-r</I>选项联合使用。当从远程主机更改口令时，用它来允许用户指定要改变的远程主机口令的用户账号。这使得在不同的系统上使用不同的账号的用户可以口令。 
+<P>
+<DT>-h<DD>
+使用这个选项可以打印出<B> smbpasswd</B>的帮助信息，注意选择正确的帮助: root用户和普通用户使用的。
+<P>
+<DT>-s<DD>
+使用这个选项会使smbpasswd保持安静(不发出提示)，在标准输入上读取原口令和新口令。而不是从<I>/dev/tty</I>上读口令(象<B><A HREF="/cgi-bin/man/man2html?1+passwd">passwd</A></B>(1)那样)。使用脚本来处理smbpasswd时可以用它。
+<P>
+<DT>-w password<DD>
+This parameter is only available if Samba has been configured to use the experimental <B>--with-ldapsam</B> option. The <I>-w</I> switch is used to specify the password to be used with the <I>ldap admin dn</I>. Note that the password is stored in the <I>secrets.tdb</I> and is keyed off of the admin's DN. This means that if the value of <I>ldap admin dn</I> ever changes, the password will need to be manually updated as well.
+<P>
+<P>
+<DT>-i<DD>
+This option tells smbpasswd that the account being changed is an interdomain trust account. Currently this is used when Samba is being used as an NT Primary Domain Controller. The account contains the info about another trusted domain.
+<P>
+<P>
+This option is only available when running smbpasswd as root.
+<P>
+<P>
+<DT>-L<DD>
+Run in local mode.
+<P>
+<P>
+<DT>username<DD>
+This specifies the username for all of the <B>root only</B> options to operate on. Only root can specify this parameter as only root has the permission needed to modify attributes directly in the local smbpasswd file.
+<P>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>注意 NOTES</H2>
+
+<P>
+<P>
+
+由于非root用户是以客户机-服务器模式运行<B>smbpasswd</B>与本地smbd通信，因此smbd守护程序必须在运行状态。通常会出现的一个问题是在对可以连接到本地运行的smbd的主机进行限制的时候，通过在<B><A HREF="/cgi-bin/man/man2html?5+smb.conf">smb.conf</A></B>(5) 配置文件中指定<I>allow hosts</I>或者<I>deny hosts</I>参数但是忘记了允许“localhost”对smbd进行连接。
+<P>
+<P>
+
+另外smbpasswd命令只有在已经把samba设成使用加密口令时才能发挥作用。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>版本 VERSION</H2>
+
+<P>
+<P>
+
+此手册页是针对samba套件版本3.0的。
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<P>
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?5+smbpasswd">smbpasswd</A></B>(5), <B><A HREF="/cgi-bin/man/man2html?7+Samba">Samba</A></B>(7).
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+<P>
+<P>
+
+samba软件和相关工具最初由Andrew Tridgell创建。samba现在由Samba Team 作为开源软件来发展，类似linux内核的开发方式。
+<P>
+<P>
+
+最初的samba手册页是 Karl Auer写的。
+手册页源码已经转换为YODL格式(另一种很好的开源软件，可以在<A HREF="ftp://ftp.ice.rug.nl/pub/unix找到)，由Jeremy">ftp://ftp.ice.rug.nl/pub/unix找到)，由Jeremy</A> Sllison 更新到Samba2.0 版本。
+Gerald Carter 在Samba2.2中将它转化为DocBook 格式。
+Alexander Bokovoy 在Samba 3.0中实现了DocBook XML4.2 格式的转换。
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">注意 NOTES</A><DD>
+<DT><A HREF="#lbAG">版本 VERSION</A><DD>
+<DT><A HREF="#lbAH">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAI">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,801 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PERL</TITLE>
+</HEAD><BODY>
+<H1>PERL</H1>
+Section: Perl Programmers Reference Guide (1)<BR>Updated: 2003-09-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+perl - Practical Extraction and Report Language (实用摘录和汇报语言)
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>perl</B><TT>&nbsp;&nbsp;&nbsp;</TT>[&nbsp;<B>-sTuU</B>&nbsp;] [&nbsp;<B>-hv</B>&nbsp;]&nbsp;[&nbsp;<B>-V</B>[:<I>configvar</I>]&nbsp;]<BR>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;<B>-cw</B>&nbsp;]&nbsp;[&nbsp;<B>-d</B>[:<I>debugger</I>]&nbsp;]&nbsp;[&nbsp;<B>-D</B>[<I>number/list</I>]&nbsp;]
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;<B>-pna</B>&nbsp;]&nbsp;[&nbsp;<B>-F</B><I>pattern</I>&nbsp;]&nbsp;[&nbsp;<B>-l</B>[<I>octal</I>]&nbsp;]&nbsp;[&nbsp;<B>-0</B>[<I>octal</I>]&nbsp;]
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;<B>-I</B><I>dir</I>&nbsp;]&nbsp;[&nbsp;<B>-m</B>[<B>-</B>]<I>module</I>&nbsp;]&nbsp;[&nbsp;<B>-M</B>[<B>-</B>]<I>'module...'</I>&nbsp;]
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;<B>-P</B>&nbsp;]&nbsp;[&nbsp;<B>-S</B>&nbsp;]&nbsp;[&nbsp;<B>-x</B>[<I>dir</I>]&nbsp;]
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;<B>-i</B>[<I>extension</I>]&nbsp;]&nbsp;[&nbsp;<B>-e</B>&nbsp;<I>'command'</I>&nbsp;]&nbsp;[&nbsp;<B>--</B>&nbsp;]&nbsp;[&nbsp;<I>programfile</I>&nbsp;]&nbsp;[&nbsp;<I>argument</I>&nbsp;]...
+<P>
+
+如果你是 Perl 新手，还是从 perlintro 看起吧，那是为初学者准备的简单介绍，提供了一些背景知识，帮助你浏览 Perl 其余的大量文档
+<P>
+
+为方便阅读，Perl 手册分成了很多章
+
+<BR>
+
+
+
+<P>
+
+<B>概述 Overview</B>
+<P>
+
+
+
+
+<PRE>
+    perl                Perl 概述 (本小节) 
+    perlintro           Perl 介绍 (为新手准备) 
+    perltoc             Perl 目录 (所有内容列表) 
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>教程 Tutorials</B>
+<P>
+
+
+
+
+<PRE>
+    perlreftut          Perl 引用 
+    perldsc             Perl 数据结构 
+    perllol             Perl 高级数据结构 
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlrequick         Perl 正则表达式快速入门 
+    perlretut           Perl 正则表达式 
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlboot            Perl OO 面向对象 入门 
+    perltoot            Perl OO 面向对象 教程 (第一部分) 
+    perltooc            Perl OO 面向对象 教程 (第二部分) 
+    perlbot             Perl OO 面向对象 窍门和例子 
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlstyle           Perl 程序风格 
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlcheat           Perl 投机取巧 
+    perltrap            Perl 大意者的陷阱 
+    perldebtut          Perl 调试 
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlfaq             Perl 常见问题 
+      perlfaq1          有关 Perl 的一般问题
+      perlfaq2          获取/学习 Perl 
+      perlfaq3          编程工具
+      perlfaq4          数据操纵
+      perlfaq5          文件与文件格式
+      perlfaq6          正则表达式
+      perlfaq7          Perl 语言本身的问题
+      perlfaq8          与操作系统交互
+      perlfaq9          网络
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>参考手册 Reference Manual</B>
+<P>
+
+
+
+
+<PRE>
+    perlsyn             Perl 语法
+    perldata            Perl 数据结构
+    perlop              Perl 操作符及优先级
+    perlsub             Perl 定义函数
+    perlfunc            Perl 内置函数
+      perlopentut       Perl open() 教程
+      perlpacktut       Perl pack() 和 unpack() 教程
+    perlpod             Perl POD 文档
+    perlpodspec         Perl POD 文档格式规约
+    perlrun             Perl 执行选项
+    perldiag            Perl 诊断信息
+    perllexwarn         Perl 警告 控制警告
+    perldebug           Perl 调试
+    perlvar             Perl 预定义变量
+    perlre              Perl 正则表达式 其余的部分
+    perlreref           Perl 正则表达式快速索引
+    perlref             Perl 参考 其余的部分 
+    perlform            Perl 格式
+    perlobj             Perl 对象
+    perltie             Perl 用简单变量隐藏对象
+      perldbmfilter     Perl DBM 层
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlipc             Perl 进程间通信
+    perlfork            Perl fork() 相关信息
+    perlnumber          Perl 数字的语义
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlthrtut          Perl 线程
+      perlothrtut       旧版 Perl 线程
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlport            Perl 移植向导
+    perllocale          Perl 语言环境支持
+    perluniintro        Perl Unicode 介绍
+    perlunicode         Perl Unicode 支持
+    perlebcdic          在 EBCDIC 平台上运行 Perl
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlsec             Perl 安全性
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlmod             Perl modules: 它如何工作
+    perlmodlib          Perl modules: 如何写和用它们
+    perlmodstyle        Perl modules: 如何写好它
+    perlmodinstall      Perl modules: 如何从 CPAN 安装它们
+    perlnewmod          Perl modules: 准备释放出新模块
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlutil            Perl 附带的工具
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlcompile         Perl 编译套件介绍
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlfilter          Perl 源码过滤
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>内部以及 C 接口 Internals and C Language Interface</B>
+<P>
+
+
+
+
+<PRE>
+    perlembed           在 C/C++ 应用中内置 Perl 的独特方法
+    perldebguts         Perl 调试要点和技巧
+    perlxstut           Perl XS 
+    perlxs              Perl XS 应用程序编程接口
+    perlclib            标准 C 库的内部实现
+    perlguts            为高级开发者准备的 Perl 内部函数
+    perlcall            从 C 转换为 Perl 调用
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlapi             Perl API 列表 (自动生成)
+    perlintern          Perl 内部函数 (自动生成)
+    perliol             Perl 以"层"方式实现 IO 用到的 C API 
+    perlapio            Perl 内部 IO 抽象接口
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlhack            修改 Perl 
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>杂项 Miscellaneous</B>
+<P>
+
+
+
+
+<PRE>
+    perlbook            Perl 书籍信息 
+    perltodo            Perl 的未来
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perldoc             查看 Pod 格式的 Perl 文档
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlhist            Perl 历史记录
+    perldelta           Perl 上一版本以来的变动
+    perl58delta         Perl 5.8.0 带来的变化
+    perl573delta        Perl changes in version 5.7.3
+    perl572delta        Perl changes in version 5.7.2
+    perl571delta        Perl changes in version 5.7.1
+    perl570delta        Perl changes in version 5.7.0
+    perl561delta        Perl changes in version 5.6.1
+    perl56delta         Perl changes in version 5.6
+    perl5005delta       Perl changes in version 5.005
+    perl5004delta       Perl changes in version 5.004
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    perlartistic        Perl Artistic License
+    perlgpl             GNU General Public License
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>语言相关 Language-Specific</B>
+<P>
+
+
+
+
+<PRE>
+    perlcn              Perl 简体中文支持 (原文是 EUC-CN 编码)
+    perljp              Perl 日本语支持 (原文是 EUC-JP 编码)
+    perlko              Perl 朝鲜语支持 (原文是 EUC-KR 编码)
+    perltw              Perl 繁体中文支持 (原文是 Big5 编码)
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>平台相关 Platform-Specific</B>
+<P>
+
+
+
+
+<PRE>
+    perlaix             Perl notes for AIX
+    perlamiga           Perl notes for AmigaOS
+    perlapollo          Perl notes for Apollo DomainOS
+    perlbeos            Perl notes for BeOS
+    perlbs2000          Perl notes for POSIX-BC BS2000
+    perlce              Perl notes for WinCE
+    perlcygwin          Perl notes for Cygwin
+    perldgux            Perl notes for DG/UX
+    perldos             Perl notes for DOS
+    perlepoc            Perl notes for EPOC
+    perlfreebsd         Perl notes for FreeBSD
+    perlhpux            Perl notes for HP-UX
+    perlhurd            Perl notes for Hurd
+    perlirix            Perl notes for Irix
+    perlmachten         Perl notes for Power MachTen
+    perlmacos           Perl notes for Mac OS (Classic)
+    perlmacosx          Perl notes for Mac OS X
+    perlmint            Perl notes for MiNT
+    perlmpeix           Perl notes for MPE/iX
+    perlnetware         Perl notes for NetWare
+    perlos2             Perl notes for OS/2
+    perlos390           Perl notes for OS/390
+    perlos400           Perl notes for OS/400
+    perlplan9           Perl notes for Plan 9
+    perlqnx             Perl notes for QNX
+    perlsolaris         Perl notes for Solaris
+    perltru64           Perl notes for Tru64
+    perluts             Perl notes for UTS
+    perlvmesa           Perl notes for VM/ESA
+    perlvms             Perl notes for VMS
+    perlvos             Perl notes for Stratus VOS
+    perlwin32           Perl notes for Windows
+
+</PRE>
+
+
+<P>
+
+默认情况下，上面列出的手册页安装在
+<I>/usr/local/man/</I> 目录
+<P>
+
+还有大量有关 Perl 模块的文档。默认的 perl 配置会将它们安装到
+<I>/usr/local/lib/perl5/man</I> 目录，(或者 Perl 库目录中的
+<I>man</I> 子目录). 它们中的一部分是随 Perl 发布的标准文档，
+另外你还可以从中找到第三方的文档
+<P>
+
+你可以用
+<I><A HREF="/cgi-bin/man/man2html?1+man">man</A></I>(1) 程序来查看 Perl 的文档，只要在配置文件中加入合适的路径，
+或者将路径设置在
+<FONT SIZE="-1">MANPATH</FONT> 环境变量中。要找出 perl 所有手册页的路径，只要运行
+<P>
+
+
+
+<PRE>
+    perl -V:man.dir
+
+</PRE>
+
+
+<P>
+
+如果路径有共同点，例如
+<I>/usr/local/man/man1</I>
+和 <I>/usr/local/man/man3</I>, 
+你只要将共同点
+(<I>/usr/local/man</I>) 
+加入到 <I><A HREF="/cgi-bin/man/man2html?1+man">man</A></I>(1) 的配置文件中，或是
+<FONT SIZE="-1">MANPATH</FONT> 环境变量中。如果它们没有共同点，就必须全部添加
+<P>
+
+如果这样做没有效果，你也可以用附带的
+<I>perldoc</I> 脚本来查看模块信息。也可以找一个 man 的替代程序
+<P>
+
+如果你的程序出了问题，又不知道该到哪里去找帮助，就先试一试
+<B>-w</B> 选项。它会精确地报告错误发生在哪一行
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+Perl 是一种特别为扫描复杂文本文件优化过的语言，
+从中提取有用的信息，然后据此生成结果。
+它也是系统管理任务中很好用的语言。它的目标是实用 (易用，高效，完整) 而不是
+精致 (小，优雅，功能有限)
+<P>
+
+Perl 结合了 (在作者看来) 
+C, <B>sed</B>, <B>awk</B>, 还有 <B>sh</B> 的优点，熟悉它们的人学起 Perl 毫无困难。
+(语言学家还会从中发现一些
+<B>csh</B>, Pascal, 甚至 <FONT SIZE="-1">BASIC-PLUS</FONT> 中的元素。)
+表达式语法与 C 表达式语法紧密对应。与大多数 Unix 工具不同，Perl 不限制
+你的数据的大小
+--- 只要你有足够的内存，Perl 可以把你的整个文件当作单一的字符串来享受。
+递归的深度是无限的。
+散列 (有时又叫做"关联数组"
+``associative arrays''
+) 会按需生长，以避免性能下降。
+Perl 使用精致的模式匹配技术来保证快速扫描大量数据。
+尽管为扫描文本而优化，Perl 仍然可以处理二进制数据，也可以像使用散列一样使用 dbm 文件。
+设置了 UID 的 Perl 脚本要比 C 程序安全，因为数据流跟踪机制可以堵上很多愚蠢的安全漏洞
+<P>
+
+如果你遇到了一般适于
+<B>sed</B> 或 <B>awk</B> 或 <B>sh</B> 处理的问题，但是问题超出了工具的能力，
+或者需要更快的处理，你又不想用 C 来写一大堆倒塌的程序，那么使用 Perl 吧。
+另外，还有很多将
+<B>sed</B> 和 <B>awk</B>
+脚本转换为 Perl 脚本的翻译器
+<P>
+
+但是稍等，还有更多...
+<P>
+
+自 1993 年开始 (参见 perlhist)，Perl 5 进行了几乎完全的重写，
+提供了以下的功能：
+<DL COMPACT>
+<DT>&bull;<DD>
+模块性和可复用性
+
+
+<P>
+
+
+详述在
+perlmod, perlmodlib, 和 perlmodinstall 中
+<DT>&bull;<DD>
+可内置可扩展
+
+
+<P>
+
+
+详述在
+perlembed, perlxstut, perlxs, perlcall, perlguts, 和 xsubpp 中
+<DT>&bull;<DD>
+创建功能强大的数据类型 (同时包括多种
+<FONT SIZE="-1">DBM</FONT> 实现)
+
+
+<P>
+
+
+详述在
+perltie 和 AnyDBM_File 中
+<DT>&bull;<DD>
+函数可重载，自动加载，原型化
+
+
+<P>
+
+
+详述在
+perlsub 中
+<DT>&bull;<DD>
+复杂的数据结构嵌套还有匿名函数
+
+
+<P>
+
+
+详述在
+perlreftut, perlref, perldsc, 和 perllol 中
+<DT>&bull;<DD>
+面向对象编程
+
+
+<P>
+
+
+详述在
+perlobj, perlboot, perltoot, perltooc, 和 perlbot 中
+<DT>&bull;<DD>
+支持轻量级进程 (线程)
+
+
+<P>
+
+
+详述在
+perlthrtut 和 threads 中
+<DT>&bull;<DD>
+支持 Unicode，国际化和本地化
+
+
+<P>
+
+
+详述在
+perluniintro, perllocale 和 Locale::Maketext 中
+<DT>&bull;<DD>
+变量作用域
+
+
+<P>
+
+
+详述在
+perlsub 中
+<DT>&bull;<DD>
+正则表达式强化
+
+
+<P>
+
+
+详述在
+perlre 中，perlop 中有更多例子
+<DT>&bull;<DD>
+强化的调试工具和交互的 Perl 环境，支持集成的编辑器
+
+
+<P>
+
+
+详述在
+perldebtut, perldebug 和 perldebguts 中
+<DT>&bull;<DD>
+<FONT SIZE="-1">POSIX</FONT> 1003.1 兼容的库
+
+
+<P>
+
+
+详述在
+<FONT SIZE="-1">POSIX</FONT> 中
+</DL>
+<P>
+
+Okay, 这些已经是绝对的绝对够用了
+<A NAME="lbAE">&nbsp;</A>
+<H2>可用性 AVAILABILITY</H2>
+
+Perl 在大部分操作系统上都可用，包含几乎所有类 Unix 的平台。参见 perlport 中的
+``Supported Platforms'' 段来查看平台列表
+<A NAME="lbAF">&nbsp;</A>
+<H2>环境 ENVIRONMENT</H2>
+
+参见 perlrun
+<A NAME="lbAG">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+Larry Wall &lt;<A HREF="mailto:larry@wall.org">larry@wall.org</A>&gt;, with the help of oodles of other folks.
+<P>
+
+如果你使用 Perl 的成功案例对想在项目中应用 Perl 的人有用，
+或者如果你只是想想表达你对 Larry 和 Perl 开发者的感激之情，请写信到
+&lt;<A HREF="mailto:perl-thanks@perl.org">perl-thanks@perl.org</A>&gt;
+<A NAME="lbAH">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+
+
+<PRE>
+ &quot;@INC&quot;                 locations of perl libraries
+
+</PRE>
+
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+
+
+<PRE>
+ a2p    awk 到 perl 翻译器
+ s2p    sed 到 perl 翻译器
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+ <A HREF="http://www.perl.com/">http://www.perl.com/</A>       Perl 官方主页
+ <A HREF="http://www.cpan.org/">http://www.cpan.org/</A>       the Comprehensive Perl Archive (Perl 文件中心)
+ <A HREF="http://www.perl.org/">http://www.perl.org/</A>       Perl Mongers (Perl 用户组)
+
+</PRE>
+
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>诊断 DIAGNOSTICS</H2>
+
+<TT>&quot;use warnings&quot;</TT> 编译指示 (pragma) (还有 <B>-w</B> 选项) 会产生
+一些有用的诊断信息
+<P>
+
+参见 perldiag 来查看所有 Perl 诊断信息的含义。
+<TT>&quot;use diagnostics&quot;</TT> 编译指示会自动将 Perl 简短的警告和错误消息
+转换为长格式
+<P>
+
+编译错误将给出行号，还有要执行的下一个词或词的类型。
+(在用
+<B>-e</B> 选项传给 Perl 的脚本中，每个
+<B>-e</B> 
+视为一行。)
+<P>
+
+设置了 UID 的脚本有额外的约束，会产生格式化的错误信息，类似
+``Insecure dependency''。参见 perlsec
+<P>
+
+我们说过你一定要用
+<B>-w</B> 选项了吗？
+<A NAME="lbAK">&nbsp;</A>
+<H2>BUGS</H2>
+
+<B>-w</B> 选项不是必要的
+<P>
+
+Perl 依赖于你的机器中操作的定义，类似于类型转换，
+<I>atof()</I>, 还有使用 <I>sprintf()</I> 来做浮点输出等操作
+<P>
+
+如果你的 stdio 在读写一个特殊流时需要一个 seek 或是 eof，Perl 也会需要它们。
+(这种情况不会在
+<I>sysread()</I> 和 <I>syswrite()</I> 中发生。)
+<P>
+
+所有内置数据类型都没有大小限制 (除了内存大小之外)，但是还是有一些限制：
+变量名不得长于 251 个字符。
+诊断信息显示的行号以短整型数保存，因此行号最大值是 65535 
+(更大的行号一般会从头开始)
+<P>
+
+可以将错误报告 (一定要包含完整的配置信息，使用 perl 源码树中的 myconfig 程序，或者用
+<TT>&quot;perl -V&quot;</TT> 命令得到) 寄给 <A HREF="mailto:perlbug@perl.org">perlbug@perl.org</A> 。
+如果你已经成功编译 perl，
+<I>utils/</I> 目录中的 <B>perlbug</B> 脚本可以用来邮寄错误报告
+<P>
+
+Perl 真正意义是
+Pathologically Eclectic Rubbish Lister, 但是
+不要告诉任何人我说过它
+<A NAME="lbAL">&nbsp;</A>
+<H2>注意 NOTES</H2>
+
+Perl 的信条是
+``There's more than one way to do it.''
+至于探索有多少种办法，就是读者自己的事了
+<P>
+
+程序员应有的三种美德是
+Laziness, Impatience, 还有 Hubris.  
+原因呢，请参见骆驼书
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>bbbush &lt;<A HREF="mailto:bbbush@163.com">bbbush@163.com</A>&gt;</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003.11.29</B>
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>《中国linux论坛man手册翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">可用性 AVAILABILITY</A><DD>
+<DT><A HREF="#lbAF">环境 ENVIRONMENT</A><DD>
+<DT><A HREF="#lbAG">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAH">文件 FILES</A><DD>
+<DT><A HREF="#lbAI">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAJ">诊断 DIAGNOSTICS</A><DD>
+<DT><A HREF="#lbAK">BUGS</A><DD>
+<DT><A HREF="#lbAL">注意 NOTES</A><DD>
+<DT><A HREF="#lbAM">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAN">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAO">《中国linux论坛man手册翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

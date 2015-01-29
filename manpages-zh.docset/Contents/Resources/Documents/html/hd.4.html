@@ -1,0 +1,135 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of HD</TITLE>
+</HEAD><BODY>
+<H1>HD</H1>
+Section: Linux Programmer's Manual (4)<BR>Updated: 1992-12-17<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+hd - MFM/IDE 硬盘设备
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<B>hd*</B> 开头的设备是以裸模式(raw mode)访问MFM/IDE类型硬盘的块
+设备. 第一个IDE驱动控制器上的主盘(主设备号3)是 <B>hda</B> ;从盘是 <B>hdb</B>.
+第二个IDE驱动器控制器(主设备号22)是 <B>hdc</B> ,从为 <B>hdd</B>.
+<P>
+
+大多数IDE 块设备以
+<B>hd</B><I>X</I>, 或者
+<B>hd</B><I>XP</I>的形式命名,  其中字母
+<I>X</I>
+
+代表任意字母以表示各个物理设备.其中P表示各个物理设备中分区的代号.
+<I>P</I>
+
+表示各个物理设备中分区的代号。第一种形式
+<B>hd</B><I>X,</I>
+
+代表整个驱动器的地址,而分区号是按照每个分区
+被发现的顺序分配的,并且只有非空和非扩展分区才能有这个号码
+然而不管这个分区是未使用过的还是扩展的,在MBR中只纪录四个分区
+号码依次为1-4. 因此逻辑分区只能从
+<B>hd</B><I>X</I><B>5</B>开始。支持DOS 风格的分区以及BSD-磁盘卷标分区。
+你最多可以在一个IDE磁盘上建立63个分区.
+<P>
+
+例如，
+<B>/dev/hda</B>
+
+代表第一个IDE驱动器的全部；
+<B>/dev/hdb3</B>
+
+代表第二块IDE硬盘上的第三DOS 主分区.
+<P>
+
+典型如下建立:
+<DL COMPACT><DT><DD>
+<P>
+mknod -m 660 /dev/hda b 3 0
+<BR>
+
+mknod -m 660 /dev/hda1 b 3 1
+<BR>
+
+mknod -m 660 /dev/hda2 b 3 2
+<BR>
+
+...
+<BR>
+
+mknod -m 660 /dev/hda8 b 3 8
+<BR>
+
+mknod -m 660 /dev/hdb b 3 64
+<BR>
+
+mknod -m 660 /dev/hdb1 b 3 65
+<BR>
+
+mknod -m 660 /dev/hdb2 b 3 66
+<BR>
+
+...
+<BR>
+
+mknod -m 660 /dev/hdb8 b 3 72
+<BR>
+
+chown root:disk /dev/hd*
+</DL>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+/dev/hd*
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+mknod">mknod</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+chown">chown</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?8+mount">mount</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?4+sd">sd</A></B>(4)
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>trcbilg &lt;email&gt;</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000.11.22</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国linux论坛man手册翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">文件 FILES</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国linux论坛man手册翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

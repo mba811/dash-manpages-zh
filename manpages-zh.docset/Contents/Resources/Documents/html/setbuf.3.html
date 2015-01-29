@@ -1,0 +1,231 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SETBUF</TITLE>
+</HEAD><BODY>
+<H1>SETBUF</H1>
+Section: Linux Programmer's Manual (3)<BR>Updated: 2001-06-09<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+setbuf, setbuffer, setlinebuf, setvbuf - 流缓冲操作
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+
+<B>#include &lt;<A HREF="file:///usr/include/stdio.h">stdio.h</A>&gt;</B>
+
+<P>
+<B>void setbuf(FILE *</B><I>stream</I><B>, char *</B><I>buf</I><B>);</B>
+
+<BR>
+
+<B>void setbuffer(FILE *</B><I>stream</I><B>, char *</B><I>buf</I><B>, size_t </B><I>size</I><B>);</B>
+
+<BR>
+
+<B>void setlinebuf(FILE *</B><I>stream</I><B>);</B>
+
+<BR>
+
+<B>int setvbuf(FILE *</B><I>stream</I><B>, char *</B><I>buf</I><B>, int </B><I>mode</I>
+
+<B>, size_t </B><I>size</I><B>);</B>
+
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+有三种类型的缓冲策略，它们是无缓冲，块缓冲和行缓冲。当输出流无缓冲时，信息在写的同时出现于目标文件或终端上；当是块缓冲时，字符被暂存，然后一起写入；当是行缓冲时，字符被暂存，直到要输出一个新行符，或者从任何与终端设备连接的流中 (典型的是 stdin) 读取输入时才输出。函数
+<B><A HREF="/cgi-bin/man/man2html?3+fflush">fflush</A></B>(3)
+
+可以用来强制提前输出。(参见
+<B><A HREF="/cgi-bin/man/man2html?3+fclose">fclose</A></B>(3))
+
+通常所有文件都是块缓冲的。当文件 I/O 操作在文件上发生时，将调用
+<B><A HREF="/cgi-bin/man/man2html?3+malloc">malloc</A></B>(3)
+
+，获得一个缓冲。如果流指向一个终端 (通常
+<I>stdout</I>
+
+都是这样)，那么它是行缓冲的。标准错误流
+<I>stderr</I>
+
+默认总是无缓冲的。
+<P>
+
+函数
+<B>setvbuf</B>
+
+可以用在任何打开的流上，改变它的缓冲。参数
+<I>mode</I>
+
+必须是下列三个宏之一：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>_IONBF</B>
+
+<DD>
+无缓冲
+<DT><B>_IOLBF</B>
+
+<DD>
+行缓冲
+<DT><B>_IOFBF</B>
+
+<DD>
+完全缓冲
+</DL>
+</DL>
+
+<P>
+
+除非是无缓冲的文件，否则参数
+<I>buf</I>
+
+应当指向一个长度至少为
+<I>size</I>
+
+字节的缓冲；这个缓冲将取代当前的缓冲。如果参数
+<I>buf</I>
+
+是
+<B>NULL</B>
+
+，只有这个模式会受到影响；下次 read 或 write 操作还将分配一个新的缓冲。函数
+<B>setvbuf</B>
+
+只能在打开一个流，还未对它进行任何其他操作之前使用。
+<P>
+
+其他三个函数调用是函数
+<B>setvbuf</B>
+
+的别名，函数
+<B>setbuf</B>
+
+与使用下列语句完全等价：
+<P>
+
+<DL COMPACT><DT><DD>
+setvbuf(stream, buf, buf ? _IOFBF : _IONBF, BUFSIZ);
+</DL>
+
+<P>
+
+函数
+<B>setbuffer</B>
+
+与此相同，但是缓冲的长度由用户决定，而不是由默认值
+<B>BUFSIZ</B>
+
+决定。函数
+<B>setlinebuf</B>
+
+与使用下列语句完全等价：
+<P>
+
+<DL COMPACT><DT><DD>
+setvbuf(stream, (char *)NULL, _IOLBF, 0);
+</DL>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>RETURN VALUE 返回值</H2>
+
+函数
+<B>setvbuf</B>
+
+成功执行时返回 0。它失败时可能返回任何值，但是当
+It can return any value on failure, but returns nonzero when
+<I>mode</I>
+
+不正确，或者不能实现请求时，必须返回非零值。它在失败时可能设置
+<I>errno</I>
+
+。其他函数没有返回值。
+<A NAME="lbAF">&nbsp;</A>
+<H2>CONFORMING TO 标准参考</H2>
+
+函数
+<B>setbuf</B>
+
+和
+<B>setvbuf</B>
+
+遵循 ANSI X3.159-1989 (``ANSI C'') 标准。
+<A NAME="lbAG">&nbsp;</A>
+<H2>BUGS</H2>
+
+函数
+<B>setbuffer</B>
+
+和
+<B>setlinebuf</B>
+
+无法移植到 4.2BSD 之前的 BSD 版本，在 Linux 中仅在 libc 4.5.21 之后的系统中可用。在 4.2BSD 和 4.3BSD 系统中，
+<B>setbuf</B>
+
+总是使用非最优的缓冲大小，应当避免使用它。
+<P>
+
+在
+<I>stream</I>
+
+被关闭时，必须确保
+<I>buf</I>
+
+和它指向的空间仍然存在。这通常发生在程序终止时。
+<P>
+
+例如，下列调用是非法的：
+<PRE>
+
+#include &lt;<A HREF="file:///usr/include/stdio.h">stdio.h</A>&gt;
+int main()
+{
+    char buf[BUFSIZ];
+    setbuf(stdin, buf);
+    printf(&quot;Hello, world!\n&quot;);
+    return 0;
+}
+</PRE>
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?3+fclose">fclose</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+fflush">fflush</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+fopen">fopen</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+fread">fread</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+malloc">malloc</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+printf">printf</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+puts">puts</A></B>(3)
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">RETURN VALUE 返回值</A><DD>
+<DT><A HREF="#lbAF">CONFORMING TO 标准参考</A><DD>
+<DT><A HREF="#lbAG">BUGS</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

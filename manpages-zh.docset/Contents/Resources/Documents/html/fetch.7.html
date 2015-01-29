@@ -1,0 +1,215 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of FETCH</TITLE>
+</HEAD><BODY>
+<H1>FETCH</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+FETCH - 用游标从查询中抓取行
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+FETCH [ <I>direction</I> { FROM | IN } ] <I>cursorname</I>
+
+where <I>direction</I> can be empty or one of:
+
+    NEXT
+    PRIOR
+    FIRST
+    LAST
+    ABSOLUTE <I>count</I>
+    RELATIVE <I>count</I>
+    <I>count</I>
+    ALL
+    FORWARD
+    FORWARD <I>count</I>
+    FORWARD ALL
+    BACKWARD
+    BACKWARD <I>count</I>
+    BACKWARD ALL
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>FETCH</B> 使用游标检索行。
+<P>
+
+<BR>&nbsp;一个游标有一个由&nbsp;FETCH&nbsp;使用的相关联的位置。&nbsp;游标得位置可以在查询结果的第一行之前，或者在结果中的任意行，&nbsp;或者在结果的最后一行之后。在创建完之后，游标是放在第一行之前的。&nbsp;在抓取了一些行之后，游标放在检索到的最后一行上。如果&nbsp;FETCH&nbsp;&nbsp;抓完了所有可用行，那么它就停在最后一行后面，或者在向前抓去的情况下是停在第一行前面。&nbsp;FETCH&nbsp;ALL&nbsp;或者&nbsp;FETCH&nbsp;BACKWARD&nbsp;ALL&nbsp;&nbsp;将总是把游标的位置放在最后一行或者在第一行前面。
+<P>
+
+NEXT, PRIOR, FIRST,
+LAST, ABSOLUTE, RELATIVE 形式在恰当地 移动游标之后抓取一个行。如果没有数据行了，那么返回一个空的结果， 那么游标就会停在查询结果的最后一行之后或者在第一行之前。
+<P>
+
+FORWARD 和 BACKWARD 形式在向前或者向后移动的过程中抓取指定的行数， 然后把游标定位在最后返回的行上（或者是，如果 count  大于可用的行数，在所有行之前或之后。）
+<P>
+
+RELATIVE 0，FORWARD 0，和 BACKWARD 0  都要求在不移动游标的前提下抓取当前行－－－也就是重新抓取最近刚刚抓取过的行。 除非游标定位在第一行之前或者最后一行之后，这个动作都应该成功，而在那两种情况下，不返回任何行。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>direction</I><B></B><DD>
+<I>direction</I> 定义抓取的方向和抓取的行数。它可以是下述之一：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>NEXT</B><DD>
+<BR>&nbsp;抓取下一行。&nbsp;direction&nbsp;&nbsp;省略时这是缺省值。
+<DT><B>PRIOR</B><DD>
+<BR>&nbsp;抓取前面一行。
+<DT><B>FIRST</B><DD>
+<BR>&nbsp;抓取查询的第一行（和&nbsp;ABSOLUTE&nbsp;1&nbsp;相同）。
+<DT><B>LAST</B><DD>
+<BR>&nbsp;抓取查询的最后一行（和&nbsp;ABSOLUTE&nbsp;-1&nbsp;相同）。
+<DT><B>ABSOLUTE </B><I>count</I><B></B><DD>
+<BR>&nbsp;抓取查询中第&nbsp;count&nbsp;行，&nbsp;或者，如果&nbsp;count&nbsp;&lt;&nbsp;0，&nbsp;从查询结果末尾抓取第abs(count)行。&nbsp;如果count&nbsp;超出了范围，那么定位在第一行之前和最后一行之后的位置；&nbsp;特别是&nbsp;ABSOLUTE&nbsp;0&nbsp;定位在第一行之前。
+<DT><B>RELATIVE </B><I>count</I><B></B><DD>
+抓取随后的第 count 行， 或者，如果 count &lt; 0 的时候， 抓取前面的第 abs(count) 行。 如果有数据的话，RELATIVE 0 重新抓取当前行。
+<DT><B></B><I>count</I><B></B><DD>
+<BR>&nbsp;抓取下面的&nbsp;count&nbsp;行&nbsp;（和&nbsp;FORWARD&nbsp;count&nbsp;一样）。
+<DT><B>ALL</B><DD>
+<BR>&nbsp;抓取所有剩余的行（和&nbsp;FORWARD&nbsp;ALL&nbsp;一样）。
+<DT><B>FORWARD</B><DD>
+<BR>&nbsp;抓取下面一行（和&nbsp;NEXT）一样。
+<DT><B>FORWARD </B><I>count</I><B></B><DD>
+<BR>&nbsp;抓取下面&nbsp;count&nbsp;行。&nbsp;FORWARD&nbsp;0&nbsp;重新抓取当前行。
+<DT><B>FORWARD ALL</B><DD>
+<BR>&nbsp;抓取所有剩余行。
+<DT><B>BACKWARD</B><DD>
+<BR>&nbsp;抓取前面一行（和&nbsp;PRIOR&nbsp;一样）。
+<DT><B>BACKWARD </B><I>count</I><B></B><DD>
+<BR>&nbsp;抓取前面&nbsp;count&nbsp;行（向后扫描）。&nbsp;BACKWARD&nbsp;0&nbsp;重新抓取当前行。
+<DT><B>BACKWARD ALL</B><DD>
+<BR>&nbsp;抓取所有前面的行（向后扫描）。
+</DL>
+</DL>
+
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B></B><I>count</I><B></B><DD>
+<I>count</I> 可能是一个有符号的整数常量，决定要抓取的行数和方向。 对于 FORWARD 和 BACKWARD 的情况，声明一个带负号的 count  等效于改变 FORWARD 和 BACKWARD 的方向。
+<DT><B></B><I>cursorname</I><B></B><DD>
+<BR>&nbsp;一个打开的游标的名称。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>OUTPUTS 输出</H2>
+
+<P>
+
+<BR>&nbsp;成功完成时，一个&nbsp;FETCH&nbsp;命令返回一个形如下面的标记
+<P>
+<PRE>
+FETCH <I>count</I>
+
+</PRE>
+
+<BR>&nbsp;这里的&nbsp;count&nbsp;是抓取的行数（可能是零）。&nbsp;请注意在&nbsp;psql&nbsp;里，命令标签实际上不会显示，&nbsp;因为&nbsp;psql&nbsp;用抓取的行数取代了。
+<A NAME="lbAG">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;如果你想使用&nbsp;FETCH&nbsp;NEXT&nbsp;之外的任何&nbsp;FETCH&nbsp;的变种，&nbsp;或者是带负数计数的&nbsp;FETCH&nbsp;FORWARD。那么定义游标的时候应该带着&nbsp;SCROLL&nbsp;选项。&nbsp;对于简单的查询，PostgreSQL&nbsp;会允许那些没有带&nbsp;SCROLL&nbsp;选项定义的游标也可以反向抓取，&nbsp;但是我们最好不要依赖这个行为。&nbsp;如果游标定义了&nbsp;NO&nbsp;SCROLL，那么不允许反向抓取。
+<P>
+
+ABSOLUTE 抓取不会比用相对位移移动到需要的数据行更快： 因为下层的实现必须遍历所有中间的行。负数的绝对抓取甚至更糟糕： 查询必须一直读到结尾才能找到最后一行，然后从那里开始反向遍历。 不过，回退到查询开头（就像 FETCH ABSOLUTE 0）很快。
+<P>
+
+<BR>&nbsp;在游标中更新数据还不被&nbsp;PostgreSQL&nbsp;支持。
+<P>
+
+DECLARE [<B><A HREF="/cgi-bin/man/man2html?7+declare">declare</A></B>(7)]
+语句用于定义一个游标。使用
+MOVE [<B><A HREF="/cgi-bin/man/man2html?7+move">move</A></B>(7)]
+语句来改变游标位置而不检索数据。
+<A NAME="lbAH">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;下面的例子用一个游标跨过一个表。
+<P>
+<PRE>
+BEGIN WORK;
+
+-- 建立一个游标：
+DECLARE liahona SCROLL CURSOR FOR SELECT * FROM films;
+
+-- 抓取头 5 行到游标 liahona 里：
+FETCH FORWARD 5 FROM liahona;
+
+ code  |          title          | did | date_prod  |   kind   |  len
+-------+-------------------------+-----+------------+----------+-------
+ BL101 | The Third Man           | 101 | 1949-12-23 | Drama    | 01:44
+ BL102 | The African Queen       | 101 | 1951-08-11 | Romantic | 01:43
+ JL201 | Une Femme est une Femme | 102 | 1961-03-12 | Romantic | 01:25
+ P_301 | Vertigo                 | 103 | 1958-11-14 | Action   | 02:08
+ P_302 | Becket                  | 103 | 1964-02-03 | Drama    | 02:28
+
+-- 抓取前面行：
+FETCH PRIOR FROM liahona;
+
+ code  |  title  | did | date_prod  |  kind  |  len
+-------+---------+-----+------------+--------+-------
+ P_301 | Vertigo | 103 | 1958-11-14 | Action | 02:08
+
+-- 关闭游标并提交事务：
+CLOSE liahona;
+COMMIT WORK;
+
+</PRE>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+SQL 标准定义的 FETCH 只用于嵌入式环境下。 这里描述的 FETCH 变种是把结果数据像 SELECT  结果那样返回，而不是把它放在宿主变量里。除了这点之外，FETCH 和 SQL 标准完全向上兼容。
+<P>
+
+<BR>&nbsp;涉及&nbsp;FORWARD&nbsp;和&nbsp;BACKWARD&nbsp;的&nbsp;FETCH&nbsp;形式&nbsp;（包括&nbsp;FETCH&nbsp;count&nbsp;和&nbsp;FETCH&nbsp;ALL&nbsp;的形式，这个时候&nbsp;FORWARD&nbsp;是隐含的）是&nbsp;PostgreSQL&nbsp;&nbsp;的扩展。
+<P>
+
+<BR>&nbsp;SQL&nbsp;标准只允许游标前面有&nbsp;FROM，&nbsp;用&nbsp;IN&nbsp;是一种扩展。
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">OUTPUTS 输出</A><DD>
+<DT><A HREF="#lbAG">NOTES 注意</A><DD>
+<DT><A HREF="#lbAH">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAI">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

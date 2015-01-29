@@ -1,0 +1,209 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DATE</TITLE>
+</HEAD><BODY>
+<H1>DATE</H1>
+Section: FSF (1)<BR>Updated: August 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+date - 打印或设置系统日期和时间
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>date</B>
+
+[<I>选项</I>]... [<I>+格式</I>]
+<BR>
+
+<B>date</B>
+
+[<I>选项</I>] [<I>MMDDhhmm</I>[[<I>CC</I>]<I>YY</I>][<I>.ss</I>]]
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<P>
+
+
+<P>
+
+根据指定格式显示当前时间或设置系统时间.
+<DL COMPACT>
+<DT><B>-d</B>, <B>--date</B>=<I>STRING</I><DD>
+显示由 STRING 指定的时间, 而不是当前时间
+<DT><B>-f</B>, <B>--file</B>=<I>DATEFILE</I><DD>
+显示 DATEFILE 中每一行指定的时间, 如同将 DATEFILE 中的每行作为
+<B>--date</B> 的参数一样
+<DT><DD>
+<B>-I</B>, <B>--iso-8601</B>[=<I>TIMESPEC</I>] 按照 ISO-8601
+的日期/时间格式输出时间.
+<DT><DD>
+TIMESPEC=`date' (或者不指定时)仅输出日期,等于
+`hours', `minutes', 或`seconds' 时按照指定精度输出日期及时间.
+<DT><B>-r</B>, <B>--reference</B>=<I>FILE</I><DD>
+显示 FILE 的最后修改时间
+<DT><B>-R</B>, <B>--rfc-822</B><DD>
+根据 RFC-822 指定格式输出日期
+<DT><B>-s</B>, <B>--set</B>=<I>STRING</I><DD>
+根据 STRING 设置时间
+<DT><B>-u</B>, <B>--utc</B>, <B>--universal</B><DD>
+显示或设置全球时间(格林威治时间)
+<DT><B>--help</B><DD>
+显示本帮助文件并退出
+<DT><B>--version</B><DD>
+显示版本信息并退出
+</DL>
+<P>
+
+格式 FORMAT 控制着输出格式. 仅当选项指定为全球时间时本格式才有效。
+分别解释如下:
+<DL COMPACT>
+<DT>%%<DD>
+文本的 %
+<DT>%a<DD>
+当前区域的星期几的简写 (Sun..Sat)
+<DT>%A<DD>
+当前区域的星期几的全称 (不同长度) (Sunday..Saturday)
+<DT>%b<DD>
+当前区域的月份的简写 (Jan..Dec)
+<DT>%B<DD>
+当前区域的月份的全称(变长) (January..December)
+<DT>%c<DD>
+当前区域的日期和时间 (Sat Nov 04 12:02:33 EST 1989)
+<DT>%d<DD>
+(月份中的)几号(用两位表示) (01..31)
+<DT>%D<DD>
+日期(按照 月/日期/年 格式显示) (mm/dd/yy)
+<DT>%e<DD>
+(月份中的)几号(去零表示) ( 1..31)
+<DT>%h<DD>
+同 %b
+<DT>%H<DD>
+小时(按 24 小时制显示，用两位表示) (00..23)
+<DT>%I<DD>
+小时(按 12 小时制显示，用两位表示) (01..12)
+<DT>%j<DD>
+(一年中的)第几天(用三位表示) (001..366)
+<DT>%k<DD>
+小时(按 24 小时制显示，去零显示) ( 0..23)
+<DT>%l<DD>
+小时(按 12 小时制显示，去零表示) ( 1..12)
+<DT>%m<DD>
+月份(用两位表示) (01..12)
+<DT>%M<DD>
+分钟数(用两位表示) (00..59)
+<DT>%n<DD>
+换行
+<DT>%p<DD>
+当前时间是上午 AM 还是下午 PM
+<DT>%r<DD>
+时间,按 12 小时制显示 (hh:mm:ss [A/P]M)
+<DT>%s<DD>
+从 1970年1月1日0点0分0秒到现在历经的秒数 (GNU扩充)
+<DT>%S<DD>
+秒数(用两位表示)(00..60)
+<DT>%t<DD>
+水平方向的 tab 制表符
+<DT>%T<DD>
+时间,按 24 小时制显示(hh:mm:ss)
+<DT>%U<DD>
+(一年中的)第几个星期，以星期天作为一周的开始(用两位表示) (00..53)
+<DT>%V<DD>
+(一年中的)第几个星期，以星期一作为一周的开始(用两位表示) (01..52)
+<DT>%w<DD>
+用数字表示星期几 (0..6); 0 代表星期天
+<DT>%W<DD>
+(一年中的)第几个星期，以星期一作为一周的开始(用两位表示) (00..53)
+<DT>%x<DD>
+按照 (mm/dd/yy) 格式显示当前日期 
+<DT>%X<DD>
+按照 (%H:%M:%S) 格式显示当前时间
+<DT>%y<DD>
+年的后两位数字 (00..99)
+<DT>%Y<DD>
+年(用 4 位表示) (1970...)
+<DT>%z<DD>
+按照 RFC-822 中指定的数字时区显示(如, -0500) (为非标准扩充)
+<DT>%Z<DD>
+时区(例如, EDT (美国东部时区)), 如果不能决定是哪个时区则为空
+</DL>
+<P>
+
+默认情况下,用 0 填充数据的空缺部分.  
+GNU 的 date 命令能分辨在 `%'和数字指示之间的以下修改.
+<DL COMPACT>
+<DT><DD>
+`-' (连接号) 不进行填充
+`_' (下划线) 用空格进行填充
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>BUG报告</H2>
+
+请向&lt;<A HREF="mailto:bug-sh-utils@gnu.org">bug-sh-utils@gnu.org</A>&gt;报告BUG.
+<A NAME="lbAF">&nbsp;</A>
+<H2>参考</H2>
+
+关于
+<B>date</B>
+
+的详细说明是个 Texinfo 手册. 如果在你的计算机上已经成功安装了
+<B>info</B>
+
+和
+<B>date</B>
+
+程序,你可以使用
+<DL COMPACT>
+<DT><DD>
+<B>info date</B>
+
+</DL>
+<P>
+
+命令访问完全手册.
+<A NAME="lbAG">&nbsp;</A>
+<H2>版权</H2>
+
+Copyright &#169; 1999 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>liguoping &lt;email&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/07/15</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">BUG报告</A><DD>
+<DT><A HREF="#lbAF">参考</A><DD>
+<DT><A HREF="#lbAG">版权</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

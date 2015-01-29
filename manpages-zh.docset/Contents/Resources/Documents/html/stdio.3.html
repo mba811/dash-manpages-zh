@@ -1,0 +1,458 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of STDIO</TITLE>
+</HEAD><BODY>
+<H1>STDIO</H1>
+Section: Linux Programmer's Manual (3)<BR>Updated: 2001-12-26<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+stdio - 标准输入输出库函数
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/stdio.h">stdio.h</A>&gt;</B>
+
+<P>
+<B>FILE *stdin;</B>
+
+<BR>
+
+<B>FILE *stdout;</B>
+
+<BR>
+
+<B>FILE *stderr;</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+标注 I/O 库函数提供了一个简单而有效的，带缓冲的流输出输出接口。输入和输出被映射为逻辑的数据流，物理的 I/O 特性则被隐藏起来。库中包含的函数与宏列在下面；更多信息可以从独立的 man 手册页中得到。
+<P>
+
+将一个流关联到一个外部文件 (可能是一个物理设备) 的方法是打开 (
+<I>opening</I>
+
+) 这个文件，其中可能牵涉到创建一个新文件。创建已有的文件使得文件中已有的内容被丢弃。如果文件支持定位请求 (例如磁盘文件；但终端不是这样)，那么一个与文件关联的定位标记 (
+<I>file position indicator</I>
+
+) 被定位到文件的起始 (0 字节)，除非以追加模式打开文件。使用追加模式时，究竟定位标记位于文件的开始还是结束是没有指定的。定位标记由后续的读、写和定位请求来维护。从流中输入时，就如同字符是连续地成功调用了函数
+<B><A HREF="/cgi-bin/man/man2html?3+fgetc">fgetc</A></B>(3)
+
+而读入的；产生输出时，就如同所有字符是连续地成功调用了函数
+<B><A HREF="/cgi-bin/man/man2html?3+fputc">fputc</A></B>(3)
+
+而输出的。
+<P>
+
+将一个流与一个与之关联的文件断开的办法是关闭 (
+<I>closing</I>
+
+) 这个文件。在流与文件断开之前，输出流被刷新 (任何未写入的缓冲的内容都被传输给主机环境)。在文件被关闭之后，指向
+<B>FILE</B>
+
+对象的指针的值是不确定的 (无用数据)。
+<P>
+
+一个文件可以继续被相同的或是不同的程序实体再次打开，它的内容可以被恢复或者修改 (如果它可以被重定位到文件开始的话)。如果 main 函数返回到它最初的调用者，或者调用了函数
+<B><A HREF="/cgi-bin/man/man2html?3+exit">exit</A></B>(3)
+
+，在程序终止前，所有打开的文件都将被关闭 (因此所有的输出流都被刷新)。其他终止程序的方法，例如
+<B><A HREF="/cgi-bin/man/man2html?3+abort">abort</A></B>(3)
+
+不会进行正常的关闭文件操作。
+<P>
+
+在程序启动时，会预先定义三个文本流，它们不需要显式地打开 ---
+<I>标准输入</I>
+
+(用于读入常规内容)，---
+<I>标准输出</I>
+
+(用于输出常规内容)，以及
+<I>标准错误</I>
+
+(用于输出诊断信息)。这些流的缩写是
+<I>stdin，stdout</I>
+
+和
+<I>stderr</I>
+
+。在打开时，标准错误流不会完全缓冲；当且仅当流不是一个交互的设备时，标准输入和标准输出流才被完全缓冲。
+<P>
+
+指向终端设备的输出流总是默认使用行缓冲；未定的输出总是在指向一个终端设备的输入流被读取时自动被写入。如果在一个输出终端上打印了一行的一部分，然后运行了大量的计算后，应当在退出和计算前
+<B><A HREF="/cgi-bin/man/man2html?3+fflush">fflush</A></B>(3)
+
+标准输出，使得输出可以显示出来。(?)
+<P>
+
+标准输入输出库
+<B>stdio</B>
+
+是函数库
+<B>libc</B>
+
+的一部分，需要时可以被编译器
+<B><A HREF="/cgi-bin/man/man2html?1+cc">cc</A></B>(1)
+
+和
+<B><A HREF="/cgi-bin/man/man2html?1+pc">pc</A></B>(1)
+
+自动加载。下列手册页的
+<B>SYNOPSIS 总览</B>
+
+段落会指出要包含哪些文件，函数定义的格式，以及它们受到哪些外部变量的影响。
+<P>
+
+下列为已定义的宏；如果不用
+<B>#undef</B>
+
+取消这些名称的当前定义的话，是不能重新使用它们的：
+<B>BUFSIZ</B>,
+
+<B>EOF</B>,
+
+<B>FILENAME_MAX</B>,
+
+<B>FOPEN_MAX</B>,
+
+<B>L_cuserid</B>,
+
+<B>L_ctermid</B>,
+
+<B>L_tmpnam,</B>
+
+<B>NULL</B>,
+
+<B>SEEK_END</B>,
+
+<B>SEEK_SET</B>,
+
+<B>SEE_CUR</B>,
+
+<B>TMP_MAX</B>,
+
+<B>clearerr</B>,
+
+<B>feof</B>,
+
+<B>ferror</B>,
+
+<B>fileno</B>,
+
+<B>fropen</B>,
+
+<B>fwopen</B>,
+
+<B>getc</B>,
+
+<B>getchar</B>,
+
+<B>putc</B>,
+
+<B>putchar</B>,
+
+<B>stderr</B>,
+
+<B>stdin</B>,
+
+<B>stdout</B>.
+
+另外，还有与这些宏的功能对应的，函数形式的版本
+<B>feof</B>,
+
+<B>ferror</B>,
+
+<B>clearerr</B>,
+
+<B>fileno</B>,
+
+<B>getc</B>,
+
+<B>getchar</B>,
+
+<B>putc</B>,
+
+和
+<B>putchar</B>
+
+，在显式地取消宏的定义时，可以使用它们。
+<A NAME="lbAE">&nbsp;</A>
+<H2>LIST OF FUNCTIONS 函数列表</H2>
+
+<DL COMPACT>
+<DT><B>Function 函数</B>
+
+<DD>
+<B>Description 描述</B>
+
+<DT><B>clearerr</B>
+
+<DD>
+检测并重置流状态
+<DT><B>fclose</B>
+
+<DD>
+关闭流
+<DT><B>fdopen</B>
+
+<DD>
+打开流
+<DT><B>feof</B>
+
+<DD>
+检测并重置流状态
+<DT><B>ferror</B>
+
+<DD>
+检测并重置流状态
+<DT><B>fflush</B>
+
+<DD>
+刷新流
+<DT><B>fgetc</B>
+
+<DD>
+从输入流中获取下一个字符或词
+
+
+
+<DT><B>fgetpos</B>
+
+<DD>
+重定位流
+<DT><B>fgets</B>
+
+<DD>
+从流中获取一行
+<DT><B>fileno</B>
+
+<DD>
+返回流参数的整数形式的描述符
+<DT><B>fopen</B>
+
+<DD>
+打开流
+<DT><B>fprintf</B>
+
+<DD>
+按照格式输出常规内容
+<DT><B>fpurge</B>
+
+<DD>
+刷新流
+<DT><B>fputc</B>
+
+<DD>
+向流输出一个字符或词
+<DT><B>fputs</B>
+
+<DD>
+向流输出一行
+<DT><B>fread</B>
+
+<DD>
+二进制输入/输出
+<DT><B>freopen</B>
+
+<DD>
+打开流
+<DT><B>fropen</B>
+
+<DD>
+打开流
+<DT><B>fscanf</B>
+
+<DD>
+按照格式输入常规内容
+<DT><B>fseek</B>
+
+<DD>
+重定位流
+<DT><B>fsetpos</B>
+
+<DD>
+重定位流
+<DT><B>ftell</B>
+
+<DD>
+重定位流
+<DT><B>fwrite</B>
+
+<DD>
+二进制输入/输出
+<DT><B>getc</B>
+
+<DD>
+从输入流中获取下一个字符或词
+<DT><B>getchar</B>
+
+<DD>
+从输入流中获取下一个字符或词
+<DT><B>gets</B>
+
+<DD>
+从流中获取一行
+<DT><B>getw</B>
+
+<DD>
+从输入流中获取下一个字符或词
+<DT><B>mktemp</B>
+
+<DD>
+创建 (唯一的) 临时文件名
+<DT><B>perror</B>
+
+<DD>
+系统错误消息
+<DT><B>printf</B>
+
+<DD>
+按照格式输出常规内容
+<DT><B>putc</B>
+
+<DD>
+向流输出一个字符或词
+<DT><B>putchar</B>
+
+<DD>
+向流输出一个字符或词
+<DT><B>puts</B>
+
+<DD>
+向流输出一行
+<DT><B>putw</B>
+
+<DD>
+向流输出一个字符或词
+<DT><B>remove</B>
+
+<DD>
+删除目录项
+<DT><B>rewind</B>
+
+<DD>
+重定位流
+<DT><B>scanf</B>
+
+<DD>
+按照格式输入常规内容
+<DT><B>setbuf</B>
+
+<DD>
+流缓冲操作
+<DT><B>setbuffer</B>
+
+<DD>
+流缓冲操作
+<DT><B>setlinebuf</B>
+
+<DD>
+流缓冲操作
+<DT><B>setvbuf</B>
+
+<DD>
+流缓冲操作
+<DT><B>sprintf</B>
+
+<DD>
+按照格式输出常规内容
+<DT><B>sscanf</B>
+
+<DD>
+按照格式输入常规内容
+<DT><B>strerror</B>
+
+<DD>
+系统错误消息
+<DT><B>sys_errlist</B>
+
+<DD>
+系统错误消息
+<DT><B>sys_nerr</B>
+
+<DD>
+系统错误消息
+<DT><B>tempnam</B>
+
+<DD>
+临时文件控制
+<DT><B>tmpfile</B>
+
+<DD>
+临时文件控制
+<DT><B>tmpnam</B>
+
+<DD>
+临时文件控制
+<DT><B>ungetc</B>
+
+<DD>
+向输入流中退回字符
+<DT><B>vfprintf</B>
+
+<DD>
+按照格式输出常规内容
+<DT><B>vfscanf</B>
+
+<DD>
+按照格式输入常规内容
+<DT><B>vprintf</B>
+
+<DD>
+按照格式输出常规内容
+<DT><B>vscanf</B>
+
+<DD>
+按照格式输入常规内容
+<DT><B>vsprintf</B>
+
+<DD>
+按照格式输出常规内容
+<DT><B>vsscanf</B>
+
+<DD>
+按照格式输入常规内容
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>CONFORMING TO 标准参考</H2>
+
+函数库
+<B>stdio</B>
+
+遵循 ANSI X3.159-1989 (``ANSI C'') 标准。
+<A NAME="lbAG">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+open">open</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+close">close</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+read">read</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+write">write</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?3+stdout">stdout</A></B>(3)
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">LIST OF FUNCTIONS 函数列表</A><DD>
+<DT><A HREF="#lbAF">CONFORMING TO 标准参考</A><DD>
+<DT><A HREF="#lbAG">SEE ALSO 参见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,166 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of HOST.CONF</TITLE>
+</HEAD><BODY>
+<H1>HOST.CONF</H1>
+Section: (Linux系统管理) (5)<BR>Updated: 1997年2月2日<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME (名称)</H2>
+
+host.conf - 解析配置文件
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION (描述)</H2>
+
+文件
+<I>/etc/host.conf</I>
+
+包含了为解析库声明的配置信息. 它应该每行含一个配置关键字,
+其后跟着合适的配置信息. 系统识别的关键字有:
+<I>order</I>, <I>trim</I>, <I>multi</I>, <I>nospoof</I>和 <I>reorder.</I>
+
+每个关键字在下面将分别进行介绍:
+<P>
+<DL COMPACT>
+<DT><I>order</I>
+
+<DD>
+这个关键字确定了主机查询是如何执行的.
+它后面应该跟随一个或者更多的查询方式,
+这些查询方式用逗号分隔. 有效的方式有:
+<I>bind</I>, <I>hosts</I>和 <I>nis</I>.
+
+<DT><I>trim</I>
+
+<DD>
+这个关键字可以多次出现. 每次出现其后应该跟随单个的以句点开头的域名.
+如果设置了它, resolv+ 库会自动截去任何通过 DNS 解析出来的主机名后面的域名.
+这个选项用于本地主机和域. (相关信息: trim 对于通过 NIS 或者 hosts 
+文件获取的主机名无效. 需要注意的是要确保在 hosts 文件中的每条记录的
+第一个主机名是全名或者非全名, 以适合于本地安装.)
+<DT><I>multi</I>
+
+<DD>
+有效的值为:
+<I>on</I>和 off<I>.</I>
+
+如果设置为
+<I>on</I>,
+
+resolv+ 库会返回一台主机在
+<I>/etc/hosts</I>
+
+文件中出现的的所有有效地址, 而不只是第一个. 默认情况下设为
+<I>off ,</I>
+
+否则可能会导致拥有庞大 hosts 文件的站点潜在的性能损失.
+<DT><I>nospoof</I>
+
+<DD>
+有效的值为:
+<I>on</I> 和 off<I>.</I>
+
+如果设置为
+<I>on</I>,
+
+resolv+ 库会尝试阻止主机名欺骗以提高使用
+<B>rlogin</B> 和 rsh
+
+的安全性. 它是如下这样工作的:
+在执行了一个主机地址的查询之后, resolv+ 会对该地址执行一次主机名的查询.
+如果两者不匹配, 查询即失败.
+<DT><I>spoofalert</I>
+
+<DD>
+如果该选项设为
+<I>on</I>
+
+同时也设置了
+<I>nospoof</I>
+
+选项, resolv+ 会通过 syslog 设施记录错误报警信息. 默认的值为
+<I>off</I>.
+
+<DT><I>reorder</I>
+
+<DD>
+有效的值为
+<I>on</I> 和 off<I>.</I>
+
+如果设置为
+<I>on</I>,
+
+resolv+ 会试图重新排列主机地址, 以便执行
+<B><A HREF="/cgi-bin/man/man2html?3+gethostbyname">gethostbyname</A></B>(3)
+
+时, 首先列出本地地址(即在同一子网中的地址).
+重新排序适合于所有查询方式. 默认的值为
+<I>off</I>.
+
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>FILES(相关文件)</H2>
+
+<DL COMPACT>
+<DT><I>/etc/host.conf</I>
+
+<DD>
+解析配置文件
+<DT><I>/etc/resolv.conf</I>
+
+<DD>
+解析配置文件
+<DT><I>/etc/hosts</I>
+
+<DD>
+本地主机数据库
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>SEE ALSO(又见)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?3+gethostbyname">gethostbyname</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?7+hostname">hostname</A></B>(7),
+
+<B>resolv+</B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+named">named</A></B>(8)
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/11/26</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME (名称)</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION (描述)</A><DD>
+<DT><A HREF="#lbAD">FILES(相关文件)</A><DD>
+<DT><A HREF="#lbAE">SEE ALSO(又见)</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

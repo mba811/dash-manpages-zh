@@ -1,0 +1,192 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of RM</TITLE>
+</HEAD><BODY>
+<H1>RM</H1>
+Section: User Commands  (1)<BR>Updated: November 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+rm - 移除文件或者目录
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>rm [</B><I>options] file...</I>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>POSIX(Portable Operating System Interface 可移植的操作系统接口) 选项:</H2>
+
+<B>[-fiRr]</B>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>GNU 选项 (最短格式):</H2>
+
+<B>[-dfirvR]</B><I>[--help]</I><B>[--version]</B><I>[--]</I>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>描述</H2>
+
+rm移除每个给定的文件。默认情况下，它不能移除目录。但是当给定了-r或者-R选
+项时，在指定目录之下的整个目录树都会被移除（而且对通过`rm -r'能够移除的目
+录树深度是没有限制的）。当文件路径末端部分只有.和..时会出错（因此可用`rm
+-r .*'之类来避免这些不愉快的诧异）。
+<P>
+如果给定了-i选项，或者如果一个文件不可写，
+而且标准输入是终端，又没有给定-f选项，那么rm会提
+示用户是否要删除该文件，它写一个问题到stderr并且从stdin读入一个应答。
+如果应答是否定的，该文件将被跳过。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>POSIX选项</H2>
+
+<DL COMPACT>
+<DT><B>-f</B>
+
+<DD>
+不作确认提示。不会写出诊断信息。
+如果错误只是文件不存在，那么不会生成一个状态返回的错误。
+<DT><B>-i</B><I>进行确认提示。（在同时给定了-f和-i选项时，列在最后的生效。）</I>
+
+<DD>
+<DT><B>-r</B>
+
+<DD>
+或者
+<B>-R</B>
+
+递归地移除目录树。
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>SVID(System V Interface Definition)细节</H2>
+
+System V接口定义(SVID)禁止移除正在执行的可执行二进制文件的最后一个链接。
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>GNU细节</H2>
+
+GNU的实现（在fileutils-3.16中）会因为可移除的层次深度的上限而招致损坏。
+（如果确实必要，可使用`deltree'工具来移除非常深的目录树。）
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>GNU选项</H2>
+
+<DL COMPACT>
+<DT><B>-d，--directory</B>
+
+<DD>
+用unlink（2）来替代rmdir（2）移除目录，而且不要求目录为空
+移除目录使用的方式是unlink（2），而非rmdir（2），
+且在试图unlink目录之前不要求其为空。
+这仅在你有合适权限时才能生效。
+因为unlink一个目录会导致在删除目录下的文件非关联化，
+因此聪明的方法是在执行此之后fsck（8）文件系统。
+<DT><B>-f，--force</B>
+
+<DD>
+忽略不存在的文件，并且从不向用户提示。
+<DT><B>-i，--interactive</B>
+
+<DD>
+提示是否移除每个文件。如果回答是否定的，文件将被跳过。
+<DT><B>-r，-R，--recursive</B>
+
+<DD>
+递归地移除目录中的内容。
+<DT><B>-v，--verbose</B>
+
+<DD>
+在移除每个文件之前打印其名称。
+<P>
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H2>GNU 标准选项</H2>
+
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+在标准输出上打印用法信息，并且以成功状态退出。
+<DT><B>--version</B>
+
+<DD>
+在标准输出上打印版本信息，然后以成功状态退出。
+<DT><B>--</B>
+
+<DD>
+终止选项列表
+<P>
+</DL>
+<A NAME="lbAL">&nbsp;</A>
+<H2>环境变量</H2>
+
+变量LANG，LC_ALL，LC_COLLATE，LC_CTYPE和LC_MESSAGES取其通常的含义。
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>适应规则</H2>
+
+POSIX 1003.2，关于文件层次深度的限制除外。
+<P>
+<A NAME="lbAN">&nbsp;</A>
+<H2>备注</H2>
+
+本页介绍了包括在fileutils-3.16包中的rm；其他版本的可能会有细微的差别。
+请把您的修正和增补建议发邮件到<A HREF="mailto:aeb@cwi.nl">aeb@cwi.nl</A>，
+<A HREF="mailto:aw@mail1.bet1.puv.fi">aw@mail1.bet1.puv.fi</A>和<A HREF="mailto:ragnar@lightside.ddns.org">ragnar@lightside.ddns.org</A>。
+报告程序中的bug请发到
+<A HREF="mailto:fileutils-bugs@gnu.ai.mit.edu">fileutils-bugs@gnu.ai.mit.edu</A>。
+<P>
+<A NAME="lbAO">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<DL COMPACT>
+<DT>校对：<DD>
+Scorpions &lt;<A HREF="mailto:rawk@chinese.com">rawk@chinese.com</A>&gt;
+</DL>
+<A NAME="lbAP">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/19</B>
+
+<A NAME="lbAQ">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">POSIX(Portable Operating System Interface 可移植的操作系统接口) 选项:</A><DD>
+<DT><A HREF="#lbAE">GNU 选项 (最短格式):</A><DD>
+<DT><A HREF="#lbAF">描述</A><DD>
+<DT><A HREF="#lbAG">POSIX选项</A><DD>
+<DT><A HREF="#lbAH">SVID(System V Interface Definition)细节</A><DD>
+<DT><A HREF="#lbAI">GNU细节</A><DD>
+<DT><A HREF="#lbAJ">GNU选项</A><DD>
+<DT><A HREF="#lbAK">GNU 标准选项</A><DD>
+<DT><A HREF="#lbAL">环境变量</A><DD>
+<DT><A HREF="#lbAM">适应规则</A><DD>
+<DT><A HREF="#lbAN">备注</A><DD>
+<DT><A HREF="#lbAO">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAP">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAQ">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

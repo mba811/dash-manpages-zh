@@ -1,0 +1,285 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of NROFF</TITLE>
+</HEAD><BODY>
+<H1>NROFF</H1>
+Section: User Commands  (1)<BR>Updated: 23 September 2003<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+nroff - 用 groff 模拟 nroff 命令
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+
+
+
+
+<BR>
+
+<B>nroff</B>
+
+
+
+[&nbsp;<B>-h</B><I></I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-i</B><I></I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-m</B><I>name</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-n</B><I>num</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-o</B><I>list</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-p</B><I></I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-r</B><I>cn</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-S</B><I></I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-t</B><I></I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-T</B><I>name</I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-U</B><I></I>&nbsp;]
+
+
+
+
+
+[&nbsp;<B>-v</B><I></I>&nbsp;]
+
+
+
+
+[&nbsp;<I>file</I>&nbsp;...&nbsp;]
+
+<BR>
+
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<B>nroff</B>
+
+shell 脚本用 groff 来模拟
+<B>nroff</B>
+
+命令。
+<B>-T</B>
+
+选项允许的有效参数是
+<B>ascii</B>,
+
+<B>ascii8</B>,
+
+<B>latin1</B>,
+
+<B>utf8</B>,
+
+<B>nippon</B>,
+
+以及
+<B>cp1047</B>
+
+。如果参数无效，或者没有给出
+<B>-T</B>
+
+选项，
+<B>nroff</B>
+
+检测当前语言环境来选择一个默认的输出设备。它首先使用
+<B>locale</B>
+
+程序，然后检测环境变量
+<B>LC_ALL</B>,
+
+<B>LC_CTYPE</B>,
+
+和
+<B>LANG</B>,
+
+最后是
+<B>LESSCHARSET</B>
+
+环境变量。
+<P>
+
+<B>-h</B>
+
+和
+<B>-c</B>
+
+选项与
+<B>grotty</B>
+
+的
+<B>-h</B>
+
+(在输出中使用tab) 和
+<B>-c</B>
+
+(使用老式的输出方案而不是 SGR 转义序列) 选项等价。
+<B>-C</B>,
+
+<B>-i</B>,
+
+<B>-n</B>,
+
+<B>-m</B>,
+
+<B>-o</B>,
+
+和
+<B>-r</B>
+
+选项的效果在
+<B><A HREF="/cgi-bin/man/man2html?1+troff">troff</A></B>(1)
+
+中详述。另外，
+<B>nroff</B>
+
+忽略
+<B>-e</B>,
+
+<B>-q</B>,
+
+和
+<B>-s</B>
+
+(在
+<B>troff</B>
+
+中没有实现) 选项，没有任何提示。
+<B>-p</B>
+
+(pic),
+<B>-t</B>
+
+(tbl),
+<B>-S</B>
+
+(safer), 和
+<B>-U</B>
+
+(unsafe) 选项被传给
+<B>groff</B>.
+
+<B>-v</B>
+
+显示版本号。
+<A NAME="lbAE">&nbsp;</A>
+<H2>环境 ENVIRONMENT</H2>
+
+<DL COMPACT>
+<DT><FONT SIZE="-1"><B>GROFF_BIN_PATH</B>
+
+</FONT>
+<DD>
+一个冒号分隔的路径列表，在搜索 PATH 之前从中搜索
+<B>groff</B>
+
+可执行文件。如果没有设置，将使用 `/usr/bin'.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>注意 NOTES</H2>
+
+这个 shell 脚本一般用于配合
+<B><A HREF="/cgi-bin/man/man2html?1+man">man</A></B>(1)
+
+使用，所以不输出警告信息。nroff 样式的字符定义 (在文件 tty-char.tmac 中) 会被读取，来模拟不可显示的符号。
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+groff">groff</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+troff">troff</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+grotty">grotty</A></B>(1)
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+
+
+
+
+<B>bbbush &lt;<A HREF="mailto:bbbush@163.com">bbbush@163.com</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003.11.22</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+
+
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">环境 ENVIRONMENT</A><DD>
+<DT><A HREF="#lbAF">注意 NOTES</A><DD>
+<DT><A HREF="#lbAG">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

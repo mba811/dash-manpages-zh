@@ -1,0 +1,474 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of AT</TITLE>
+</HEAD><BODY>
+<H1>AT</H1>
+Section: Linux Programmer's Manual (1)<BR>Updated: Nov 1996<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+at, batch, atq, atrm - 排队、检查或删除以后要执行的作业。
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>at</B>
+
+[-V]
+
+[-q
+
+<I>队列]</I>
+
+[-f
+
+<I>文件]</I>
+
+[-mldbv]
+
+<B>时间</B>
+
+<B>at -c</B>
+
+<I>作业</I>
+
+[作业...]
+
+<B>atq</B>
+
+[-V]
+
+[-q
+
+<I>队列]</I>
+
+[-v]
+
+<BR>
+
+<B>atrm</B>
+
+[-V]
+
+<I>作业</I>
+
+[作业...]
+
+<BR>
+
+<B>batch</B>
+
+[-V]
+
+[-q
+
+<I>队列]</I>
+
+[-f
+
+<I>文件]</I>
+
+[-mv]
+
+[时间]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>at</B>
+
+和
+<B>batch</B>
+
+从标准输入或一个指定的文件读取命令，这些命令在以后某个时间用
+<B>/bin/sh</B>
+
+执行。
+<DL COMPACT>
+<DT><B>at</B>
+
+<DD>
+在指定的时间执行命令。 
+<DT><B>atq</B>
+
+<DD>
+列出用户的等待执行的作业；在用户是超级用户的情况下，列出所有人的作业。 
+<DT><B>atrm</B>
+
+<DD>
+删除作业。
+<DT><B>batch</B>
+
+<DD>
+在系统负载水平允许的时候执行命令；换句话说，当平均负
+载降到低于0.8，或降到了在 atrun 文件中指定的期望值时运行。
+译注：atrun 文件参见 atd 手册页。
+</DL>
+<P>
+
+<B>At</B>
+
+允许相当复杂的时间指定，它扩展了 POSIX.2 标准。它接受
+<B>HH:MM</B>
+
+的时间式样，用来指定在一天的某个时间运行一个作业。
+(如果时间已经过了则假定为第二天。)你可以指定
+<B>midnight</B>
+
+(午夜)、
+<B>noon</B>
+
+(中午) 或 
+<B>teatime</B>
+
+(下午4点)，你可以用
+<B>AM</B>
+
+或
+<B>PM</B>
+
+后缀指定一天的上午或下午。你可以给出
+<B>month-name day</B>
+
+加上可选
+的年份的式样用来指定运行 at 的日期，或者给出
+<B>MMDDYY</B>
+
+、
+<B>MM/DD/YY</B>
+
+或
+<B>DD.MM.YY</B>
+
+式样用来指定运行 at 的日期。日期的指定
+必须跟在时间指定的后面。你也可以给出象
+<B>now +</B>
+
+<I>计数 时间单位</I>
+
+的式样，这里的时间单位可以是
+<B>minutes</B>
+
+、
+<B>hours</B>
+
+、
+<B>days</B>
+
+或
+<B>weeks，</B>
+
+你可以给时间加一个
+<B>today</B>
+
+后缀来指定
+<B>at</B>
+
+今天运行作业，可以
+给时间加一个
+<B>tomorrow</B>
+
+后缀来指定
+<B>at</B>
+
+明天运行作业。
+<P>
+
+例如，要在三天以后的下午 4 点运行一个作业，at 时间参数可以
+指定为
+<B>4pm + 3 days。</B>
+
+要在7月31日上午10:00运行一个作业，
+at 时间参数可以指定为
+<B>10am Jul 31，</B>
+
+要在明天上午1点运行一个
+作业，at 时间参数可以指定为
+<B>1am tomorrow。</B>
+
+<P>
+
+时间指定的精确的定义可以在
+<I>/usr/doc/at-3.1.7/timespec</I>
+
+找到。
+<P>
+
+对于
+<B>at</B>
+
+和
+<B>batch</B>
+
+两者，从标准输入或以
+<B>-f</B>
+
+选项指定的文件中
+读取命令并执行之。工作路径、环境变量(除了
+<B>TERM、</B>
+
+<B>DISPLAY</B>
+
+和
+<B>_</B>)、
+
+umask 从所期望的时间起保持不变。从一个从执行
+<B><A HREF="/cgi-bin/man/man2html?1+su">su</A>(1)</B>
+
+命令得到的 
+shell 中调用的
+<B>at -</B>
+
+或
+<B>batch -</B>
+
+命令将保持当前的 userid。
+用户的命令的标准错误输出和标准输出将用邮件发给用户。发送邮件
+使用命令
+<B>/usr/sbin/sendmail。</B>
+
+从一个从执行
+<B><A HREF="/cgi-bin/man/man2html?1+su">su</A>(1)命令得到的 </B>
+
+shell 中执行了
+<B>at</B>
+
+，登录 shell 的所有者将接到邮件。 
+译注：userid 是用户标识的意思。umask 是与每个进程相关联的文件
+方式创建屏蔽字。
+<P>
+
+超级用户可以在任何情况下使用这些命令。对于其他用户，使用 at
+的权限由文件
+<I>/etc/at.allow</I>
+
+和
+<I>/etc/at.deny</I>
+
+确定。
+<P>
+
+如果文件
+<I>/etc/at.allow</I>
+
+存在，在其中提及的用户名被允许使用
+<B>at</B>
+
+命令。
+<P>
+
+如果
+<I>/etc/at.allow</I>
+
+不存在，而
+<I>/etc/at.deny</I>
+
+存在，所有在
+<I>/etc/at.deny</I>
+
+中未提及的用户被允许使用
+<B>at</B>
+
+命令。
+<P>
+
+如果两者均不存在，只用超级用户可以使用
+<B>at</B>
+
+命令。
+<P>
+
+一个空的
+<I>/etc/at.deny</I>
+
+意味着所有用户均被允许使用这些命令，
+这是缺省的配置。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-V </B>
+
+<DD>
+在标准错误上输出版本号。
+<DT><B>-q queue</B>
+
+<DD>
+使用指定的队列。一个队列用一个字母标定，有效的的队列标定的
+范围是从a到z和从A到Z。at 的缺省队列是 a,batch 的缺省队列是
+b。队列的字母顺序越高，则队列运行时越谦让(运行级别越低)。
+指定的队列 &quot;=&quot; 保留给当前运行的作业所在的队列。
+</DL>
+<P>
+
+如果一个作业被提交到一个以大写字母标定的队列，则与提交到
+batch 同样对待。如果给
+<B>atq</B>
+
+指定一个队列，则只显示在此指定
+队列中的作业。
+<DL COMPACT>
+<DT><B>-m</B>
+
+<DD>
+当作业完成时即使没有输出也给用户发邮件。
+<DT><B>-f file </B>
+
+<DD>
+从文件而不是标准输入中读取作业信息。
+<DT><B>-l</B>
+
+<DD>
+是
+<B>atq</B>
+
+的别名。
+<DT><B>-d</B>
+
+<DD>
+是
+<B>atrm</B>
+
+的别名。
+<DT><B>-v</B>
+
+<DD>
+对于
+<B>atq，</B>
+
+显示完整的在队列中未被删除的作业，对于其他
+命令，显示作业将要执行的时间。
+</DL>
+<P>
+
+显示的时间的格式类似于&quot;1997-02-20 14:50&quot;，但如果设置了
+<B>POSIXLY_CORRECT</B>
+
+环境变量之后，格式类似于&quot;Thu Feb 20 
+14:50:00 1996&quot;。
+<DL COMPACT>
+<DT><B>-c</B>
+
+<DD>
+连接命令行中列出的作业并输出到标准输出。
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>相关文件</H2>
+
+<I>/var/spool/at</I>
+
+<BR>
+
+<I>/var/spool/at/spool</I>
+
+<BR>
+
+<I>/proc/loadavg</I>
+
+<BR>
+
+<I>/var/run/utmp</I>
+
+<BR>
+
+<I>/etc/at.allow</I>
+
+<BR>
+
+<I>/etc/at.deny</I>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+cron">cron</A>(1), <A HREF="/cgi-bin/man/man2html?1+nice">nice</A>(1), <A HREF="/cgi-bin/man/man2html?1+sh">sh</A>(1), <A HREF="/cgi-bin/man/man2html?2+umask">umask</A>(2), <A HREF="/cgi-bin/man/man2html?8+atd">atd</A>(8)
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>缺陷</H2>
+
+在 Linux 下正确的批处理操作依赖于挂装在/proc 上的一个
+<I>proc</I>-
+
+类型的目录的存在。
+<P>
+
+如果文件
+<I>/var/run/utmp</I>
+
+不可获得或已经损坏，或者在
+<B>at</B>
+
+所期
+待的时间用户没有登录，向在环境变量
+<B>LOGNAME</B>
+
+中找到的 userid
+发送邮件。如果
+<B>LOGNAME</B>未定义或是空的，假定为当前的<B>userid。</B>
+
+<P>
+
+当前实现的
+<B>at</B>
+
+和
+<B>batch</B>
+
+在用户竞争资源的时候是不适合的。
+如果你的站点是这种情况，你可以考虑其他的批处理系统，
+例如
+<B>nqs。</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>著作者</H2>
+
+AT 大部分是由Thomas Koenig写的。<A HREF="mailto:ig25@rz.uni-karlsruhe.de">ig25@rz.uni-karlsruhe.de</A>.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>mhss &lt;<A HREF="mailto:jijingzhisheng@up369.com">jijingzhisheng@up369.com</A>&gt;</B>
+
+<BR>
+
+主要参照了：
+<B>Linux</B>实用大全
+
+/ 陈向阳，方汉 编著. -北京：
+科学出版社，1998.8 
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/27</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">相关文件</A><DD>
+<DT><A HREF="#lbAG">参见</A><DD>
+<DT><A HREF="#lbAH">缺陷</A><DD>
+<DT><A HREF="#lbAI">著作者</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

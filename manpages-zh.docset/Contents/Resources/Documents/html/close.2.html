@@ -1,0 +1,136 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CLOSE</TITLE>
+</HEAD><BODY>
+<H1>CLOSE</H1>
+Section: Linux Programmer's Manual (2)<BR>Updated: 1996-04-14<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME  名字</H2>
+
+close - 关闭一个文件描述符
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS  总览</H2>
+
+<PRE>
+<B>#include &lt;<A HREF="file:///usr/include/unistd.h">unistd.h</A>&gt;</B>
+
+<B>int close(int </B><I>fd</I><B>);</B>
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION  描述</H2>
+
+<B>close</B>
+
+关闭 一个 文件 描述符 , 使它 不在 指向 任何 文件 和 可以 在 新的 文件 操作 中 被 再次 使用.
+任何 与 此 文件 相关联 的 以及 程序 所 拥有 的 锁 , 都 会 被 删除 (忽略 那些 持有 锁 的 文件描述符)
+<P>
+
+假如
+<I>fd</I>
+
+是 最后 一个 文件描述符 与此 资源 相 关联 , 则 这个 资源 将 被 释放.
+若此 描述符 是 最后 一个 引用 到 此 文件 上 的 , 则 文件 将 使用
+<B><A HREF="/cgi-bin/man/man2html?2+unlink">unlink</A></B>(2)
+
+删除.
+<A NAME="lbAE">&nbsp;</A>
+<H2>RETURN VALUE  返回值</H2>
+
+<B>close</B>
+
+返回 0 表示 成功 , 或者 -1 表示 有 错误 发生 .
+<A NAME="lbAF">&nbsp;</A>
+<H2>ERRORS  错误信息</H2>
+
+<DL COMPACT>
+<DT><B>EBADF</B>
+
+<DD>
+<I>fd</I>
+
+不是 一个 有效 的 已 被 打开 的 文件 的 描述符
+<DT><B>EINTR</B>
+
+<DD>
+The
+<B>close</B>()
+
+调用 被 一 信号 中断.
+<DT><B>EIO</B>
+
+<DD>
+I/O 有 错误 发生
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>CONFORMING TO</H2>
+
+SVr4, SVID, POSIX, X/OPEN, BSD 4.3.  SVr4 documents an additional
+ENOLINK error condition.
+<A NAME="lbAH">&nbsp;</A>
+<H2>NOTES  注意</H2>
+
+通常 不检测 返回值 , 除了 发生 严重 的 程序 错误.  文件系统  使用 了
+&quot;write-behind&quot; 的 技术 提高 了 执行
+<B><A HREF="/cgi-bin/man/man2html?2+write">write</A></B>(2)
+
+时 的 性能 . 即使 还 没有 被 写 , 写操作 也会 成功 . 错误 信息 在 写操作 以后
+报告 , 但是 这 保证 在 关闭 文件 时 报告 . 在 关闭 文件 时 不检测 返回值 可能
+会 导致 数据 的 丢失 . 这 一点 在 NFS 和 磁盘 配额 上 比较 明显.
+<P>
+
+由于 内核 会 延迟 写 , 所以 就算 成功 关闭 一个 文件 不能 保证 数据 被 成功 的 写到 磁盘 上.
+当 文件流 关闭 时 , 对 文件系统 来说 一般 不去 刷新 缓冲区 . 如果 你 要 保证 数据 写入
+磁盘 等 物理 存贮器 中
+就 使用 <A HREF="/cgi-bin/man/man2html?2+fsync">fsync</A>(2) 或 <A HREF="/cgi-bin/man/man2html?2+sync">sync</A>(2), 他们 会 做到 你想做的 (对于 这一点 要 依赖于 磁盘 设备).
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO  参考</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+open">open</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+fcntl">fcntl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+shutdown">shutdown</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+unlink">unlink</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?3+fclose">fclose</A></B>(3)
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文维护]</H2>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>Daniel (<A HREF="mailto:badlong@163.com">badlong@163.com</A>)<BR>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文更新]</H2>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>2002/1/10<BR>
+<A NAME="lbAL">&nbsp;</A>
+<H2>[说明]</H2>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>若 发现 错误 或 不足 请 与 我 联系.<BR>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME  名字</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS  总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION  描述</A><DD>
+<DT><A HREF="#lbAE">RETURN VALUE  返回值</A><DD>
+<DT><A HREF="#lbAF">ERRORS  错误信息</A><DD>
+<DT><A HREF="#lbAG">CONFORMING TO</A><DD>
+<DT><A HREF="#lbAH">NOTES  注意</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO  参考</A><DD>
+<DT><A HREF="#lbAJ">[中文维护]</A><DD>
+<DT><A HREF="#lbAK">[中文更新]</A><DD>
+<DT><A HREF="#lbAL">[说明]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,76 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PG_CONFIG</TITLE>
+</HEAD><BODY>
+<H1>PG_CONFIG</H1>
+Section: PostgreSQL Server Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+pg_config - 检索已安装版本的 PostgreSQL 的信息
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+pg_config {--bindir | --includedir | --includedir-server | --libdir | --pkglibdir | --configure | --version...}
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>pg_config</B> 工具打印当前安装的 PostgreSQL版本配置参数。 它可以用于那些希望与 PostgreSQL  相联接的软件包，这样可以通过它找到相对应的头文件和库。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<BR>&nbsp;要使用&nbsp;pg_config，使用下面的一个或者多个选项：
+<DL COMPACT>
+<DT>--bindir<DD>
+<BR>&nbsp;打印用户可执行文件的路径。比如，可以用这个找&nbsp;psql&nbsp;程序。&nbsp;通常这也是&nbsp;pg_config&nbsp;程序存在的路径。
+<DT>--includedir<DD>
+<BR>&nbsp;打印&nbsp;C&nbsp;头文件的路径。
+<DT>--includedir-server<DD>
+<BR>&nbsp;打印那些做服务器编程时使用的&nbsp;C&nbsp;头文件的位置。
+<DT>--libdir<DD>
+<BR>&nbsp;打印目标代码库的路径。
+<DT>--pkglibdir<DD>
+<BR>&nbsp;打印动态装载的模块的位置，或者服务器在哪里寻找他们。&nbsp;（其它体系相关的数据文件可能也放在这个目录里。）
+<DT>--configure<DD>
+<BR>&nbsp;打印我们配置和制作&nbsp;PostgreSQL&nbsp;&nbsp;时给&nbsp;configure&nbsp;脚本用的选项，&nbsp;或者找出二进制包是用哪些选项制作的。（不过请注意二进制包通常包含供应商提供的补丁。）
+<DT>--version<DD>
+<BR>&nbsp;打印&nbsp;PostgreSQL&nbsp;的版本并退出。
+</DL>
+<P>
+
+<P>
+
+<BR>&nbsp;如果给出多于一个选项（除了&nbsp;--version），那么信息以该顺序打印，每行一条。
+<A NAME="lbAF">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

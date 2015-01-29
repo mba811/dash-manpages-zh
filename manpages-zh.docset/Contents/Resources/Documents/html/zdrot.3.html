@@ -1,0 +1,193 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ZDROT</TITLE>
+</HEAD><BODY>
+<H1>ZDROT</H1>
+Section: C Library Functions (3)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ZDROT - ZDROT
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<DL COMPACT>
+<DT>SUBROUTINE ZDROT(<DD>
+N, CX, INCX, CY, INCY, C, S )
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+INTEGER
+INCX, INCY, N
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+DOUBLE
+PRECISION C, S
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+COMPLEX*16
+CX( * ), CY( * )
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+INTEGER
+I, IX, IY
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+COMPLEX*16
+CTEMP
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+IF(
+N.LE.0 )
+RETURN
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+IF(
+INCX.EQ.1 .AND. INCY.EQ.1 )
+GO TO 20
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+IX
+= 1
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+IY
+= 1
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+IF(
+INCX.LT.0 )
+IX = ( -N+1 )*INCX + 1
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+IF(
+INCY.LT.0 )
+IY = ( -N+1 )*INCY + 1
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+DO
+10 I = 1, N
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+CTEMP
+= C*CX( IX ) + S*CY( IY )
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+CY(
+IY ) = C*CY( IY ) - S*CX( IX )
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+CX(
+IX ) = CTEMP
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+IX
+= IX + INCX
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+IY
+= IY + INCY
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+10
+CONTINUE
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+RETURN
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+20
+CONTINUE
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+DO
+30 I = 1, N
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+CTEMP
+= C*CX( I ) + S*CY( I )
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+CY(
+I ) = C*CY( I ) - S*CX( I )
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+CX(
+I ) = CTEMP
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+30
+CONTINUE
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+RETURN
+<DT><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<DD>
+END
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>PURPOSE</H2>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>姓名 &lt;email&gt;</B>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>yyyy.mm.dd</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">PURPOSE</A><DD>
+<DT><A HREF="#lbAE">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAF">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAG">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

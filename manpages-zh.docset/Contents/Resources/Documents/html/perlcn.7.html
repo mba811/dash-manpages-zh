@@ -1,0 +1,274 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PERLCN</TITLE>
+</HEAD><BODY>
+<H1>PERLCN</H1>
+Section: Perl Programmers Reference Guide (7)<BR>Updated: 2003-09-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+perlcn - 简体中文 Perl 指南
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+<A NAME="ixAAC"></A>
+欢迎来到 Perl 的天地!
+<P>
+
+从 5.8.0 版开始, Perl 具备了完善的 Unicode (统一码) 支援,
+也连带支援了许多拉丁语系以外的编码方式; <FONT SIZE="-1">CJK</FONT> (中日韩) 便是其中的一部份.
+Unicode 是国际性的标准, 试图涵盖世界上所有的字符: 西方世界, 东方世界,
+以及两者间的一切 (希腊文, 叙利亚文, 亚拉伯文, 希伯来文, 印度文,
+印地安文, 等等). 它也容纳了多种作业系统与平台 (如 <FONT SIZE="-1">PC</FONT> 及麦金塔).
+<P>
+
+Perl 本身以 Unicode 进行操作. 这表示 Perl 内部的字符串数据可用 Unicode
+表示; Perl 的函式与算符 (例如正规表示式比对) 也能对 Unicode 进行操作.
+在输入及输出时, 为了处理以 Unicode 之前的编码方式存放的数据, Perl
+提供了 Encode 这个模块, 可以让你轻易地读取及写入旧有的编码数据.
+<P>
+
+Encode 延伸模块支援下列简体中文的编码方式 ('gb2312' 表示 'euc-cn'):
+<P>
+
+
+
+<PRE>
+    euc-cn      Unix 延伸字符集, 也就是俗称的国标码
+    gb2312-raw  未经处理的 (低比特) GB2312 字符表
+    gb12345     未经处理的中国用繁体中文编码
+    iso-ir-165  GB2312 + GB6345 + GB8565 + 新增字符
+    cp936       字码页 936, 也可以用 'GBK' (扩充国标码) 指明
+    hz          7 比特逸出式 GB2312 编码
+
+</PRE>
+
+
+<P>
+
+举例来说, 将 EUC-CN 编码的档案转成 Unicode, 祗需键入下列指令:
+<P>
+
+
+
+<PRE>
+    perl -Mencoding=euc-cn,STDOUT,utf8 -pe1 &lt; file.euc-cn &gt; file.utf8
+
+</PRE>
+
+
+<P>
+
+Perl 也内附了 ``piconv'', 一支完全以 Perl 写成的字符转换工具程序, 用法如下:
+<P>
+
+
+
+<PRE>
+    piconv -f euc-cn -t utf8 &lt; file.euc-cn &gt; file.utf8
+    piconv -f utf8 -t euc-cn &lt; file.utf8 &gt; file.euc-cn
+
+</PRE>
+
+
+<P>
+
+另外, 利用 encoding 模块, 你可以轻易写出以字符为单位的程序码, 如下所示:
+<P>
+
+
+
+<PRE>
+    #!/usr/bin/env perl
+    # 启动 euc-cn 字串解析; 标准输出入及标准错误都设为 euc-cn 编码
+    use encoding 'euc-cn', STDIN =&gt; 'euc-cn', STDOUT =&gt; 'euc-cn';
+    print length(&quot;骆驼&quot;);            #  2 (双引号表示字符)
+    print length('骆驼');            #  4 (单引号表示字节)
+    print index(&quot;谆谆教诲&quot;, &quot;蛔唤&quot;); # -1 (不包含此子字符串)
+    print index('谆谆教诲', '蛔唤'); #  1 (从第二个字节开始)
+
+</PRE>
+
+
+<P>
+
+在最后一列例子里, ``谆'' 的第二个字节与 ``谆'' 的第一个字节结合成 EUC-CN
+码的 ``蛔''; ``谆'' 的第二个字节则与 ``教'' 的第一个字节结合成 ``唤''.
+这解决了以前 EUC-CN 码比对处理上常见的问题.
+
+<BR>
+
+
+
+<P>
+
+<B>额外的中文编码</B>
+<P>
+
+
+<A NAME="ixAAD"></A>
+如果需要更多的中文编码, 可以从 <FONT SIZE="-1">CPAN</FONT> (&lt;<A HREF="http://www.cpan.org/">http://www.cpan.org/</A>&gt;) 下载
+Encode::HanExtra 模块. 它目前提供下列编码方式:
+<P>
+
+
+
+<PRE>
+    gb18030     扩充过的国标码, 包含繁体中文
+
+</PRE>
+
+
+<P>
+
+另外, Encode::HanConvert 模块则提供了简繁转换用的两种编码:
+<P>
+
+
+
+<PRE>
+    big5-simp   Big5 繁体中文与 Unicode 简体中文互转
+    gbk-trad    GBK 简体中文与 Unicode 繁体中文互转
+
+</PRE>
+
+
+<P>
+
+若想在 <FONT SIZE="-1">GBK</FONT> 与 Big5 之间互转, 请参考该模块内附的 b2g.pl 与 g2b.pl 两支程序,
+或在程序内使用下列写法:
+<P>
+
+
+
+<PRE>
+    use Encode::HanConvert;
+    $euc_cn = big5_to_gb($big5); # 从 Big5 转为 GBK
+    $big5 = gb_to_big5($euc_cn); # 从 GBK 转为 Big5
+
+</PRE>
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>进一步的信息</B>
+<P>
+
+
+<A NAME="ixAAE"></A>
+请参考 Perl 内附的大量说明文件 (不幸全是用英文写的), 来学习更多关于
+Perl 的知识, 以及 Unicode 的使用方式. 不过, 外部的资源相当丰富:
+
+<BR>
+
+
+
+<P>
+
+<B>提供 Perl 资源的网址</B>
+<P>
+
+
+<A NAME="ixAAF"></A>
+<DL COMPACT>
+<DT>&lt;<A HREF="http://www.perl.com/">http://www.perl.com/</A>&gt;<DD>
+<A NAME="ixAAG"></A>
+Perl 的首页 (由欧莱礼公司维护)
+<DT>&lt;<A HREF="http://www.cpan.org/">http://www.cpan.org/</A>&gt;<DD>
+<A NAME="ixAAH"></A>
+Perl 综合典藏网 (Comprehensive Perl Archive Network)
+<DT>&lt;<A HREF="http://lists.perl.org/">http://lists.perl.org/</A>&gt;<DD>
+<A NAME="ixAAI"></A>
+Perl 邮递论坛一览
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>学习 Perl 的网址</B>
+<P>
+
+
+<A NAME="ixAAJ"></A>
+<DL COMPACT>
+<DT>&lt;<A HREF="http://www.oreilly.com.cn/html/perl.html">http://www.oreilly.com.cn/html/perl.html</A>&gt;<DD>
+<A NAME="ixAAK"></A>
+简体中文版的欧莱礼 Perl 书藉
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>Perl 使用者集会</B>
+<P>
+
+
+<A NAME="ixAAL"></A>
+<DL COMPACT>
+<DT>&lt;<A HREF="http://www.pm.org/groups/asia.shtml#China">http://www.pm.org/groups/asia.shtml#China</A>&gt;<DD>
+<A NAME="ixAAM"></A>
+中国 Perl 推广组一览
+
+<BR>
+
+
+
+</DL>
+<P>
+
+<B>Unicode 相关网址</B>
+<P>
+
+
+<A NAME="ixAAN"></A>
+<DL COMPACT>
+<DT>&lt;<A HREF="http://www.unicode.org/">http://www.unicode.org/</A>&gt;<DD>
+<A NAME="ixAAO"></A>
+Unicode 学术学会 (Unicode 标准的制定者)
+<DT>&lt;<A HREF="http://www.cl.cam.ac.uk/%7Emgk25/unicode.html">http://www.cl.cam.ac.uk/%7Emgk25/unicode.html</A>&gt;<DD>
+<A NAME="ixAAP"></A>
+Unix/Linux 上的 <FONT SIZE="-1">UTF-8</FONT> 及 Unicode 答客问
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+<A NAME="ixAAQ"></A>
+Encode, Encode::CN, encoding, perluniintro, perlunicode
+<A NAME="lbAE">&nbsp;</A>
+<H2>AUTHORS</H2>
+
+<A NAME="ixAAR"></A>
+Jarkko Hietaniemi &lt;<A HREF="mailto:jhi@iki.fi">jhi@iki.fi</A>&gt;
+<P>
+
+Autrijus Tang (唐宗汉) &lt;<A HREF="mailto:autrijus@autrijus.org">autrijus@autrijus.org</A>&gt;
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">SEE ALSO</A><DD>
+<DT><A HREF="#lbAE">AUTHORS</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,381 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of msgcat</TITLE>
+</HEAD><BODY>
+<H1>msgcat</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+msgcat - Tcl 消息目录
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>package require Tcl 8.2</B>
+<P>
+<B>package require msgcat 1.1</B>
+<P>
+<B>::msgcat::mc </B><I>src-string</I>
+<P>
+<B>::msgcat::mclocale </B>?<I>newLocale</I>?
+<P>
+<B>::msgcat::mcpreferences</B>
+<P>
+<B>::msgcat::mcload </B><I>dirname</I>
+<P>
+<B>::msgcat::mcset </B><I>locale src-string </I>?<I>translate-string</I>?
+<P>
+<B>::msgcat::mcunknown </B><I>locale src-string</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>msgcat</B> 包提供用来管理多语言的用户界面的一系列函数。在独立于应用的一个“消息目录”中定义文本串，可以编辑和修改这些文本串而不用修改应用的源代码。通过向这个消息目录增加一个新文件来提供一个新语言或地域(locale)。
+<P>
+
+对任何应用和包使用消息目录都是可选的，但是鼓励你使用它，以便应用或包在多语言环境中被采用。                 
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>命令 COMMANDS</H2>
+
+<DL COMPACT>
+<DT><B>::msgcat::mc </B><I>src-string</I> ?<I>arg arg ...</I>?<DD>
+依照用户的当前地区，返回 <I>src-string</I>   的翻译(translation)。如果在 <I>src-string</I> 之后给出了附加的参数，使用 <B>format</B>  命令把 <I>src-string</I><I> </I>的翻译中的转换指定符替换成补充参数。
+<P>
+为了翻译 <I>src-string </I><B>::msgcat::mc</B>  将在当前名字空间中查找定义的消息；如果未找到，它将在当前的名字空间的父空间中查找，以此类推直到到达全局名字空间。如果不存在转换字符串，调用 <B>::msgcat::mcunknown</B> 并返回 <B>::msgcat::mcunknown</B>  的返回。
+</DL>
+<P>
+
+<B>::msgcat::mc</B>  是用来本地化一个应用的主要函数。不再直接的使用英文字符串，一个应用可以把英文字符串传递给 <B>::msgcat::mc</B> 并使用它的结果。如果以这种方式用一种语言写了一个应用，通过简单的定义新的消息目录条目，以后增加附加的语言支持是很容易的。
+<DL COMPACT>
+<DT><B>::msgcat::mclocale </B>?<I>newLocale</I>? <DD>
+这个函数把地域设置成 <I>newLocale</I>。如果省略了 <I>newLocale</I>，返回当前的地域，否则当前的地域被设置成 <I>newLocale</I>。初始的地域缺省为在用户的环境变量中指定的地域。关于地域字符串的格式的详细描述参见下面的 <B>LOCALE AND SUBLOCALE SPECIFICATION</B> 地域和子地域指定章节。   
+<DT><B>::msgcat::mcpreferences</B><DD>
+返回一个有序的地域列表，它们是基于用户指定的语言，以用户喜好程度为次序。次序是从最偏好到最不喜好的。如果用户已经指定了LANG=en_US_funky，这个过程将返回{en_US_funky en_US en}。
+<DT><B>::msgcat::mcload </B><I>dirname</I><DD>
+在指定的目录中查找一个文件，这个文件匹配用 <B>::msgcat::mcpreferences </B>返回的语言指定。每个文件的根文件名是地域字符串，扩展名是“.msg”。返回匹配的指定和装载了消息的数目。 
+<DT><B>::msgcat::mcset </B><I>locale src-string </I>?<I>translate-string</I>?<DD>
+在指定的 <I>locale </I>中设置从 <I>src-string</I>  到 <I>translate-string</I>  的翻译。如果未指定 <I>translate-string</I>，对二者都使用 <I>src-string</I> 。函数返回 <I>translate-string</I>。  
+<DT><B>::msgcat::mcunknown </B><I>locale src-string</I><DD>
+在当前的地域中没有给 <I>src-string</I> 定义的翻译的情况下，这个例程被 <B>::msgcat::mc</B>  调用。缺省的动作是返回  <I>src-string</I>。这个过程可以被这个应用重新定义，比如对每个未知字符串记录错误消息日志。在与 <B>::msgcat::mc </B>相同的栈层次上调用 <B>::msgcat::mcunknown</B> 过程。 <B>::msgcat::mcunknown</B>  的返回值被用做 <B>::msgcat::mc </B>的返回值。 
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>地域和子地域规定 LOCALE AND SUBLOCALE SPECIFICATION</H2>
+
+<P>
+
+用地域字符串指定地域。地域字符串的组成是一个语言代码，一个可选的国家(地区)代码，一个可选的特定于系统代码，它们用“_”分割。国家和语言代码在标准ISO-639 和 ISO-3166 中。例如，地域“en”指定 English 而“en_US”指定  U.S.  English。
+<P>
+
+区域定义缺省为装载 <B>msgcat </B>包时在 <B>env(LANG) </B>中的值。如果未定义 <B>env(LANG)</B>，则地域缺省为“C”。
+<P>
+
+在用户指定一个地域的时候，在字符串翻译期间进行“最佳匹配”查找。例如，如果用户指定了 en_UK_Funky，按“en_UK_Funky”、“en_UK”、和“en” 的次序查找地域，直到找到一个匹配的字符串翻译。如果没有找到这个字符串的翻译，则调用 <B>::msgcat::unknown</B>。
+<P>
+
+译注：常用地域字符串的一部分
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+语言  国家(地区)地域 ID
+Arabic  Saudi Arabiaar_SA
+Chinese (Simplified)Chinazh_CN
+Chinese (Traditional)Taiwanzh_TW
+English United Statesen_US
+French  Francefr_FR
+German  Germanyde_DE
+Hebrew  Israeliw_IL
+Italian Italyit_IT
+Japanese  Japanja_JP
+Korean  South Koreako_KR
+Spanish Spaines_ES
+Swedish Swedensv_SE
+
+</PRE>
+
+</DL>
+
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>NAME</H2>
+
+<P>
+
+在消息目录中存储的字符串被存储为相对于在其中增加它们的那个名字空间。这允许多个包使用相同的字符串而不用害怕与其他包冲突。它还允许源字符串被缩写而减少(less prone to)排字错误。    
+<P>
+
+例如，执行代码 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+mcset en hello &quot;hello from ::&quot;
+namespace eval foo {mcset en hello &quot;hello from ::foo&quot;}
+puts [mc hello]
+namespace eval foo {puts [mc hello]}
+
+</PRE>
+
+</DL>
+
+
+将输出   
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+hello from ::
+hello from ::foo
+
+</PRE>
+
+</DL>
+
+
+<P>
+
+在查找一个消息的翻译的时候，消息目录将首先查找当前名字空间，接着是当前名字空间的父名字空间，以次类推知道到达全局名字空间。这允许子名字空间从它的父名字空间“继承”消息。
+<P>
+
+例如，执行代码        
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+mcset en m1 &quot;:: message1&quot;
+mcset en m2 &quot;:: message2&quot;
+mcset en m3 &quot;:: message3&quot;
+namespace eval ::foo {
+    mcset en m2 &quot;::foo message2&quot;
+    mcset en m3 &quot;::foo message3&quot;
+}
+namespace eval ::foo::bar {
+    mcset en m3 &quot;::foo::bar message3&quot;
+}
+puts &quot;[mc m1]; [mc m2]; [mc m3]&quot;
+namespace eval ::foo {puts &quot;[mc m1]; [mc m2]; [mc m3]&quot;}
+namespace eval ::foo::bar {puts &quot;[mc m1]; [mc m2]; [mc m3]&quot;}
+
+</PRE>
+
+</DL>
+
+
+将输出
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+:: message1; :: message2; :: message3
+:: message1; ::foo message2; ::foo message3
+:: message1; ::foo message2; ::foo::bar message3
+
+</PRE>
+
+</DL>
+
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>消息文件的定位和格式 LOCATION AND FORMAT OF MESSAGE FILES</H2>
+
+<P>
+
+消息文件可以位于任何目录中，取决于下列条件:
+<DL COMPACT>
+<DT>[1]<DD>
+给一个包的所有消息文件都在相同的目录中。  
+<DT>[2]<DD>
+消息文件名跟一个地域指定符并跟随着“.msg”。例如:        
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+es.msg    -- spanish
+en_UK.msg -- UK English
+
+</PRE>
+
+</DL>
+
+
+<DT>[3]<DD>
+这个文件包含一系列对 mcset 的调用，它们为这个语言设置需要的翻译字符串。例如:   
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+::msgcat::mcset es &quot;Free Beer!&quot; &quot;Cerveza Gracias!&quot;
+
+</PRE>
+
+</DL>
+
+
+<P>
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>推荐的对包的消息设置 RECOMMENDED MESSAGE SETUP FOR PACKAGES</H2>
+
+<P>
+
+如果一个包被安装到<B>tcl_pkgPath</B>  的一个子目录中并通过 <B>package require</B> 装载，推荐下列过程。
+<DL COMPACT>
+<DT>[1]<DD>
+在包安装期间，在你的包目录下建立一个子目录<B>msgs</B>。     
+<DT>[2]<DD>
+复制你的 *.msg 文件到这个目录中。    
+<DT>[3]<DD>
+在你的包初始化脚本中增加下列命令:          
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+# load language files, stored in msgs subdirectory
+::msgcat::mcload [file join [file dirname [info script]] msgs]
+
+</PRE>
+
+</DL>
+
+
+<P>
+</DL>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>给 FORMAT 和 SCAN 命令的定位代码 POSTITIONAL CODES FOR FORMAT AND SCAN COMMANDS</H2>
+
+<P>
+
+用做给 <B>format</B> 的参数的一个消息字符串中的转换指定符可以包含一个 XPG3 位置指定符。例如，它可以按句法的需要在翻译的时候重新安排句子结构。  
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+format &quot;We produced %d units in location %s&quot; $num $city
+format &quot;In location %s we produced %d units&quot; $city $num
+
+</PRE>
+
+</DL>
+
+
+<P>
+
+可使用定位参数来处理:   
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+format &quot;We produced %1\$d units in location %2\$s&quot; $num $city
+format &quot;In location %2\$s we produced %1\$d units&quot; $num $city
+
+</PRE>
+
+</DL>
+
+
+<P>
+
+类似的，可以在 <B>scan</B> 中使用定位参数来提取国际化字符串中的值。
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>感谢 CREDITS</H2>
+
+<P>
+
+消息目录代码由 Mark Harrison 开发。  
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+format">format</A>(n), <A HREF="/cgi-bin/man/man2html?n+scan">scan</A>(n), <A HREF="/cgi-bin/man/man2html?n+namespace">namespace</A>(n), <A HREF="/cgi-bin/man/man2html?n+package">package</A>(n)
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+internationalization, i18n, localization, l10n, message, text, translation
+<P>
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+译注：部分句子写的莫名其妙，余加以意译。
+
+</PRE>
+
+</DL>
+
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/12</B>
+
+<A NAME="lbAP">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">命令 COMMANDS</A><DD>
+<DT><A HREF="#lbAF">地域和子地域规定 LOCALE AND SUBLOCALE SPECIFICATION</A><DD>
+<DT><A HREF="#lbAG">NAME</A><DD>
+<DT><A HREF="#lbAH">消息文件的定位和格式 LOCATION AND FORMAT OF MESSAGE FILES</A><DD>
+<DT><A HREF="#lbAI">推荐的对包的消息设置 RECOMMENDED MESSAGE SETUP FOR PACKAGES</A><DD>
+<DT><A HREF="#lbAJ">给 FORMAT 和 SCAN 命令的定位代码 POSTITIONAL CODES FOR FORMAT AND SCAN COMMANDS</A><DD>
+<DT><A HREF="#lbAK">感谢 CREDITS</A><DD>
+<DT><A HREF="#lbAL">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAM">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAN">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAO">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAP">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

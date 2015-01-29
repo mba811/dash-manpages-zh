@@ -1,0 +1,95 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of NEWGRP</TITLE>
+</HEAD><BODY>
+<H1>NEWGRP</H1>
+Section: Linux Programmer's Manual (1)<BR>Updated: 9 October 1993<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+newgrp - 登录到新的用户组中
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>newgrp [ </B><I>group</I><B> ]</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>Newgrp</B>
+
+改变 调用者 的 用户组标识, 类似于
+<B><A HREF="/cgi-bin/man/man2html?1+login">login</A></B>(1).
+
+调用者 仍旧 登录 在 系统 中, 当前目录 也不变, 但是 文件的访问权限 将 根据
+新的 用户组 ID 计算.
+<P>
+
+如果 没有 指定 用户组, GID 将 变成 登录 的 GID.
+<P>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>文件 (FILES)</H2>
+
+<I>/etc/group</I>
+
+<BR>
+
+<I>/etc/passwd</I>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+login">login</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?5+group">group</A></B>(5)
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>作者 (AUTHOR)</H2>
+
+Originally by Michael Haardt. Currently maintained by 
+Peter Orbaek (<A HREF="mailto:poe@daimi.aau.dk">poe@daimi.aau.dk</A>).
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">文件 (FILES)</A><DD>
+<DT><A HREF="#lbAF">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAG">作者 (AUTHOR)</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,101 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of svnserve</TITLE>
+</HEAD><BODY>
+<H1>svnserve</H1>
+Section: Maintenance Commands (8)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+svnserve - 使用 `svn' 访问仓库时的服务器
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<DL COMPACT>
+<DT><B>svnserve</B> [<I>options</I>]<DD>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<B>svnserve</B> 允许使用 svn 网络协议访问 Subversion 仓库。它可以运行为独立的服务器进程，也可以在 xinetd 控制下运行。在启动 <B>svnserver</B> 时，必须选择操作的模式。下列选项也被识别：
+<P>
+
+<DL COMPACT>
+<DT><B>-d</B>, <B>--daemon</B><DD>
+使得 <B>svnserve</B> 以守护进程方式运行。<B>svnserve</B> 使自身运行在后台，在 svn 端口 (默认是 3690) 监听并提供服务。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>--listen-port</B>=<I>port</I><DD>
+使得 <B>svnserve</B> 在以守护进程方式运行时监听 <I>port</I> 端口。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>--listen-host</B>=<I>host</I><DD>
+使得 <B>svnserver</B> 监听 <I>host</I> 指定的接口，可以是一个主机名或是一个 IP 地址。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>--foreground</B><DD>
+当与 <B>-d</B> 一同使用时，这个选项使得 <B>svnserve</B> 在前台运行。这个选项主要用于调试。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-i</B>, <B>--inetd</B><DD>
+使得 <B>svnserve</B> 使用标准输入/标准输出文件描述符，当它在 xinetd 控制下运行时应该这样做。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-h</B>, <B>--help</B><DD>
+显示用法信息，然后退出。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-r</B> <I>root</I>, <B>--root</B>=<I>root</I><DD>
+为它提供服务的所有仓库设置虚根目录。客户端给出的 URL 中的路径名将被解释为相对于此 “根” 目录的路径，不允许超出根目录的范围。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-t</B>, <B>--tunnel</B><DD>
+使得 <B>svnserver</B> 运行于隧道模式，操作与 xinetd 模式类似 (在标准输入/标准输出提供一个连接)，但是将连接视为已认证的，认证用户就是当前的 uid。这个选项是在客户端运行于一个隧道代理上时使用。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-T</B>, <B>--threads</B><DD>
+当运行在守护进程模式时，使得 <B>svnserve</B> 为每个连接产生新线程而不是新进程。<B>svnserve</B> 进程在启动时仍然将自身放到后台。
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-X</B>, <B>--listen-once</B><DD>
+使得 <B>svnserve</B> 接受 svn 端口的一个连接，提供服务，然后退出。这个选项主要用于调试。
+</DL>
+<P>
+
+一旦客户端通过传递 URL 选择了一个仓库，<B>snvserve</B> 读取这个仓库中名为 <B>conf/svnserve.conf</B> 的文件，判断特定于仓库的设置信息，例如使用什么认证数据库，接受什么样的认证规则。参见 <B><A HREF="/cgi-bin/man/man2html?5+svnserve.conf">svnserve.conf</A></B>(5) 来查看文件格式的详细信息。
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,108 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MODINFO</TITLE>
+</HEAD><BODY>
+<H1>MODINFO</H1>
+Section: 模块支持 (8)<BR>Updated: 11 Nov 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+modinfo - 显示当前内核模块信息
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>modinfo</B>
+
+[ options ] &lt;module_file&gt;
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>modinfo</B>
+
+工具软件用来对内核模块的目标文件
+<I>module_file</I>
+
+进行测试并打印输出相关信息。
+<A NAME="lbAE">&nbsp;</A>
+<H3>选项</H3>
+
+<DL COMPACT>
+<DT><B>-a</B>, <B>--author</B>
+
+<DD>
+显示模块的开发人员
+<DT><B>-d</B>, <B>--description</B>
+
+<DD>
+显示此模块的描述说明
+<DT><B>-f</B><I>format_string</I><B>, --format </B><I>format_string</I>
+
+<DD>
+由用户定义任意格式字符串，可以通过该字符串从内核模块
+<I>module_file</I>
+
+的 ELF 段中获得该模块相应的值，其中包含该模块的信息。
+替换由一个百分号后跟一个由花括号括起来的标签名组成。
+<DT><B>-p</B>, <B>--parameters</B>
+
+<DD>
+显示模块所支持的有类型的参数
+<DT><B>-h</B>, <B>--help</B>
+
+<DD>
+显示帮助信息
+<DT><B>-V</B>, <B>--version</B>
+
+<DD>
+显示
+<B>modinfo</B>的版本信息
+
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+insmod">insmod</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?8+modprobe">modprobe</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?8+depmod">depmod</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?8+rmmod">rmmod</A></B>(8), 
+
+<B><A HREF="/cgi-bin/man/man2html?8+lsmod">lsmod</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?8+ksyms">ksyms</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?2+modules">modules</A></B>(2) 
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>”[中文版维护人]”</H2>
+
+<B>所罗门 &lt;<A HREF="mailto:solomen@email.com.cn">solomen@email.com.cn</A>&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>”[中文版最新更新]”</H2>
+
+<B>2001/05/01</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DL>
+<DT><A HREF="#lbAE">选项</A><DD>
+</DL>
+<DT><A HREF="#lbAF">参见</A><DD>
+<DT><A HREF="#lbAG">”[中文版维护人]”</A><DD>
+<DT><A HREF="#lbAH">”[中文版最新更新]”</A><DD>
+<DT><A HREF="#lbAI">《中国Linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,99 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of unknown</TITLE>
+</HEAD><BODY>
+<H1>unknown</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+unknown - 处理对使用不存在命令的尝试
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>unknown </B><I>cmdName </I>?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+在一个脚本尝试调用一个不存在的命令的时候，Tcl  解释器将调用这个命令。<B>unknown</B>  的实现不是 Tcl  核心的一部分；但是在 Tcl   启动的时候，它是一个被缺省定义的库过程。你可以覆盖这个缺省的 <B>unknown</B>     来改变它的功能。
+<P>
+
+如果 Tcl   解释器遇到一个命令名而没有为它一个定义了的命令，则 Tcl    检查是否存在一个叫 <B>unknown </B>的命令。如果没有这个命令，则解释器返回一个错误。如果<B>unknown</B>     命令存在，则调用它并加上由被完全替换过的名字组成的参数和给最初的不存在的命令的参数。典型的，<B>unknown</B>    命令做在库目录中查找名字是    <I>cmdName </I>的一个命令过程，把缩写的命令名扩展成全长的名字，或自动的作为子进程执行未知命令等事情。在这些情况下(比如扩展缩写) <B>unknown</B>    将轻微的改变最初的命令，接着(重)执行它。<B>unknown</B>    命令的结果被用做最初的不存在的命令的结果。
+<P>
+
+<B>unknown</B>    的缺省实现的行为如下。它首先调用 <B>auto_load</B>  库过程来装载命令，接着它用最初的参数执行最初的命令。如果自动装载失败则 <B>unknown</B>  调用 <B>auto_execok</B>     来看是否有一个叫 <I>cmd </I>的可执行文件。如果有，它调用 Tcl <B>exec</B>    命令并加上 <I>cmd</I>  和所有 <I>args</I>  作为参数。如果 <I>cmd</I>  不可自动执行，<B>unknown</B>     检查是否在顶层调用这个命令并在任何脚本的外部。如果是这样，则 <B>unknown</B>   进行两个额外的步骤。首先它参看 <I>cmd</I>   是否是下列三种形式之一:    <B>!!</B>, <B>!</B><I>event</I>, 或 <B>^</B><I>old</I><B>^</B><I>new</I>?<B>^</B>?。如果是这样，则 <B>unknown</B>  用与 <B>csh</B>  相同的方式对这些构造(construct)进行历史替换。最后，<B>unknown</B>   检查 <I>cmd</I>  是否是一个现存的 Tcl  命令的缩写。如果是，它扩展命令名并用最初的参数执行这个命令。如果上述努力都不能执行这个命令，<B>unknown</B>   返回一个错误。如果定义了全局变量 <B>auto_noload</B> ，则跳过自动装载步骤。如果定义了全局变量 <B>auto_noexec</B>，则跳过自动执行步骤。在通常的条件下，<B>unknown</B>    的返回值就是最终执行的命令的返回值。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+info">info</A>(n), <A HREF="/cgi-bin/man/man2html?n+proc">proc</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+error, non-existent command
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/09/01</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,72 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DEALLOCATE</TITLE>
+</HEAD><BODY>
+<H1>DEALLOCATE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+DEALLOCATE - 删除一个准备好的查询
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+DEALLOCATE [ PREPARE ] <I>plan_name</I>
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>DEALLOCATE</B> 用于删除前面准备好的查询。 如果你没有明确 DEALLOCATE 一个准备好的查询， 那么它在会话结束的时候删除。
+<P>
+
+<BR>&nbsp;有关已准备好的查询的更多信息。参阅&nbsp;PREPARE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+prepare">prepare</A></B>(7)].
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B>PREPARE</B><DD>
+<BR>&nbsp;这个关键字被忽略。
+<DT><B></B><I>plan_name</I><B></B><DD>
+<BR>&nbsp;要删除的已准备查询。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;SQL&nbsp;标准包括一个&nbsp;DEALLOCATE&nbsp;语句，但它只是用于嵌入的&nbsp;SQL&nbsp;客户端。
+<A NAME="lbAG">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAG">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

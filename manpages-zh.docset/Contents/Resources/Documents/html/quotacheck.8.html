@@ -1,0 +1,247 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of quotacheck</TITLE>
+</HEAD><BODY>
+<H1>quotacheck</H1>
+Section: Maintenance Commands (8)<BR>Updated: Mon Jul 17 2000<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+quotacheck - 扫描文件系统,创建,检测并修补配额文件
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览(SYNOPSIS)</H2>
+
+<B>quotacheck</B>
+
+[
+<B>-agucfinvdFR</B>
+
+]
+<I>filesystem</I>
+
+<BR>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述(DESCRIPTION)</H2>
+
+<B>quotacheck </B>
+
+察看每一个文件系统,建立当前磁盘使用情况表,并将
+此表与配额文件中相应内容比较(如果使用了选项 
+<B>-c</B>
+
+, 这一步将省略).如果发现任何不一致,同时更新配额文件和当前
+不正确的系统配额拷贝(只有当选择使用配额的文件系统时,才更新
+后者).在缺省状态下,只选择用户配额.
+<P>
+
+<B>quotacheck</B>
+
+要求每个被检测的文件系统在其根目录中都有名为
+<I>aquota.user</I>
+
+和
+<I>aquota.group</I>
+
+的配额文件.如果上述文件不存在,
+<B>quotacheck</B>
+
+将创建它(们).
+<P>
+
+<B>quotacheck</B>
+
+通常在系统启动的时候由位于
+<I>/etc/init.d</I>
+
+的初始化脚本在 <A HREF="/cgi-bin/man/man2html?8+quotaon">quotaon</A>(8) 建立磁盘配额之前运行.
+<P>
+
+强烈建议在运行
+<B>quotacheck</B>
+
+之前关掉配额,卸载文件系统或者将其设为只读模式,否则会出现
+配额损坏.
+<BR>
+
+<B>quotacheck</B>
+
+在开始扫描之前,会尝试以只读模式装配各文件系统. 当扫描完
+成时,它会以读写模式重新装配文件系统.你可以用-F选项使
+<B>quotacheck</B>
+
+在尝试以只读模式重新装配文件系统失败之后继续运行.
+<P>
+
+完成扫描所需要的时间与磁盘的使用程度成正比.
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项(OPTIONS)</H2>
+
+<DL COMPACT>
+<DT><B>-v</B>
+
+<DD>
+<B>quotacheck</B>
+
+在运行时报告其每一项操作.在缺省状态下不报告.
+<DT><B>-d</B>
+
+<DD>
+进入调试状态.这会产生许多用于调试程序的信息.输出的信息
+非常详尽,而扫描速度会减慢.
+<DT><B>-a</B>
+
+<DD>
+如果用它取代任何文件系统的名字,
+<B>quotacheck</B>
+
+将检测所有在
+<I>/etc/mtab</I>
+
+中列为可读写的文件系统的配额.在缺省状态下,只有在
+<I>/etc/mtab</I>
+
+中被列为配额的文件系统才会被检测.
+<DT><B>-u</B>
+
+<DD>
+只检测在
+<I>/etc/mtab</I>
+
+列出或指定的文件系统中的用户配额.这是缺省状态下采取的行动.
+<DT><B>-g</B>
+
+<DD>
+只检测在
+<I>/etc/mtab</I>
+
+中列出或制定的文件系统中的组配额
+<DT><B>-c</B>
+
+<DD>
+不读已经存在的配额文件.执行一次新的扫描,并且把结果保存到磁盘上.
+<DT><B>-f</B>
+
+<DD>
+强制检测所有使用配额的文件系统.不推荐使用该选项,因为其产生的
+配额文件可能会不同步.
+<DT><B>-F</B>
+
+<DD>
+强制在可读写状态下检测文件系统.当使用该选项时,请先确定在对文件
+系统进行扫描的时候,没有进程需要对该文件系统写入数据.
+<DT><B>-R</B>
+
+<DD>
+当与
+<B>-a</B>
+
+一起使用时,检测除根(root)文件系统外的其他所有文件系统.
+<DT><B>-i</B>
+
+<DD>
+交互模式.在缺省状态下,
+<B>quotacheck</B>
+
+在发现错误后即退出.在交互模式下,用户会被问取建议.
+参考选项
+<B>-n</B>.
+
+<DT><B>-n</B>
+
+<DD>
+有时候对同一个ID会找到多个结果. 通常遇到这种情况
+<B>quotacheck</B>
+
+就终止运行.该选项强制使用第一个结果(该选项在交互模式下同样有效).
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>注意 (NOTE)</H2>
+
+<B>quotacheck</B>
+
+应该只能由超级用户执行.因为未授权用户通常不能读
+一个给定文件系统上的所有目录.
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见(SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+quota">quota</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?2+quotactl">quotactl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?5+fstab">fstab</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?8+quotaon">quotaon</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+repquota">repquota</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+convertquota">convertquota</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+setquota">setquota</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+edquota">edquota</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+fsck">fsck</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+efsck">efsck</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+e2fsck">e2fsck</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+xfsck">xfsck</A></B>(8)
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>文件(FILES)</H2>
+
+<B>aquota.user</B>
+
+与用户配额位于文件系统根目录
+<BR>
+
+<B>aquota.group</B>
+
+与组配额位于文件系统根目录
+<BR>
+
+<B>/etc/mtab</B>
+
+是已装配文件系统表.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>作者(AUTHOR)</H2>
+
+Jan Kara &lt;<A HREF="mailto:jack@atrey.karlin.mff.cuni.cz">jack@atrey.karlin.mff.cuni.cz</A>&gt;
+<BR>
+
+基于旧版
+<B>quotacheck</B>
+
+作者:
+<BR>
+
+Edvard Tuinder &lt;<A HREF="mailto:ed@elm.net">ed@elm.net</A>&gt;
+<BR>
+
+Marco van Wieringen &lt;<A HREF="mailto:mvw@planets.elm.net">mvw@planets.elm.net</A>&gt;
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览(SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述(DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项(OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">注意 (NOTE)</A><DD>
+<DT><A HREF="#lbAG">参见(SEE ALSO)</A><DD>
+<DT><A HREF="#lbAH">文件(FILES)</A><DD>
+<DT><A HREF="#lbAI">作者(AUTHOR)</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

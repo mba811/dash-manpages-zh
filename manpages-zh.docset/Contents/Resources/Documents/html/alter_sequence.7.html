@@ -1,0 +1,121 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ALTER SEQUENCE</TITLE>
+</HEAD><BODY>
+<H1>ALTER SEQUENCE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ALTER SEQUENCE - 更改一个序列生成器的定义
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+ALTER SEQUENCE <I>name</I> [ INCREMENT [ BY ] <I>increment</I> ]
+    [ MINVALUE <I>minvalue</I> | NO MINVALUE ] [ MAXVALUE <I>maxvalue</I> | NO MAXVALUE ]
+    [ RESTART [ WITH ] <I>start</I> ] [ CACHE <I>cache</I> ] [ [ NO ] CYCLE ]
+  
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>ALTER SEQUENCE</B> 命令修改一个现有的序列发生器的参数。 任何没有明确在 ALTER SEQUENCE 命令里声明的参数都将保留原先的设置。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<P>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;一个要修改的序列的名字（可以有模式修饰）。
+<DT><B></B><I>increment</I><B></B><DD>
+INCREMENT BY <I>increment</I> 子句是可选的。一个正数会让序列成为递增序列，负数则成为递减序列。 如果没有声明，将沿用原来的递增值。
+<DT><B></B><I>minvalue</I><B></B><DD>
+<DT><B>NO MINVALUE</B><DD>
+<BR>&nbsp;可选的子句&nbsp;MINVALUE&nbsp;<I>minvalue</I>&nbsp;&nbsp;决定一个序列可以生成的最小的值。如果声明了&nbsp;NO&nbsp;MINVALUE，将使用缺省值，&nbsp;对于递增和递减的序列分别是&nbsp;1&nbsp;和&nbsp;-2^63-1。如果没有声明任何选项，则沿用当前的最小值。
+<DT><B></B><I>maxvalue</I><B></B><DD>
+<DT><B>NO MAXVALUE</B><DD>
+<BR>&nbsp;可选的子句&nbsp;MAXVALUE&nbsp;<I>maxvalue</I>&nbsp;决定序列的最大值。如果声明了&nbsp;NO&nbsp;MAXVALUE，则使用缺省值，对于递增和递减的序列分别是&nbsp;2^63-1&nbsp;和&nbsp;-1。如果两个选项都没有声明，&nbsp;则沿用当前的最大值。
+<DT><B></B><I>start</I><B></B><DD>
+<BR>&nbsp;可选的&nbsp;RESTART&nbsp;WITH&nbsp;<I>start</I>&nbsp;子句允许序列可以在任何地方开始。
+<DT><B></B><I>cache</I><B></B><DD>
+CACHE <I>cache</I> 选项打开序列号预分配并存储在内存缓冲的功能。最小值是 1 （也就是每次只能生成一个数值，没有缓冲）。 如果没有声明，将沿用旧的缓冲值。
+<DT><B>CYCLE</B><DD>
+<BR>&nbsp;可选的键字&nbsp;CYCLE&nbsp;可以用于允许序列在达到递增序列的&nbsp;maxvalue&nbsp;或者递减序列的&nbsp;minvalue的时候重叠使用。&nbsp;如果达到了极限，那么生成的下一个数字将分别是
+<I>minvalue</I> 或
+<I>maxvalue</I>。
+<DT><B>NO CYCLE</B><DD>
+<BR>&nbsp;如果声明了可选键字&nbsp;NO&nbsp;CYCLE，任何在序列达到其最大极限后对&nbsp;nextval&nbsp;的调用都将返回错误。&nbsp;如果既未声明&nbsp;CYCLE&nbsp;也未声明&nbsp;NO&nbsp;CYCLE，&nbsp;那么将沿用原有的循环行为。
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;从&nbsp;105&nbsp;开始重新开始一个叫&nbsp;serial&nbsp;的序列：
+<P>
+<PRE>
+ALTER SEQUENCE serial RESTART WITH 105;
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;为了避免并发的事务从同一个序列获取数值的时候被阻塞住，ALTER&nbsp;SEQUENCE&nbsp;操作从来不会回滚；&nbsp;修改马上生效并且不能恢复。
+<P>
+
+<B>ALTER SEQUENCE</B> 将不会立即影响后端的 nextval 结果，除了当前的之外， 因为它又已经缓冲了的序列号。它们只有再使用光所有已经缓冲的数值之后才能意识到改变了的序列参数。当前后端将立即被影响。
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY  兼容性</H2>
+
+<A NAME="lbAI">&nbsp;</A>
+<H3>SQL99</H3>
+
+<P>
+
+<B>ALTER SEQUENCE</B> 是 PostgreSQL  语言扩展。在 SQL99 里没有 ALTER SEQUENCE 语句。
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">NOTES 注意</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY  兼容性</A><DD>
+<DL>
+<DT><A HREF="#lbAI">SQL99</A><DD>
+</DL>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

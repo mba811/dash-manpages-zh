@@ -1,0 +1,151 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ALTER DOMAIN</TITLE>
+</HEAD><BODY>
+<H1>ALTER DOMAIN</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ALTER DOMAIN - 改变一个域的定义
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+ALTER DOMAIN <I>name</I>
+    { SET DEFAULT <I>expression</I> | DROP DEFAULT }
+ALTER DOMAIN <I>name</I>
+    { SET | DROP } NOT NULL
+ALTER DOMAIN <I>name</I>
+    ADD <I>domain_constraint</I>
+ALTER DOMAIN <I>name</I>
+    DROP CONSTRAINT <I>constraint_name</I> [ RESTRICT | CASCADE ]
+ALTER DOMAIN <I>name</I>
+    OWNER TO <I>new_owner</I> 
+  
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>ALTER DOMAIN</B> 修改一个现有域的定义。 它有几种子形式：
+<DL COMPACT>
+<DT><B>SET/DROP DEFAULT</B><DD>
+<BR>&nbsp;这些形式设置或者删除一个域的缺省值。请注意缺省只适用于随后的&nbsp;INSERT&nbsp;命令；他们并不影响使用该域已经在表中的行。
+<DT><B>SET/DROP NOT NULL</B><DD>
+<BR>&nbsp;这些形式改变一个域是否标记为允许&nbsp;NULL&nbsp;值或者是拒绝&nbsp;NULL&nbsp;值。&nbsp;在使用域的字段包含非空的值的时候，你只可以&nbsp;SET&nbsp;NOT&nbsp;NULL。
+<DT><B>ADD </B><I>domain_constraint</I><B></B><DD>
+<BR>&nbsp;这种形式向域中增加一种新的约束，使用的语法和
+CREATE DOMAIN [<B><A HREF="/cgi-bin/man/man2html?7+create_domain">create_domain</A></B>(7)] 一样。这样做只有在所有使用域的字段满足新的约束的条件下才能成功。
+<DT><B>DROP CONSTRAINT</B><DD>
+<BR>&nbsp;这种形式删除一个域上的约束。
+<DT><B>OWNER</B><DD>
+<BR>&nbsp;这种形式把域的所有者改变为另外一个用户。
+</DL>
+<P>
+
+<BR>&nbsp;要使用&nbsp;ALTER&nbsp;DOMAIN，你必须拥有该域；但是使用&nbsp;ALTER&nbsp;DOMAIN&nbsp;OWNER&nbsp;的时候你必须是数据库超级用户。
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<P>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;一个要修改的现有域的名字（可以有模式修饰）。
+<DT><B></B><I>domain_constraint</I><B></B><DD>
+<BR>&nbsp;域的新的域约束。
+<DT><B></B><I>constraint_name</I><B></B><DD>
+<BR>&nbsp;要删除的现有约束。
+<DT><B>CASCADE</B><DD>
+<BR>&nbsp;自动删除依赖这个对象的约束。
+<DT><B>RESTRICT</B><DD>
+<BR>&nbsp;如果有任何依赖对象，则拒绝删除约束。这是缺省行为。
+<DT><B></B><I>new_owner</I><B></B><DD>
+<BR>&nbsp;域的新所有者的用户名。
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;给一个域增加一个&nbsp;NOT&nbsp;NULL&nbsp;约束：
+<P>
+<PRE>
+ALTER DOMAIN zipcode SET NOT NULL;
+  
+
+</PRE>
+
+<BR>&nbsp;从一个域里删除一个&nbsp;NOT&nbsp;NULL&nbsp;约束：
+<P>
+<PRE>
+ALTER DOMAIN zipcode DROP NOT NULL;
+
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;给一个域里增加一个检查约束：
+<P>
+<PRE>
+ALTER DOMAIN zipcode ADD CONSTRAINT zipchk CHECK (char_length(VALUE) = 5);
+   
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;从一个域里删除一个检查约束：
+<P>
+<PRE>
+ALTER DOMAIN zipcode DROP CONSTRAINT zipchk;
+   
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>ALTER DOMAIN</B> 语句与 SQL99 兼容，除 OWNER 变种之外，这个变种是 PostgreSQL 的扩展。
+<A NAME="lbAH">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

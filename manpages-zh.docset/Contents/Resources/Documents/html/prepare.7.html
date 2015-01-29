@@ -1,0 +1,92 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PREPARE</TITLE>
+</HEAD><BODY>
+<H1>PREPARE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+PREPARE - 创建一个准备好的查询
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+PREPARE <I>plan_name</I> [ (<I>datatype</I> [, ...] ) ] AS <I>statement</I>
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>PREPARE</B> 创建一个已准备好的查询。 一个已准备好的查询是服务器端的对象，可以用于优化性能。 在执行 PREPARE 语句的时候，指定的查询被分析，重写以及规划。 当随后发出 EXECUTE 语句的时候， 已准备好的查询就只需要执行了。因此，分析，重写，以及规划阶段都只执行一次，而不是每次查询执行的时候都要执行一次。
+<P>
+
+<BR>&nbsp;准备好的查询可以接受参数：在它执行的时候替换到查询中的数值。&nbsp;要给一个准备好的查询声明参数，我们需要在&nbsp;PREPARE&nbsp;语句里包含一个数据类型的列表。在查询本身里，你可以按照位置来引用这些参数，&nbsp;比如&nbsp;$1，$2，等。&nbsp;在执行查询的时候，在&nbsp;EXECUTE&nbsp;语句里为这些参数声明实际的数值。&nbsp;参考&nbsp;EXECUTE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+execute">execute</A></B>(7)]&nbsp;获取更多信息。
+<P>
+
+<BR>&nbsp;准备好的查询是在本地存储的（在当前后端里），并且只是在当前数据库会话的过程中存在。&nbsp;如果客户端退出，那么准备好的查询就会被遗忘，因此我们必须在被重新使用之前重新创建。&nbsp;这也意味着一个准备好的查询不能被多个同时的数据库客户端使用；&nbsp;但是，每个客户端可以创建它们自己的已准备好的查询来使用。
+<P>
+
+<BR>&nbsp;如果一个会话准备用于执行大量类似的查询，那么已准备好的查询可以获得最大限度的性能优势。&nbsp;如果查询非常复杂，需要复杂的规划或者重写，那么性能差距将非常明显。&nbsp;比如，如果查询设计许多表的连接，或者有多种规则要求应用。如果查询的规划和重写相对简单，&nbsp;而执行起来开销相当大，那么已准备好的查询的性能优势就不那么明显。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>plan_name</I><B></B><DD>
+<BR>&nbsp;给予这个特定的已准备好查询的任意名字。它必须在一个会话中是唯一的，&nbsp;并且用于执行或者删除一个前面准备好的查询。
+<DT><B></B><I>datatype</I><B></B><DD>
+<BR>&nbsp;已准备好查询的某个参数的数据类型。要在已准备好查询内部引用这个参数，使用&nbsp;$1，$2，等。
+<DT><B></B><I>statement</I><B></B><DD>
+<BR>&nbsp;任何&nbsp;<B>SELECT</B>,&nbsp;<B>INSERT</B>,&nbsp;<B>UPDATE</B>,
+或 <B>DELETE</B> 语句。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;在一些情况下，PostgreSQL&nbsp;&nbsp;为一个已准备好的查询生成的查询规划可能还不如按照普通方法提交并执行的查询生成的规划好。&nbsp;这是因为该查询在被规划的时候（也是优化器视图判断最优查询规划的时候），&nbsp;在查询中声明的任何参数的实际数值都还不可见。&nbsp;PostgreSQL&nbsp;在表中收集数据分布的统计，&nbsp;而且可以利用查询中的常量来猜测执行查询的可能结果。&nbsp;因为这些数据在准备哪种带参数的查询的规划的时候还不可得，&nbsp;所以，选出来得规划可能是次好的。&nbsp;要检查&nbsp;PostgreSQL&nbsp;为已准备好的查询选取的查询计划，&nbsp;使用&nbsp;&nbsp;<B>EXPLAIN&nbsp;EXECUTE</B>&nbsp;。
+<P>
+
+<BR>&nbsp;有关查询规划和&nbsp;PostgreSQL&nbsp;为查询优化的目的收集的统计的更多信息，&nbsp;参阅&nbsp;ANALYZE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+analyze">analyze</A></B>(7)]
+文档。
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;SQL&nbsp;标准包含一个&nbsp;PREPARE&nbsp;语句，&nbsp;但是它只用于嵌入的&nbsp;SQL&nbsp;客户端。PostgreSQL&nbsp;实现的&nbsp;PREPARE&nbsp;语句的语法也略有不同。
+<A NAME="lbAH">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,203 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CHMOD</TITLE>
+</HEAD><BODY>
+<H1>CHMOD</H1>
+Section: User Commands  (1)<BR>Updated: November 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+chmod - 改变文件的访问权限
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总揽</H2>
+
+<B>chmod [</B><I>options</I><B>] </B><I>mode file...</I>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>POSIX 选项:</H2>
+
+<B>[-R]</B>
+
+<P>
+GNU 选项 (最短方式): 
+<B>[-cfvR] </B>
+
+<B>[--reference=rfile]</B>
+
+<B>[--help] [--version] [--]</B>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>描述</H2>
+
+使用chmod命令改变指定文件访问权限有两种方式:一种是用符号
+标记所进行更改,另一种方式是采用8进制数指定新的访问权限。
+使用下面的语法格式来使用符号改变方式
+<BR>
+
+`[ugoa...][[+-=][rwxXstugo...]...][,...]'.
+<P>
+
+在这种格式下,所带参数是一个用逗号分隔的字符列表.每个符号方式的
+改变命令以零或者字'ugoa'开始;'ugoa'控制哪些用户对该文件访问权
+限将被改变:文件的所有者(u),与文件所有者同组的用户(g),其他组的
+用户(o),所有用户(a).因此,a在这里等同于ugo.如果没有带参数,则缺
+省设置为a,运行效果相同,但是在umask中设置的位将不会受影响.
+<P>
+
+操作符'+'使得用户选择的权限被追加到每个指定文件，（操作给
+指定文件添加所选权限）;操作符'-'使得这些权限被撤消;'='使得
+指定文件只具有这些权限。
+<P>
+
+字符串'rwxXstugo' 给用户选择新的属性:(r)读权限、(w)写权限、
+(x)执行权(或对目录的访问权)，（X）只有目标文件对某些用户是
+可执行的或该目标文件是目录时才追加x属性，（s）同时设定用户
+或组ID，(t)粘滞位（保存程序的文本到交换设备上），(u)目标文件
+属主，(g)目标文件属主所在的组，(o)其他用户。（因此，'chmod g-s file'
+撤消sgid位,'chmod ug+s file'同时设置了suid和sgid位,'chmod o+s file'
+则没有进行任何设置）
+<P>
+
+POSIX并没有粘滞位的描述。它最初是指在交换设备上保留程序文本。
+现在，如果设置了目录的粘滞位，
+那么只有文件和目录的所有者可以删除该目录下的文件。
+(一般使用于类似于/tmp这样有基本写权限的目录)
+<P>
+
+数字模式是一到4个八进制数,每个数由位权为4,2,1的3位叠加而得.
+被省略掉的数字缺省设置为零. 第一位为4时为suid,2时为sgid,1时
+为粘滞位,.第二位设置文件所有者的权限:可读(4),可写(2),可执行(1);
+第三位设置了文件所在组其他用户的权限,值如上;第四位设置了其
+他组的用户的权限,值同上.
+<P>
+
+由于chmod的系统调用不支持,chomd命令不能改变符号链接的权限.
+由于符号链接的权限从不使用,所以这也不成问题.无论如何,由于
+每个符号连接都可在命令行中列出,chmod改变了所指文件的属性.
+相反,chmod在递归目录遍历时忽略所碰到的符号连接.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>POSIX 选项</H2>
+
+<B>-R</B>
+
+改变目录及目录下的内容的访问权限.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>GNU 选项</H2>
+
+<DL COMPACT>
+<DT><B>-c, --changes</B>
+
+<DD>
+只有在文件的权限确实改变时才进行详细的说明
+<DT><B>-f, --silent, --quiet</B>
+
+<DD>
+不输出权限不能改变的文件的错误信息
+<DT><B>-v, --verbose</B>
+
+<DD>
+详细说明权限的变化
+<DT><B>-R, --recursive</B>
+
+<DD>
+改变目录及其所有子目录的文件的权限
+<DT><B>--reference=</B><I>rfile</I>
+
+<DD>
+(更新在fileutils 4.0上) 改变文件的模式到rfile.
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>GNU 标准选项</H2>
+
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+在标准输出上输出帮助信息并退出
+<DT><B>--version</B>
+
+<DD>
+在标准输出上输出版本信息并退出
+<DT><B>--</B>
+
+<DD>
+终端选项列表
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>环境变量</H2>
+
+变量LANG, LC_ALL, LC_CTYPE ,LC_MESSAGES与一般情况相同.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>遵循</H2>
+
+POSIX 1003.2 只需要-R参数。使用其他选项可能无法移植。该标准没有描述
+`t'权限位。该标准没有特别要求chmod命令是否必须通过拒绝或清除suid,sgid位
+来保持一致性，也就是说，当所有的可执行位都被清除了以后，
+chomd 是否还完全保留`s'位．
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>非标准模式</H2>
+
+在上面的内容中我们讨论了't'位在目录上的用法。不同的系统对这些
+位的组合有特殊的定义。特别是Linux，继System V之后（参考System V
+接口描述（SVID）第三卷），给一个文件设置 sgid 位但又不给它设置组执行权限，
+那么就标志该文件被强制锁住．详细内容,参照文件
+/usr/src/linux/Docu-mentation/mandatory.txt
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>注意</H2>
+
+此页描述的chmod基于fileutils-4.0 package;其他版本可能会有细微
+的差别.请将修正和增加发送到<A HREF="mailto:aeb@cwi.nl">aeb@cwi.nl</A>.
+程序中的错误报告到<A HREF="mailto:fileutils-bugs@gnu.ai.mit.edu">fileutils-bugs@gnu.ai.mit.edu</A>.
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>王炎 &lt;<A HREF="mailto:wyd@263.net">wyd@263.net</A>&gt;</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/19</B>
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总揽</A><DD>
+<DT><A HREF="#lbAD">POSIX 选项:</A><DD>
+<DT><A HREF="#lbAE">描述</A><DD>
+<DT><A HREF="#lbAF">POSIX 选项</A><DD>
+<DT><A HREF="#lbAG">GNU 选项</A><DD>
+<DT><A HREF="#lbAH">GNU 标准选项</A><DD>
+<DT><A HREF="#lbAI">环境变量</A><DD>
+<DT><A HREF="#lbAJ">遵循</A><DD>
+<DT><A HREF="#lbAK">非标准模式</A><DD>
+<DT><A HREF="#lbAL">注意</A><DD>
+<DT><A HREF="#lbAM">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAN">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAO">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,778 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of NETSTAT</TITLE>
+</HEAD><BODY>
+<H1>NETSTAT</H1>
+Section: Linux Programmer's Manual (8)<BR>Updated: 19 December 2000<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+netstat - 显示网络连接，路由表，接口状态，伪装连接，网络链路信息和组播成员组。
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<P>
+<B>netstat </B>
+
+[<I>address_family_options</I>]
+
+[<B>--tcp</B>|<B>-t</B>]
+
+[<B>--udp</B>|<B>-u</B>]
+
+[<B>--raw</B>|<B>-w</B>]
+
+[<B>--listening</B>|<B>-l</B>]
+
+[<B>--all</B>|<B>-a</B>]
+
+[<B>--numeric</B>|<B>-n</B>]
+
+[<B>--numeric-hosts</B>]<B>[</B>--numeric-ports<B>]</B>[<B>--numeric-ports</B>]
+
+[<B>--symbolic</B>|<B>-N</B>]
+
+[<B>--extend</B>|<B>-e</B>[<B>--extend</B>|<B>-e]</B>]
+
+[<B>--timers</B>|<B>-o</B>]
+
+[<B>--program</B>|<B>-p</B>]
+
+[<B>--verbose</B>|<B>-v</B>]
+
+[<B>--continuous</B>|<B>-c]</B>
+
+[delay]
+
+<P>
+
+<B>netstat </B>
+
+{<B>--route</B>|<B>-r</B>}
+
+[<I>address_family_options</I>]
+
+[<B>--extend</B>|<B>-e</B>[<B>--extend</B>|<B>-e]</B>]
+
+[<B>--verbose</B>|<B>-v</B>]
+
+[<B>--numeric</B>|<B>-n</B>]
+
+[<B>--numeric-hosts</B>]<B>[</B>--numeric-ports<B>]</B>[<B>--numeric-ports</B>]
+
+[<B>--continuous</B>|<B>-c]</B>
+
+[delay]
+
+<P>
+
+<B>netstat</B>
+
+{<B>--interfaces</B>|<B>-i</B>}
+
+[<I>iface</I>]
+
+[<B>--all</B>|<B>-a</B>]
+
+[<B>--extend</B>|<B>-e</B>[<B>--extend</B>|<B>-e]</B>]
+
+[<B>--verbose</B>|<B>-v</B>]
+
+[<B>--program</B>|<B>-p</B>]
+
+[<B>--numeric</B>|<B>-n</B>]
+
+[<B>--numeric-hosts</B>]<B>[</B>--numeric-ports<B>]</B>[<B>--numeric-ports</B>]
+
+[<B>--continuous</B>|<B>-c]</B>
+
+[delay]
+
+<P>
+
+<B>netstat</B>
+
+{<B>--groups</B>|<B>-g</B>}
+
+[<B>--numeric</B>|<B>-n</B>]
+
+[<B>--numeric-hosts</B>]<B>[</B>--numeric-ports<B>]</B>[<B>--numeric-ports</B>]
+
+[<B>--continuous</B>|<B>-c]</B>
+
+[delay]
+
+<P>
+
+<B>netstat</B>
+
+{<B>--masquerade</B>|<B>-M</B>}
+
+[<B>--extend</B>|<B>-e</B>]
+
+[<B>--numeric</B>|<B>-n</B>]
+
+[<B>--numeric-hosts</B>]<B>[</B>--numeric-ports<B>]</B>[<B>--numeric-ports</B>]
+
+[<B>--continuous</B>|<B>-c]</B>
+
+[delay]
+
+<P>
+
+<B>netstat</B>
+
+{<B>--statistics</B>|<B>-s</B>}
+
+[<B>--tcp</B>|<B>-t</B>]
+
+[<B>--udp</B>|<B>-u</B>]
+
+[<B>--raw</B>|<B>-w</B>]
+
+[delay]
+
+<P>
+
+<B>netstat </B>
+
+{<B>--version</B>|<B>-V</B>}
+
+<P>
+
+<B>netstat </B>
+
+{<B>--help</B>|<B>-h</B>}
+
+<P>
+
+<I>address_family_options</I>:
+
+<P>
+
+[<B>--protocol=</B>{<B>inet</B>,<B>unix</B>,<B>ipx</B>,<B>ax25</B>,<B>netrom</B>,<B>ddp</B>}[,<B>...]</B>]
+
+[<B>--unix</B>|<B>-x</B>]
+
+[<B>--inet</B>|<B>--ip</B>]
+
+[<B>--ax25</B>]
+
+[<B>--ipx</B>]
+
+[<B>--netrom</B>]
+
+[<B>--ddp</B>]
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<B>Netstat</B>
+
+程序显示Linux网络子系统的信息。 输出信息的类型是由第一个参数控制的，就像这样：
+<A NAME="lbAE">&nbsp;</A>
+<H3>(none)</H3>
+
+无选项时,
+<B>netstat </B>
+
+显示打开的套接字.  如果不指定任何地址族，那么打印出所有已配置地址族的有效套接字。
+<A NAME="lbAF">&nbsp;</A>
+<H3>--route , -r</H3>
+
+显示内核路由表。
+<A NAME="lbAG">&nbsp;</A>
+<H3>--groups , -g</H3>
+
+显示IPv4 和 IPv6的IGMP组播组成员关系信息。
+<A NAME="lbAH">&nbsp;</A>
+<H3>--interface=</B><I>iface </I>, <B>-i</H3>
+
+显示所有网络接口列表或者是指定的
+</B><I>iface</I>
+
+。
+<A NAME="lbAI">&nbsp;</A>
+<H3>--masquerade , -M</H3>
+
+显示一份所有经伪装的会话列表。
+<A NAME="lbAJ">&nbsp;</A>
+<H3>--statistics , -s</H3>
+
+显示每种协议的统计信息。
+<A NAME="lbAK">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+<A NAME="lbAL">&nbsp;</A>
+<H3>--verbose , -v</H3>
+
+详细模式运行。特别是打印一些关于未配置地址族的有用信息。
+<A NAME="lbAM">&nbsp;</A>
+<H3>--numeric , -n</H3>
+
+显示数字形式地址而不是去解析主机、端口或用户名。
+<A NAME="lbAN">&nbsp;</A>
+<H3>--numeric-hosts</H3>
+
+显示数字形式的主机但是不影响端口或用户名的解析。
+<A NAME="lbAO">&nbsp;</A>
+<H3>--numeric-ports</H3>
+
+显示数字端口号，但是不影响主机或用户名的解析。
+<A NAME="lbAP">&nbsp;</A>
+<H3>--numeric-users</H3>
+
+显示数字的用户ID，但是不影响主机和端口名的解析。
+<A NAME="lbAQ">&nbsp;</A>
+<H3>--protocol=</B><I>family </I>, <B>-A</H3>
+
+指定要显示哪些连接的地址族(也许在底层协议中可以更好地描述)。
+</B><I>family </I>
+
+以逗号分隔的地址族列表，比如
+<B>inet</B>,
+
+<B>unix</B>,
+
+<B>ipx</B>,
+
+<B>ax25</B>,
+
+<B>netrom</B>,
+
+和
+<B>ddp</B>。
+
+这样和使用
+<B>--inet</B>,
+
+<B>--unix</B> (<B>-x</B>),
+
+<B>--ipx</B>,
+
+<B>--ax25</B>,
+
+<B>--netrom</B>,
+
+和
+<B>--ddp </B>
+
+选项效果相同。
+<P>
+
+地址族
+<B>inet</B>
+
+包括raw, udp 和tcp 协议套接字。
+<A NAME="lbAR">&nbsp;</A>
+<H3>-c, --continuous</H3>
+
+将使
+<B>netstat</B>
+
+不断地每秒输出所选的信息。
+<A NAME="lbAS">&nbsp;</A>
+<H3>-e, --extend</H3>
+
+显示附加信息。使用这个选项两次来获得所有细节。
+<A NAME="lbAT">&nbsp;</A>
+<H3>-o, --timers</H3>
+
+包含与网络定时器有关的信息。
+<A NAME="lbAU">&nbsp;</A>
+<H3>-p, --program</H3>
+
+显示套接字所属进程的PID和名称。
+<A NAME="lbAV">&nbsp;</A>
+<H3>-l, --listening</H3>
+
+只显示正在侦听的套接字(这是默认的选项)
+<A NAME="lbAW">&nbsp;</A>
+<H3>-a, --all</H3>
+
+显示所有正在或不在侦听的套接字。加上
+<B>--interfaces</B>
+
+选项将显示没有标记的接口。
+<A NAME="lbAX">&nbsp;</A>
+<H3>-F</H3>
+
+显示FIB中的路由信息。(这是默认的选项)
+<A NAME="lbAY">&nbsp;</A>
+<H3>-C</H3>
+
+显示路由缓冲中的路由信息。
+<A NAME="lbAZ">&nbsp;</A>
+<H3>delay</H3>
+
+netstat将循环输出统计信息，每隔
+<B>delay </B>
+
+秒。
+<P>
+
+<A NAME="lbBA">&nbsp;</A>
+<H2>输出 OUTPUT</H2>
+
+<P>
+
+<A NAME="lbBB">&nbsp;</A>
+<H3>活动的Internet网络连接 (TCP, UDP, raw)</H3>
+
+<A NAME="lbBC">&nbsp;</A>
+<H3>Proto </H3>
+
+套接字使用的协议。
+<A NAME="lbBD">&nbsp;</A>
+<H3>Recv-Q</H3>
+
+连接此套接字的用户程序未拷贝的字节数。
+<A NAME="lbBE">&nbsp;</A>
+<H3>Send-Q</H3>
+
+远程主机未确认的字节数。
+<A NAME="lbBF">&nbsp;</A>
+<H3>Local Address </H3>
+
+套接字的本地地址(本地主机名)和端口号。除非给定-n
+<B>--numeric</B> (<B>-n</B>)
+
+选项，否则套接字地址按标准主机名(FQDN)进行解析，而端口号则转换到相应的服务名。
+<A NAME="lbBG">&nbsp;</A>
+<H3>Foreign Address</H3>
+
+套接字的远程地址(远程主机名)和端口号。
+Analogous to &quot;Local Address.&quot;
+<A NAME="lbBH">&nbsp;</A>
+<H3>State</H3>
+
+套接字的状态。因为在RAW协议中没有状态，而且UDP也不用状态信息，所以此行留空。通常它为以下几个值之一：
+<DL COMPACT>
+<DT><I>ESTABLISHED</I>
+
+<DD>
+套接字有一个有效连接。
+<DT><I>SYN_SENT</I>
+
+<DD>
+套接字尝试建立一个连接。
+<DT><I>SYN_RECV</I>
+
+<DD>
+从网络上收到一个连接请求。
+<DT><I>FIN_WAIT1</I>
+
+<DD>
+套接字已关闭，连接正在断开。
+<DT><I>FIN_WAIT2</I>
+
+<DD>
+连接已关闭，套接字等待远程方中止。
+<DT><I>TIME_WAIT</I>
+
+<DD>
+在关闭之后，套接字等待处理仍然在网络中的分组
+<DT><I>CLOSED</I>
+
+<DD>
+套接字未用。
+<DT><I>CLOSE_WAIT</I>
+
+<DD>
+远程方已关闭，等待套接字关闭。
+<DT><I>LAST_ACK</I>
+
+<DD>
+远程方中止，套接字已关闭。等待确认。
+<DT><I>LISTEN</I>
+
+<DD>
+套接字监听进来的连接。如果不设置
+<B>--listening</B> (<B>-l</B>)
+
+或者
+<B>--all</B> (<B>-a</B>)
+
+选项，将不显示出来这些连接。
+<DT><I>CLOSING</I>
+
+<DD>
+套接字都已关闭，而还未把所有数据发出。
+<DT><I>UNKNOWN</I>
+
+<DD>
+套接字状态未知。
+</DL>
+<A NAME="lbBI">&nbsp;</A>
+<H3>User</H3>
+
+套接字属主的名称或UID。
+<A NAME="lbBJ">&nbsp;</A>
+<H3>PID/Program name</H3>
+
+以斜线分隔的处理套接字程序的PID及进程名。
+<B>--program</B>
+
+使此栏目被显示。你需要
+<I>superuser</I>
+
+权限来查看不是你拥有的套接字的信息。对IPX套接字还无法获得此信息。
+<A NAME="lbBK">&nbsp;</A>
+<H3>Timer</H3>
+
+(this needs to be written)
+<P>
+
+<A NAME="lbBL">&nbsp;</A>
+<H3>活动的UNIX域套接字</H3>
+
+<A NAME="lbBM">&nbsp;</A>
+<H3>Proto </H3>
+
+套接字所用的协议(通常是unix)。
+<A NAME="lbBN">&nbsp;</A>
+<H3>RefCnt</H3>
+
+使用数量(也就是通过此套接字连接的进程数)。
+<A NAME="lbBO">&nbsp;</A>
+<H3>Flags</H3>
+
+显示的标志为SO_ACCEPTON(显示为
+<B>ACC</B>),
+
+SO_WAITDATA 
+(<B>W</B>)
+
+或 SO_NOSPACE 
+(<B>N</B>)。
+
+如果相应的进程等待一个连接请求，那么SO_ACCECPTON用于未连接的套接字。其它标志通常并不重要
+<A NAME="lbBP">&nbsp;</A>
+<H3>Type</H3>
+
+套接字使用的一些类型：
+<DL COMPACT>
+<DT><I>SOCK_DGRAM</I>
+
+<DD>
+此套接字用于数据报(无连接)模式。
+<DT><I>SOCK_STREAM</I>
+
+<DD>
+流模式(连接)套接字
+<DT><I>SOCK_RAW</I>
+
+<DD>
+此套接字用于RAW模式。
+<DT><I>SOCK_RDM</I>
+
+<DD>
+一种服务可靠性传递信息。
+<DT><I>SOCK_SEQPACKET</I>
+
+<DD>
+连续分组套接字。
+<DT><I>SOCK_PACKET</I>
+
+<DD>
+RAW接口使用套接字。
+<DT><I>UNKNOWN</I>
+
+<DD>
+将来谁知道它的话将告诉我们，就填在这里 :-)
+</DL>
+<P>
+
+<A NAME="lbBQ">&nbsp;</A>
+<H3>State</H3>
+
+此字段包含以下关键字之一：
+<DL COMPACT>
+<DT><I>FREE</I>
+
+<DD>
+套接字未分配。
+<DT><I>LISTENING </I>
+
+<DD>
+套接字正在监听一个连接请求。除非设置
+<B>--listening</B> (<B>-l</B>)
+
+或者
+<B>--all</B> (<B>-a</B>)
+
+选项，否则不显示。
+<DT><I>CONNECTING</I>
+
+<DD>
+套接字正要建立连接。
+<DT><I>CONNECTED</I>
+
+<DD>
+套接字已连接。
+<DT><I>DISCONNECTING</I>
+
+<DD>
+套接字已断开。
+<DT><I>(empty)</I>
+
+<DD>
+套接字未连。
+<DT><I>UNKNOWN</I>
+
+<DD>
+！不应当出现这种状态的。
+</DL>
+<A NAME="lbBR">&nbsp;</A>
+<H3>PID/Program name</H3>
+
+处理此套接字的程序进程名和PID。上面关于活动的Internet连接的部分有更详细的信息。
+<A NAME="lbBS">&nbsp;</A>
+<H3>Path</H3>
+
+当相应进程连入套接字时显示路径名。
+<P>
+
+<A NAME="lbBT">&nbsp;</A>
+<H3>活动的IPX套接字</H3>
+
+(this needs to be done by somebody who knows it)
+<P>
+
+<A NAME="lbBU">&nbsp;</A>
+<H3>Active NET/ROM sockets</H3>
+
+(this needs to be done by somebody who knows it)
+<P>
+
+<A NAME="lbBV">&nbsp;</A>
+<H3>Active AX.25 sockets</H3>
+
+(this needs to be done by somebody who knows it)
+<P>
+
+<A NAME="lbBW">&nbsp;</A>
+<H2>注意 NOTES</H2>
+
+从linux 2.2内核开始
+<B>netstat -i </B>
+
+不再显示别名接口的统计信息。要获得每个别名接口的计数器，则需要用
+<B><A HREF="/cgi-bin/man/man2html?8+ipchains">ipchains</A>(8)</B>
+
+命令。 
+<P>
+<A NAME="lbBX">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+
+
+<I>/etc/services</I>
+
+-- 服务解释文件
+<P>
+<I>/proc</I>
+
+-- proc文件系统的挂载点。proc文件系统通过下列文件给出了内核状态信息。
+<P>
+<I>/proc/net/dev</I>
+
+-- 设备信息
+<P>
+<I>/proc/net/raw</I>
+
+-- RAW套接字信息
+<P>
+<I>/proc/net/tcp</I>
+
+-- TCP套接字信息
+<P>
+<I>/proc/net/udp</I>
+
+-- UDP套接字信息
+<P>
+<I>/proc/net/igmp</I>
+
+-- IGMP组播信息
+<P>
+<I>/proc/net/unix</I>
+
+-- Unix域套接字信息
+<P>
+<I>/proc/net/ipx</I>
+
+-- IPX套接字信息
+<P>
+<I>/proc/net/ax25</I>
+
+-- AX25套接字信息
+<P>
+<I>/proc/net/appletalk</I>
+
+-- DDP(appletalk)套接字信息
+<P>
+<I>/proc/net/nr</I>
+
+-- NET/ROM套接字信息
+<P>
+<I>/proc/net/route</I>
+
+-- IP路由信息
+<P>
+<I>/proc/net/ax25_route</I>
+
+-- AX25路由信息
+<P>
+<I>/proc/net/ipx_route</I>
+
+-- IPX路由信息
+<P>
+<I>/proc/net/nr_nodes</I>
+
+-- NET/ROM节点列表
+<P>
+<I>/proc/net/nr_neigh</I>
+
+-- NET/ROM邻站
+<P>
+<I>/proc/net/ip_masquerade</I>
+
+-- 伪装连接
+<P>
+<I>/proc/net/snmp</I>
+
+-- 统计
+
+<P>
+
+<A NAME="lbBY">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+route">route</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+ifconfig">ifconfig</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+ipchains">ipchains</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+iptables">iptables</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?5+proc">proc</A></B>(5)
+
+<P>
+
+<A NAME="lbBZ">&nbsp;</A>
+<H2>BUGS</H2>
+
+有时如果一个套接字在查看中发生了改变，会显示一些奇怪的信息。
+一般不会发生这种情况。
+<P>
+
+<A NAME="lbCA">&nbsp;</A>
+<H2>作者 AUTHORS</H2>
+
+netstat 程序是 Fred Baumgarten&lt;<A HREF="mailto:dc6iq@insu1.etec.uni-karlsruhe.de">dc6iq@insu1.etec.uni-karlsruhe.de</A>&gt; 的作品。
+<P>
+手册页是Matt Welsh &lt;<A HREF="mailto:mdw@tc.cornell.edu">mdw@tc.cornell.edu</A>&gt; 写的。
+<P>
+Alan Cox &lt;<A HREF="mailto:Alan.Cox@linux.org">Alan.Cox@linux.org</A>&gt; 做了一些更新，但是还需要做更多工作。
+<P>
+Tuan Hoang&lt;<A HREF="mailto:tqhoang@bigfoot.com">tqhoang@bigfoot.com</A>&gt; 又做了一些更新。
+<P>
+<BR>
+
+Bernd Eckenfels &lt;<A HREF="mailto:ecki@linux.de">ecki@linux.de</A>&gt; 彻底重写了手册页和net-tools工具包中的命令。
+<P>
+<A NAME="lbCB">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbCC">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<A NAME="lbCD">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DL>
+<DT><A HREF="#lbAE">(none)</A><DD>
+<DT><A HREF="#lbAF">--route , -r</A><DD>
+<DT><A HREF="#lbAG">--groups , -g</A><DD>
+<DT><A HREF="#lbAH">--interface=<I>iface </I>, <B>-i</A><DD>
+<DT><A HREF="#lbAI">--masquerade , -M</A><DD>
+<DT><A HREF="#lbAJ">--statistics , -s</A><DD>
+</DL>
+<DT><A HREF="#lbAK">选项 OPTIONS</A><DD>
+<DL>
+<DT><A HREF="#lbAL">--verbose , -v</A><DD>
+<DT><A HREF="#lbAM">--numeric , -n</A><DD>
+<DT><A HREF="#lbAN">--numeric-hosts</A><DD>
+<DT><A HREF="#lbAO">--numeric-ports</A><DD>
+<DT><A HREF="#lbAP">--numeric-users</A><DD>
+<DT><A HREF="#lbAQ">--protocol=<I>family </I>, <B>-A</A><DD>
+<DT><A HREF="#lbAR">-c, --continuous</A><DD>
+<DT><A HREF="#lbAS">-e, --extend</A><DD>
+<DT><A HREF="#lbAT">-o, --timers</A><DD>
+<DT><A HREF="#lbAU">-p, --program</A><DD>
+<DT><A HREF="#lbAV">-l, --listening</A><DD>
+<DT><A HREF="#lbAW">-a, --all</A><DD>
+<DT><A HREF="#lbAX">-F</A><DD>
+<DT><A HREF="#lbAY">-C</A><DD>
+<DT><A HREF="#lbAZ">delay</A><DD>
+</DL>
+<DT><A HREF="#lbBA">输出 OUTPUT</A><DD>
+<DL>
+<DT><A HREF="#lbBB">活动的Internet网络连接 (TCP, UDP, raw)</A><DD>
+<DT><A HREF="#lbBC">Proto </A><DD>
+<DT><A HREF="#lbBD">Recv-Q</A><DD>
+<DT><A HREF="#lbBE">Send-Q</A><DD>
+<DT><A HREF="#lbBF">Local Address </A><DD>
+<DT><A HREF="#lbBG">Foreign Address</A><DD>
+<DT><A HREF="#lbBH">State</A><DD>
+<DT><A HREF="#lbBI">User</A><DD>
+<DT><A HREF="#lbBJ">PID/Program name</A><DD>
+<DT><A HREF="#lbBK">Timer</A><DD>
+<DT><A HREF="#lbBL">活动的UNIX域套接字</A><DD>
+<DT><A HREF="#lbBM">Proto </A><DD>
+<DT><A HREF="#lbBN">RefCnt</A><DD>
+<DT><A HREF="#lbBO">Flags</A><DD>
+<DT><A HREF="#lbBP">Type</A><DD>
+<DT><A HREF="#lbBQ">State</A><DD>
+<DT><A HREF="#lbBR">PID/Program name</A><DD>
+<DT><A HREF="#lbBS">Path</A><DD>
+<DT><A HREF="#lbBT">活动的IPX套接字</A><DD>
+<DT><A HREF="#lbBU">Active NET/ROM sockets</A><DD>
+<DT><A HREF="#lbBV">Active AX.25 sockets</A><DD>
+</DL>
+<DT><A HREF="#lbBW">注意 NOTES</A><DD>
+<DT><A HREF="#lbBX">文件 FILES</A><DD>
+<DT><A HREF="#lbBY">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbBZ">BUGS</A><DD>
+<DT><A HREF="#lbCA">作者 AUTHORS</A><DD>
+<DT><A HREF="#lbCB">[中文版维护人]</A><DD>
+<DT><A HREF="#lbCC">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbCD">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

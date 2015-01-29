@@ -1,0 +1,88 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of tkerror</TITLE>
+</HEAD><BODY>
+<H1>tkerror</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: 4.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tkerror - 为处理后台错误而调用的命令
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>tkerror </B><I>message</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+注意: 在 Tk 4.1 中把 <B>tkerror</B> 命令重新命名为 <B>bgerror</B>，原因是事件循环(这个命令通常被它所调用)现在是Tcl 的一部分了。为了反向兼容，如果存在 <B>tkerror</B>(或一个可自动装载的 tkerror)，则当前的 Tk 版本提供的 <B>bgerror</B> 仍然尝试调用它，所以定义了错误处理器的老脚本仍然可以工作，但你应该设法修改你脚本来使用 <B>bgerror</B> 替代 <B>tkerror</B>，因为对老名字的支持在不久的将来可能不复存在。如果调用它失败，<B>bgerror</B> 将贴出(post)一个对话框显示这个错误并向用户提供栈跟踪。如果你想拥有自己的错误管理，你应该直接使用 
+<B>bgerror</B> 而不是 <B>tkerror</B>。<B>bgerror</B> 的文档可在 Tcl 的文档中获得。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+background error, reporting
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/12/26</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

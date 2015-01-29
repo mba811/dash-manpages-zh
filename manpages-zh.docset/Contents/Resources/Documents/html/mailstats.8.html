@@ -1,0 +1,120 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MAILSTATS</TITLE>
+</HEAD><BODY>
+<H1>MAILSTATS</H1>
+Section: April 25, 1996 (8)<BR>Updated: UNIX Reference Manual<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>mailstats - 显示邮件状态信息</B>
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>mailstats [-o] [-C cffile] [-f stfile]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+mailstats工具显示当前的邮件状态信息。
+<P>
+
+首先，先显示统计启动时所记录的时间，当然是以<A HREF="/cgi-bin/man/man2html?3+ctime">ctime</A>(3)所指定的格式。然后每行显
+示一个邮件程序的统计，而每行都以空格把下面这些字段分隔开：
+<P>
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT>M<DD>
+邮件程序号码
+<DT>msgsfr<DD>
+该邮件程序接收的信件数
+<DT>bytes_from   <DD>
+该邮件程序接收的信件容量
+<DT>msgsto       <DD>
+该邮件程序发出的信件数
+<DT>bytes_to     <DD>
+该邮件程序发出的信件容量
+<DT>msgsrej      <DD>
+退回的信件数
+<DT>msgsdis      <DD>
+丢弃的信件数
+<DT>Mailer       <DD>
+该邮件程序名
+
+</DL>
+</DL>
+
+<P>
+
+显示完这些后，用一行对所有邮件程序的所有值进行合计，中间用一行等号把它和上面的
+内容隔开。
+<P>
+
+该程序有以下选项：
+<DL COMPACT>
+<DT>-C<DD>
+读取指定的文件来替换缺省的sendmail的&quot;cf&quot;文件。
+<DT>-f<DD>
+读取指定的统计文件来替换在sendmail的&quot;cf&quot;文件中所指定的那个统计文件。
+<DT>-o<DD>
+在输出中不显示邮件程序名。
+</DL>
+<P>
+
+该程序运行正常返回0，出错返回大于0的任何值。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>文件</H2>
+
+<DL COMPACT>
+<DT>/etc/sendmail.cf<DD>
+缺省的sendmail的&quot;cf&quot;文件。
+<DT>/var/log/sendmail.st<DD>
+缺省的sendmail的统计文件。
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>另见</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+mailq">mailq</A>(1),<A HREF="/cgi-bin/man/man2html?8+sendmail">sendmail</A>(8)
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/02/24</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">文件</A><DD>
+<DT><A HREF="#lbAF">另见</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

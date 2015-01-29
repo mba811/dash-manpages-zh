@@ -1,0 +1,103 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of puts</TITLE>
+</HEAD><BODY>
+<H1>puts</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.5<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+puts - 向一个通道写
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>puts </B>?<B>-nonewline</B>? ?<I>channelId</I>? <I>string</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+把用 <I>string</I>  给出的字符写到用 <I>channelId </I>给出的通道中。    <I>ChannelId</I>  必须是从以前的 <B>open</B>  或 <B>socket</B>  调用返回的一个通道标识符。它必须为输出而打开。如果未指定 <I>channelId</I>  则取省为 <B>stdout</B>。<B>Puts</B>  通常在    <I>string </I>后面输出一个换行字符，但可以通过指定    <B>-nonewline</B> 开关来禁止这个特征。
+<P>
+
+<B>puts</B>   
+依照给这个通道的 <B>-translation</B>  选项的值把在输出中换行(Newline)字符转换成特定于平台的行结束序列(例如，在  PC 上换行一般被替换成回车换行(carriage-return-linefeed)序列；在  Macintoshe 上换行通常被替换成回车符(carriage-returns))。关于 <B>fconfigure</B>   如何改变输出的讨论请参见 <B>fconfigure</B>   手册条目。
+<P>
+
+Tcl 在内部缓冲输出，所以用 <B>puts</B>  写的字符可能不会在输出文件或设备上立即出现；Tcl  通常延迟输出，一直等到缓冲区满了或通道被关闭。你可以通过 <B>flush</B>     命令强制输出立即出现。
+<P>
+
+当输出缓冲被添满的时候，在所有缓冲的数据被操作系统接受以便输出之前，<B>puts</B>   命令将一直阻塞。如果 <I>channelId</I>   在非阻塞模式下，那么即使操作系统不接受这些数据，<B>puts</B>   命令也不阻塞。作为替代，Tcl  继续缓冲这些数据并在后台以底层的文件或设备可以接受的速度写它们。要使非阻塞的输出工作应用必须使用  Tcl 事件循环；否则 Tcl 不能发现文件或设备已经准备好接收更多的输出数据。在非阻塞模式下的一个通道可以缓冲任意数量的数据，这可能消耗大量的内存。要避免浪费内存，非阻塞 I/O  通常应该以事件驱动的方式用于 <B>fileevent</B>   命令(除非在通过一个文件事件得到指示，通知你通道已经准备好接收更多的数据，否则不要调用 <B>puts</B>)。  
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+file">file</A>(n), <A HREF="/cgi-bin/man/man2html?n+fileevent">fileevent</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+channel, newline, output, write
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/17   </B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,186 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of USERADD</TITLE>
+</HEAD><BODY>
+<H1>USERADD</H1>
+Section: Maintenance Commands (8)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+useradd - 帐 号 建 立 或 更 新 新 使 用 者 的 资 讯
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<DL COMPACT>
+<DT><B>useradd</B> [<B>-c</B> <I>comment</I>] [<B>-d</B> <I>home_dir</I>]<DD>
+<BR>
+
+[<B>-e</B> <I>expire_date</I>] [<B>-f</B> <I>inactive_time</I>]
+<BR>
+
+[<B>-g</B> <I>initial_group</I>] [<B>-G</B> <I>group</I>[,...]]
+<BR>
+
+[<B>-m</B> [<B>-k</B> <I>skeleton_dir</I>]] [<B>-o</B>] [<B>-p</B> <I>passwd</I>]
+<BR>
+
+[<B>-s</B> <I>shell</I>] [<B>-u</B> <I>uid</I>] <I>login</I>
+<DT><B>useradd</B> <B>-D</B> [<B>-g</B><I> default_group</I>] [<B>-b</B><I> default_home</I>]<DD>
+<BR>
+
+[<B>-e</B><I> default_expire_date</I>] [<B>-f</B><I> default_inactive</I>]
+<BR>
+
+[<B>-s</B><I> default_shell</I>]
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<A NAME="lbAE">&nbsp;</A>
+<H3>新 帐 号 建 立 </H3>
+
+当 不 加 -D 参 数 , useradd 指 令 使 用 命 令 列 来 指 定 新 帐 号 的 设 定 值 and 使 用 系 统 上 的 预 设 值 . 新 使 用 者 帐 号 将 产 生 一 些 系 统 档 案 ， 使 用 者 目 录 建 立 ， 拷 备 起 始 档 案 等 ， 这 些 均 可 以 利 用 命 令列 选 项 指 定 。 此 版 本 为 Red Hat Linux 提 供 ， 可 帮 每 个 新 加 入 的 使 用 者 建 立 个 别 的 group , 毋 须 添 加 -n 选 项 。 useradd 可 使 用 的 选 项 为
+<DL COMPACT>
+<DT><B>-c </B><I>comment</I><DD>
+新 帐 号 password 档 的 说 明 栏 。
+<DT><B>-d </B><I>home_dir</I><DD>
+新 帐 号 每 次 登 入 时 所 使 用 的 home_dir 。 预 设 值 为 default_home 内 login 名 称 ， 并 当 成 登 入 时 目 录 名 称 。
+<DT><B>-e </B><I>expire_date</I><DD>
+帐 号 终 止 日 期 。 日 期 的 指 定 格 式 为 MM/DD/YY 。
+<DT><B>-f </B><I>inactive_days</I><DD>
+帐 号 过 期 几 日 后 永 久 停 权 。 当 值 为 0 时 帐 号 则 立 刻 被 停 权 。 而 当 值 为 -1 时 则 关 闭 此 功 能 ， 预 设 值 为 -1
+<DT><B>-g </B><I>initial_group</I><DD>
+group 名 称 或 以 数 字 来 做 为 使 用 者 登 入 起 始 群 组 (group) 。 群 组 名 须 为 现 有 存 在 的 名 称 。 群 组 数 字 也 须 为 现 有 存 在 的 群 组 。 预 设 的 群 组 数 字 为 1 。
+<DT><B>-G </B><I>group,[...]</I><DD>
+定 义 此 使 用 者 为 此 一 堆 groups 的 成 员 。 每 个 群 组 使 用 ??区 格 开 来 ， 不 可 以 夹 杂 空 白 字 元 。 群 组 名 同 -g 选 项 的 限 制 。 定 义 值 为 使用 者 的 起 始 群 组 。
+<DT><B>-m</B><DD>
+使 用 者 目 录 如 不 存 在 则 自 动 建 立 。 如 使 用 -k 选 项 skeleton_dir 内 的 档 案 将 复 制 至 使 用 者 目 录 下 。 然 而 在 /etc/skel 目 录 下 的 档 案 也 会 复 制 过 去 取 代 。 任 何 在 skeleton_dir or /etc/skel 的 目 录 也 相 同 会 在 使 用 者 目 录 下 一 一 建 立 。 The -k 同 -m 不 建 立 目 录 以 及 不 复 制 任 何 档 案 为 预 设 值 。
+<DT><B>-o</B><DD>
+Allow create user with duplicate (non-unique) UID.
+<DT><B>-p </B><I>passwd</I><DD>
+The encrypted password, as returned by <B><A HREF="/cgi-bin/man/man2html?3+crypt">crypt</A></B>(3).
+The default is to disable the account.
+<DT><B>-s </B><I>shell</I><DD>
+使 用 者 登 入 后 使 用 的 shell 名 称 。 预 设 为 不 填 写 ， 这 样 系 统 会 帮 你 指 定 预 设 的 登 入 shell 。
+<DT><B>-u </B><I>uid</I><DD>
+用 者 的 ID 值 。 必 须 为 唯 一 的 ID 值 ， 除 非 用 -o 选 项 。 数 字 不 可 为 负 值。预 设 为 最 小 不 得 小 于 99 而 逐 次 增 加 。 0~99 传 统 上 是 保 留 给 系 统 帐 号 使 用 。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H3>改 变 预 设 值</H3>
+
+当 -D 选 项 出 现 时 ， useradd 秀 出 现 在 的 预 设 值 ， 或 是 藉 由 命 令 列 的 方 式 更 新 预 设 值 。 可 用 选 项 为 ∶
+<DL COMPACT>
+<DT><B>-b </B><I>default_home</I><DD>
+定 义 使 用 者 所 属 目 录 的 前 一 个 目 录 。 使 用 者 名 称 会 附 加 在 default_home 后 面 用 来 建 立 新 使 用 者 的 目 录 。 当 然 使 用 -d 后 则 此 选 项 无 效 。
+<DT><B>-e </B><I>default_expire_date</I><DD>
+使 用 者 帐 号 停 止 日 期 。
+<DT><B>-f </B><I>default_inactive</I><DD>
+帐 号 过 期 几 日 后 停 权 。
+<DT><B>-g </B><I>default_group</I><DD>
+新 帐 号 起 始 群 组 名 或 ID 。 群 组 名 须 为 现 有 存 在 的 名 称 。 群 组 I D 也 须 为 现 有 存 在 的 群 组 。
+<DT><B>-s </B><I>default_shell</I><DD>
+使 用 者 登 入 后 使 用 的 shell 名 称 。 往 后 新 加 入 的 帐 号 都 将 使 用 此 shell.
+</DL>
+<P>
+
+如 不 指 定 任 何 参 数 ， useradd 显 示 目 前 预 设 的 值 。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>NOTES</H2>
+
+The system administrator is responsible for placing the default
+user files in the <I>/etc/skel</I> directory.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>警告 CAVEATS</H2>
+
+不 可 新 增 使 用 者 于 NIS 群 组 中 。 你 必 须 在 NIS 伺 服 器 上 执 行 。
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+/etc/passwd - 使 用 者 帐 号 资 讯
+<BR>
+
+/etc/shadow - 使 用 者 帐 号 资 讯 加 密
+<BR>
+
+/etc/group - 群 组 资 讯 
+<BR>
+
+/etc/default/useradd - 定 义 资 讯
+<BR>
+
+/etc/skel - 系 统 广 义 设 定
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+chfn">chfn</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+chsh">chsh</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+passwd">passwd</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?3+crypt">crypt</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?8+groupadd">groupadd</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+groupdel">groupdel</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+groupmod">groupmod</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+userdel">userdel</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+usermod">usermod</A></B>(8)
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+Julianne Frances Haugh (<A HREF="mailto:jockgrrl@ix.netcom.com">jockgrrl@ix.netcom.com</A>)
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>软件教程之Linux Man </B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>1998.01.01</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DL>
+<DT><A HREF="#lbAE">新 帐 号 建 立 </A><DD>
+<DT><A HREF="#lbAF">改 变 预 设 值</A><DD>
+</DL>
+<DT><A HREF="#lbAG">NOTES</A><DD>
+<DT><A HREF="#lbAH">警告 CAVEATS</A><DD>
+<DT><A HREF="#lbAI">文件 FILES</A><DD>
+<DT><A HREF="#lbAJ">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAK">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAL">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAM">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAN">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

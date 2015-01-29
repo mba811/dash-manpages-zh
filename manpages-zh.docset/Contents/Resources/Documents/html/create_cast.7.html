@@ -1,0 +1,164 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE CAST</TITLE>
+</HEAD><BODY>
+<H1>CREATE CAST</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE CAST - 定义一个用户定义的转换
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE CAST (<I>sourcetype</I> AS <I>targettype</I>)
+    WITH FUNCTION <I>funcname</I> (<I>argtype</I>)
+    [ AS ASSIGNMENT | AS IMPLICIT ]
+
+CREATE CAST (<I>sourcetype</I> AS <I>targettype</I>)
+    WITHOUT FUNCTION
+    [ AS ASSIGNMENT | AS IMPLICIT ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE CAST</B> 定义一个新的转换。 一个转换说明如何在两个类型之间进行转换。比如：
+<P>
+<PRE>
+SELECT CAST(42 AS text);
+
+</PRE>
+
+通过调用前面声明的一个函数，把整数常量 42 转换成类型 text， 在这个例子里是 text(int4)。（如果没有预先定义好合适的转换，那么这个转换失败。）
+<P>
+
+两种类型可以是二进制兼容的， 意思是它们之间可以&quot;自由转换&quot;而不用调用任何函数。 这就需要那个对应的数值使用同样的内部表现形式。 比如，类型 text 和 varchar 是二进制兼容的。
+<P>
+
+缺省时，只有在明确要求转换的情况下才调用一个转换， 也就是一个明确的 CAST(x AS typename)， x::typename，或者 typename(x) 构造。
+<P>
+
+如果转换标记为 AS ASSIGNMENT，那么在赋一个数值给目标数据类型的字段的时候， 可以隐含调用它。比如，假设 foo.f1 是一个类型为 text 的字段，那么
+<P>
+<PRE>
+INSERT INTO foo (f1) VALUES (42);
+
+</PRE>
+
+如果从类型 integer 到类型 text 的转换标记为 AS ASSIGNMENT， 上面的这句就被允许，否则就不允许。（我们通常用术语赋值转换来描述这种转换。）
+<P>
+
+如果转换标记为 AS IMPLICIT，那么它就可以在任何环境里调用， 不管是赋值还是在表达式的内部。比如，因为 || 接受 text 操作数，
+<P>
+<PRE>
+SELECT 'The time is ' || now();
+
+</PRE>
+
+将只有在类型 timestamp 到 text 的转换标记为 AS IMPLICIT 的时候才允许。否则我们就必须明确书写转换， 比如
+<P>
+<PRE>
+SELECT 'The time is ' || CAST(now() AS text);
+
+</PRE>
+
+（我们通常使用术语隐含转换来描述这种类型的转换。）
+<P>
+
+在标记转换为隐含的这个问题上保守一些是明智的。 过于丰富的隐含转换路径会导致 PostgreSQL 选择让人奇怪的命令的解析， 或者是完全不能解析命令，因为存在多个可能的解析。 一条好的拇指定律是，只有在同一个通用类型表里面的那些可以保留转换信息的类型之间才标记为可隐含调用转换。 比如，从 int2 到 int4  可以合理地标记为隐含转换，但是从 float8 到 int4  可能应该是标记为赋值转换。跨类型表的转换，比如 text 到 int4，最好是只能明确地转换。
+<P>
+
+要想创建一个转换，你必须拥有源或者目的数据类型。要创建一个二进制兼容的转换， 你必须是超级用户。（做这个限制是因为一种有问题的二进制兼容转换可以很容易摧毁服务器。）
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>sourcetype</I><B></B><DD>
+转换的源数据类型。
+<DT><B></B><I>targettype</I><B></B><DD>
+转换的目标数据类型。
+<DT><B></B><I>funcname</I><B>(</B><I>argtype</I><B>)</B><DD>
+用于执行转换的函数。这个函数名可以是用模式名修饰的。 如果它没有用模式名修饰，那么该函数将从路径中找出来。 参数类型必须和源数据类型相同，结果数据类型必须匹配转换的目标类型。
+<DT><B>WITHOUT FUNCTION</B><DD>
+表示源数据类型和目标数据类型是二进制兼容的， 所以不需要什么函数来执行转换。 
+<DT><B>AS ASSIGNMENT</B><DD>
+表示转换可以在赋值环境里隐含调用。
+<DT><B>AS IMPLICIT</B><DD>
+表示这个转换可以在任何环境里隐含调用。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+用 DROP CAST 删除用户定义的转换。
+<P>
+
+请注意，如果你想能双向转换类型，那么你需要明确地定义两个方向的转换。
+<P>
+
+在 PostgreSQL 7.3 之前，如果一个函数的名字和一个数据类型相同， 并且返回该种数据类型，而且还接受另外一种类型的参数自动就是一个转换函数。 这个传统随着模式的引入以及为了能在系统表种表示二进制兼容的转换就被废弃了。 （内置的转换函数仍然遵循这个命名规则，但是它们现在必须在系统表 pg_cast 里显示为转换。）
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+要使用函数 int4(text) 创建一个从类型 text 到类型 int4的转换：
+<P>
+<PRE>
+CREATE CAST (text AS int4) WITH FUNCTION int4(text);
+
+</PRE>
+
+（这个转换在系统中已经预先定义了。）
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>CREATE CAST</B> 命令遵循 SQL99，只不过 SQL99 没有提供二进制兼容类型。AS IMPLICIT 也是 PostgreSQL  的扩展。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<P>
+
+CREATE FUNCTION [<B><A HREF="/cgi-bin/man/man2html?7+create_function">create_function</A></B>(7)],
+CREATE TYPE [<B><A HREF="/cgi-bin/man/man2html?7+create_type">create_type</A></B>(7)],
+DROP CAST [<B><A HREF="/cgi-bin/man/man2html?7+drop_cast">drop_cast</A></B>(7)]
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

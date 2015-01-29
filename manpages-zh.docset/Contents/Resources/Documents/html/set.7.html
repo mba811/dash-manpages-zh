@@ -1,0 +1,176 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SET</TITLE>
+</HEAD><BODY>
+<H1>SET</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+SET - 改变运行时参数
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+SET [ SESSION | LOCAL ] <I>name</I> { TO | = } { <I>value</I> | '<I>value</I>' | DEFAULT }
+SET [ SESSION | LOCAL ] TIME ZONE { <I>timezone</I> | LOCAL | DEFAULT }
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+SET 命令修改运行时配置参数。许多在 Section 16.4 ``Run-time Configuration'' 里面列出的运行时参数可以用 SET 在运行时设置。 （但是有些要求使用超级用户权限来修改，而其它有些则在服务器或者会话 开始之后不能修改。）请注意 SET 只影响当前会话使用的数值。
+<P>
+
+<BR>&nbsp;如果&nbsp;SET&nbsp;或者&nbsp;SET&nbsp;SESSION&nbsp;是在一个稍后退出的事务里发出的，&nbsp;那么&nbsp;SET&nbsp;命令的效果将在事务回滚的之后小时。&nbsp;（这个行为和PostgreSQL版本&nbsp;7.3&nbsp;之前的不同，&nbsp;那个时候&nbsp;SET&nbsp;的效果在后面的错误之后不会回滚。）&nbsp;一旦包围它的事务提交，那么其效果将持续到事务的结束，除非被另外一个&nbsp;SET&nbsp;覆盖。
+<P>
+
+SET LOCAL 的效果只持续到当前事务结束，不管是否提交。 一个特例是在一个事务里面的 SET 后面跟着一个 SET LOCAL：在事务结束之前只能看到 SET LOCAL  的数值，但是之后（如果事务提交），则是 SET 的值生效。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 选项</H2>
+
+<DL COMPACT>
+<DT><B>SESSION</B><DD>
+<BR>&nbsp;声明这个命令只对当前会话起作用。&nbsp;（如果&nbsp;SESSION&nbsp;或&nbsp;LOCAL&nbsp;都没出现，那么这个是缺省。）
+<DT><B>LOCAL</B><DD>
+<BR>&nbsp;声明该命令只在当前事务中有效。在&nbsp;COMMIT&nbsp;或者&nbsp;ROLLBACK&nbsp;之后，会话级别的设置将再次生效。&nbsp;请注意如果在&nbsp;BEGIN&nbsp;块之外运行，那么&nbsp;SET&nbsp;LOCAL&nbsp;&nbsp;将表现出没有作用，因为事务将立即结束。
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;可设置的运行时参数的名字。可用的参数在&nbsp;Section&nbsp;16.4&nbsp;``Run-time&nbsp;Configuration''&nbsp;和下面归档。
+<DT><B></B><I>value</I><B></B><DD>
+<BR>&nbsp;参数的新值。值可以声明为字串常量，标识符，数字，或者逗号分隔的上面这些东西的列表。&nbsp;DEFAULT&nbsp;可以用于把这些参数设置为它们的缺省值。
+</DL>
+<P>
+
+<BR>&nbsp;除了在&nbsp;Section&nbsp;16.4&nbsp;``Run-time&nbsp;Configuration''&nbsp;里面有文档记载的配置参数之外，&nbsp;还有几个只能用&nbsp;SET&nbsp;命令设置，或者是有特殊的语法的参数：
+<DL COMPACT>
+<DT><B>NAMES</B><DD>
+SET NAMES <I>value</I> 是
+SET client_encoding TO <I>value</I> 的别名。
+<DT><B>SEED</B><DD>
+<BR>&nbsp;为随机数生成器（函数&nbsp;random）设置内部的种子。&nbsp;允许的值是介于&nbsp;0&nbsp;和&nbsp;1&nbsp;之间的浮点数，然后它会被乘以&nbsp;231-1。
+<P>
+<BR>&nbsp;我们也可以通过调用函数&nbsp;setseed&nbsp;来设置种子：
+<P>
+<PRE>
+SELECT setseed(<I>value</I>);
+
+</PRE>
+
+<DT><B>TIME ZONE</B><DD>
+SET TIME ZONE <I>value</I> 是
+for SET timezone TO <I>value</I> 的一个别名。 语法 SET TIME ZONE 允许为时区设置特殊的语法。 下面是有效值的例子：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>'PST8PDT'</B><DD>
+<BR>&nbsp;加州伯克利的时区。
+<DT><B>'Portugal'</B><DD>
+<BR>&nbsp;葡萄牙时区。
+<DT><B>'Europe/Rome'</B><DD>
+<BR>&nbsp;意大利时区。
+<DT><B>-7</B><DD>
+<BR>&nbsp;UTC&nbsp;以西&nbsp;7&nbsp;小时的时区（等效于&nbsp;PDT）。
+<DT><B>INTERVAL '-08:00' HOUR TO MINUTE</B><DD>
+<BR>&nbsp;UTC&nbsp;以西&nbsp;8&nbsp;小时的时区（等效于&nbsp;PST）。
+<DT><B>LOCAL</B><DD>
+<DT><B>DEFAULT</B><DD>
+<BR>&nbsp;将时区设置为你的本地时区（服务器的操作系统缺省的那个）。
+</DL>
+</DL>
+
+</DL>
+<P>
+
+<BR>&nbsp;参阅&nbsp;Section&nbsp;8.5&nbsp;``Date/Time&nbsp;Types''&nbsp;获取有关时区的更多细节。
+<P>
+
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;函数&nbsp;set_config&nbsp;提供了等效的功能。&nbsp;参阅&nbsp;Section&nbsp;9.13&nbsp;``Miscellaneous&nbsp;Functions''&nbsp;。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;设置模式搜索路径：
+<P>
+<PRE>
+SET search_path TO my_schema, public;
+
+</PRE>
+
+<P>
+
+把日期时间风格设置为传统的 POSTGRES 风格，
+with ``day before month'' input convention:
+<P>
+<PRE>
+SET datestyle TO postgres, dmy;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;把时区设置为加州伯克力，&nbsp;使用双引号保存时区声明里大写字符的属性&nbsp;（注意这里的日期/时间格式是&nbsp;PostgreSQL）：
+<P>
+<PRE>
+SET TIME ZONE 'PST8PDT';
+SELECT current_timestamp AS today;
+
+             today
+-------------------------------
+ 2003-04-29 15:02:01.218622-07
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+SET TIME ZONE 扩展了在 SQL 标准里定义的语法。 标准只允许有一个数字时区偏移， 而 PostgreSQL 还允许完整更灵活的时区声明。 所有其它的 SET 特性都是 PostgreSQL 扩展。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+RESET [<B><A HREF="/cgi-bin/man/man2html?7+reset">reset</A></B>(7)], SHOW [<B><A HREF="/cgi-bin/man/man2html?l+show">show</A></B>(l)]
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 选项</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

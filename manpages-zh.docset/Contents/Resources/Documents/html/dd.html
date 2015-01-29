@@ -1,0 +1,354 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DD</TITLE>
+</HEAD><BODY>
+<H1>DD</H1>
+Section: User Commands  (1)<BR>Updated: November 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+dd - 转换和拷贝文件
+<A NAME="lbAC">&nbsp;</A>
+<H2>摘要</H2>
+
+<B>dd</B>
+
+<B>[--help] [--version]</B>
+
+<B>[if=</B><I>file</I><B>]</B>
+
+<B>[of=</B><I>file</I><B>]</B>
+
+<B>[ibs=</B><I>bytes</I><B>]</B>
+
+<B>[obs=</B><I>bytes</I><B>]</B>
+
+<B>[bs=</B><I>bytes</I><B>]</B>
+
+<B>[cbs=</B><I>bytes</I><B>]</B>
+
+<B>[skip=</B><I>blocks</I><B>]</B>
+
+<B>[seek=</B><I>blocks</I><B>]</B>
+
+<B>[count=</B><I>blocks</I><B>]</B>
+
+<B>[conv={ascii, ebcdic, ibm, block, unblock, lcase, ucase, swab, noerror, notrunc, sync}]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+当进行非强制的转换的时候，使用指定的输入和输出块大小拷贝文件
+（默认是从标准输入到标准输出。）
+<P>
+
+它每次从输入读取指定大小的一个块（默认是512字节）。
+如果使用
+<B>bs=</B><I>bytes</I>
+
+选项，并且没有转换，除了指定
+<B>sync</B>, <B>noerror</B>, 或 <B>notrunc</B>
+
+之外， 那么dd将把全部读到的数据（可以比请求读的少）
+写到独立的输出块去。 这个输出块的长度和读到的数据
+完全一样，除非指定使用
+<B>sync（同步）</B>
+
+转换，那样的话，数据结尾处将追加NUL字符（或空格，见下）。
+<P>
+
+其他情况下，输入的时候每次读一个块，然后处理，并将
+输出结果收集起来，最后写到指定大小的数据块中去。最
+终的输出块可能会比指定的大小短一些。
+<P>
+
+数字值选项（以字节或块为单位）后面可以跟一个乘数：
+k=1024，b=512，w=2，c=1（w和c是GNU扩展语法。最好别
+使用w，因为在system V中，它表示2，在4.2 BSD中，它
+表示4）。两个或更多的数值表达式可以通过"x"乘起来。
+GEU fileutils 4.0并且允许在数据块大小的叙述中使用
+下列乘法后缀（用bs=，cbs=，obs=）：M=1048576，G=1073741824，
+同理可得T，P，E，Z，Y。D后缀表示数值是以
+十进制表示的：kD=1000 MD=1000000 GD=1000000000等等。
+（注意，在ls、df、du命令中，M等标记的大小是由环境
+变量确定的，而在DD中，它的值是固定的。）
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>if=</B><I>file</I>
+
+<DD>
+从
+<I>file</I>
+
+中读而不是标准输入。
+<DT><B>of=</B><I>file</I>
+
+<DD>
+写到
+<I>file</I>
+
+里去而不是标准输出。除非指定
+<B>conv=notrunc</B>
+
+，否则，
+<B>dd</B>
+
+将把
+<I>file</I>
+
+截为O字节（或由
+<B>seek=</B>
+
+选项指定的大小）
+<DT><B>ibs=</B><I>bytes</I>
+
+<DD>
+一次读
+<I>bytes</I>
+
+字节。默认是512。
+<DT><B>obs=</B><I>bytes</I>
+
+<DD>
+一次写
+<I>bytes</I>
+
+字节。默认是512。
+<DT><B>bs=</B><I>bytes</I>
+
+<DD>
+一次读和写
+<I>bytes</I>
+
+字节。这将覆盖
+<B>ibs</B>
+
+和
+<B>obs</B>
+
+设定的值（并且，设定
+<B>bs</B>
+
+不等于同时将
+<B>ibs</B>
+
+和
+<B>obs</B>
+
+设为同一个值，至少在
+只使用
+<B>sync</B>,
+
+<B>noerror</B>
+
+或
+<B>notrunc</B>
+
+转换时是这样的。因为bs规定，每个输入块都应作为单独
+的数据块拷贝到输出，而不把较短的块组合到一起）。
+<DT><B>cbs=</B><I>bytes</I>
+
+<DD>
+为
+<B>block</B>
+
+转换和
+<B>unblock</B>
+
+转换指定转换块的大小。
+<DT><B>skip=</B><I>blocks</I>
+
+<DD>
+在拷贝之前，跳过输入文件的前
+<I>blocks</I>
+
+块，每块大小为
+<B>ibs</B>-byte
+
+字节。
+<DT><B>seek=</B><I>blocks</I>
+
+<DD>
+在拷贝之前，跳过输出文件的前
+<I>blocks</I>
+
+块，每块大小为
+<B>obs</B>-byte
+
+字节。
+<DT><B>count=</B><I>blocks</I>
+
+<DD>
+只拷贝输入文件的前
+<I>blocks</I>
+
+块（每块的大小为
+<B>ibs</B>-byte
+
+字节），而不是全部内容，直到文件末尾。
+<DT><B>conv=</B><I>转换[,</I><B>转换]...</B>
+
+<DD>
+将文件按
+<I>转换</I>
+
+参数指定的方式转换（在","两边没有空格）。
+<DL COMPACT><DT><DD>
+<P>
+
+转换方式包括：
+<P>
+
+<DL COMPACT>
+<DT><B>ascii</B>
+
+<DD>
+将EBCDIC转换成ascii。
+<DT><B>ebcdic</B>
+
+<DD>
+将ascii转换成ebcdic。
+<DT><B>ibm</B>
+
+<DD>
+将ascii转换成alternative ebcdic。
+<DT><B>block</B>
+
+<DD>
+每一行输入，无论长短，输出都是
+<B>cbs</B>
+
+字节，并且其中的"换行"（NEWLINE，即c中的'）用
+空格替换。如有必要，行尾会填充空格。
+<DT><B>unblock</B>
+
+<DD>
+用"换行"替换每个输入块（
+<B>cbs</B>
+
+字节大小）末尾的空格。
+<DT><B>lcase</B>
+
+<DD>
+将大写字母转换成小写。
+<DT><B>ucase</B>
+
+<DD>
+将小写字母转换成大写。
+<DT><B>swab</B>
+
+<DD>
+交换每对输入字节。如果读入的字节数是奇数，最后
+一个字节只是简单的复制到输出（因为没有能跟它交换的
+字节了）（POSIX 1003.26，PASC翻译1003.2 3号和4号）。
+<DT><B>noerror</B>
+
+<DD>
+发生读错误时，继续进行。
+<DT><B>notrunc</B>
+
+<DD>
+不截断输出文件。
+<DT><B>sync</B>
+
+<DD>
+用0填充到每个输入块的末尾，使其大小为
+<B>ibs</B>
+
+字节。
+</DL>
+</DL>
+
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>GNU标准选项</H2>
+
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+将用法信息打印到标准输出，并成功退出。
+<DT><B>--version</B>
+
+<DD>
+将版本信息打印到标准输出，并成功退出。
+<DT><B>--</B>
+
+<DD>
+结束选项列表。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>环境变量</H2>
+
+LANG, LC_ALL, LC_CTYPE和LC_MESSAGES具有其通常含义。
+<A NAME="lbAH">&nbsp;</A>
+<H2>遵循标准</H2>
+
+POSIX 1003.2
+<A NAME="lbAI">&nbsp;</A>
+<H2>举例</H2>
+
+磁带机通常不能接受任意大小的数据块，当最后一个数据片
+段不能充满整个块时，
+<B>dd</B>
+
+将出现I/O错误。用'dd if=myfile of=/dev/mytape conv=sync'
+就可以使全部内容存到磁带上。当然，这样做，把文件从磁
+带上读回时回产生一个稍大些的文件，因为其尾部填充了一
+些NUL（空字符）。
+<A NAME="lbAJ">&nbsp;</A>
+<H2>注</H2>
+
+本手册页描述了fileutils-4.0软件包中的
+<B>dd</B>
+
+命令。其他版
+本的dd会与此稍有不同。有关更正和补充可以发帖到中国linux
+论坛-man手册版。报告程序中的错误，请给
+fileutils-bugs2gnu.ai.wit.edu
+发邮件。
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>astonia &lt;email&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/19</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">摘要</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">GNU标准选项</A><DD>
+<DT><A HREF="#lbAG">环境变量</A><DD>
+<DT><A HREF="#lbAH">遵循标准</A><DD>
+<DT><A HREF="#lbAI">举例</A><DD>
+<DT><A HREF="#lbAJ">注</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

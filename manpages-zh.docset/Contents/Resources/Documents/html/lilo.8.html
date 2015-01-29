@@ -1,0 +1,254 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LILO</TITLE>
+</HEAD><BODY>
+<H1>LILO</H1>
+Section: Maintenance Commands (8)<BR>Updated: 28 July 1995<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+lilo - 安装引导装入程序
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总述</H2>
+
+主要功能:
+<P>
+
+<B>” /sbin/lilo”</B>
+
+- 安装引导装入程序
+<P>
+
+辅助用途:
+<P>
+
+<B>”/sbin/lilo –q”</B>
+
+- 查询影射表
+<BR>
+
+<B>”/sbin/lilo –R”</B>
+
+- 设置下次启动的默认命令行
+<BR>
+
+<B>”/sbin/lilo –I”</B>
+
+- 查询当前内核的路径
+<BR>
+
+<B>”/sbin/lilo {-u|-U}”</B>
+
+- 卸载lilo
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>使用说明</H2>
+
+<P>
+
+lilo 安装一个你在下一次启动时被激活的引导装入程序
+它有多项的选择.
+<P>
+
+<DL COMPACT>
+<DT><B>-v</B>
+
+<DD>
+增加冗余.给出一个或更多的-v选项
+使lilo 更详细.
+<DT><B>-q</B>
+
+<DD>
+列表当前已被影射的文件.
+<B>lilo</B>
+
+维护着一个文件,缺省的是
+<I>”/boot/map”,</I>
+
+包含了启动内核的名称和定位（位置）。
+这个选项列出在其中的名字.
+<B>”-m</B><I>“</I><B>影射文件名</B>
+
+使用指定的影射文件代替默认的.
+<DT><B>”-C”</B><I>配置文件名</I>
+
+<DD>
+<B>lilo</B>
+
+从这个文件中读取有关影射文件的指令, 省缺的是
+<I>”/etc/lilo.conf”.</I>
+
+这个选项能使用一个指定的非默认的配置文件.
+<DT><B>”-d</B><I>“</I><B>延迟</B>
+
+<DD>
+如果你有几个指定的内核, 在启动时按下Shift 键, 引导程序会提供一个你选
+择使用哪个系统内核去启动的机会. 一个预期的时间后列表的第一项将被引导. 
+这个选项指定一个以十分之一秒为单位的超时延迟.
+<DT><B>”-D</B><I>”</I><B>标记</B>
+
+<DD>
+使用给出标记的内核去代替第一个来作为默认的引导.
+<DT><B>”-r</B><I>”</I><B>root-目录</B>
+
+<DD>
+做任何（修改）之前，改变root的位置到指出的目录.
+习惯上用于纠正从软盘启动的安装.
+<DT><B>”-t</B><I>”</I>
+
+<DD>
+只进行测试. 不会真正的写入新的启动或影射文件.
+和<B>-v</B>一起使用得知.B lilo
+大约有什么要做.
+<DT><B>”-c ”</B>
+
+<DD>
+影射压缩.将合并读入从临近部分的请求.
+加速启动(尤其从软盘).
+<DT><B>”-f</B><I>”</I><B>disk-tab</B>
+
+<DD>
+指定磁盘参数文件. (省缺的是
+<I>/etc/disktab.)</I>
+
+<DT><B>”-i</B><I>”</I><B>boot-sector</B>
+
+<DD>
+指定一个文件作为boot sector使用.(省缺的是 
+<I>/boot/boot.b.)</I>
+
+<DT><B>”-l</B><I>”</I>
+
+<DD>
+产生线性sector地址代替sector/head/cylinder 地址.
+<DT><B>”-P</B><I>”</I><B>”{fix|ignore}”</B>
+
+<DD>
+修理(或忽略)被破坏的分区表, 例如,
+分区表用线性的和sector/head/cylinder 地址不协调.
+<DT><B>”-s</B><I>”</I><B>save-file</B>
+
+<DD>
+当
+<B>lilo</B>
+
+覆盖 boot sector, 保存旧的内容在一个文件里,
+省缺的是
+<I>/boot/boot.NNNN</I>
+
+这个NNNN依赖与设备.
+这选项为boot sector 指定一个后选的挽救文件.
+(或者, 和
+<B>-u</B> 一起使用,从哪里恢复boot sector.)
+<DT><B>”-S</B><I>”</I><B>挽救文件</B>
+
+<DD>
+通常地,
+<B>lilo</B>
+
+不会覆盖已存在的挽救文件.
+这个选项就是告诉它可以覆盖（这个文件）.
+<DT><B>”-u</B><I>”</I><B>device-name</B>
+
+<DD>
+卸载
+<B>lilo,</B>
+
+通过检查时间标记，拷回一个保存了的boot sector.
+<DT><B>”-U</B><I>”</I><B>device-name</B>
+
+<DD>
+同上, 但不检查时间标记.
+<DT><B>”-R</B><I>”</I><B>command</B><I>line</I>
+
+<DD>
+设定下次启动的命令行.boot loader会删除这行的:
+这是个一次性命令.代表性的用在reboot 脚本, 只在调用shutdown -r'之前使
+用.
+<DT><B>”-I</B><I>”</I><B>标记</B>
+
+<DD>
+启动后可以在环境变量BOOT_IMAGE 找到这个标记.
+在标准输出设备上，这个命令列出相应的路径名.
+<DT><B>”-V”</B>
+
+<DD>
+列出版本号.
+</DL>
+<P>
+
+上面的命令行选项相对应于下面在配置文件指出的关键字。
+<DL COMPACT>
+<DT><DD>
+<PRE>
+    1.1
+        -b bootdev boot=bootdev
+        -c compact
+        -d dsec delay=dsec
+        -D label default=label
+        -i bootsector install=bootsector
+        -f file disktab=file
+        -l linear
+        -m mapfile map=mapfile
+        -P fix fix-table
+        -P ignore ignore-table
+        -s file backup=file
+        -S file force-backup=file
+        -v verbose=level
+</PRE>
+
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>”请参阅”</H2>
+
+<A HREF="/cgi-bin/man/man2html?5+lilo.conf">lilo.conf</A>(5).
+<BR>
+
+lilo 分发的非常广泛的文档.
+<A NAME="lbAF">&nbsp;</A>
+<H2>”作者”</H2>
+
+Werner Almesberger (<A HREF="mailto:almesber@bernina.ethz.ch">almesber@bernina.ethz.ch</A>).
+<BR>
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>”[中文版维护人]”</H2>
+
+<B>Scorpio &lt;<A HREF="mailto:rawk@chinese.com">rawk@chinese.com</A>&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>”[中文版最新更新]”</H2>
+
+2000/10/9
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总述</A><DD>
+<DT><A HREF="#lbAD">使用说明</A><DD>
+<DT><A HREF="#lbAE">”请参阅”</A><DD>
+<DT><A HREF="#lbAF">”作者”</A><DD>
+<DT><A HREF="#lbAG">”[中文版维护人]”</A><DD>
+<DT><A HREF="#lbAH">”[中文版最新更新]”</A><DD>
+<DT><A HREF="#lbAI">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,93 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of TTYTYPE</TITLE>
+</HEAD><BODY>
+<H1>TTYTYPE</H1>
+Section: Linux Programmer's Manual(Linux程序员手册) (5)<BR>Updated: 1993年7月24日<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+ttytype - 终端设备映射的默认终端类型
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<I>/etc/ttytype</I>
+
+文件把termcap/terminfo中的终端类型名与tty行关联起来.每行包括一种终端类型,后面跟着空格,然后是tty名(不带
+<I>/dev/</I> ) 前缀.
+
+<P>
+这种关联被
+<B><A HREF="/cgi-bin/man/man2html?1+tset">tset</A></B>(1)
+
+程序用来针对用户当前的tty设置环境变量TERM为默认终端名.
+<P>
+这项功能设计是为了Unix微机连接的字符类终端发挥传统分时作业的特色.这在现代的Unix工作站和个人Unix机上很少使用.
+<A NAME="lbAD">&nbsp;</A>
+<H2>EXAMPLE(示例)</H2>
+
+<I>/etc/ttytype</I>
+
+为:
+<DL COMPACT><DT><DD>
+<P>
+con80x25 tty1
+<BR>
+
+vt320 ttys0
+<P>
+</DL>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>FILES(相关文件)</H2>
+
+<DL COMPACT>
+<DT><I>/etc/ttytype</I>
+
+<DD>
+tty定义文件.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+getty">getty</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?5+terminfo">terminfo</A></B>(5), <B><A HREF="/cgi-bin/man/man2html?5+termcap">termcap</A></B>(5)
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/11/01</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAD">EXAMPLE(示例)</A><DD>
+<DT><A HREF="#lbAE">FILES(相关文件)</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

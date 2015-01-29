@@ -1,0 +1,183 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of uuencode</TITLE>
+</HEAD><BODY>
+<H1>uuencode</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+uuencode - 对二进制文件编码
+<P>
+
+uudecode - 解码由 uuencode 创建的文件
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>uuencode</B>
+
+[-m] [ file ] name
+<P>
+
+<B>uudecode</B>
+
+[-o outfile] [ file ]...
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<I>Uuencode</I>
+
+和
+<I>uudecode</I>
+
+用于 在 某些 只能 传输 简单 ASCII 数据 的 信道 上 传送 二进制文件.
+<P>
+
+<I>Uuencode</I>
+
+读入 文件
+<I>file</I>
+
+(缺省为 标准输入)的 内容, 编码后 的 文件 送往 标准输出.
+编码 只使用 可显示 ASCII 字符, 同时 将 文件访问模式 和 目标文件名
+<I>name</I>
+
+存放在 目标文件 中, 供
+<I>uudecode</I>
+
+使用. 如果 目标文件名
+<I>name</I>
+
+是 标准输出
+<I>/dev/stdout ,</I>
+
+Uuencode 将把 生成结果 送往 标准输出. 缺省标准 使用 UU 编码格式.
+如果 在 命令行上 指定了 
+<I>-m</I>
+
+选项, Uuencode 就 改用
+<B>base64</B>
+
+编码格式.
+<P>
+<P>
+
+<I>Uudecode</I>
+
+把 uuencode 编码过的 文件
+<I>file</I>
+
+(缺省是 标准输入) 解码成 原来的 形式. 产生的 文件 命名为
+<I>name</I>
+
+(如果 使用了 -o 选项, 文件名 就是
+<I>outfile </I>
+
+), 拥有 原来的 文件访问模式, 但会 去除 setuid
+和 可执行 位. 如果
+<I>outfile</I>
+
+或
+<I>name</I>
+
+是 /dev/stdout, Uudecode 将把 生成结果 送往 标准输出.
+<I>Uudecode</I>
+
+忽略 任何(多余的) 前后行. 它 能够 自动 识别 编码格式, 并采用 相应的 解码方案.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>例子 (EXAMPLES)</H2>
+
+下面的 例子 显示了 打包 一棵 源文件树, 压缩, UU 编码, 然后 寄给
+另一个 系统 的 用户.
+在 目的地 运行
+<I>uudecode</I>
+
+时 将 产生 ``src_tree.tar.Z'' 文件, 展开 这个 文件 就可以 还原成
+原来的 文件树.
+<P>
+
+<DL COMPACT>
+<DT><DD>
+<PRE>
+tar cf - src_tree | compress |
+uuencode src_tree.tar.Z | mail sys1!sys2!user
+</PRE>
+
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+compress">compress</A>(1), <A HREF="/cgi-bin/man/man2html?1+mail">mail</A>(1), <A HREF="/cgi-bin/man/man2html?1+uucp">uucp</A>(1), <A HREF="/cgi-bin/man/man2html?5+uuencode">uuencode</A>(5)
+<A NAME="lbAG">&nbsp;</A>
+<H2>标准 (STANDARDS)</H2>
+
+本实现遵循 P1003.2b/D11.
+<A NAME="lbAH">&nbsp;</A>
+<H2>BUGS</H2>
+
+如果 使用了 -o 选项 的 同时 要求 解码 一个以上 的 文件
+<I>file ,</I>
+
+或者 这些 已经 编码的 文件 中, 出现了 相同的 文件名
+<I>name , </I>
+
+其结果 可能 不是 你 想要的.
+<P>
+<P>
+
+用 UU 格式 编码 的 文件 增大 37%, 用 base64 格式 (3编码成4字节, 加上控制信息)
+编码 的 文件 增大 35%
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>历史 (HISTORY)</H2>
+
+<I>uuencode</I>
+
+命令始于 BSD 4.0.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">例子 (EXAMPLES)</A><DD>
+<DT><A HREF="#lbAF">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAG">标准 (STANDARDS)</A><DD>
+<DT><A HREF="#lbAH">BUGS</A><DD>
+<DT><A HREF="#lbAI">历史 (HISTORY)</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

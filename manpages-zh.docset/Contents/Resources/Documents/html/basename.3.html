@@ -1,0 +1,210 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DIRNAME</TITLE>
+</HEAD><BODY>
+<H1>DIRNAME</H1>
+Section: Linux Programmer's Manual (3)<BR>Updated: 2000-12-14<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+dirname, basename - 分析路径成员
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<PRE>
+<B>#include &lt;<A HREF="file:///usr/include/libgen.h">libgen.h</A>&gt;</B>
+
+<B>char *dirname(char </B><I>*path</I><B>);</B>
+<B>char *basename(char </B><I>*path</I><B>);</B>
+</PRE>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>dirname</B>
+
+和
+<B>basename</B>
+
+把 以 null 结尾 的 路径名 分解为 目录 和 文件名. 一般情况下, 
+<B>dirname</B>
+
+返回 路径名 的 前面部分, 直到 (但不包括) 最后一个 '/', 而
+<B>basename</B>
+
+则 返回 最后一个 '/' 后面 的 内容. 如果 路径名 以 '/' 结尾, 
+该 '/' 被认为 不是 路径名 的 一部分.
+<P>
+<P>
+
+如果 路径名
+<I>path</I>
+
+不包含 斜杠 '/', 
+<B>dirname</B>
+
+返回 字符串 &quot;.&quot;, 而
+<B>basename</B>
+
+返回
+<I>path</I>
+
+的 副本. 如果 路径名
+<I>path</I>
+
+是 &quot;/&quot;, 则
+<B>dirname</B>
+
+和
+<B>basename</B>
+
+均 返回 &quot;/&quot;. 如果 路径名
+<I>path</I>
+
+是 NULL 指针 或 指向 空串, 则
+<B>dirname</B>
+
+和
+<B>basename</B>
+
+均 返回 &quot;.&quot;.
+<P>
+
+把
+<B>dirname</B>
+
+返回的 字符串, &quot;/&quot;, 和
+<B>basename</B>
+
+返回的 字符串 连接 起来, 能够 产生 一个 完整 的 路径名.
+<P>
+
+无论
+<B>dirname</B>
+
+还是
+<B>basename</B>
+
+都 有可能 更改 
+<I>path</I>
+
+的 内容, 因此 如果 需要 保护 原有 路径名, 应该 传送 副本 作为 参数. 此外,
+<B>dirname</B>
+
+和
+<B>basename</B>
+
+返回的 指针 可能 指向 一块 静态分配 的 内存, 会被 下次 调用 覆盖.
+<P>
+
+下面 的 例子 (摘自 SUSv2) 展示了 对于 不同的 路径名,
+<B>dirname</B>
+
+和
+<B>basename</B>
+
+返回 的 字符串:
+<P>
+<PRE>
+<B>path            dirname         basename</B>
+&quot;/usr/lib&quot;      &quot;/usr&quot;          &quot;lib&quot;
+&quot;/usr/&quot;         &quot;/&quot;             &quot;usr&quot;
+&quot;usr&quot;           &quot;.&quot;             &quot;usr&quot;
+&quot;/&quot;             &quot;/&quot;             &quot;/&quot;
+&quot;.&quot;             &quot;.&quot;             &quot;.&quot;
+&quot;..&quot;            &quot;.&quot;             &quot;..&quot;
+</PRE>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>示例 (EXAMPLE)</H2>
+
+<PRE>
+char *dirc, *basec, *bname, *dname;
+char *path = &quot;/etc/passwd&quot;;
+
+dirc = strdup(path);
+basec = strdup(path);
+dname = dirname(dirc);
+bname = basename(basec);
+printf(&quot;dirname=%s, basename=%s\n&quot;, dname, bname);
+free(dirc);
+free(basec);
+</PRE>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>返回值 (RETURN VALUE)</H2>
+
+<B>dirname</B>
+
+和
+<B>basename</B>
+
+均 返回 以 null 结尾的 字符串 的 指针.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>BUGS</H2>
+
+在 glibc 的 各个 版本 中, 直到 (并包括) 2.2.1,
+<B>dirname</B>
+
+无法 正确 处理 以 '/' 字符 结尾 的 路径名. 如果 参数 是 NULL 指针,
+他 还会 产生 段冲突 (segmentation violation).
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>遵循 (CONFORMING TO)</H2>
+
+SUSv2
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+dirname">dirname</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+basename">basename</A></B>(1)
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">示例 (EXAMPLE)</A><DD>
+<DT><A HREF="#lbAF">返回值 (RETURN VALUE)</A><DD>
+<DT><A HREF="#lbAG">BUGS</A><DD>
+<DT><A HREF="#lbAH">遵循 (CONFORMING TO)</A><DD>
+<DT><A HREF="#lbAI">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

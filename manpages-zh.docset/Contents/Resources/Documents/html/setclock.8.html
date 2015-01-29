@@ -1,0 +1,68 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SETCLOCK</TITLE>
+</HEAD><BODY>
+<H1>SETCLOCK</H1>
+Section: Maintenance Commands (8)<BR>Updated: 1996年11月12日 sun<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>setclock - 用系统时间来设置硬件时间 </B> 
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>setclock</B>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>setclock</B> 用当前系统时钟存储的时间设置系统的硬件时间.
+它先读取 <I>/etc/sysconfig/clock</I> 的时间格式, 时间存储前应该转化成这种格式. 
+Red Hat 的标准启动脚本和 <B><A HREF="/cgi-bin/man/man2html?8+timeconfig">timeconfig</A>(8)</B> 也是用的这种方法 .
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>相关文件</H2>
+
+
+<DL COMPACT>
+<DT><I>/etc/sysconfig/clock</I> <DD>
+用来配置时间的格式. 
+<P>
+
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>另见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+clock">clock</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+timeconfig">timeconfig</A></B>(8)
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>作者</H2>
+
+<PRE>
+Erik Troan &lt;<A HREF="mailto:ewt@redhat.com">ewt@redhat.com</A>&gt;
+</PRE>
+
+<BR>&nbsp;
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">相关文件</A><DD>
+<DT><A HREF="#lbAF">另见</A><DD>
+<DT><A HREF="#lbAG">作者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

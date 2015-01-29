@@ -1,0 +1,129 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of encoding</TITLE>
+</HEAD><BODY>
+<H1>encoding</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+encoding - 操纵编码
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>encoding </B><I>option</I> ?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>介绍 INTRODUCTION</H2>
+
+<P>
+
+在 Tcl 中字符串使用16位的 Unicode 字符来编码。不同的操作系统接口或应用可以生成用其他编码如 Shift-JIS 的字符串。<B>encoding</B>  命令是 Unicode  和其他格式之间的桥梁。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+依照<I>option</I>，完成与编码相关一系列操作之一。合法的 <I>option</I>s有:     
+<DL COMPACT>
+<DT><B>encoding convertfrom ?</B><I>encoding</I>? <I>data</I><DD>
+把 <I>data</I>  从特定的 <I>encoding</I>(编码)转换成 Unicode。在 <I>data</I> 中的字符被作为二进制数据对待，其中的每个字符的低8位被作为一个单一的字节接受。结果的字节序列被作为一个用特定的 <I>encoding </I>编码的字符串。如果未指定 <I>encoding</I>，使用当前的系统编码。    
+<DT><B>encoding convertto ?</B><I>encoding</I>? <I>string</I><DD>
+把 <I>string</I>  从 Unicode 转换成特定的 <I>encoding</I>编码。结果是表示转换后的字符串的一个字节序列。每个字节都存储在一个 Unicode 字符的低8位中。如果未指定 <I>encoding</I>，使用当前的系统编码。
+<DT><B>encoding names</B><DD>
+返回包含当前可获得的所有编码的名字的一个列表。      
+<DT><B>encoding system</B> ?<I>encoding</I>?<DD>
+设置系统编码为 <I>encoding</I>。如果省略了 <I>encoding</I>，则命令返回当前系统编码。在 Tcl 向系统调用传递字符串时使用系统编码。 
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>范例 EXAMPLE</H2>
+
+<P>
+
+一个常见的实践是用产生 euc-jp 编码输出的文本编辑器来写脚本文件，它把 ASCII  字符表示成一个单一的字节而把日文字符表示成两字节。这样通过简单的键入对应于非 ASCII 字符的文字串便可在脚本中某个位置上嵌入它。但是,  由于 <B>source</B>  命令总是使用 ISO8859-1 编码来读文件，Tcl  将把文件中的每个字节作为一个单独的字符对待并映射成在 Unicode 中的 00 (代码)页(中的字符)。结果的 Tcl 字符串不包含想要的日文字符。转而，它将包含相应与原始的字符串的每个字节的一个Latin-1 字符的序列。<B>encoding</B>  命令将可被用于把这个字符串转换成想要的日文 Unicode 字符。例如,     
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+   set s [encoding convertfrom euc-jp &quot;\xA4\xCF&quot;]
+
+</PRE>
+
+</DL>
+
+
+将返回 Unicode 字符串 &quot;\u306F&quot;，它是 Hiragana 字母 HA。     
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?3+Tcl_GetEncoding">Tcl_GetEncoding</A>(3)
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+encoding
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/07/08 </B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">介绍 INTRODUCTION</A><DD>
+<DT><A HREF="#lbAE">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAF">范例 EXAMPLE</A><DD>
+<DT><A HREF="#lbAG">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

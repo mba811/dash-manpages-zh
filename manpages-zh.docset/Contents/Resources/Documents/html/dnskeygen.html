@@ -1,0 +1,293 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DNSKEYGEN</TITLE>
+</HEAD><BODY>
+<H1>DNSKEYGEN</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+<BR>BSD mandoc<BR>
+BSD 4
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>dnskeygen</B>
+
+ - 针对DNS安全性所生成的公共,私有和共享的密钥
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>dnskeygen</B>
+
+[-
+
+
+[<B>DHR</B>
+
+]
+
+<I>size</I>
+
+]
+[-<B>F</B>
+
+]
+
+-<B></B>[<B>zhu</B>
+
+]
+
+
+
+[-<B>a</B>
+
+]
+
+[-<B>c</B>
+
+]
+
+[-<B>p </B><I>num</I>
+
+
+
+]
+
+[-<B>s </B><I>num</I>
+
+
+
+]
+
+-<B>n </B><I>name</I>
+
+
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<B>Dnskeygen</B>
+
+(DNS密钥生成器)是一个用来在DNS(Domain Name System)内部
+生成和维护针对DNS安全性的密钥的工具.
+<B>Dnskeygen</B>
+
+可以生成鉴别区域数据的公共和私有密钥,以及用于请求/事务处理签名的
+共享密钥.
+<DL COMPACT>
+<P>
+
+<DT><B>-D</B>
+
+
+<DD>
+Dnskeygen会生成一个
+<B>DSA/DSS</B>
+
+密钥.
+``size''
+
+必为[512, 576, 640, 704, 768, 832, 896, 960, 1024]中的一个.
+<DT><B>-H</B>
+
+
+<DD>
+Dnskeygen会生成一个
+<B>HMAC-MD5</B>
+
+密钥.
+``size''
+
+必定在128到504之间.
+<DT><B>-R</B>
+
+
+<DD>
+Dnskeygen会生成一个
+<B>RSA</B>
+
+密钥.
+``size''
+
+必定在512到4096之间.
+<DT><B>-F</B>
+
+
+<DD>
+<B>(只用于RSA)</B>
+
+在生成密钥中使用大指数.
+<DT><B>-z -h -u</B>
+
+
+
+
+
+
+<DD>
+这些标识分别定义了所生成密钥的类型为区域(DNS有效性)密钥,
+主机(主机或服务)密钥还是用户(如email)密钥.
+<DT><B>-a</B>
+
+
+<DD>
+指明该密钥
+<B>不能</B>
+
+用作鉴别.
+<DT><B>-c</B>
+
+
+<DD>
+指明该密钥
+<B>不能</B>
+
+用作加密.
+<DT><B>-p </B><I>num</I>
+
+
+
+
+<DD>
+设置密钥的协议字段为
+<I>num</I>
+
+;默认为
+<B>3</B>
+
+(DNSSEC)如果指定了
+``-<B>z</B>
+
+''
+
+或
+``-<B>h</B>
+
+''
+
+那么则为
+<B>2</B>
+
+(EMAIL).
+其它可接受的值还有
+<B>1</B>
+
+(TLS),
+<B>4</B>
+
+(IPSEC),和
+<B>255</B>
+
+(ANY).
+<DT><B>-s </B><I>num</I>
+
+
+
+
+<DD>
+设置密钥的强度字段为
+<I>num;</I>
+
+默认为
+<B>0.</B>
+
+<DT><B>-n </B><I>name</I>
+
+
+
+
+<DD>
+设置密钥的名字为
+<I>name.</I>
+
+</DL>
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H3>DETAILS(细节)</H3>
+
+<B>Dnskeygen</B>
+
+存储每个密钥在两个文件中:
+K&lt;name&gt;+&lt;alg&gt;+&lt;footprint&gt;.private
+
+和
+K&lt;name&gt;+&lt;alg&gt;+&lt;footprint&gt;.key
+
+文件
+K&lt;name&gt;+&lt;alg&gt;+&lt;footprint&gt;.private
+
+包含了以可移植格式保存的私有密钥.文件
+K&lt;name&gt;+&lt;alg&gt;+&lt;footprint&gt;.key
+
+包含了以DNS区域文件格式保存的公共密钥:
+<P>
+
+
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT(环境变量)</H2>
+
+没有涉及到任何环境变量.
+<A NAME="lbAG">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<I>RFC 2065</I>
+
+关于维护DNS安全的文档以及
+<I>TSIG</I>
+
+Internet草案.
+<A NAME="lbAH">&nbsp;</A>
+<H2>AUTHOR(作者)</H2>
+
+Olafur Gudmundsson (<A HREF="mailto:ogud@tis.com">ogud@tis.com</A>).
+<A NAME="lbAI">&nbsp;</A>
+<H2>ACKNOWLEDGMENTS(致谢)</H2>
+
+基本的加密数学是由DNSSAFE和/或Foundation Toolkit libraries完成的.
+<A NAME="lbAJ">&nbsp;</A>
+<H2>BUGS</H2>
+
+目前尚无已知的bugs.
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2001/7/13
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DL>
+<DT><A HREF="#lbAE">DETAILS(细节)</A><DD>
+</DL>
+<DT><A HREF="#lbAF">ENVIRONMENT(环境变量)</A><DD>
+<DT><A HREF="#lbAG">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAH">AUTHOR(作者)</A><DD>
+<DT><A HREF="#lbAI">ACKNOWLEDGMENTS(致谢)</A><DD>
+<DT><A HREF="#lbAJ">BUGS</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

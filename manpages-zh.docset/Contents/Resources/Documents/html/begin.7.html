@@ -1,0 +1,112 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of BEGIN</TITLE>
+</HEAD><BODY>
+<H1>BEGIN</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+BEGIN - 开始一个事务块
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+BEGIN [ WORK | TRANSACTION ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>BEGIN</B> 初始化一个事务块， 也就是说所有 BEGIN  命令后的用户语句都将在一个事务里面执行直到给出一个明确的 COMMIT [<B><A HREF="/cgi-bin/man/man2html?7+commit">commit</A></B>(7)] 或者 ROLLBACK [<B><A HREF="/cgi-bin/man/man2html?l+rollback">rollback</A></B>(l)] 。
+缺省时，（没有 BEGIN），PostgreSQL 以 &quot;autocommit&quot;  模式执行事务，也就是说，每个语句在其自身的事务中执行， 并且在语句结束的时候隐含地执行一个提交（如果执行成功，否则执行回滚）。
+<P>
+
+<BR>&nbsp;在事务块里执行的语句很明显地快得多，&nbsp;因为事务开始/提交（start/commit）需要大量的CPU和磁盘活动。&nbsp;在一个&nbsp;事务内部执行多条语句对于修改若干个相关的表的时候也是很有用的：&nbsp;在所有相关的更新完成之前，其它会话看不到中间的状态。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B>WORK</B><DD>
+<DT><B>TRANSACTION</B><DD>
+<BR>&nbsp;可选关键字。没什么作用。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+START TRANSACTION [<B><A HREF="/cgi-bin/man/man2html?7+start_transaction">start_transaction</A></B>(7)] 有着和 BEGIN 一样的功能。
+<P>
+
+<BR>&nbsp;使用&nbsp;COMMIT&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+commit">commit</A></B>(7)]&nbsp;或
+ROLLBACK [<B><A HREF="/cgi-bin/man/man2html?7+rollback">rollback</A></B>(7)]
+结束一个事务。
+<P>
+
+<BR>&nbsp;在一个现有事务块内部发出一个&nbsp;BEGIN&nbsp;将产生一个警告信息。&nbsp;事务的状态将不会被影响。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;开始一个用户事务：
+<P>
+<PRE>
+BEGIN;
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>BEGIN</B> 是 PostgreSQL 语言的扩展。 在 SQL  标准中没有明确的 BEGIN  的定义；事务初始化总是隐含的而且使用一个 COMMIT 或者 ROLLBACK 语句终止。
+<P>
+
+<BR>&nbsp;许多关系型数据库为了方便提供一个自动提交（autocommit）特性。
+<P>
+
+<BR>&nbsp;顺便说一句，BEGIN&nbsp;关键字在嵌入&nbsp;SQL&nbsp;里用于不同的目的。&nbsp;我们建议你在移植数据库应用时仔细检查事务的语义。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+COMMIT [<B><A HREF="/cgi-bin/man/man2html?7+commit">commit</A></B>(7)], ROLLBACK [<B><A HREF="/cgi-bin/man/man2html?l+rollback">rollback</A></B>(l)]
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

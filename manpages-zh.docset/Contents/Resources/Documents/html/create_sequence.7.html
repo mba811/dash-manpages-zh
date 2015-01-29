@@ -1,0 +1,174 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE SEQUENCE</TITLE>
+</HEAD><BODY>
+<H1>CREATE SEQUENCE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE SEQUENCE - 创建一个新的序列发生器
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE [ TEMPORARY | TEMP ] SEQUENCE <I>name</I> [ INCREMENT [ BY ] <I>increment</I> ]
+    [ MINVALUE <I>minvalue</I> | NO MINVALUE ] [ MAXVALUE <I>maxvalue</I> | NO MAXVALUE ]
+    [ START [ WITH ] <I>start</I> ] [ CACHE <I>cache</I> ] [ [ NO ] CYCLE ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE SEQUENCE</B> 将向当前数据库里增加一个新的序列号生成器。 包括创建和初始化一个新的名为 name的单行表。生成器将为使用此命令的用户所有。
+<P>
+
+<BR>&nbsp;如果给出了一个模式名，那么该序列是在指定模式中创建的。&nbsp;否则它会在当前模式中创建临时序列存在于一个特殊的模式中，因此如果创建一个临时序列的时候，&nbsp;不能给出模式名。&nbsp;序列名必需和同一模式中的其他序列，表，索引，或者视图不同。
+<P>
+
+<BR>&nbsp;在序列创建后，你可以使用函数
+<B>nextval</B>,
+<B>currval</B>, 和
+<B>setval</B>
+操作序列。这些函数在 ``Sequence-Manipulation Functions'' 中有详细文档。
+<P>
+
+<BR>&nbsp;尽管你不能直接更新一个序列，但你可以使用象
+<P>
+<PRE>
+SELECT * FROM <I>name</I>;
+
+</PRE>
+
+<BR>&nbsp;检查一个序列的参数和当前状态。特别是序列的&nbsp;last_value&nbsp;字段显示了任意后端进程分配的最后的数值。&nbsp;（当然，这些值在被打印出来的时候可能已经过时了&nbsp;---&nbsp;如果其它进程正积极地使用&nbsp;nextval。）
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B>TEMPORARY or TEMP</B><DD>
+<BR>&nbsp;如果声明了这个修饰词，那么该序列对象只为这个会话创建，&nbsp;并且在会话结束的时候自动删除。在临时序列存在的时候，&nbsp;同名永久序列是不可见的（在同一会话里），除非它们是用模式修饰的名字引用的。
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;将要创建的序列号名（可以用模式修饰）。
+<DT><B></B><I>increment</I><B></B><DD>
+INCREMENT BY <I>increment</I>  子句是可选的。一个正数将生成一个递增的序列， 一个负数将生成一个递减的序列。缺省值是一（1）。
+<DT><B></B><I>minvalue</I><B></B><DD>
+<DT><B>NO MINVALUE</B><DD>
+<BR>&nbsp;可选的子句&nbsp;MINVALUE&nbsp;minvalue&nbsp;&nbsp;决定一个序列可生成的最小值。&nbsp;如果没有声明这个子句或者声明了&nbsp;NO&nbsp;MINVALUE，那么就使用缺省。&nbsp;缺省分别是递增序列为&nbsp;1&nbsp;递减为&nbsp;-263-1。
+<DT><B></B><I>maxvalue</I><B></B><DD>
+<DT><B>NO MAXVALUE</B><DD>
+<BR>&nbsp;使用可选子句&nbsp;MAXVALUE&nbsp;maxvalue&nbsp;&nbsp;决定序列的最大值。&nbsp;如果没有声明这个子句或者声明了&nbsp;NO&nbsp;MAXVALUE，那么就使用缺省。&nbsp;缺省的分别是递增为&nbsp;263-1，递减为&nbsp;-1。
+<DT><B></B><I>start</I><B></B><DD>
+<BR>&nbsp;可选的&nbsp;START&nbsp;WITH&nbsp;start&nbsp;&nbsp;子句&nbsp;&nbsp;使序列可以从任意位置开始。缺省初始值是递增序列为&nbsp;minvalue&nbsp;&nbsp;递减序列为&nbsp;maxvalue.
+<DT><B></B><I>cache</I><B></B><DD>
+CACHE cache  选项使序列号预分配并且为快速访问存储在内存里面。 最小值（也是缺省值）是1（一次只能生成一个值, 也就是说没有缓存）这也是缺省。
+<DT><B>CYCLE</B><DD>
+<DT><B>NO CYCLE</B><DD>
+<BR>&nbsp;可选的CYCLE关键字可用于使序列到达&nbsp;最大值（maxvalue）&nbsp;或&nbsp;最小值（minvalue）&nbsp;&nbsp;时可复位并继续下去。如果达到极限，生成的下一个数据将分别是&nbsp;最小值（minvalue）&nbsp;或&nbsp;最大值（maxvalue）。
+<P>
+<BR>&nbsp;如果声明了可选的关键字&nbsp;NO&nbsp;CYCLE，&nbsp;那么在序列达到其最大值之后任何对&nbsp;nextval&nbsp;的调用都强返回一个错误。&nbsp;如果既没有声明&nbsp;CYCLE&nbsp;也没有声明&nbsp;NO&nbsp;CYCLE，&nbsp;那么&nbsp;NO&nbsp;CYCLE&nbsp;是缺省。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;使用&nbsp;DROP&nbsp;SEQUENCE&nbsp;语句来删除序列。
+<P>
+
+<BR>&nbsp;序列是基于&nbsp;<B>bigint</B>&nbsp;运算的，因此其范围不能超过八字节的整数范围（-9223372036854775808&nbsp;到&nbsp;9223372036854775807）。&nbsp;在一些老一点的平台上可能没有对八字节整数的编译器支持，&nbsp;这种情况下序列使用普通的&nbsp;integer&nbsp;运算（范围是&nbsp;-2147483648&nbsp;到&nbsp;+2147483647）。
+<P>
+
+<BR>&nbsp;如果&nbsp;cache&nbsp;设置大于一，&nbsp;并且这个序列对象将被用于并发多会话的场合，那么可能会有不可预料的结果发生。&nbsp;每个会话在一次访问序列对象的过程中将分配并缓存随后的序列值，并且相应增加序列对象的&nbsp;last_value。&nbsp;这样，同一个事务中的随后的&nbsp;cache-1&nbsp;次&nbsp;nextval&nbsp;&nbsp;将只是返回预先分配的数值，而不用动序列对象。因此，任何在一个会话中分配但是没有使用的数字都将在会话结尾丢失，导致序列里面出现&quot;空洞&quot;。
+<P>
+
+<BR>&nbsp;另外，尽管系统保证为多个会话分配独立的序列值，但是如果考虑所有会话，&nbsp;那么这个数值可能会丢失顺序。比如，如果&nbsp;cache&nbsp;&nbsp;设置为&nbsp;10，那么会话&nbsp;A&nbsp;保留了&nbsp;1..10&nbsp;并且返回&nbsp;nextval=1，&nbsp;然后会话&nbsp;B&nbsp;可能会保留&nbsp;11..20&nbsp;然后在会话&nbsp;A&nbsp;生成&nbsp;nextval=2&nbsp;之前返回&nbsp;nextval=11。因此，对于&nbsp;cache&nbsp;设置为一的情况，我们可以安全地假设&nbsp;nextval&nbsp;值是顺序生成的；&nbsp;而如果把&nbsp;cache&nbsp;设置得大于一，&nbsp;那么你只能假设&nbsp;nextval&nbsp;值总是唯一得，而不是完全顺序地生成。&nbsp;同样，last_value&nbsp;将反映任何会话保留的最后的数值，不管它是否曾被&nbsp;nextval&nbsp;返回。
+<P>
+
+<BR>&nbsp;另外一个考虑是在这样的序列上执行的&nbsp;setval&nbsp;将不会被其它会话注意到，直到它们用光他们缓存的数值。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;创建一个叫&nbsp;serial&nbsp;的递增序列，从101开始：
+<P>
+<PRE>
+CREATE SEQUENCE serial START 101;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;从此序列中选出下一个数字：
+<P>
+<PRE>
+SELECT nextval('serial');
+    
+ nextval
+---------
+     114
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;在一个&nbsp;INSERT&nbsp;中使用此序列：
+<P>
+<PRE>
+INSERT INTO distributors VALUES (nextval('serial'), 'nothing');
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;在一个&nbsp;COPY&nbsp;FROM&nbsp;后更新序列：
+<P>
+<PRE>
+BEGIN;
+COPY distributors FROM 'input_file';
+SELECT setval('serial', max(id)) FROM distributors;
+END;
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>CREATE SEQUENCE</B> 是 PostgreSQL  语言扩展。 在 SQL 标准里没有 CREATE SEQUENCE 语句。
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

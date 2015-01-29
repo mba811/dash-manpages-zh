@@ -1,0 +1,125 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DMESG</TITLE>
+</HEAD><BODY>
+<H1>DMESG</H1>
+Section: Maintenance Commands (8)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+dmesg - print or control the kernel ring buffer
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>dmesg [ -c ] [ -n </B><I>级别</I><B> ] [ -s </B><I>缓冲区大小</I><B> ]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>dmesg</B>
+
+用于检测和控制内核环缓冲。
+<P>
+程序用来帮助用户了解系统的启动信息。用户只需使用命令：
+<DL COMPACT><DT><DD>
+dmesg &gt; boot.messages
+</DL>
+
+然后将文件
+<I>boot.messages</I>
+
+邮寄给某些可以帮你调试系统的人。而无须手工拷贝系统启动信息。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><B>-c</B>
+
+<DD>
+当完成打印显示后清除环缓冲内的内容。
+<DT><B>-s</B><I>缓冲区大小</I>
+
+<DD>
+定义一个大小为&quot;缓冲区大小&quot;的缓冲区用于查询内核环缓冲区。
+默认大小为 8196（此大小与 2.0.33 和 2.1.103 内核的默认
+syslog 缓冲区大小一致），
+如果你设置了一个大于默认值的环缓冲区，
+那你就可以用这个选项定义一个相当的缓冲区
+来查看完整的环缓冲区内容。
+<DT><B>-n</B><I>级别</I>
+
+<DD>
+设置
+<I>级别</I>
+
+为记录控制台启动信息的级别。比如，
+<B>-n 1</B>
+
+指的就是将此级别设为最低级，
+除了内核恐慌信息之外不会向控制台显示信息。
+所有级别的启动信息还将记录到
+<I>/proc/kmsg</I>,
+
+文件中，因此，
+<B><A HREF="/cgi-bin/man/man2html?8+syslogd">syslogd</A></B>(8)
+
+同样可以用来对信息的输出进行控制。当使用
+<B>-n</B>
+
+选项时，
+<B>dmesg</B>
+
+将
+<I>不会 </I>
+
+清除内核环缓冲区中的内容。
+当同时使用以上两个选项时，只有最后一个选项才会产生效果。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>又见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+syslogd">syslogd</A></B>(8)
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>作者</H2>
+
+Theodore Ts'o (<A HREF="mailto:tytso@athena.mit.edu">tytso@athena.mit.edu</A>)
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>所罗门 &lt;<A HREF="mailto:solomen@email.com.cn">solomen@email.com.cn</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2001/04/01
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">又见</A><DD>
+<DT><A HREF="#lbAG">作者</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

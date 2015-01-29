@@ -1,0 +1,144 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of dde</TITLE>
+</HEAD><BODY>
+<H1>dde</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+dde - 执行一个动态数据交换命令
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<P>
+<B>package require dde 1.1</B>
+<P>
+<B>dde </B><I>servername </I>?<I>topic</I>?
+<P>
+<B>dde ?-async?</B> <I>command service topic </I>?<I>data</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+当运行在 Microsoft Windows 下的时候，这个命令允许一个应用来发送动态数据交换(Dynamic Data Exchange：DDE)命令。动态数据交换是一种机制，在这里应用可以交换原始数据。每个 DDE 事务都需要一个<I>服务名(service name)</I>和一个<I>主题(topic)</I>。<I>服务名</I>和主题均由应用来定义；Tcl 使用的服务名是 <B>TclEval</B>，而主题名是用<B>dde servername </B>给出的解释器的名字。其他的应用有其自己的<I>服务名</I>和<I>主题</I>。例如，Microsoft Excel 的服务名是 <B>Excel</B>。
+<P>
+
+<B>dde</B>  命令的唯一的选项是:          
+<DL COMPACT>
+<DT><B>-async</B><DD>
+要求异步激发(invocation)。这只对<B>execute</B> 子命令有效。正常的，<B>dde execute</B> 子命令等待直到命令完成，返回适当的出错信息。当使用了 <B>-async</B>  选项，命令立刻返回，不能获得出错信息。  
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>DDE 命令 COMMANDS</H2>
+
+<P>
+
+下面的命令是完整的动态数据交换命令集的子集。 
+<DL COMPACT>
+<DT><B>dde servername </B>?<I>topic</I>?<DD>
+<B>dde servername</B>  用服务名 <B>TclEval</B>   和由 <I>topic </I>指定的主题名来把解释器注册为一个 DDE 服务器。如果没有给出 <I>topic</I>，<B>dde servername</B>返回当前的主题的名字，如果未被注册为一个服务则返回空串。      
+<DT><B>dde execute </B><I>service topic data</I><DD>
+<B>dde execute</B>  接受 <I>data</I>  并把它发送到由 <I>service</I>  指示出的服务器并由 <I>topic </I>指示出主题。典型的，<I>service</I> 是一个应用的名字，而 <I>topic</I> 是要在其上工作的一个文件。给予远程应用的是 <I>data</I> 域(field)。典型的，应用把 <I>data</I>  域作为脚本对待，接着在应用中运行脚本。如果脚本没有运行，命令返回一个错误。如果使用了 <B>-async</B>标志，命令立即返回而没有错误。               
+<DT><B>dde poke </B><I>service topic item data</I><DD>
+<B>dde poke</B>  传递 <I>data</I>  到由 <I>service</I>指示的服务器并用 <I>topic</I> 和 <I>item</I>  加以指定。典型的， <I>service</I>  是一个应用的名字。<I>topic</I> 由应用指定，可以是给服务器的一个命令或一个要在其上工作的一个文件的名字。<I>item</I> 也由应用指定，不常用，但必须总是非空。给予远程应用的是 <I>data</I>  域( field)。                 
+<DT><B>dde request </B><I>service topic item</I><DD>
+<B>dde request</B>  典型的用于得到某种东西的值；如 Microsoft Excel 中的一个单元格(cell)的值或在 Microsoft Word  中一个选择的文本。 <I>service</I> 典型的是一个应用的名字。 <I>topic</I>典型的是文件的名字，<I>item</I>由用户来指定。命令返回在应用中定义的 <I>item</I>的值。
+<DT><B>dde services </B><I>service topic</I><DD>
+<B>dde services</B>  返回当前在机器上存在的服务-主题对的一个列表。如果 <I>service</I>  和 <I>topic</I>  都是空串({}),  则返回在系统上当前可获得的所有的服务-主题对。如果 <I>service</I> 是空而 <I>topic</I>  不是，则返回指定主题的所有服务。如果 <I>service</I> 不空而 <I>topic</I>  空，则返回指定服务的所有主题。如果均不空，若当前存在这个服务-主题对则返回它，否则返回空。                 
+<DT><B>dde eval </B><I>topic cmd </I>?<I>arg arg ...</I>?<DD>
+<B>dde eval</B>   求值一个命令和它的参数，解释器用 <I>topic</I> 指定。DDE 服务必须是<B>TclEval</B>  服务。这个命令可以用于在 Windows 上替换 send。                 
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>DDE 和 TCL</H2>
+
+一个 Tcl 解释器总是有一个服务名 <B>TclEval</B>。每个不同的运行 Tcl 应用的解释器必须给予一个用 <B>dde servername</B>指定的唯一的名字。每个解释器只有使用 <B>dde servername</B>命令来设置名字，这个解释器才可作为一个 DDE 主题来获得。所以一个 <B>dde services TclEval {}</B>  命令将返回一个服务-主题对的列表，这里每个当前运行的解释器都将是一个主题。
+<P>
+
+当       
+Tcl 处理一个 <B>dde execute</B> 命令时，用于执行的数据作为一个脚本在 <B>dde execute</B> 命令的主题指明的解释器中运行。
+<P>
+
+当 Tcl 处理一个 <B>dde request</B>命令时，它返回在 dde 命令中给出的变量的值，变量在由 dde主题指名的解释器的上下文中的。Tcl 为内部使用而保留变量 <B>$TCLEVAL  $EXECUTE $RESULT</B>，对这些变量的<B>dde request</B>  命令将返回不可预测的(unpredictable)结果。
+<P>
+
+打算运行一个Tcl 脚本的一个外部(external)应用应当使这个脚本在一个变量中存储它的结果，运行  <B>dde execute</B>  命令，接着运行 <B>dde request</B> 得到这个变量的值。
+<P>
+
+当使用 DDE 时，注意要确保使用 <B>update</B>或者 <B>vwait </B>来刷新事件队列。在使用<B>wish</B>时这是缺省的，但不包括调用了一个阻塞命令的情况(例如 <B>exec</B>  而不填加 <B>&amp;amp;</B>  来在后台运行进程)。如果由于某种原因而导致事件队列没被刷新，DDE 命令将挂起(hang)直到事件队列被刷新。这可能产生死锁的情况。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+tk">tk</A>(n), <A HREF="/cgi-bin/man/man2html?n+winfo">winfo</A>(n), <A HREF="/cgi-bin/man/man2html?n+send">send</A>(n)
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+application, dde, name, remote execution
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/18 </B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">DDE 命令 COMMANDS</A><DD>
+<DT><A HREF="#lbAF">DDE 和 TCL</A><DD>
+<DT><A HREF="#lbAG">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

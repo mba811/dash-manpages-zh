@@ -1,0 +1,75 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of EXECUTE</TITLE>
+</HEAD><BODY>
+<H1>EXECUTE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+EXECUTE - 执行一个准备好的查询
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+EXECUTE <I>plan_name</I> [ (<I>parameter</I> [, ...] ) ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>EXECUTE</B> 用于执行一个前面准备好的语句。 因为一个准备好的查询只在会话的生命期里存在，那么准备好的查询必须是在当前会话的前些时候用 PREPARE  语句执行的。
+<P>
+
+<BR>&nbsp;如果创建语句的&nbsp;PREPARE&nbsp;语句声明了一些参数，&nbsp;那么传递给&nbsp;EXECUTE&nbsp;语句的必须是一个兼容的参数集，&nbsp;否则就会生成一个错误。请注意（和函数不同），准备好的语句不会基于参数的类型或者个数重载：&nbsp;在一次数据库会话过程中，准备好的语句的名字必须是唯一的。
+<P>
+
+<BR>&nbsp;有关创建和使用准备好的语句的更多信息，&nbsp;请参阅&nbsp;PREPARE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+prepare">prepare</A></B>(7)].
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>plan_name</I><B></B><DD>
+<BR>&nbsp;要执行的准备好的语句。
+<DT><B></B><I>parameter</I><B></B><DD>
+<BR>&nbsp;给准备好的语句的一个参数的具体数值。&nbsp;它必须是一个生成与创建这个准备好的语句的&nbsp;PREPARE&nbsp;语句指定参数位置的参数相兼容的数据类型的表达式。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;SQL&nbsp;标准包括一个&nbsp;EXECUTE&nbsp;语句，&nbsp;但它只是用于嵌入的&nbsp;SQL&nbsp;客户端。PostgreSQL&nbsp;&nbsp;实现的&nbsp;EXECUTE&nbsp;的语法也略微不同。
+<A NAME="lbAG">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAG">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

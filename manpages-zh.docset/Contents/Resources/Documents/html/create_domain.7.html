@@ -1,0 +1,116 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE DOMAIN</TITLE>
+</HEAD><BODY>
+<H1>CREATE DOMAIN</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE DOMAIN - 定义一个新域
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE DOMAIN <I>name</I> [AS] <I>data_type</I>
+    [ DEFAULT <I>expression</I> ]
+    [ <I>constraint</I> [ ... ] ]
+
+where <I>constraint</I> is:
+
+[ CONSTRAINT <I>constraint_name</I> ]
+{ NOT NULL | NULL | CHECK (<I>expression</I>) }
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE DOMAIN</B> 创建一个新的数据域。 定义域的用户成为其所有者。
+<P>
+
+<BR>&nbsp;如果给出一个模式名称（比如，CREATE&nbsp;DOMAIN&nbsp;myschema.mydomain&nbsp;...），&nbsp;那么该域是在指定的模式中创建的。否则它会在当前模式中创建。&nbsp;域名字必需在其所在模式中的现有类型和域中唯一。
+<P>
+
+<BR>&nbsp;域可以便于我们把不同表之间的公共域抽取到一个位置进行维护。&nbsp;比如，一个电子邮件地址字段可能在多个表中使用，所有的都是同样的属性。&nbsp;我们可以定义并使用一个域，而不是分别设置每个表的约束。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;要创建的域名字（可以有模式修饰）。
+<DT><B></B><I>data_type</I><B></B><DD>
+<BR>&nbsp;域的下层数据类型。它可以包含数组声明字。
+<DT><B>DEFAULT </B><I>expression</I><B></B><DD>
+DEFAULT 子句为域数据类型的字段声明一个缺省值。 该值是任何不含变量的表达式（但不允许子查询）。 缺省表达式的数据类型必需匹配域的数据类型。如果没有声明缺省值， 那么缺省值就是空值。
+<P>
+<BR>&nbsp;缺省表达式将用在任何不为该字段声明数值的插入操作。&nbsp;如果为特定的字段声明了缺省值，那么它覆盖任何和该域相关联的缺省值。&nbsp;然后，域的缺省覆盖任何与下层数据类型相关的缺省。
+<DT><B>CONSTRAINT </B><I>constraint_name</I><B></B><DD>
+<BR>&nbsp;一个约束的可选名称。如果没有声明，系统生成一个名字。
+<DT><B>NOT NULL</B><DD>
+<BR>&nbsp;这个域的数值不允许为&nbsp;NULL。
+<DT><B>NULL</B><DD>
+<BR>&nbsp;这个域的数值允许为空。它是缺省。
+<BR>&nbsp;
+<BR>&nbsp;这个子句只是用于和非标准的&nbsp;SQL&nbsp;数据库兼容用。&nbsp;我们不建议在新的应用中使用它。
+<DT><B>CHECK (</B><I>expression</I><B>)</B><DD>
+<BR>&nbsp;CHECK&nbsp;子句声明完整性约束或者是测试，域地数值必须满足这些要求。&nbsp;每个约束必须是一个生成一个布尔结果的表达式。它应该使用名字&nbsp;VALUE&nbsp;&nbsp;来引用被测试的数值。
+<P>
+<BR>&nbsp;目前，CHECK&nbsp;表达式不能包含子查询，也不能引用除&nbsp;VALUE&nbsp;之外的变量。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;这个例子创建了&nbsp;country_code&nbsp;数据类型并且在一个表定义中使用了该类型：
+<P>
+<PRE>
+CREATE DOMAIN country_code <A HREF="/cgi-bin/man/man2html?2+char">char</A>(2) NOT NULL;
+CREATE TABLE countrylist (id integer, country country_code);
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>CREATE DOMAIN</B> 命令符合 SQL 标准。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+DROP DOMAIN [<B><A HREF="/cgi-bin/man/man2html?7+drop_domain">drop_domain</A></B>(7)]
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

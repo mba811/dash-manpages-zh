@@ -1,0 +1,266 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of BIND</TITLE>
+</HEAD><BODY>
+<H1>BIND</H1>
+Section: Linux Programmer's Manual (2)<BR>Updated: 3 Oct 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME 名称</H2>
+
+bind - 将一个名字和一个套接字绑定到一起(赋一个名字给一个套接字)
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 概述</H2>
+
+<B>#include &lt;<A HREF="file:///usr/include/sys/types.h">sys/types.h</A>&gt;</B>
+
+<BR>
+
+<B>#include &lt;<A HREF="file:///usr/include/sys/socket.h">sys/socket.h</A>&gt;</B>
+
+<P>
+<B>int bind(int </B><I>sockfd</I><B>, struct sockaddr *</B><I>my_addr</I><B>, socklen_t </B><I>addrlen</I><B>);</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<B>bind</B>
+
+为套接字
+<I>sockfd</I>
+
+指定本地地址
+<I>my_addr</I>.
+
+<I>my_addr</I>
+
+的长度为
+<I>addrlen</I>
+
+(字节).传统的叫法是给一个套接字分配一个名字.
+当使用
+<B><A HREF="/cgi-bin/man/man2html?2+socket">socket</A></B>(2),
+
+函数创建一个套接字时,它存在于一个地址空间(地址族),
+但还没有给它分配一个名字
+<P>
+
+一般来说在使用
+<B>SOCK_STREAM</B>
+
+套接字建立连接之前总要使用
+<B>bind</B>
+
+为其分配一个本地地址.参见
+<B><A HREF="/cgi-bin/man/man2html?2+accept">accept</A></B>(2)).
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+这条规则用于给每个地址族绑定不同的名称.更多细节请参
+考手册页第7册(man7).
+对于
+<B>AF_INET</B>
+
+参见
+<B><A HREF="/cgi-bin/man/man2html?7+ip">ip</A></B>(7),
+
+对于
+<B>AF_UNIX</B>
+
+参见
+<B><A HREF="/cgi-bin/man/man2html?7+unix">unix</A></B>(7),
+
+对于
+<B>AF_APPLETALK</B>
+
+参见
+<B><A HREF="/cgi-bin/man/man2html?7+ddp">ddp</A></B>(7),
+
+对于
+<B>AF_PACKET</B>
+
+参见
+<B><A HREF="/cgi-bin/man/man2html?7+packet">packet</A></B>(7),
+
+对于r
+<B>AF_X25</B>
+
+参见
+<B><A HREF="/cgi-bin/man/man2html?7+x25">x25</A></B>(7)
+
+对于
+<B>AF_NETLINK</B>
+
+参见
+<B><A HREF="/cgi-bin/man/man2html?7+netlink">netlink</A></B>(7).
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>RETURN VALUE 返回值</H2>
+
+函数执行成功返回0,否则返回-1,
+并设置错误代码.
+<A NAME="lbAG">&nbsp;</A>
+<H2>ERRORS 错误</H2>
+
+<DL COMPACT>
+<DT><B>EBADF</B>
+
+<DD>
+<I>sockfd</I>
+
+不是一个合法套接字描述符.
+<DT><B>EINVAL</B>
+
+<DD>
+套接字已经绑定到一个地址.这一条在以后会有所改变:
+具体参见
+<I>linux/unix/sock.c</I>
+
+<DT><B>EACCES</B>
+
+<DD>
+地址受保护,用户不是系统管理员.
+<DT><B>ENOTSOCK</B>
+
+<DD>
+参数是文件描述符,不是一个套接字.
+</DL>
+<P>
+
+下列错误适用于UNIX域 
+(<B>AF_UNIX</B>)
+
+套接字.
+<DL COMPACT>
+<DT><B>EINVAL</B>
+
+<DD>
+地址长度
+<I>addrlen</I>
+
+错误,或者套接字不在
+<B>AF_UNIX</B>
+
+族.
+<DT><B>EROFS</B>
+
+<DD>
+套接字节点位于只读文件系统.
+<DT><B>EFAULT</B>
+
+<DD>
+<I>my_addr</I>
+
+指向用户无权访问的地址空间.
+<DT><B>ENAMETOOLONG</B>
+
+<DD>
+<I>my_addr</I>
+
+长度超范围.
+<DT><B>ENOENT</B>
+
+<DD>
+文件不存在.
+<DT><B>ENOMEM</B>
+
+<DD>
+内核存储空间不足.
+<DT><B>ENOTDIR</B>
+
+<DD>
+指定路径不是一个目录.
+<DT><B>EACCES</B>
+
+<DD>
+指定路径拒绝访问.
+<DT><B>ELOOP</B>
+
+<DD>
+在解析
+<I>my_addr</I>
+
+时发现过多符号连接.
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>BUGS 勘误</H2>
+
+透明代理选项没有描述.
+<A NAME="lbAI">&nbsp;</A>
+<H2>CONFORMING TO 一致性</H2>
+
+SVr4,4.4BSD(函数
+<B>bind</B>
+
+首次出现于BSD 4.2)SVr4文档增加了
+<B>EADDRNOTAVAIL</B>,
+
+<B>EADDRINUSE</B>,
+
+和
+<B>ENOSR </B>
+
+一般性错误,
+还增加了
+<B>EIO</B>,
+
+<B>EISDIR </B>
+
+和
+<B>EROFS </B>
+
+Unix域错误.
+<A NAME="lbAJ">&nbsp;</A>
+<H2>NOTE</H2>
+
+函数
+<B>bind</B>
+
+的第三个参数实际上是int类型(BSD 4.*和libc4以及libc5都是这么做的).
+不知为什么有的POSIX系统目前仍在使用socklen_t.
+目前尚无统一标准,不过glibc2两者都使用.参见
+<B><A HREF="/cgi-bin/man/man2html?2+accept">accept</A></B>(2).
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+accept">accept</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+connect">connect</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+listen">listen</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+socket">socket</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+getsockname">getsockname</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?7+ip">ip</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?7+socket">socket</A></B>(7)
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME 名称</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 概述</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">NOTES 注意</A><DD>
+<DT><A HREF="#lbAF">RETURN VALUE 返回值</A><DD>
+<DT><A HREF="#lbAG">ERRORS 错误</A><DD>
+<DT><A HREF="#lbAH">BUGS 勘误</A><DD>
+<DT><A HREF="#lbAI">CONFORMING TO 一致性</A><DD>
+<DT><A HREF="#lbAJ">NOTE</A><DD>
+<DT><A HREF="#lbAK">SEE ALSO 参见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

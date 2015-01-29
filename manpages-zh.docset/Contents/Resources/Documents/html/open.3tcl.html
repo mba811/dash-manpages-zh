@@ -1,0 +1,305 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of open</TITLE>
+</HEAD><BODY>
+<H1>open</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.6<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+open - 打开基于文件或命令管道的一个通道
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<P>
+<B>open </B><I>fileName</I>
+<BR>
+
+<B>open </B><I>fileName access</I>
+<BR>
+
+<B>open </B><I>fileName access permissions</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+
+
+
+
+
+
+
+这个命令打开一个文件、串行端口、或命令管道并返回一个
+
+
+
+
+
+
+通道标识符用于将来被命令如 <B>read</B>、<B>puts</B>、和<B>close </B>调用。如果 <I>fileName</I> 的第一个字符不是“|”则命令打开一个文件: <I>fileName</I> 给出要打开的文件的名字，并且它必须符合在 <B>filename</B> 手册条目中描述的规范。
+<P>
+
+如果存在 <I>access</I> 参数，则它指示以何种方式访问文件(或命令管道)。在第一种形式下 <I>access</I> 可以是下列值:
+<DL COMPACT>
+<DT><B>r</B><DD>
+为只读而打开文件；文件必须已经存在。如果未指定 <I>access</I>     则这个值是缺省值。
+<DT><B>r+</B><DD>
+为读写而打开文件；文件必须已经存在。
+<DT><B>w</B><DD>
+为只写而打开文件。如果文件已经存在则截断(truncate)它，如果文件不存在则建立一个新文件。
+<DT><B>w+</B><DD>
+为读写而打开文件。如果文件已经存在则截断(truncate)它，如果文件不存在则建立一个新文件。
+<DT><B>a</B><DD>
+为只读而打开文件。如果文件不存在，则建立一个新的空文件。设置初始访问位置为文件的结束处。
+<DT><B>a+</B><DD>
+为读写而打开文件。如果文件不存在，则建立一个新的空文件。设置初始访问位置为文件的结束处。
+</DL>
+<P>
+
+在第二种形式下，<I>access</I> 由某些下列标志的一个列表构成，所有这些都有标准的 POSIX 意义。 必须有一个标志是 <B>RDONLY</B>、<B>WRONLY</B> 或 <B>RDWR</B> 中的一个。
+<DL COMPACT>
+<DT><B>RDONLY</B><DD>
+为只读而打开文件。
+<DT><B>WRONLY</B><DD>
+为只写而打开文件。
+<DT><B>RDWR</B><DD>
+为读写而打开文件。
+<DT><B>APPEND</B><DD>
+在每次写之前把指针设置到文件的结束处。
+<DT><B>CREAT</B><DD>
+如果文件不存在则建立这个文件(如果没有这个标志，在文件不存在时返回一个错误)。
+<DT><B>EXCL</B><DD>
+如果还指定了 <B>CREAT</B>，如果文件已经存在则返回一个错误。
+<DT><B>NOCTTY</B><DD>
+如果文件是一个终端设备，这个标志防止这个文件成为这个进程的控制终端。
+<DT><B>NONBLOCK</B><DD>
+在打开文件和可能的后续 I/O 
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;操作期间防止过程阻塞。这个标志的真实行为是依赖于系统的和依赖于设备的；不鼓励使用它(更好是使用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>fconfigure</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;命令来使一个文件进入非阻塞模式)。详情参见你的系统文档中的&nbsp;&nbsp;<B>open</B>&nbsp;系统调用的&nbsp;<B>O_NONBLOCK</B>&nbsp;标志。
+<DT><B>TRUNC</B><DD>
+如果文件存在则截断其为零长度。
+</DL>
+<P>
+
+如果作为打开过程的一部分而建立了一个新文件，使用 <I>permissions</I> (一个整数)并联合进程的文件模式建立掩码为新文件设置权限。<I>Permissions</I> 缺省为 0666。
+<P>
+
+
+
+
+
+
+
+
+
+
+Note that if you are going to be reading or writing binary data from
+the channel created by this command, you should use the
+<B>fconfigure</B> command to change the <B>-translation</B> option of
+the channel to <B>binary</B> before transferring any binary data.  This
+is in contrast to the ``b'' character passed as part of the equivalent
+of the <I>access</I> parameter to some versions of the C library
+<I>fopen()</I> function.
+
+
+
+
+
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>命令管道 COMMAND PIPELINES</H2>
+
+<P>
+
+如果 <I>fileName</I> is 的第一个字符是“|”，则把 <I>fileName</I> 的余下的字符被作为描述要调用的一个命令管道的参数的一个列表来对待，与 <B>exec </B>对待参数的方式相同。在这种情况下，依赖于 access 的值，使用由 <B>open</B> 返回的通道标识符来向这个命令的输入管道写或从它的输出管道读。如果使用了只写访问(例如， <I>access</I> 是 <B>w</B>)，则除非被这个命令所屏弃(override)，这个(命令)管道的标准输出被定向到当前的标准输出上。如果使用了只读访问(例如，<I>access</I> 是 <B>r</B>)，则除非被这个命令所屏弃(override)，这个(命令)管道的标准输入接受当前的标准输入。
+<P>
+
+译注
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+打开用来写的命令管道
+
+                    Tcl     ==&gt;   Pipeline  ==&gt;   command
+
++--------+       +--------+      +--------+      +--------+
+| stdin  |&lt;------+ stdin  |  +--&gt;| pipein |   +--+ stdin  |
++--------+       +--------+  |   +--------+   |  +--------+
+| stdout |&lt;--+---+ stdout |  |   | pipeout|&lt;--+  | stdout +--+
++--------+   |   +--------+  |   +--------+      +--------+  |
+             |   | stderr |  |                   | stderr |  |
+             |   +--------+  |                   +--------+  |
+             |   | channel+--+                               |
+             |   +--------+                                  |
+             +-----------------------------------------------+
+
+
+打开一个用来读的命令管道
+
+             +-----------------------------------------------+
+             |                                               |
++--------+   |   +--------+      +--------+      +--------+  |
+| stdin  |&lt;--+---+ stdin  |      | pipein |&lt;--+  | stdin  +--+
++--------+       +--------+      +--------+   |  +--------+
+| stdout |&lt;------+ stdout |  +--&gt;| pipeout|   +--+ stdout |
++--------+       +--------+  |   +--------+      +--------+
+                 | stderr |  |                   | stderr |
+                 +--------+  |                   +--------+
+                 | channel+--+
+                 +--------+
+                    Tcl     &lt;==    Pipeline  &lt;==  command
+
+
+</PRE>
+
+</DL>
+
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>串行通信 SERIAL COMMUNICATIONS</H2>
+
+
+
+
+
+
+
+
+<P>
+
+如果 <I>fileName</I> 参照一个串行端口，则打开特定的串行端口并以依赖于平台的方式初始化。给 <I>fileName</I> 用以打开一个串行端口的可接受的值在移植要点中描述。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>配置选项 CONFIGURATION OPTIONS</H2>
+
+使用 <B>fconfigure</B> 命令来为打开的串行端口查询和设置下列选项:
+<DL COMPACT>
+<DT><B>-mode </B><I>baud</I><B>,</B><I>parity</I><B>,</B><I>data</I><B>,</B><I>stop</I><DD>
+这个选项是由逗号分隔的四个值的一个集合:     这个串行端口的波特(baud)率、奇偶校验(parity)、数据位数、和停止位。<I>baud</I>     率是指定连接速度的一个简单整数。<I>Parity</I>     是下列字母之一: <B>n</B>、<B>o</B>、<B>e</B>、<B>m</B>、<B>s</B>；分别表示奇偶校验选项“none”、“odd”、“even”、“mark”、或“space”。<I>Data</I>     是数据位数，应当是从 5 到 8 中的一个整数，而 <I>stop</I>     是停止位的数目，应当是整数 1 或 2。
+<DT><B>-pollinterval </B><I>msec</I><DD>
+只在 Windows     上串行端口能获得这个选项，它被用来设置文件事件轮询(poll)之间的最大时间。这影响整个     Tcl 解释器检查事件中间的时间间隔(总是采用最小的值)。只有在你想要使轮询这个串行端口的时间间隔小于     10 msec (缺省值)时才使用这个选项。
+<DT><B>-lasterror</B><DD>
+只在 Windows 上串行端口能获得这个选项，并只能查询(只在直接请求时报告)。在串行通信出错的情况下，<B>read</B>     或 <B>puts</B> 返回一个一般 Tcl 文件 I/O     错误。可以调用 <B>fconfigure -lasterror</B>     来得到错误详情的一个列表(例如，FRAME RXOVER)。
+
+
+
+
+
+
+<P>
+
+
+
+
+
+
+
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>移植要点 PORTABILITY ISSUES</H2>
+
+<P>
+<DL COMPACT>
+<DT><B>Windows </B>(所有版本)<DD>
+给 <I>fileName</I> 来打开一个串行端口的有效值的形式是 <B>com</B><I>X</I><B>:</B>，这里     <I>X</I> 是一个数，一般是从 1 到 4。如果系统有多于四个串行端口，则这个符号(notation)可以表示串行端口从     1 到 9。尝试打开一个不存在或序号大于 9     的串行端口将导致错误。打开串行端口的可替代的方法是使用文件名    <B>\\.\comX</B>，这里 X 是对应于一个串行端口的任何(整)数；请注意，这个方法在     Windows 95 和 Windows 98 上相当的慢。
+<DT><B>Windows NT</B><DD>
+在交互运行 Tcl     的时候，如果存在一个控制台，则在真实的控制台和使用标准输入或输出的一个命令管道之间可能有一些奇怪的相互作用。如果为读而打开一个命令管道，在这个控制台键入的一些行将被发送到命令管道而一些行将别发送到     Tcl     求值器。如果为写而打开一个命令管道，在管道关闭之前，在这个控制台中键入的击键(keystroke)将一直是不可见的。在执行     16-bit 或 32-bit     应用程序时都可能发生这种事情。这些问题只发生在 Tcl     和子应用程序同时竞争这个控制台的时候。如果命令管道是从一个脚本中启动的，所以     Tcl     不访问控制台，或者命令管道不使用标准输出或输出，而是重定向(从或)到一个文件，那么上述问题不发生。
+<DT><B>Windows 95</B> <DD>
+不能同时为读写而打开一个命令管道来执行一个 16-bit DOS     应用程序，因为从一个管道接收标准输入和向一个管道发送标准输出的(两个)     16-bit DOS 应用程序同步运行。不执行 16-bit DOS     应用程序的命令管道异步运行并且可以同时为读写而打开。
+<P>
+在交互运行 Tcl     的时候，如果存在一个控制台，则在真实的控制台和使用标准输入或输出的一个命令管道之间可能有一些奇怪的相互作用。如果为从一个     32-bit     应用程序读而打开一个命令管道，在这个控制台键入的一些击键将被发送到命令管道而一些击键将别发送到     Tcl 求值器。如果为向一个 32-bit     应用程序写而打开一个命令管道，在管道关闭之前，在控制台中将一直没有输出是可见的。这些问题只发生在     Tcl     和子应用程序同时竞争这个控制台的时候。如果命令管道是从一个脚本中启动的，所以     Tcl     不访问控制台，或者命令管道不使用标准输出或输出，而是重定向(从或)到一个文件，那么上述问题不发生。
+<P>
+不论 Tcl 是否在交互的运行，如果为从一个 16-bit DOS     应用程序读而打开一个命令管道，在从命令管道的标准输出收到文件结束之前，对     <B>open</B> 的调用一直不返回。如果为向一个 16-bit DOS     应用程序写而打开一个命令管道，在管道实际上被关闭之前，没有数据被发送到命令管道的标准输出。象上面描述的那样，这个问题发生的原因是     16-bit DOS 应用程序同步运行。
+<DT><B>Macintosh</B><DD>
+在 Macintosh 下目前未实现打开串行端口。
+<P>
+在 Macintosh     不支持打开命令管道，原因是应用程序不支持标准输入或输出的概念。
+<DT><B>Unix</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<DD>
+给 <I>fileName</I> 来打开一个串行端口的有效值的形式是 <B>/dev/tty</B><I>X</I>，这里的     <I>X</I> 是 <B>a</B> 或 <B>b</B>，但是可以使用映射到一个串行端口的任何伪文件(pseudo-file)的名字。
+<P>
+在交互运行 Tcl     的时候，如果存在一个控制台，则在真实的控制台和使用标准输入或输出的一个命令管道之间可能有一些奇怪的相互作用。如果为读而打开一个命令管道，在这个控制台键入的一些行将被发送到命令管道而一些行将别发送到     Tcl 求值器。这些问题只发生在 Tcl     和子应用程序同时竞争这个控制台的时候。如果命令管道是从一个脚本中启动的，所以     Tcl     不访问控制台，或者命令管道不使用标准输出或输出，而是重定向(从或)到一个文件，那么上述问题不发生。
+</DL>
+<P>
+
+关于在不同平台上执行应用程序请参见 <B>exec</B> 命令的<B>移植要点</B>章节来得到不特定于命令管道的额外的信息。
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+file">file</A>(n), <A HREF="/cgi-bin/man/man2html?n+close">close</A>(n), <A HREF="/cgi-bin/man/man2html?n+filename">filename</A>(n), <A HREF="/cgi-bin/man/man2html?n+fconfigure">fconfigure</A>(n), <A HREF="/cgi-bin/man/man2html?n+gets">gets</A>(n), <A HREF="/cgi-bin/man/man2html?n+read">read</A>(n),
+<A HREF="/cgi-bin/man/man2html?n+puts">puts</A>(n), <A HREF="/cgi-bin/man/man2html?n+exec">exec</A>(n), <A HREF="/cgi-bin/man/man2html?1+fopen">fopen</A>(1)
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+access mode, append, create, file, non-blocking, open, permissions,
+pipeline, process, serial
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/16</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">命令管道 COMMAND PIPELINES</A><DD>
+<DT><A HREF="#lbAF">串行通信 SERIAL COMMUNICATIONS</A><DD>
+<DT><A HREF="#lbAG">配置选项 CONFIGURATION OPTIONS</A><DD>
+<DT><A HREF="#lbAH">移植要点 PORTABILITY ISSUES</A><DD>
+<DT><A HREF="#lbAI">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAJ">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

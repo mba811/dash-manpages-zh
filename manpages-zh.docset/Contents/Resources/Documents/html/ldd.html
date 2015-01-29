@@ -1,0 +1,148 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LDD</TITLE>
+</HEAD><BODY>
+<H1>LDD</H1>
+Section: User Commands  (1)<BR>Updated: 30 March 1995<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ldd - 显示共享库的依赖情况
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>ldd</B>
+
+[<B>-vVdr</B>]
+
+program ...
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>ldd</B>
+
+显示 每个 程序 需要 的 共享库 (shared library), 程序名 在 命令行 上 给出.
+<P>
+
+对于 a.out 程序,
+<B>ldd</B>
+
+简单的 进行 fork 和 exec 各个 程序, 执行 程序 时 argc 参数 等于零,
+a.out 的 动态连接器 (dynamic linker)
+<B>ld.so</B>,
+
+正常情况下 能够 调入 共享库, 注意到 这个 特殊情况, 从而 显示出 依赖关系.
+<P>
+
+对于 ELF 程序,
+<B>ldd</B>
+
+设置 适当的 环境变量集, 然后 fork 和 exec 各个 程序.
+ELF 的 动态连接器,
+<B>ld-linux.so</B>,
+
+正常情况下 能够 调入 共享库, 注意到 这个 特殊情况, 从而 显示出 依赖关系.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+<DL COMPACT>
+<DT><B>-v</B>
+
+<DD>
+显示
+<B>ldd</B>
+
+的 版本号.
+<DT><B>-V</B>
+
+<DD>
+显示 动态连接器
+<B>ld.so</B>
+
+的 版本号.
+<DT><B>-d</B>
+
+<DD>
+进行 重定位(relocation), 而且 报告 缺少的 函数 (仅限于 ELF).
+<DT><B>-r</B>
+
+<DD>
+对 数据目标 (data object) 和 函数 进行 重定位, 而且 报告 缺少的 
+数据目标 (仅限于 ELF).
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>BUGS</H2>
+
+对于 非常 陈旧 的 程序,
+<B>ldd</B>
+
+可能
+<I>无法</I>
+
+工作, 这些 程序 在 
+<B>ldd</B>
+
+加入 编译器工具 之前 就 连接 好了. 如果 对 这样的 某个 程序 执行
+<B>ldd ,</B>
+
+该 程序 的 argc = 0, 其 运行结果 无法 预测. 
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>作者 (AUTHOR)</H2>
+
+David Engel.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+ldconfig">ldconfig</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+ld.so">ld.so</A></B>(8),
+
+<B>ld.so.info</B>.
+
+<P>
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+第一版
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">BUGS</A><DD>
+<DT><A HREF="#lbAG">作者 (AUTHOR)</A><DD>
+<DT><A HREF="#lbAH">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

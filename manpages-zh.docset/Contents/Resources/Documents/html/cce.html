@@ -1,0 +1,127 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of cce</TITLE>
+</HEAD><BODY>
+<H1>cce</H1>
+Section: User Commands  (1)<BR>Updated: cce v0.35<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+cce - 控制台中文环境
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>语法 (SYNTAX) </H2>
+
+<B>cce [-e program]</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+该程序是一个类似于 WZCE ， yact 和 chdrv 的控制台中文平台。
+进入该环境后可以用"空格 + Ctrl"键来切换中文／英文的不同输
+入方式，" Ctrl+Alt+0~9 "可以用来改变不同的输入法。
+" Ctrl+Alt+9 "是内码输入法。" Ctrl+Alt+0 "是拼音输入法。
+默认情况下，CCE以全拼输入法作为输入法 1 （默认输入法），五笔
+输入法作为输入法 2 。你可以通过使用工具软件 cin2tab（安装在
+/usr/lib/cce 中）和 tab2cin 来创建自己的输入法。 cin2tab 会
+将输入法的源文件格式（ *.cin ）转换成二进制格式，而 tab2cin 
+完成的是相反的工作。
+<P>
+
+为了使用鼠标的剪切和粘贴功能，你必须在你的配置文件（ cce.cfg ）
+中设置你的鼠标类型。 Microsoft （串行鼠标）或 PS2 （默认）。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+<B>-e</B>
+
+<P>
+
+定义 CCE 启动后自动运行的程序，默认的是 shell
+<P>
+
+例如：
+<P>
+
+cce -e vi
+<P>
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>配置 (CONFIGURATION)</H2>
+
+CCE 的配置文件是 /usr/lib/cce/cce.cfg 。你可以在这个文件中定义
+很多选项。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>使用方法 (USAGE)</H2>
+
+<BR>&nbsp;Ctrl+Space&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;切换中文/英文输入法
+<BR>&nbsp;Ctrl+Alt+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;拼音输入法
+<BR>&nbsp;Ctrl+Alt+9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;内码输入法
+<BR>&nbsp;Ctrl+Alt+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;全拼输入法
+<BR>&nbsp;Ctrl+Alt+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;五笔输入法
+<BR>&nbsp;Ctrl+Alt+3-Ctrl+Alt+8&nbsp;&nbsp;&nbsp;其它输入法
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者(AUTHORS)</H2>
+
+yact:  Nicholas Pearl &lt;<A HREF="mailto:Nicholas.bbs@bbs.csie.nctu.edu.tw">Nicholas.bbs@bbs.csie.nctu.edu.tw</A>&gt;
+<P>
+
+bcs16: Server &lt;<A HREF="mailto:cnoize.bbs@bbs.cis.nctu.edu.tw">cnoize.bbs@bbs.cis.nctu.edu.tw</A>&gt;
+<P>
+
+chdrv: Youzhong Wang &lt;<A HREF="mailto:wycc@iis.sinica.edu.tw">wycc@iis.sinica.edu.tw</A>&gt; 
+<P>
+
+kon: Takashi MANABE (<A HREF="mailto:manabe@papilio.tutics.tut.ac.jp">manabe@papilio.tutics.tut.ac.jp</A>)
+<P>
+
+pyinput: ZhenChun Li (<A HREF="mailto:zhchli@163.net">zhchli@163.net</A>)
+<P>
+
+cce:  Rui He &lt;<A HREF="mailto:herui@cs.duke.edu">herui@cs.duke.edu</A>&gt;
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>程序错误 (BUGS)</H2>
+
+如果发现任何程序错误或对该程序有任何建议，请发信到以下地址：
+<A HREF="mailto:herui@cs.duke.edu">herui@cs.duke.edu</A>
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>声明（DISCLAIMER）</H2>
+
+本程序不提供任何形式的保证，无论是书面的还是暗示的。不保证
+本程序的任何适用性。本程序作者不对本程序承担任何担保。
+<P>
+8月29日 1999<TT>&nbsp;&nbsp;</TT><TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>    cce v0.35<BR>
+翻译者：所罗门
+10月20日 2000
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">语法 (SYNTAX) </A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">配置 (CONFIGURATION)</A><DD>
+<DT><A HREF="#lbAG">使用方法 (USAGE)</A><DD>
+<DT><A HREF="#lbAH">作者(AUTHORS)</A><DD>
+<DT><A HREF="#lbAI">程序错误 (BUGS)</A><DD>
+<DT><A HREF="#lbAJ">声明（DISCLAIMER）</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

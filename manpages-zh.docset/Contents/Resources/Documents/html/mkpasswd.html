@@ -1,0 +1,156 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MKPASSWD</TITLE>
+</HEAD><BODY>
+<H1>MKPASSWD</H1>
+Section: User Commands  (1)<BR>Updated: 22 August 1994<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+mkpasswd - 为用户产生新口令
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>mkpasswd</B>
+
+<I>[</I>
+
+<I>args</I>
+
+]
+[
+<I>user</I>
+
+]
+<A NAME="lbAD">&nbsp;</A>
+<H2>介绍 INTRODUCTION</H2>
+
+<B>mkpasswd</B>
+
+为用户产生口令并自动应用。它是基于O'Reilly的书<I>《Exploring Expect》</I>第23章中的代码的。
+<A NAME="lbAE">&nbsp;</A>
+<H2>用法 USAGE</H2>
+
+不带参数的话，
+<B>mkpasswd</B>
+
+返回一个新口令。带上用户名的话，
+<B>mkpasswd</B>
+
+为该用户分配一个新口令。
+<P>
+
+根据以下的标志可以随机性的产生口令。
+<A NAME="lbAF">&nbsp;</A>
+<H2>标志 FLAGS</H2>
+
+<B>-l</B>
+
+标志定义口令长度。缺省值为9。以下示例建立一个20位的口令。
+<P>
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>mkpasswd -l 20<BR>
+<P>
+<P>
+<B>-d</B>
+
+标志定义口令必须包含的最少数字位数。缺省值为2。以下示例建立一个含3位数字的口令。
+<P>
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>mkpasswd -d 3<BR>
+<P>
+<B>-c</B>
+
+标志定义口令必须包含的最少小写字母个数。缺省值为2。
+<P>
+<P>
+<B>-C</B>
+
+标志定义口令必须包含的最少大写字母个数。缺省值也是2。
+<P>
+The
+<B>-s</B>
+
+flag defines the minimum number of special characters that must be in the password.
+The default is 1.
+<P>
+<P>
+<B>-p</B>
+
+标志标明设立口令的程序。如果/etc/yppasswd存在的话则它为缺省值，否则就用/bin/passwd。
+<P>
+<P>
+<B>-2</B>
+
+标志交换键盘上左右手的字母(我想就是左手输入g则为h吧)，以使别人更难监视输入的口令。这也使口令猜测程序更容易成功。(这句不懂，请高手指教！)
+<P>
+<P>
+<B>-v</B>
+
+使设定口令的交互可见，但缺省是不可见的。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>示例 EXAMPLE</H2>
+
+以下示例建立一个15位包含至少3位数字和5位大写字符的口令。
+<P>
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>mkpasswd -l 15 -d 3 -C 5<BR>
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>另见 SEE ALSO</H2>
+
+<I>Don Libes所写的由O'Reilly and Associates于1995年一月出版的</I>
+
+《Exploring Expect:  A  Tcl-Based Toolkit  for  Automating Interactive  Programs》<BR>
+一书。
+<P>
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+Don Libes，国家标准与技术学会(NIST)
+<P>
+<B>mkpasswd</B>
+
+是公共域软件。如果本程序或者它的部分有用的话，将是NIST和我的荣誉。
+<P>
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人] </H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新] </H2>
+
+<B>2001/02/24</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">介绍 INTRODUCTION</A><DD>
+<DT><A HREF="#lbAE">用法 USAGE</A><DD>
+<DT><A HREF="#lbAF">标志 FLAGS</A><DD>
+<DT><A HREF="#lbAG">示例 EXAMPLE</A><DD>
+<DT><A HREF="#lbAH">另见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAI">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人] </A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新] </A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

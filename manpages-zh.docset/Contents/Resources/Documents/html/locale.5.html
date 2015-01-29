@@ -1,0 +1,816 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of locale</TITLE>
+</HEAD><BODY>
+<H1>locale</H1>
+Section: Linux用户手册 (5)<BR>Updated: 09 Nov 1994<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+locale - 地域定义文件的描述
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述</H2>
+
+<B>地域</B>
+
+定义文件含有
+<B><A HREF="/cgi-bin/man/man2html?1+localedef">localedef</A>(1) </B>
+
+命令所需的全部信息.
+<P>
+定义文件由几个小节组成, 一个小节详细地描述地域的一个范畴.
+<A NAME="lbAD">&nbsp;</A>
+<H2>语法</H2>
+
+地域定义文件以一个包含有如下关键字的文件头开头:
+<DL COMPACT>
+<DT><I>&lt;escape_char&gt;</I>
+
+<DD>
+其后所跟字符在文件的其余部分被特别解释为逃逸字符, 
+逃逸字符缺省为反斜杠(
+<B>\\  </B>
+
+).
+<DT><I>&lt;comment_char&gt;</I>
+
+<DD>
+后面所跟字符在文件的其余部分要特别解释为注释符, 注
+释符缺省为数字符号(
+<B>#</B>
+
+).
+<P>
+</DL>
+<P>
+
+地域定义分成几个部分, 每个部分对应一个地域范畴, 每个部分都
+可以复制别的地域范畴的内容, 也可以自己重新新定义一个, 如果
+一个范畴想要复制别的范畴, 则在该范畴的定义里唯一有效的关键
+字是
+<B>copy</B>,
+
+其后跟随要复制的地域范畴的名字.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H3>LC_CTYPE</H3>
+
+<B>LC_CTYPE</B>
+
+范畴的定义以第一栏的
+<I>LC_CTYPE </I>
+
+字符串开始.
+<P>
+可以有如下关键字:
+<P>
+<DL COMPACT>
+<DT><I>upper</I>
+
+<DD>
+跟随一个大写字母列表. 字母
+<B>A</B>
+
+到
+<B>Z</B>
+
+自动包括. 被说明
+为
+<B>cntrl, digit, punct,</B>
+
+或
+<B>space</B>
+
+的字符则不允许包括.
+<P>
+<DT><I>lower</I>
+
+<DD>
+跟随一个小写字母列表. 字母
+<B>a</B>
+
+到
+<B>z</B>
+
+自动包括. 同样也
+不允许如下字符:
+<B>cntrl, digit, punct,</B>
+
+或者
+<B>space.</B>
+
+<P>
+<DT><I>alpha</I>
+
+<DD>
+跟随一个字母列表. 所有被说明为
+<B>upper</B>
+
+或 
+<B>lower</B>
+
+的字符
+都自动包括. 但如下字符仍然不允许:
+<B>cntrl, digit, punct,</B>
+
+或
+<B>space</B>
+
+<P>
+<DT><I>digit</I>
+
+<DD>
+后面跟随的字符被划分为数字. 只允许数字
+<B>0 </B>
+
+到
+<B>9 ,</B>
+
+并且
+缺省它们也被包括进来了.
+<P>
+<DT><I>space</I>
+
+<DD>
+跟随一列被定义为空格的字符. 那些被说明为
+<B>upper, lower, alpha, digit, graph,</B>
+
+或者
+<B>xdigit</B>
+
+的字符是不被允许的. 而字符
+<B>&lt;space&gt;, &lt;form-feed&gt;, &lt;newline&gt;, &lt;carriage-return&gt;, &lt;tab&gt;,</B>
+
+以及
+<B>&lt;vertical-tab&gt;</B>
+
+则被自动包括进来.
+<P>
+<DT><I>cntrl</I>
+
+<DD>
+跟随一个控制字符列表.那些被说明为
+<B>upper, lower, alpha, digit, punct, graph, print</B>
+
+或者
+<B>xdigit</B>
+
+的字符不允许包括.
+<P>
+<DT><I>punct</I>
+
+<DD>
+跟随一个标点符号的列表. 不允许包括那些被说明为
+<B>upper, lower, alpha, digit, cntrl, xdigit</B>
+
+或者
+<B>&lt;space&gt;</B>
+
+字符.
+<P>
+<DT><I>graph</I>
+
+<DD>
+跟随一个可打印字符列表, 但不包括空格符
+<B>&lt;space&gt;</B>.
+
+被
+说明为
+<B>upper, lower, alpha, digit, xdigit</B>
+
+或
+<B>punct </B>
+
+的字符自动包括, 而被说明为
+<B>cntrl</B>
+
+的字符则不允许包括.
+<P>
+<DT><I>print</I>
+
+<DD>
+跟随一个可打印字符列表, 包括空格符
+<B>&lt;space&gt;</B>.
+
+被定义
+为
+<B>upper, lower, alpha, digit, xdigit, punct</B>
+
+或
+<B>&lt;space&gt;</B>
+
+的字符自动包括. 而被说明为
+<B>cntrl</B>
+
+的字符则
+不被允许.
+<P>
+<DT><I>xdigit</I>
+
+<DD>
+跟随一个被归类为十六进制数的字符的列表. 十进制数字必
+须被包括, 其后还有一个或多个的升序顺序的六字符集, 缺
+省包括下列字符:
+<B>0</B>
+
+到
+<B>9,</B>
+
+<B>a</B>
+
+到
+<B>f,</B>
+
+<B>A</B>
+
+到
+<B>F.</B>
+
+<P>
+<DT><I>blank</I>
+
+<DD>
+跟随一个被归类为
+<B>blank</B>
+
+字符的列表. 自动包括的字符有
+<B>&lt;space&gt;</B>
+
+和
+<B>&lt;tab&gt;.</B>
+
+<P>
+<DT><I>toupper</I>
+
+<DD>
+跟随一个从小写字母到大写字母的映射列表. 每个映射都是
+一个小写-大写字母对, 中间以
+<B>,</B>
+
+分隔, 并且用圆括号括起
+来. 各个映射之间则用分号分隔.
+<P>
+<DT><I>tolower</I>
+
+<DD>
+跟随一个从大写字母到小写字母的映射列表. 如果没有出现
+关键字tolower的话, 就使用它的逆toupper.
+<P>
+</DL>
+<P>
+
+<B>LC_CTYPE</B>
+
+定义以字符串
+<I>END LC_CYTPE</I>
+
+结束.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H3>LC_COLLATE</H3>
+
+<B>LC_COLLATE</B>
+
+范畴定义了校对字符的规则. 由于libc的局限性, 所以
+并没有实现所有的POSIX选项. 
+<P>
+该定义以第一栏的字符串
+<B>LC_COLLATE</B>
+
+为开始标记.
+<P>
+允许如下关键字:
+<P>
+<DL COMPACT>
+<DT><I>collating-element</I>
+
+<DD>
+<P>
+<DT><I>collating-symbol</I>
+
+<DD>
+<P>
+</DL>
+<P>
+
+order-definition以下列行开始:
+<DL COMPACT>
+<DT><I>order_start</I>
+
+<DD>
+</DL>
+<P>
+
+后随一个如下关键字的列表:
+<B>forward,</B>
+
+<B>backward</B>
+
+或者
+<B>position.</B>
+
+顺序定义由一些描述顺序的行组成, 并以如下关键字终止,
+<DL COMPACT>
+<DT><I>order_end.</I>
+
+<DD>
+</DL>
+<P>
+
+<P>
+要得到更多细节请查阅在
+<B>/usr/lib/nls/src</B>
+
+里的源代码. 请注意
+几个例子:
+<B>POSIX,</B>
+
+<B>Example</B>
+
+以及 
+<B>Example2.</B>
+
+<P>
+<P>
+
+<B>LC_COLLATE</B>
+
+的定义以字符串
+<I>END LC_COLLATE</I>
+
+结束.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H3>LC_MONETARY</H3>
+
+该定义以第一栏里的字符串
+<B>LC_MONETARY</B>
+
+开始.
+<P>
+可以有如下关键字:
+<P>
+<DL COMPACT>
+<DT><I>int_curr_symbol</I>
+
+<DD>
+其后跟随国际货币符号. 必须是一个四字符的字符串, 包含
+有ISO 4217标准所定义的国际货币符号(三字符)以及一个
+分隔符号.
+<P>
+<DT><I>currency_symbol</I>
+
+<DD>
+其后跟随当地的货币符号.
+<P>
+<DT><I>mon_decimal_point</I>
+
+<DD>
+其后跟随一个字符串, 该字符串在格式化货币的数额时用做
+十进制定界符号.
+<P>
+<DT><I>mon_thousands_sep</I>
+
+<DD>
+其后跟随一个字符串, 该字符串在格式化货币的数额时用做
+组分隔符号.
+<P>
+<DT><I>mon_grouping</I>
+
+<DD>
+其后跟随一个字符串, 该字符串描述货币数额格式.
+<P>
+<DT><I>positive_sign</I>
+
+<DD>
+其后跟随一个字符串, 该字符串被用于指示货币数额的正号.
+<P>
+<DT><I>negative_sign</I>
+
+<DD>
+其后跟随一个字符串, 该字符串被用于指示货币数额的负号.
+<P>
+<DT><I>int_frac_digits</I>
+
+<DD>
+其后跟随货币数额的小数部分的数字位数, 该数在用
+<B>int_curr_symbol</B>
+
+格式化货币数额时要用到.
+<P>
+<DT><I>frac_digits</I>
+
+<DD>
+其后跟随货币数额的小数部分的数字位数, 该数在用
+<B>currency_symbol</B>
+
+格式化货币数额时要用到.
+<P>
+<DT><I>p_cs_precedes</I>
+
+<DD>
+其后跟随一个整数, 如果
+<I>currency_symbol</I>
+
+或者
+<I>int_curr_symbol</I>
+
+要置于格式化的货币数额前面, 该整数就为
+<B>1</B>,
+
+否则为
+<B>0</B>.
+
+<P>
+<DT><I>p_sep_by_space</I>
+
+<DD>
+跟随一个整数,
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>0</B>
+
+<DD>
+表明在货币符号和数额之间不打印空格,
+<DT><B>1</B>
+
+<DD>
+表明在货币符号和数额之间打印一个空格,
+<DT><B>2 </B>
+
+<DD>
+的意思是如果货币符号与数额的正号相邻的话, 其间打印一个空格,
+</DL>
+</DL>
+
+<P>
+<DT><I>n_cs_precedes</I>
+
+<DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>0 </B>
+
+<DD>
+- 负号跟随于数额,
+<DT><B>1</B>
+
+<DD>
+- 负号领先于数额,
+</DL>
+</DL>
+
+<P>
+<DT><I>n_sep_by_space</I>
+
+<DD>
+一个整数,设为
+<B>0</B>
+
+要求在
+<I>currency_symbol</I>
+
+或者 
+<I>int_curr_symbol</I>
+
+和一个负的货币数额之间没有空格分隔, 设为
+<B>1</B>
+
+则要求在两者之间有一个空格分隔, 而设为
+<B>2</B>
+
+则要求在货币符号和负号之间有一个空格分隔, 如果这两者相邻的话,
+<P>
+<DT><I>p_sign_posn</I>
+
+<DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>0</B>
+
+<DD>
+意思是要用括号括住
+<I>currency_symbol</I>
+
+或
+<I>int_curr_symbol.</I>
+
+和货币数额,
+<DT><B>1</B>
+
+<DD>
+正号要领先于货币数额和货币符号
+<I>currency_symbol</I>
+
+或
+<I>int_curr_symbol.</I>
+
+<DT><B>2</B>
+
+<DD>
+正号跟在货币数额和货币符号
+<I>currency_symbol</I>
+
+或
+<I>int_curr_symbol</I>
+
+的后面.
+<DT><B>3</B>
+
+<DD>
+正号领先于货币符号
+<I>currency_symbol</I>
+
+或
+<I>int_curr_symbol.</I>
+
+<DT><B>4</B>
+
+<DD>
+正号跟在货币符号
+<I>currency_symbol</I>
+
+或
+<I>int_curr_symbol</I>
+
+的后面.
+</DL>
+</DL>
+
+<P>
+<DT><I>n_sign_posn</I>
+
+<DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>0</B>
+
+<DD>
+意思是要用括号括住
+<I>currency_symbol</I>
+
+或
+<I>int_curr_symbol.</I>
+
+和货币数额,
+<DT><B>1</B>
+
+<DD>
+负号领先于货币数额及货币符号
+<I>currency_symbol</I>
+
+或
+<I>int_curr_symbol.</I>
+
+<DT><B>2</B>
+
+<DD>
+负号跟在货币数量及货币符号
+<I>currency_symbol</I>
+
+或
+<I>int_curr_symbol</I>
+
+的后面.
+<DT><B>3</B>
+
+<DD>
+负号领先于货币符号
+<I>currency_symbol</I>
+
+或
+<I>int_curr_symbol.</I>
+
+<DT><B>4</B>
+
+<DD>
+负号跟在货币符号
+<I>currency_symbol</I>
+
+或
+<I>int_curr_symbol</I>
+
+的后面.
+</DL>
+</DL>
+
+<P>
+</DL>
+<P>
+
+<B>LC_MONETARY</B>
+
+定义以字符串
+<I>END LC_MONETARY.</I>
+
+结束,
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H3>LC_NUMERIC</H3>
+
+该定义以第一栏的字符串
+<B>LC_NUMERIC</B>
+
+开始.
+<P>
+可有如下关键字:
+<P>
+<DL COMPACT>
+<DT><I>decimal_point</I>
+
+<DD>
+跟随一个字符串, 该串在格式化数量值时用作十进制定界符,
+<DT><I>thousands_sep</I>
+
+<DD>
+跟随一个字符串, 该串在格式化数量值时用作群组分隔符,
+<DT><I>grouping</I>
+
+<DD>
+跟随一个字符串, 该串描述数量值的格式化,
+<P>
+</DL>
+<P>
+
+<B>LC_NUMERIC</B>
+
+定义以字符串
+<I>END LC_NUMERIC.</I>
+
+结束,
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H3>LC_TIME</H3>
+
+该定义以第一栏的字符串
+<B>LC_TIME</B>
+
+开始,
+<P>
+可以有如下关键字:
+<P>
+<DL COMPACT>
+<DT><I>abday</I>
+
+<DD>
+跟随一个简写星期名列表, 该列表以Sunday或其译名开头,
+<DT><I>day</I>
+
+<DD>
+跟随一个星期名列表, 该列表以Sunday开头,
+<DT><I>abmon</I>
+
+<DD>
+跟随一个简写的月名列表,
+<DT><I>mon</I>
+
+<DD>
+跟随一个月名列表,
+<DT><I>am_pm</I>
+
+<DD>
+对
+<B>am</B>
+
+和
+<B>pm</B>
+
+的适当表示,
+<DT><I>d_t_fmt</I>
+
+<DD>
+适当的日期加时间格式,
+<DT><I>d_fmt</I>
+
+<DD>
+适当的日期格式,
+<DT><I>t_fmt</I>
+
+<DD>
+适当的时间格式,
+<DT><I>t_fmt_ampm</I>
+
+<DD>
+适当的时间格式(12小时格式),
+<P>
+</DL>
+<P>
+
+<B>LC_TIME</B>
+
+定义以字符串
+<I>END LC_TIME.</I>
+
+结束,
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H3>LC_MESSAGES</H3>
+
+该定义以第一栏的字符串
+<B>LC_MESSAGES</B>
+
+开始,
+<P>
+可以有如下关键字:
+<P>
+<DL COMPACT>
+<DT><I>yesexpr</I>
+
+<DD>
+跟随一个正则表达式, 描述可能的yes-responses. 
+<P>
+<DT><I>noexpr</I>
+
+<DD>
+跟随一个正则表达式, 描述可能的no-responses. 
+<P>
+</DL>
+<P>
+
+<B>LC_MESSAGES</B>
+
+定义以字符串 
+<I>END LC_MESSAGES</I>
+
+结束.
+<P>
+要得到更多细节, 请查阅POSIX.2标准.
+<A NAME="lbAK">&nbsp;</A>
+<H2>文件</H2>
+
+/usr/lib/locale/<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>- 当前地域范畴设置数据库<BR>
+/usr/lib/nls/charmap/*<TT>&nbsp;&nbsp;</TT>- 字符映射文件<BR>
+<A NAME="lbAL">&nbsp;</A>
+<H2>BUGS</H2>
+
+该手册页并不完全.
+<A NAME="lbAM">&nbsp;</A>
+<H2>作者</H2>
+
+Jochen Hein (<A HREF="mailto:Hein@Student.TU-Clausthal.de">Hein@Student.TU-Clausthal.de</A>)
+<A NAME="lbAN">&nbsp;</A>
+<H2>CONFORMING TO</H2>
+
+POSIX.2
+<A NAME="lbAO">&nbsp;</A>
+<H2>另见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?3+setlocale">setlocale</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+localeconv">localeconv</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?5+charmap">charmap</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?1+locale">locale</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+localedef">localedef</A></B>(1)
+
+<P>
+<A NAME="lbAP">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>&lt;email&gt;</B>
+
+<A NAME="lbAQ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2001/7/15
+<A NAME="lbAR">&nbsp;</A>
+<H2>《Linuxfourm 中文MAN-PAGE计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">描述</A><DD>
+<DT><A HREF="#lbAD">语法</A><DD>
+<DL>
+<DT><A HREF="#lbAE">LC_CTYPE</A><DD>
+<DT><A HREF="#lbAF">LC_COLLATE</A><DD>
+<DT><A HREF="#lbAG">LC_MONETARY</A><DD>
+<DT><A HREF="#lbAH">LC_NUMERIC</A><DD>
+<DT><A HREF="#lbAI">LC_TIME</A><DD>
+<DT><A HREF="#lbAJ">LC_MESSAGES</A><DD>
+</DL>
+<DT><A HREF="#lbAK">文件</A><DD>
+<DT><A HREF="#lbAL">BUGS</A><DD>
+<DT><A HREF="#lbAM">作者</A><DD>
+<DT><A HREF="#lbAN">CONFORMING TO</A><DD>
+<DT><A HREF="#lbAO">另见</A><DD>
+<DT><A HREF="#lbAP">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAQ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAR">《Linuxfourm 中文MAN-PAGE计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,148 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of send</TITLE>
+</HEAD><BODY>
+<H1>send</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: 4.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+send - 在一个不同的应用的执行一个命令
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>send ?</B><I>options</I>? <I>app cmd </I>?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令安排在叫做 <I>app </I>的应用中执行 <I>cmd</I> (和 <I>arg</I>s)。它返回这个命令执行的结果或错误。<I>App</I> 可以是其主窗口在容纳发送者的主窗口的显示器上的任何应用的名字；不需要在同一个进程中。如果不存在 <I>arg</I> 参数，则要执行的这个命令完全的包含在 <I>cmd</I> 参数内。如果存在一个或多个 <I>arg</I>s，则把它们串联起来形成要执行的命令，就象 <B>eval</B> 命令那样。
+<P>
+
+如果这个命令的最初的参数开始于“-”，则把它们作为选项对待。当前定义了下列选项:
+<DL COMPACT>
+<DT><B>-async</B><DD>
+要求异步调用。在这种情况下 <B>send</B>     命令将立即完成而不等待 <I>cmd</I>     在目标应用中完成；不能获得任何结果并且忽略在发送命令中的错误。如果目标应用与发送的应用在同一个进程中则忽略     <B>-async</B> 选项。
+<DT><B>-displayof</B> <I>pathName</I><DD>
+指定目标应用的主窗口是在用 <I>pathName </I>给出的窗口的显示器上，而不是包含应用的主窗口的显示器。
+<DT><B>--</B><DD>
+除了终止选项的列表没有其他用途。这个选择只在 <I>app</I>     包含一个前导的“-”字符时需要。
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>应用的名字 APPLICATION NAMES</H2>
+
+<P>
+
+用程序或建立这个应用的脚本的名字来初始设置应用的名字。你可以用 <B>tk appname</B> 命令查询和变更一个应用的名字
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>停用发送 DISABLING SENDS</H2>
+
+<P>
+
+如果从应用中删除了 <B>send</B> 命令(比如，使用了命令 <B>rename send {}</B>)，则这个应用不对到来的发送请求做任何响应，也不能发起外出的请求。可以通过调用 <B>tk appname</B> 命令重新启用通信。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>安全 SECURITY</H2>
+
+<P>
+
+<B>send</B> 命令是一个潜在的严重的安全漏洞。在 Unix 上，可以连接到你的 X 服务器的任何应用都可以向你的应用发送脚本。这些到来的脚本可以使用 Tcl 来读写你的文件和用你的名字调用子进程。
+基于主机的访问控制比如 <B>xhost</B> 特别不安全，因为它允许在特定主机上有一个帐户的任何人连接到你的服务器上，并且如果停用了它则允许任何人从任何地方连接到你的服务器。为了提供少量的安全性，Tk 检查服务器使用的访问控制，并且除非是 (a)启用了 <B>xhost</B>式样的访问控制(就是说只有特定主机可以建立连接)，和 (b)允许的主机的列表是空的，否则丢弃到来的发送。这意味着除非应用使用了其他形式的授权(authorization)比如 <B>xauth</B>，否则不能连接到服务器上。
+
+
+
+
+
+
+
+在 Windows 上，目前禁用 <B>send</B>。它的多数功能由 <B>dde</B> 命令提供。
+
+
+
+
+
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+
+
+
+
+
+
+
+application, dde, name, remote execution, security, send
+
+
+
+
+
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/05/28</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">应用的名字 APPLICATION NAMES</A><DD>
+<DT><A HREF="#lbAF">停用发送 DISABLING SENDS</A><DD>
+<DT><A HREF="#lbAG">安全 SECURITY</A><DD>
+<DT><A HREF="#lbAH">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

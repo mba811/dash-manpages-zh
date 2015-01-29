@@ -1,0 +1,142 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DROPDB</TITLE>
+</HEAD><BODY>
+<H1>DROPDB</H1>
+Section: PostgreSQL Client Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+dropdb - 删除一个现有 PostgreSQL 数据库
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>dropdb</B> [ <B></B><I>option</I><B></B>...<B> </B>] <B></B><I>dbname</I><B></B>
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>dropdb</B> 删除一个现有 PostgreSQL 数据库。 执行这条命令的人必须是数据库超级用户，或者是数据库所有者。
+<P>
+
+<B>dropdb</B> 是对 SQL 命令 DROP DATABASE [<B><A HREF="/cgi-bin/man/man2html?7+drop_database">drop_database</A></B>(7)]  的封装。因此，用两种方法删除数据库都没什么区别。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<B>dropdb</B> 接受下列命令行选项：
+<DL COMPACT>
+<DT><B></B><I>dbname</I><B></B><DD>
+<BR>&nbsp;声明要删除的数据库名。
+<DT><B>-e</B><DD>
+<DT><B>--echo</B><DD>
+<BR>&nbsp;回显&nbsp;dropdb&nbsp;生成的命令并且把它发送到服务器。
+<DT><B>-i</B><DD>
+<DT><B>--interactive</B><DD>
+<BR>&nbsp;在做任何破坏性动作前提示。
+<DT><B>-q</B><DD>
+<DT><B>--quiet</B><DD>
+<BR>&nbsp;不显示响应。
+</DL>
+<P>
+
+<P>
+
+<B>createuser</B> 还接受下列命令行参数用作连接参数：
+<DL COMPACT>
+<DT><B>-h </B><I>host</I><B></B><DD>
+<DT><B>--host </B><I>host</I><B></B><DD>
+<BR>&nbsp;声明运行服务器的机器的主机名。&nbsp;如果数值以斜扛开头，则它被用做到&nbsp;Unix&nbsp;域套接字的路径。
+<DT><B>-p </B><I>port</I><B></B><DD>
+<DT><B>--port </B><I>port</I><B></B><DD>
+<BR>&nbsp;声明服务器&nbsp;正在侦听的互联网&nbsp;TCP&nbsp;端口号或本地Unix域套接字的文件扩展（描述符）。
+<DT><B>-U </B><I>username</I><B></B><DD>
+<DT><B>--username </B><I>username</I><B></B><DD>
+<BR>&nbsp;连接的用户名（不是要创建的用户名）。
+<DT><B>-W</B><DD>
+<DT><B>--password</B><DD>
+<BR>&nbsp;强制口令提示（与服务器连接的口令，不是新用户的口令。）
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>PGHOST</B><DD>
+<DT><B>PGPORT</B><DD>
+<DT><B>PGUSER</B><DD>
+<BR>&nbsp;缺省连接参数。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>DIAGNOSTICS 诊断</H2>
+
+<P>
+
+<BR>&nbsp;如果出现错误，参阅&nbsp;DROP&nbsp;DATABASE&nbsp;&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+drop_database">drop_database</A></B>(7)]&nbsp;&nbsp;和&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1)&nbsp;获取可能的问题和错误信息描述。&nbsp;数据库服务器必须在目标机器上运行。同样，任何前端库&nbsp;libpq&nbsp;&nbsp;使用的缺省连接设置和环境变量都将适用。
+<A NAME="lbAH">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;删除缺省数据库服务器上的数据库&nbsp;demo：
+<P>
+<PRE>
+$ <B>dropdb demo</B>
+DROP DATABASE
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;用在主机eden上的服务器删除数据库demo，&nbsp;端口是&nbsp;5000，需要确认和显示执行的命令：
+<P>
+<PRE>
+$ <B>dropdb -p 5000 -h eden -i -e demo</B>
+Database &quot;demo&quot; will be permanently deleted.
+Are you sure? (y/n) <B>y</B>
+DROP DATABASE &quot;demo&quot;
+DROP DATABASE
+
+</PRE>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+createdb">createdb</A></B>(1), DROP DATABASE [<B><A HREF="/cgi-bin/man/man2html?7+drop_database">drop_database</A></B>(7)]
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAG">DIAGNOSTICS 诊断</A><DD>
+<DT><A HREF="#lbAH">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

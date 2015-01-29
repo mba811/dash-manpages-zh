@@ -1,0 +1,152 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE USER</TITLE>
+</HEAD><BODY>
+<H1>CREATE USER</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE USER - 创建一个新的数据库用户帐户
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE USER <I>name</I> [ [ WITH ] <I>option</I> [ ... ] ]
+
+where <I>option</I> can be:
+    
+      SYSID <I>uid</I> 
+    | [ ENCRYPTED | UNENCRYPTED ] PASSWORD '<I>password</I>'
+    | CREATEDB | NOCREATEDB
+    | CREATEUSER | NOCREATEUSER
+    | IN GROUP <I>groupname</I> [, ...]
+    | VALID UNTIL '<I>abstime</I>' 
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE USER</B> 向一个 PostgreSQL  数据库集群增加一个新用户。 参考 Chapter 17 ``Database Users and Privileges''  和 Chapter 19 ``Client Authentication''  获取关于管理用户和认证的信息。 要执行这条命令，你必须是一个数据库超级用户。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;用户名
+<DT><B></B><I>uid</I><B></B><DD>
+SYSID 子句可以用于选择正在被创建的用户的 PostgreSQL 用户标识。 通常这是不必要的，但是如果你想恢复一个孤儿对象的所有者，也许这个很有用。
+<P>
+<BR>&nbsp;如果没有声明这个，缺省使用已分配的最高用户标识加一（最小是&nbsp;100）。
+<DT><B></B><I>password</I><B></B><DD>
+<BR>&nbsp;设置用户的口令，如果你不准备使用口令认证，&nbsp;那么你可以省略这个选项，但如果你想切换到一个口令认证的服务器，那么该用户将不能联接。&nbsp;此口令可以稍后再次设置或者修改，使用&nbsp;ALTER&nbsp;USER&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+alter_user">alter_user</A></B>(7)]。
+<DT><B>ENCRYPTED</B><DD>
+<DT><B>UNENCRYPTED</B><DD>
+控制口令在数据库中是否以加密形式存储在系统表中。 （如果两个都没有设置，那么缺省的特性是由配置参数 password_encryption 决定的。） 如果提供的字串已经是 MD5 加密的格式，那么就照原样存储， 不管声明的是 ENCRYPTED 还是 UNENCRYPTED。 这样就允许在转储/恢复的过程中重载加密后的口令。
+<P>
+<BR>&nbsp;请注意老的客户端可能缺少&nbsp;MD5&nbsp;认证机制，我们需要这个认证机制处理存储为密文的口令。
+<DT><B>CREATEDB</B><DD>
+<DT><B>NOCREATEDB</B><DD>
+这个子句定义用户的创建数据库权限。 如果声明了CREATEDB， 被定义的用户将允许创建其自己的数据库。 而使用NOCREATEDB将否决该用户的创建数据库的能力。 如果忽略本子句，缺省是NOCREATEDB。 
+<DT><B>CREATEUSER</B><DD>
+<DT><B>NOCREATEUSER</B><DD>
+<BR>&nbsp;该子句决定一个用户是否能创建一个新的用户。&nbsp;这个选项同样把此用户变成数据库超级用户，可以跨越所有访问限制。省略这个参数将置用户的这个属性为&nbsp;NOCREATEUSER。
+<DT><B></B><I>groupname</I><B></B><DD>
+<BR>&nbsp;一个组名称，把这个用户设为该组成员。&nbsp;你可以列出多个组名字。
+<DT><B></B><I>abstime</I><B></B><DD>
+VALID UNTIL （有效期）子句设置一个绝对时间， 过了该时间后用户的口令将不再有效。 如果省略这个子句，登陆将总是有效的。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;使用&nbsp;ALTER&nbsp;USER&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+alter_user">alter_user</A></B>(7)]&nbsp;修改用户的口令和权限，DROP&nbsp;USER&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+drop_user">drop_user</A></B>(7)]&nbsp;删除一个用户。&nbsp;使用&nbsp;ALTER&nbsp;GROUP&nbsp;[<B><A HREF="/cgi-bin/man/man2html?l+alter_group">alter_group</A></B>(l)]&nbsp;从组中增加或删除用户。
+<P>
+
+PostgreSQL  里有一个程序 createuser [<B><A HREF="/cgi-bin/man/man2html?1+createuser">createuser</A></B>(1)] 与CREATE USER 有相同的功能（实际上，它调用这条命令）， 但是可以在命令行上运行。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;创建一个没有口令的用户：
+<P>
+<PRE>
+CREATE USER jonathan;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;创建一个有口令的用户：
+<P>
+<PRE>
+CREATE USER davide WITH PASSWORD 'jw8s0F4';
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;创建一个有口令的用户，其帐号在&nbsp;2004&nbsp;年底失效。&nbsp;注意当&nbsp;2005&nbsp;年走过一秒后，该帐号将不再有效：
+<P>
+<PRE>
+CREATE USER miriam WITH PASSWORD 'jw8s0F4' VALID UNTIL '2005-01-01';
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;创建一个拥有创建数据库权限的用户：
+<P>
+<PRE>
+CREATE USER manuel WITH PASSWORD 'jw8s0F4' CREATEDB;
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>CREATE USER</B> 语句是 PostgreSQL 扩展。 SQL 标准把用户的定义交给具体实现处理。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+ALTER USER [<B><A HREF="/cgi-bin/man/man2html?7+alter_user">alter_user</A></B>(7)], DROP USER [<B><A HREF="/cgi-bin/man/man2html?l+drop_user">drop_user</A></B>(l)], <B><A HREF="/cgi-bin/man/man2html?1+createuser">createuser</A></B>(1)
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

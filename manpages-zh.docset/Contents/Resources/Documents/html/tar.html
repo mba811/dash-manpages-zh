@@ -1,0 +1,1104 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of TAR</TITLE>
+</HEAD><BODY>
+<H1>TAR</H1>
+Section: tar (1)<BR>Updated: Mar 2010<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>名字</H2>
+
+tar - tar 档案文件管理程序的 GNU 版本。
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>tar</B>
+
+<I>&lt;操作参数&gt; [选项]</I>
+
+<P>
+<I>操作参数:</I>
+
+<PRE>
+<B>[-]A --catenate --concatenate</B>
+<B>[-]c --create</B>
+<B>[-]d --diff --compare</B>
+<B>[-]r --append</B>
+<B>[-]t --list</B>
+<B>[-]u --update</B>
+<B>[-]x --extract --get</B>
+<B>--delete</B>
+</PRE>
+
+<P>
+<I>常用选项:</I>
+
+<PRE>
+<B>-C</B>, <B>--directory</B> 目录
+<B>-f</B>, <B>--file</B> 文件
+<B>-j</B>, <B>--bzip2</B>
+<B>-J</B>, <B>--xz</B>
+<B>-p</B>, <B>--preserve-permissions</B>
+<B>-v</B>, <B>--verbose</B>
+<B>-z</B>, <B>--gzip</B>
+</PRE>
+
+<P>
+<I>所有选项:</I>
+
+<BR>
+
+[
+<B>-a</B>, <B>--auto-compress</B>
+
+]
+[
+<B>--add-file</B> 文件
+
+]
+[
+<B>--anchored</B>
+
+]
+[
+<B>--atime-preserve</B>
+
+]
+[
+<B>-b</B>, <B>--blocking-factor</B> N
+
+]
+[
+<B>-B</B>, <B>--read-full-records</B>
+
+]
+[
+<B>--backup</B>[=备份类型]
+
+]
+[
+<B>--block-compress</B>
+
+]
+[
+<B>-C</B>, <B>--directory</B> 目录
+
+]
+[
+<B>--checkpoint</B>
+
+]
+[
+<B>--delay-directory-restore</B>
+
+]
+[
+<B>--exclude</B> 文件或目录
+
+]
+[
+<B>--exclude-caches</B>
+
+]
+[
+<B>--exclude-caches-all</B>
+
+]
+[
+<B>--exclude-caches-under</B>
+
+]
+[
+<B>--exclude-tag</B> 文件
+
+]
+[
+<B>--exclude-tag-all</B> 文件
+
+]
+[
+<B>--exclude-tag-under</B> 文件
+
+]
+[
+<B>-f</B>, <B>--file</B> [主机名:]文件
+
+]
+[
+<B>-F</B>, <B>--info-script</B> 文件, <B>--new-volume-script</B> 文件
+
+]
+[
+<B>--force-local</B>
+
+]
+[
+<B>--format</B> 格式
+
+]
+[
+<B>-g</B>, <B>--listed-incremental</B> 快照
+
+]
+[
+<B>-G</B>, <B>--incremental</B>
+
+]
+[
+<B>--group</B> 组
+
+]
+[
+<B>-h</B>, <B>--dereference</B>
+
+]
+[
+<B>--help</B>
+
+]
+[
+<B>-i</B>, <B>--ignore-zeros</B>
+
+]
+[
+<B>-I</B>, <B>--use-compress-program</B> 程序
+
+]
+[
+<B>--ignore-case</B>
+
+]
+[
+<B>--ignore-command-error</B>
+
+]
+[
+<B>--ignore-failed-read</B>
+
+]
+[
+<B>--index-file</B> 文件
+
+]
+[
+<B>-j</B>, <B>--bzip2</B>
+
+]
+[
+<B>-J</B>, <B>--xz</B>
+
+]
+[
+<B>-k</B>, <B>--keep-old-files</B>
+
+]
+[
+<B>-K</B>, <B>--starting-file</B> 文件
+
+]
+[
+<B>--keep-newer-files</B>
+
+]
+[
+<B>-l</B>, <B>--check-links</B>
+
+]
+[
+<B>-L</B>, <B>--tape-length</B> N
+
+]
+[
+<B>--lzip</B>
+
+]
+[
+<B>--lzma</B>
+
+]
+[
+<B>--lzop</B>
+
+]
+[
+<B>-m</B>, <B>--touch</B>, <B>--modification-time</B>
+
+]
+[
+<B>-M</B>, <B>--multi-volume</B>
+
+]
+[
+<B>--mode</B> 权限
+
+]
+[
+<B>--mtime</B> 日期
+
+]
+[
+<B>-N</B>, <B>--after-date</B> 日期, <B>--newer</B> 日期
+
+]
+[
+<B>--newer-mtime</B> 日期
+
+]
+[
+<B>--no-anchored</B>
+
+]
+[
+<B>--no-auto-compress</B>
+
+]
+[
+<B>--no-delay-directory-restore</B>
+
+]
+[
+<B>--no-ignore-case</B>
+
+]
+[
+<B>--no-ignore-command-error</B>
+
+]
+[
+<B>--no-overwrite-dir</B>
+
+]
+[
+<B>--no-quote-chars</B>
+
+]
+[
+<B>--no-recursion</B>
+
+]
+[
+<B>--no-same-permissions</B>
+
+]
+[
+<B>--no-unquote</B>
+
+]
+[
+<B>--no-wildcards</B>
+
+]
+[
+<B>--no-wildcards-match-slash</B>
+
+]
+[
+<B>--null</B>
+
+]
+[
+<B>--numeric-owner</B>
+
+]
+[
+<B>-o</B>, <B>--old-archive</B>, <B>--portability</B>, <B>--no-same-owner</B>
+
+]
+[
+<B>-O</B>, <B>--to-stdout</B>
+
+]
+[
+<B>--occurrence</B> 次数
+
+]
+[
+<B>--one-file-system</B>
+
+]
+[
+<B>--overwrite</B>
+
+]
+[
+<B>--overwrite-dir</B>
+
+]
+[
+<B>--owner</B> 用户
+
+]
+[
+<B>-p</B>, <B>--same-permissions</B>, <B>--preserve-permissions</B>
+
+]
+[
+<B>-P</B>, <B>--absolute-names</B>
+
+]
+[
+<B>--pax-option</B> 关键字列表
+
+]
+[
+<B>--posix</B>
+
+]
+[
+<B>--preserve</B>
+
+]
+[
+<B>--quote-chars</B> 字符串
+
+]
+[
+<B>--quote-style</B> 风格
+
+]
+[
+<B>-R</B>, <B>--block-number</B>
+
+]
+[
+<B>--record-size</B> 字节数
+
+]
+[
+<B>--recursion</B>
+
+]
+[
+<B>--recursive-unlink</B>
+
+]
+[
+<B>--remove-files</B>
+
+]
+[
+<B>--restrict</B>
+
+]
+[
+<B>--rmt-command</B> 命令
+
+]
+[
+<B>--rsh-command</B> 命令
+
+]
+[
+<B>-s</B>, <B>--same-order</B>, <B>--preserve-order</B>
+
+]
+[
+<B>-S</B>, <B>--sparse</B>
+
+]
+[
+<B>--same-owner</B>
+
+]
+[
+<B>--show-defaults</B>
+
+]
+[
+<B>--show-omitted-dirs</B>
+
+]
+[
+<B>--show-transformed-names</B>, <B>--show-stored-names</B>
+
+]
+[
+<B>--strip-components</B> 目录层数
+
+]
+[
+<B>--suffix</B> 后缀
+
+]
+[
+<B>-T</B>, <B>--files-from</B> 文件
+
+]
+[
+<B>--test-label</B>
+
+]
+[
+<B>--to-command</B> 命令
+
+]
+[
+<B>--transform</B> sed表达式
+
+]
+[
+<B>--totals</B>
+
+]
+[
+<B>-U</B>, <B>--unlink-first</B>
+
+]
+[
+<B>--unquote</B>
+
+]
+[
+<B>--utc</B>
+
+]
+[
+<B>-v</B>, <B>--verbose</B>
+
+]
+[
+<B>-V</B>, <B>--label</B> 名称
+
+]
+[
+<B>--version</B>
+
+]
+[
+<B>--volno-file</B> 文件
+
+]
+[
+<B>-w</B>, <B>--interactive</B>, <B>--confirmation</B>
+
+]
+[
+<B>-W</B>, <B>--verify</B>
+
+]
+[
+<B>--wildcards</B>
+
+]
+[
+<B>--wildcards-match-slash</B>
+
+]
+[
+<B>-X</B>, <B>--exclude-from</B> 文件
+
+]
+[
+<B>-z</B>, <B>--gzip</B>, <B>--gunzip</B>, <B>--ungzip</B>
+
+]
+[
+<B>-Z</B>, <B>--compress</B>, <B>--uncompress</B>
+
+]
+[
+<B>-[0-7][lmh]</B>
+
+]
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+这是<B>tar</B>的GNU版本的手册页。 <B>tar</B>是一个用于储存或提取<I>tar文件</I>的程序。 <I>tar文件</I>可放在磁盘中， 也可以存为普通文件。
+<B>tar</B>&nbsp;的第一个参数必须是操作参数A、c、d、r、t、u、x 中的一个， 参数后面可跟着任意可选选项。
+<B>tar</B>的最后一个参数是你要处理的文件或目录的名字。 如果你指定了一个目录， 该目录的所有子目录都将被加入存档。
+<A NAME="lbAE">&nbsp;</A>
+<H2>应用举例</H2>
+
+<DL COMPACT>
+<DT><B>tar -xvf foo.tar</B>
+
+<DD>
+提取 foo.tar 文件并显示提取过程
+<DT><B>tar -xzf foo.tar.gz</B>
+
+<DD>
+提取用 gzip 压缩的文件 foo.tar.gz
+<DT><B>tar -cjf foo.tar.bz2 bar/</B>
+
+<DD>
+用 bzip 为目录 bar 创建一个叫做 foo.tar.bz2存档
+<DT><B>tar -xjf foo.tar.bz2 -C bar/</B>
+
+<DD>
+把用 bzip 压缩的文件 foo.tar.bz2 提取到 bar 目录
+<DT><B>tar -xzf foo.tar.gz blah.txt</B>
+
+<DD>
+把文件 blah.txt 从 foo.tar.gz 中提取出来
+</DL>
+<P>
+
+注意: 当压缩或提取的时候， 压缩类型选项常常是不必需的， 因为<B>tar</B>会根据文件的后缀自动选择压缩类型。
+<A NAME="lbAF">&nbsp;</A>
+<H2>参数说明</H2>
+
+<DL COMPACT>
+<DT><B>下列参数中必须有至少一个被使用：</B>
+
+<DD>
+<DT><B>-A</B>, <B>--catenate</B>, <B>--concatenate</B>
+
+<DD>
+将一存档与已有的存档合并
+<DT><B>-c</B>, <B>--create</B>
+
+<DD>
+创建一个新的存档
+<DT><B>-d</B>, <B>--diff</B>, <B>--compare</B>
+
+<DD>
+比较存档与相应的未存档文件的不同之处
+<DT><B>-r</B>, <B>--append</B>
+
+<DD>
+将文件附加到存档结尾
+<DT><B>-t</B>, <B>--list</B>
+
+<DD>
+列出存档中文件的目录
+<DT><B>-u</B>, <B>--update</B>
+
+<DD>
+仅将较新的文件附加到存档中
+<DT><B>-x</B>, <B>--extract</B>, <B>--get</B>
+
+<DD>
+从存档提取文件
+<DT><B>--delete</B>
+
+<DD>
+把指定文件从存档中删除（不要用于磁带！）
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>常用选项</H2>
+
+<DL COMPACT>
+<DT><B>-C</B>, <B>--directory</B> 目录
+
+<DD>
+提取存档到指定目录
+<DT><B>-f</B>, <B>--file</B> [主机名:]文件
+
+<DD>
+指定存档或设备中的文件 (默认是&nbsp;&quot;-&quot;，&nbsp;表示&nbsp;标准输入/输出)
+<DT><B>-j</B>, <B>--bzip2</B>
+
+<DD>
+用 bzip2 处理存档;&nbsp;用于&nbsp;.bz2&nbsp;文件
+<DT><B>-J</B>, <B>--xz</B>
+
+<DD>
+用 xz 处理存档;&nbsp;用于&nbsp;.xz&nbsp;文件
+<DT><B>-p</B>, <B>--preserve-permissions</B>
+
+<DD>
+提取所有保护信息
+<DT><B>-v</B>, <B>--verbose</B>
+
+<DD>
+显示文件处理过程
+<DT><B>-z</B>, <B>--gzip</B>, <B>--ungzip</B>
+
+<DD>
+用 gzip 处理存档;&nbsp;用于&nbsp;.gz&nbsp;文件
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>所有选项</H2>
+
+<DL COMPACT>
+<DT><B>-a</B>, <B>--auto-compress</B>
+
+<DD>
+根据存档后缀来选择压缩程序
+<DT><B>--add-file</B> 文件
+
+<DD>
+添加指定文件到存档 (对以下标线开头的文件很有用)
+<DT><B>--anchored</B>
+
+<DD>
+patterns will match the start of file names
+<DT><B>--atime-preserve</B>
+
+<DD>
+不改变存档中文件的访问时间
+<DT><B>-b</B>, <B>--blocking-factor</B> N
+
+<DD>
+指定块大小为 Nx512 字节（默认N=20)
+<DT><B>-B</B>, <B>--read-full-blocks</B>
+
+<DD>
+读取时重组块&nbsp;(用于读取4.2BSD pipes)
+<DT><B>--backup</B>[=备份类型]
+
+<DD>
+备份文件而不是删除它们,  备份类型有simple、numbered等
+<DT><B>--block-compress</B>
+
+<DD>
+让磁带的输出结果成块输出
+<DT><B>-C</B>, <B>--directory</B> 目录
+
+<DD>
+提取文档到指定目录
+<DT><B>--checkpoint</B>
+
+<DD>
+读取存档时显示目录名
+<DT><B>--delay-directory-restore</B>
+
+<DD>
+延迟对已提取目录的修改时间和权限的设定， 直到提取结束
+<DT><B>--exclude</B> 文件或目录
+
+<DD>
+排除指定文件或目录
+<DT><B>--exclude-caches</B>
+
+<DD>
+排除带有&nbsp;缓存目录&nbsp;标记的目录
+<DT><B>--exclude-tag</B> 文件
+
+<DD>
+排除包含指定文件的目录
+<DT><B>-f</B>, <B>--file</B> [主机名:]文件
+
+<DD>
+指定存档或设备中的文件 (默认是&nbsp;&quot;-&quot;，&nbsp;表示&nbsp;标准输入/输出)
+<DT><B>-F</B>, <B>--info-script</B> 文件, <B>--new-volume-script</B> 文件
+
+<DD>
+在每卷磁带的结尾运行脚本 （会应用<I>--multi-volume</I>选项）
+<DT><B>--force-local</B>
+
+<DD>
+存档文件是本地的，&nbsp;即使它的名称中含有冒号
+<DT><B>--format</B> FORMAT
+
+<DD>
+选择创建存档的格式
+<PRE>
+<I>v7</I> - Unix V7
+<I>oldgnu</I> - GNU tar &lt;=1.12
+<I>gnu</I> - GNU tar 1.13
+<I>ustar</I> - POSIX.1-1988
+<I>posix</I> - POSIX.1-2001
+</PRE>
+
+<DT><B>-g</B>, <B>--listed-incremental</B> 快照
+
+<DD>
+创建/列出/提取&nbsp;新GNU格式的增量备份
+<DT><B>--group</B> 组
+
+<DD>
+将添加到存档的文件的组标识设置为指定组， 而不是源文件所在的组; 这个选项对提取无效
+<DT><B>-G</B>, <B>--incremental</B>
+
+<DD>
+创建/列出/提取&nbsp;旧GNU格式的增量备份
+<DT><B>-h</B>, <B>--dereference</B>
+
+<DD>
+不存入符号链接;&nbsp;存入链接指向的文件
+<DT><B>--help</B>
+
+<DD>
+显示像本手册这样的帮助信息， 但不像这么详细
+<DT><B>-i</B>, <B>--ignore-zeros</B>
+
+<DD>
+忽略存档中的 0 字节块 （那通常意味着文件结束)
+<DT><B>-I</B>, <B>--use-compress-program</B> 程序
+
+<DD>
+通过指定程序访问存档 (该程序通常是一个压缩程序; 它需能接受&nbsp;<I>-d</I>&nbsp;参数)
+<DT><B>--ignore-case</B>
+
+<DD>
+排除文件时不区分大小写
+<DT><B>--ignore-command-error</B>
+
+<DD>
+忽略子程序的退出代码
+<DT><B>--ignore-failed-read</B>
+
+<DD>
+遇到不可读文件的非零状态不退出
+<DT><B>--index-file</B> 文件
+
+<DD>
+将处理过程信息输出到指定文件， 而不是输出到标准输出
+<DT><B>-j</B>, <B>--bzip2</B>
+
+<DD>
+用 bzip2 处理存档，&nbsp;用于&nbsp;.bz2&nbsp;文件
+<DT><B>-J</B>, <B>--xz</B>
+
+<DD>
+用 xz 处理存档，&nbsp;用于&nbsp;.xz&nbsp;文件
+<DT><B>-k</B>, <B>--keep-old-files</B>
+
+<DD>
+保留已存在的文件;&nbsp;不用存档中的文件覆盖它们
+<DT><B>-K</B>, <B>--starting-file</B> FILE
+
+<DD>
+从存档中的指定文件处开始
+<DT><B>--keep-newer-files</B>
+
+<DD>
+不覆盖比存档新的文件
+<DT><B>-l</B>, <B>--check-links</B>
+
+<DD>
+如果文件系统中文件的硬链接数和存档中记录的不同， 则发出警告
+<DT><B>-L</B>, <B>--tape-length</B> N
+
+<DD>
+在写入了N*1024字节后， 更换磁带
+<DT><B>-m</B>, <B>--touch</B>, <B>--modification-time</B>
+
+<DD>
+不提取文件的修改时间
+<DT><B>-M</B>, <B>--multi-volume</B>
+
+<DD>
+创建/列出/提取 多卷存档
+<DT><B>--mode</B> 权限
+
+<DD>
+添加文件时应用指定的权限 (参看&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+chmod">chmod</A></B>(1))
+<DT><B>--mtime</B> 日期
+
+<DD>
+当创建存档时，&nbsp;使用指定日期作为存档成员的修改日期， 而不是使用文件的实际修改时间
+<DT><B>-N</B>, <B>--after-date</B> 日期, <B>--newer</B> 日期
+
+<DD>
+只存储在指定日期后有修改或状态更新 (权限，&nbsp;ACLs，&nbsp;扩展属性，&nbsp;...)的文件
+<DT><B>--newer-mtime</B> 日期
+
+<DD>
+和&nbsp;<I>--newer</I>&nbsp;类似， 但是只存储指定日期后有修改的文件
+<DT><B>--no-anchored</B>
+
+<DD>
+匹配任意‘/’后字符项<I>--exclude</I>一起使用
+<DT><B>--no-auto-compress</B>
+
+<DD>
+不根据存档后缀来决定使用哪个压缩程序
+<DT><B>--no-delay-directory-restore</B>
+
+<DD>
+在目录中的所有文件都被提取完成时， 就设定该目录的修改时间和权限; 这是默认设置
+<DT><B>--no-ignore-command-error</B>
+
+<DD>
+对以非零状态终止的子程序的显示警告
+<DT><B>--no-ignore-case</B>
+
+<DD>
+用&nbsp;<I>--exclude</I>&nbsp;匹配时区分大小写
+<DT><B>--no-overwrite-dir</B>
+
+<DD>
+从存档中提取文件时，&nbsp;保留已存在目录的元数据。
+<DT><B>--no-quote-chars</B> 字符串
+
+<DD>
+把指定字符串中的字符从<I>--quote-chars</I>选项指定的字符中去除
+<DT><B>--no-recursion</B>
+
+<DD>
+不递归进入子目录
+<DT><B>--no-same-permissions</B>
+
+<DD>
+提取时应用用户的umask， 而不是用已记录的权限
+<DT><B>--no-unquote</B>
+
+<DD>
+将所有输入文件或成员的名字作为普通文字， 不解释转义序列
+<DT><B>--no-wildcards</B>
+
+<DD>
+不对<I>--exclude</I>使用通配符
+<DT><B>--no-wildcards-match-slash</B>
+
+<DD>
+<I>--exclude</I>的通配符不匹配斜杠(/)
+<DT><B>--null</B>
+
+<DD>
+<I>--files-from</I>读取以空值终止的名字， 禁用<I>--directory</I>
+<DT><B>--numeric-owner</B>
+
+<DD>
+总是用数字作为 用户/组 的名字
+<DT><B>-o</B>, <B>--old-archive</B>, <B>--portability</B>
+
+<DD>
+相当于<I>--format=v7</I>； 当创建存档时<I>-o</I>选项表示这个行为 （已弃用的行为）
+<DT><B>-o</B>, <B>--no-same-owner</B>
+
+<DD>
+提取时不恢复所有权； 当提取时<I>-o</I>选项表示这个行为
+<DT><B>-O</B>, <B>--to-stdout</B>
+
+<DD>
+将文件提取到标准输出
+<DT><B>--occurrence</B> 次数
+
+<DD>
+只处理指定次数每个已被命名的文件的在操作中的出现； 用于<I>--delete</I>, <I>--diff</I>, <I>--extract</I>, 或 <I>--list</I>
+<DT><B>--one-file-system</B>
+
+<DD>
+创建存档时停留在本地文件系统
+<DT><B>--overwrite</B>
+
+<DD>
+提取时覆盖已存在的文件和目录中的元数据
+<DT><B>--overwrite-dir</B>
+
+<DD>
+提取时覆盖目录中的元数据
+<DT><B>--owner</B> 用户
+
+<DD>
+将文件所有者设为指定用户， 而不是原文件的所有者； 这个选项对提取无效 
+<DT><B>-p</B>, <B>--preserve-permissions</B>, <B>--same-permissions</B>
+
+<DD>
+提取所有保护信息
+<DT><B>-P</B>, <B>--absolute-names</B>
+
+<DD>
+将文件名开头的“/”符号看作文件名的一部分
+<DT><B>--pax-option</B> 关键字列表
+
+<DD>
+修改<B>tar</B>处理扩展头关键字的方式， 只用于POSIX.1-2001存档
+<DT><B>--posix</B>
+
+<DD>
+相当于<I>--format=posix</I>
+<DT><B>--preserve</B>
+
+<DD>
+相当于<I>--preserve-permissions</I>加上<I>--same-order</I>
+<DT><B>--quote-chars</B> 字符串
+
+<DD>
+总是标出指定字符串中包含的的字符， 即使已选择的标识风格不标识它们
+<DT><B>--quote-style</B> 风格
+
+<DD>
+设定显示成员和文件名称的标识风格
+<DT><B>-R</B>, <B>--record-number</B>
+
+<DD>
+显示存档中每条信息的记录数字
+<DT><B>--record-size</B> 字节数
+
+<DD>
+访问存档时每条记录使用指定的字节数
+<DT><B>--recursion</B>
+
+<DD>
+递归进入目录
+<DT><B>--recursive-unlink</B>
+
+<DD>
+提取目录之前先把存在的相同名称的目录删除
+<DT><B>--remove-files</B>
+
+<DD>
+把文件加入到存档后删除这些文件
+<DT><B>--restrict</B>
+
+<DD>
+禁用一些有潜在害处的选项； 目前这会禁用多卷菜单中对shell的调用
+<DT><B>--rmt-command</B> 命令
+
+<DD>
+用指定的命令代替默认的/usr/sbin/rmt
+<DT><B>--rsh-command</B> 命令
+
+<DD>
+用指定的远程命令代替<B><A HREF="/cgi-bin/man/man2html?1+rsh">rsh</A></B>(1)
+<DT><B>-s</B>, <B>--same-order</B>, <B>--preserve-order</B>
+
+<DD>
+名称列表会被排序以匹配存档
+<DT><B>-S</B>, <B>--sparse</B>
+
+<DD>
+高效地处理稀疏文件
+<DT><B>--same-owner</B>
+
+<DD>
+以相同的所有权创建提取出的文件
+<DT><B>--show-defaults</B>
+
+<DD>
+显示<B>tar</B>使用的默认选项
+<DT><B>--show-omitted-dirs</B>
+
+<DD>
+显示提取时<B>tar</B>跳过的目录
+<DT><B>--show-transformed-names</B>, <B>--show-stored-names</B>
+
+<DD>
+应用了任何<B>sed</B>转换之后， 显示文件或成员名字
+<DT><B>--strip-components</B> 目录层数
+
+<DD>
+在提取前， 把文件从前往后指定层数的目录都从提取路径中去掉， 如果文件包含在指定层数中， 则不被提取
+<DT><B>--suffix</B> 后缀
+
+<DD>
+备份文件时， 使用指定的后缀， 而不是使用默认后缀‘～’
+<DT><B>-T</B>, <B>--files-from</B> 文件
+
+<DD>
+从指定文件中获得要提取或创建的存档的名字
+<DT><B>--test-label</B>
+
+<DD>
+读取卷标； 如果一个词被指定了， 则测试它是否匹配这个卷标
+<DT><B>--to-command</B> 命令
+
+<DD>
+提取期间， 将提取的文件导入到指定命令的标准输入
+<DT><B>--totals</B>
+
+<DD>
+显示用--create参数写入的总字节数
+<DT><B>--transform</B> sed表达式
+
+<DD>
+用<B>sed</B>的转换表达式转换文件或成员的名字
+<DT><B>-U</B>, <B>--unlink-first</B>
+
+<DD>
+提取文件之前，删除已存在的与之同名的文件
+<DT><B>--unquote</B>
+
+<DD>
+不标识输入文件或成员的名字； 这是默认选项
+<DT><B>--utc</B>
+
+<DD>
+以UTC时间显示文件的修改日期
+<DT><B>-v</B>, <B>--verbose</B>
+
+<DD>
+列出文件的处理情况
+<DT><B>-V</B>, <B>--label</B> 名称
+
+<DD>
+用指定卷名创建存档
+<DT><B>--version</B>
+
+<DD>
+显示<B>tar</B>程序的版本信息
+<DT><B>--volno-file</B> 文件
+
+<DD>
+保持追踪指定文件中多卷存档的卷编号； 和<I>--multi-volume</I>一起使用
+<DT><B>-w</B>, <B>--interactive</B>, <B>--confirmation</B>
+
+<DD>
+每一个动作都要求确认
+<DT><B>-W</B>, <B>--verify</B>
+
+<DD>
+写完存档后对其进行校验
+<DT><B>--wildcards</B>
+
+<DD>
+对<I>--exclude</I>用通配符
+<DT><B>--wildcards-match-slash</B>
+
+<DD>
+<I>--exclude</I>的通配符匹配斜杠(/)
+<DT><B>-X</B>, <B>--exclude-from</B> 文件
+
+<DD>
+<P>
+排除列在指定文件中的文件
+<DT><B>-z</B>, <B>--gzip</B>, <B>--gunzip</B>, <B>--ungzip</B>
+
+<DD>
+用gzip对存档进行操作
+<DT><B>-Z</B>, <B>--compress</B>, <B>--uncompress</B>
+
+<DD>
+用compress对存档进行操作
+<DT><B>-[0-7][lmh]</B>
+
+<DD>
+指定驱动器[0-7]和压缩密度[低中高]
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>BUGS</H2>
+
+GNU世界的人， 通常不喜欢man手册， 而是写文档代替之。
+<B>tar</B>的维护者也是如此。 所以，&nbsp;这个man手册页可能会不完全， 或者不够新， 它被包含在Gentoo的portage树中， 因为man是一个非常好的工具：）。 这个man手册页最初取自Debian&nbsp;Linux， 从那时起已在这里被很好地更新。
+<A NAME="lbAJ">&nbsp;</A>
+<H2>报告 BUGS</H2>
+
+请通过 <A HREF="http://bugs.gentoo.org/">http://bugs.gentoo.org/</A> 报告Bug。
+翻译问题请联系译者或到 <A HREF="https://github.com/lidaobing/manpages-zh/">https://github.com/lidaobing/manpages-zh/</A> 提交问题
+<A NAME="lbAK">&nbsp;</A>
+<H2>作者</H2>
+
+<PRE>
+Debian Linux <A HREF="http://www.debian.org/">http://www.debian.org/</A>
+Mike Frysinger &lt;<A HREF="mailto:vapier@gentoo.org">vapier@gentoo.org</A>&gt;
+</PRE><A NAME="lbAL">&nbsp;</A>
+<H2>译者</H2>
+
+<PRE>
+CMPP 中文手册页计划 <A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A> (2001/08/08)
+Saigut &lt;<A HREF="mailto:gosaigut@gmail.com">gosaigut@gmail.com</A>&gt; (2013/11/09)
+</PRE><A NAME="lbAM">&nbsp;</A>
+<H2>中文版最新更新</H2>
+
+
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">名字</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">应用举例</A><DD>
+<DT><A HREF="#lbAF">参数说明</A><DD>
+<DT><A HREF="#lbAG">常用选项</A><DD>
+<DT><A HREF="#lbAH">所有选项</A><DD>
+<DT><A HREF="#lbAI">BUGS</A><DD>
+<DT><A HREF="#lbAJ">报告 BUGS</A><DD>
+<DT><A HREF="#lbAK">作者</A><DD>
+<DT><A HREF="#lbAL">译者</A><DD>
+<DT><A HREF="#lbAM">中文版最新更新</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

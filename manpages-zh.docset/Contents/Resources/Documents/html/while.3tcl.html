@@ -1,0 +1,84 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of while</TITLE>
+</HEAD><BODY>
+<H1>while</H1>
+Section: Misc. Reference Manual Pages (3tcl)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>while - 在条件满足时重复的执行脚本</B>
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>while test body</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+while 命令把 test 作为一个表达式来求值(用与 expr 求它的参数的值相同的方式)。这个表达式的值必须是一个正确的 boolean 值；如果它是真值则把 body 传递给 Tcl 解释器来执行它。一旦执行了 body 则再次求值 test ，并重复处理直到最终 test 求值出一个假 boolean 值。可以在 body 中执行 Continue 命令来终止这个循环的当前重复操作(iteration)，并可以在 body 中执行 break 命令来导致 while 命令立即终止。while 命令总是返回一个空串。
+<P>
+注意: test 应该总是包围在花括号中。如果不是，在 while 命令开始执行之前将进行变量替换，这意味着循环体所做的变量变更将不考虑在这个表达式中。这将很可能导致无限循环。如果 test 被包围在花括号中，变量替换被推迟到求值这个表达式的时候(在每次循环重复操作之前)，所以变量的变化将是可见的。例如，尝试下列脚本并在 $x&lt;10 两边分别加上和不加花括号:
+<P>
+<PRE>
+set x 0
+while {$x&lt;10} {
+        puts &quot;x is $x&quot;
+        incr x
+}
+</PRE>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字</H2>
+
+boolean 值, 循环, 测试, while
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>作者</H2>
+
+<PRE>
+Copyright (C) 1993 The Regents of the University of California.
+Copyright (C) 1994-1997 Sun Microsystems, Inc.
+Copyright (C) 1995-1997 Roger E. Critchlow Jr.
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/11/20</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">关键字</A><DD>
+<DT><A HREF="#lbAF">作者</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

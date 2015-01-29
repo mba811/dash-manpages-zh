@@ -1,0 +1,166 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of foreach</TITLE>
+</HEAD><BODY>
+<H1>foreach</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+foreach - 在一个或多个列表的所有元素上重复
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>foreach </B><I>varname list body</I>
+<BR>
+
+<B>foreach </B><I>varlist1 list1</I> ?<I>varlist2 list2 ...</I>? <I>body</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>foreach</B> 命令实现一个循环，在这里循环变量从一个或多个列表接受值。在最简单的情况下，这里有一个循环变量 <I>varname</I>  ，和一个列表 <I>list</I>，它是要赋给 <I>varname</I>  的值的一个列表。<I>body</I>  参数是一个 Tcl 脚本。对于 <I>list</I>   的每个元素(按从最先到最后的次序)，<B>foreach</B>   把这个元素的内容赋给 <I>varname</I>，如同使用 <B>lindex</B>   命令提取元素一样，接着调用 Tcl 解释器来执行 <I>body</I>。
+<P>
+
+在一般的情况下，这里可以有多于一个的值列表(例如，<I>list1</I>和 <I>list2</I>)，并且每个值列表可以与一个循环变量的列表相关联。(例如，<I>varlist1</I> 和 <I>varlist2</I>)。 在循环的每次重复期间每个 <I>varlist</I> 中的变量被赋与相应的<I>list </I>中的连续的值。在每 个<I>list</I> 中的值按从最先到最后的次序被使用，并且每个值被准确的使用一次。循环重复的总数足够的大来用光所有列表的所有的值。如果一个值的列表不包含足够元素，供给每次重复中的每个循环变量，则给遗漏的元素使用空值。
+<P>
+
+<B>break</B>  和 <B>continue</B>  语句可以在 <I>body </I>中调用，与在 <B>for</B> 命令中有相同的效果。<B>Foreach</B>  返回一个空串。
+<A NAME="lbAE">&nbsp;</A>
+<H2>范例 EXAMPLES</H2>
+
+<P>
+
+下面的循环使用 i 和 j 作为循环变量在一个单一的列表的一对元素上重复。 
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+set x {}
+foreach {i j} {a b c d e f} {
+    lappend x $j $i
+}
+# The value of x is &quot;b a d c f e&quot;
+# There are 3 iterations of the loop.
+
+</PRE>
+
+</DL>
+
+<P>
+
+<P>
+
+下一个循环使用 i 和 j 在两个并行的列表上重复。  
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+set x {}
+foreach i {a b c} j {d e f g} {
+    lappend x $i $j
+}
+# The value of x is &quot;a d b e c f {} g&quot;
+# There are 4 iterations of the loop.
+
+</PRE>
+
+</DL>
+
+<P>
+
+<P>
+
+在下面例子中组合了两种形式。
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+set x {}
+foreach i {a b c} {j k} {d e f g} {
+    lappend x $i $j $k
+}
+# The value of x is &quot;a d e b f g c {} {}&quot;
+# There are 3 iterations of the loop.
+
+</PRE>
+
+</DL>
+
+<P>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+for">for</A>(n), <A HREF="/cgi-bin/man/man2html?n+while">while</A>(n), <A HREF="/cgi-bin/man/man2html?n+break">break</A>(n), <A HREF="/cgi-bin/man/man2html?n+continue">continue</A>(n)
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+foreach, iteration, list, looping
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/08/05</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">范例 EXAMPLES</A><DD>
+<DT><A HREF="#lbAF">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

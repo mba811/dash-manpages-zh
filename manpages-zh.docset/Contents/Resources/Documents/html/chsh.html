@@ -1,0 +1,121 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CHSH</TITLE>
+</HEAD><BODY>
+<H1>CHSH</H1>
+Section: Linux Reference Manual (1)<BR>Updated: 7 October 1998<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+chsh - 改变登录 shell
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>chsh</B>
+
+[&nbsp;-s&nbsp;shell&nbsp;] [&nbsp;-l&nbsp;] [&nbsp;-u&nbsp;] [&nbsp;-v&nbsp;] [&nbsp;username&nbsp;]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>chsh</B>
+
+用于 改变 用户的 登录 shell. 如果 没有在 命令行上 指定 shell,
+<B>chsh</B>
+
+能够 做出 提示.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H3>有效的 SHELL (VALID SHELLS)</H3>
+
+<B>chsh</B>
+
+接受 系统中 任何 可执行文件 的 全路径名称.
+然而, 如果 它们 没有 在
+<I>/etc/shells</I>
+
+中 列举, chsh 将 发出 警告. 另一方面, 可以 把 chsh 配置成 只接受 这个文件中
+列举的 shell, 除非 你是 超级用户.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+<DL COMPACT>
+<DT><I>-s, --shell</I>
+
+<DD>
+指定 用户的 登录 shell.
+<DT><I>-l, --list-shells</I>
+
+<DD>
+显示
+<I>/etc/shells</I>
+
+中的 shell 列表, 然后退出.
+<DT><I>-u, --help</I>
+
+<DD>
+显示 使用方法, 然后退出.
+<DT><I>-v, --version</I>
+
+<DD>
+显示 版本信息, 然后退出.
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+login">login</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?5+passwd">passwd</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?5+shells">shells</A></B>(5)
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者 (AUTHOR)</H2>
+
+Salvatore Valente &lt;<A HREF="mailto:svalente@mit.edu">svalente@mit.edu</A>&gt;
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@iname.com">xuming@iname.com</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/24</B>
+
+第一版
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》：</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DL>
+<DT><A HREF="#lbAE">有效的 SHELL (VALID SHELLS)</A><DD>
+</DL>
+<DT><A HREF="#lbAF">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAG">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAH">作者 (AUTHOR)</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国Linux论坛man手册页翻译计划》：</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

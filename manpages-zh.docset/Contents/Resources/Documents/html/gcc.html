@@ -1,0 +1,4178 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of GCC</TITLE>
+</HEAD><BODY>
+<H1>GCC</H1>
+Section: GNU Tools (1)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+gcc, g++ - GNU 工程的 C 和 C++ 编译器 (egcs-1.1.2)
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>gcc</B>
+
+[ <I>option</I> | <I>filename</I> ]...
+
+<BR>
+
+<B>g++</B>
+
+[ <I>option</I> | <I>filename</I> ]...
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>警告 (WARNING)</H2>
+
+本手册页 内容 摘自 GNU C 编译器 的 完整文档, 仅限于 解释 选项 的 含义.
+<P>
+
+除非 有人 自愿 维护, 否则 本手册页 不再 更新. 如果 发现 手册页 和 软件
+之间 有所矛盾, 请 查对 Info 文件, Info 文件 是 权威 文档.
+<P>
+
+如果 我们 发觉 本手册页 的 内容 由于 过时 而 导致 明显 的 混乱 和 抱怨 时,
+我们 就 停止 发布 它. 不可能有 其他 选择, 象 更新 Info 文件 同时 更新
+man 手册, 因为 其他 维护 GNU CC 的 工作 没有 留给 我们 时间 做 这个.
+GNU 工程 认为 man 手册 是 过时产物, 应该 把 时间 用到 别的地方.
+<P>
+
+如果 需要 完整 和 最新 的 文档, 请 查阅 Info 文件 `<B>gcc</B>' 或 
+<I>Using and Porting GNU CC (for version 2.0) (使用和移植 GNU CC 2.0)  </I> 手册.  二者 均 来自 Texinfo 原文件
+<B>gcc.texinfo</B>.
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+C 和 C++ 编译器 是 集成的. 他们 都要 用 四个步骤 中的 一个 或 多个 处理
+输入文件: 预处理(preprocessing), 编译(compilation), 汇编(assembly) 和 
+连接(linking). 源文件后缀名 标识 源文件 的 语言, 但是 对 编译器 来说, 
+后缀名 控制着 缺省设定:
+<DL COMPACT>
+<DT><B>gcc</B>
+
+<DD>
+认为 预处理后的 文件 (<B>.i</B>) 是 C 文件, 并且 设定 C 形式 的 连接.
+<DT><B>g++</B>
+
+<DD>
+认为 预处理后的 文件 (<B>.i</B>) 是 C++ 文件, 并且 设定 C++ 形式 的 连接.
+</DL>
+<P>
+
+源文件后缀名 指出 语言种类 以及 后期 的 操作:
+
+<P>
+
+
+
+<PRE>
+
+<B>.c</B>      C 源程序; 预处理, 编译, 汇编
+<B>.C</B>      C++ 源程序; 预处理, 编译, 汇编
+<B>.cc</B>     C++ 源程序; 预处理, 编译, 汇编
+<B>.cxx</B>    C++ 源程序; 预处理, 编译, 汇编
+<B>.m</B>      Objective-C 源程序; 预处理, 编译, 汇编
+<B>.i</B>      预处理后的 C 文件; 编译, 汇编
+<B>.ii</B>     预处理后的 C++ 文件; 编译, 汇编
+<B>.s</B>      汇编语言源程序; 汇编
+<B>.S</B>      汇编语言源程序; 预处理, 汇编
+<B>.h</B>      预处理器文件; 通常 不出现在 命令行 上
+
+
+</PRE>
+
+其他 后缀名 的 文件 被传递 给 连接器(linker). 通常 包括:
+
+<P>
+
+
+
+<PRE>
+<B>.o</B>      目标文件 (Object file)
+<B>.a</B>      归档库文件 (Archive file)
+<BR>
+</PRE>
+
+
+<P>
+
+
+
+除非 使用了 
+<B>-c</B>,
+
+<B>-S</B>,
+
+或
+<B>-E</B>
+
+选项 (或者 编译错误 阻止了 完整 的 过程), 否则 连接 总是 最后的步骤.
+在 连接阶段 中, 所有 对应于 源程序 的
+<B>.o</B>
+
+文件, 
+<B>-l</B>
+
+库文件, 无法 识别 的 文件名 (包括 指定的
+<B>.o</B>
+
+目标文件 和
+<B>.a</B>
+
+库文件) 按 命令行中 的 顺序 传递给 连接器.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+选项 必须 分立 给出: `<B>-dr</B>' 完全 不同于 `<B>-d -r</B>
+
+'.
+<P>
+
+大多数 `<B>-f</B>' 和 `<B>-W</B>' 选项 有 两个 相反 的 格式:
+<B>-f</B><I>name</I>
+
+和
+<B>-fno-</B><I>name</I> (或
+<B>-W</B><I>name</I>
+
+和
+<B>-Wno-</B><I>name</I>).  这里 只列举 不是 默认选项 的 格式.
+<P>
+
+下面 是 所有 选项 的 摘要, 按 类型 分组, 解释 放在 后面 的 章节 中.
+
+
+<DL COMPACT>
+<DT><B>总体选项 (Overall Option)</B>
+
+<DD>
+<BR>
+
+-c
+-S
+-E
+-o <I>file</I>
+
+-pipe
+-v
+-x <I>language</I>
+
+<DT><B>语言选项 (Language Option)</B>
+
+<DD>
+-ansi
+-fall-virtual
+-fcond-mismatch
+-fdollars-in-identifiers
+-fenum-int-equiv
+-fexternal-templates
+-fno-asm
+-fno-builtin
+-fhosted
+-fno-hosted
+-ffreestanding
+-fno-freestanding
+-fno-strict-prototype
+-fsigned-bitfields
+-fsigned-char
+-fthis-is-variable
+-funsigned-bitfields
+-funsigned-char
+-fwritable-strings
+-traditional
+-traditional-cpp
+-trigraphs
+<DT><B>警告选项 (Warning Option)</B>
+
+<DD>
+-fsyntax-only
+-pedantic
+-pedantic-errors
+-w
+-W
+-Wall
+-Waggregate-return
+-Wcast-align
+-Wcast-qual
+-Wchar-subscript
+-Wcomment
+-Wconversion
+-Wenum-clash
+-Werror
+-Wformat
+-Wid-clash-<I>len</I>
+
+-Wimplicit
+-Wimplicit-int
+-Wimplicit-function-declaration
+-Winline
+-Wlong-long
+-Wmain
+-Wmissing-prototypes
+-Wmissing-declarations
+-Wnested-externs
+-Wno-import
+-Wparentheses
+-Wpointer-arith
+-Wredundant-decls
+-Wreturn-type
+-Wshadow
+-Wstrict-prototypes
+-Wswitch
+-Wtemplate-debugging
+-Wtraditional
+-Wtrigraphs
+-Wuninitialized
+-Wunused
+-Wwrite-strings
+<DT><B>调试选项 (Debugging Option)</B>
+
+<DD>
+-a
+-d<I>letters</I>
+
+-fpretend-float
+-g
+-g<I>level</I>
+
+-gcoff
+-gxcoff
+-gxcoff+
+-gdwarf
+-gdwarf+
+-gstabs
+-gstabs+
+-ggdb
+-p
+-pg
+-save-temps
+-print-file-name=<I>library</I>
+
+-print-libgcc-file-name
+-print-prog-name=<I>program</I>
+
+<DT><B>优化选项 (Optimization Option)</B>
+
+<DD>
+-fcaller-saves
+-fcse-follow-jumps
+-fcse-skip-blocks
+-fdelayed-branch
+-felide-constructors
+-fexpensive-optimizations
+-ffast-math
+-ffloat-store
+-fforce-addr
+-fforce-mem
+-finline-functions
+-fkeep-inline-functions
+-fmemoize-lookups
+-fno-default-inline
+-fno-defer-pop
+-fno-function-cse
+-fno-inline
+-fno-peephole
+-fomit-frame-pointer
+-frerun-cse-after-loop
+-fschedule-insns
+-fschedule-insns2
+-fstrength-reduce
+-fthread-jumps
+-funroll-all-loops
+-funroll-loops
+-O
+-O2
+-O3
+<DT><B>预处理器选项 (Preprocessor Option)</B>
+
+<DD>
+-A<I>assertion</I>
+
+-C
+-dD
+-dM
+-dN
+-D<I>macro</I>[=<I>defn</I>]
+
+-E
+-H
+-idirafter <I>dir</I>
+
+-include <I>file</I>
+
+-imacros <I>file</I>
+
+-iprefix <I>file</I>
+
+-iwithprefix <I>dir</I>
+
+-M
+-MD
+-MM
+-MMD
+-nostdinc
+-P
+-U<I>macro</I>
+
+-undef
+<DT><B>汇编器选项 (Assembler Option)</B>
+
+<DD>
+-Wa,<I>option</I>
+
+<DT><B>连接器选项 (Linker Option)</B>
+
+<DD>
+-l<I>library</I>
+
+-nostartfiles
+-nostdlib
+-static
+-shared
+-symbolic
+-Xlinker&nbsp;<I>option</I>
+
+-Wl,<I>option</I>
+
+-u <I>symbol</I>
+
+<DT><B>目录选项 (Directory Option)</B>
+
+<DD>
+-B<I>prefix</I>
+
+-I<I>dir</I>
+
+-I-
+-L<I>dir</I>
+
+<DT><B>目标机选项 (Target Option)</B>
+
+<DD>
+-b  <I>machine</I>
+
+-V <I>version</I>
+
+<DT><B>配置相关选项 (Configuration Dependent Option)</B>
+
+<DD>
+<I>M680x0&nbsp;选项</I>
+
+<BR>
+
+-m68000
+-m68020
+-m68020-40
+-m68030
+-m68040
+-m68881
+-mbitfield
+-mc68000
+-mc68020
+-mfpa
+-mnobitfield
+-mrtd
+-mshort
+-msoft-float
+
+<P>
+
+
+
+<I>VAX 选项</I>
+
+<BR>
+
+-mg
+-mgnu
+-munix
+
+<P>
+
+
+
+<I>SPARC 选项</I>
+
+<BR>
+
+-mepilogue
+-mfpu
+-mhard-float
+-mno-fpu
+-mno-epilogue
+-msoft-float
+-msparclite
+-mv8
+-msupersparc
+-mcypress
+
+<P>
+
+
+
+<I>Convex 选项</I>
+
+<BR>
+
+-margcount
+-mc1
+-mc2
+-mnoargcount
+
+<P>
+
+
+
+<I>AMD29K 选项</I>
+
+<BR>
+
+-m29000
+-m29050
+-mbw
+-mdw
+-mkernel-registers
+-mlarge
+-mnbw
+-mnodw
+-msmall
+-mstack-check
+-muser-registers
+
+<P>
+
+
+
+<I>M88K 选项</I>
+
+<BR>
+
+-m88000
+-m88100
+-m88110
+-mbig-pic
+-mcheck-zero-division
+-mhandle-large-shift
+-midentify-revision
+-mno-check-zero-division
+-mno-ocs-debug-info
+-mno-ocs-frame-position
+-mno-optimize-arg-area
+-mno-serialize-volatile
+-mno-underscores
+-mocs-debug-info
+-mocs-frame-position
+-moptimize-arg-area
+-mserialize-volatile
+-mshort-data-<I>num</I>
+
+-msvr3
+-msvr4
+-mtrap-large-shift
+-muse-div-instruction
+-mversion-03.00
+-mwarn-passed-structs
+
+<P>
+
+
+
+<I>RS6000 选项</I>
+
+<BR>
+
+-mfp-in-toc
+-mno-fop-in-toc
+
+<P>
+
+
+
+<I>RT 选项</I>
+
+<BR>
+
+-mcall-lib-mul
+-mfp-arg-in-fpregs
+-mfp-arg-in-gregs
+-mfull-fp-blocks
+-mhc-struct-return
+-min-line-mul
+-mminimum-fp-blocks
+-mnohc-struct-return
+
+<P>
+
+
+
+<I>MIPS 选项</I>
+
+<BR>
+
+-mcpu=<I>cpu type</I>
+-mips2
+-mips3
+-mint64
+-mlong64
+-mmips-as
+-mgas
+-mrnames
+-mno-rnames
+-mgpopt
+-mno-gpopt
+-mstats
+-mno-stats
+-mmemcpy
+-mno-memcpy
+-mno-mips-tfile
+-mmips-tfile
+-msoft-float
+-mhard-float
+-mabicalls
+-mno-abicalls
+-mhalf-pic
+-mno-half-pic
+-G <I>num</I>
+-nocpp
+
+<P>
+
+
+
+<I>i386 选项</I>
+
+<BR>
+
+-m486
+-mno-486
+-msoft-float
+-mno-fp-ret-in-387
+
+<P>
+
+
+
+<I>HPPA 选项</I>
+
+<BR>
+
+-mpa-risc-1-0
+-mpa-risc-1-1
+-mkernel
+-mshared-libs
+-mno-shared-libs
+-mlong-calls
+-mdisable-fpregs
+-mdisable-indexing
+-mtrailing-colon
+
+<P>
+
+
+
+<I>i960 选项</I>
+
+<BR>
+
+-m<I>cpu-type</I>
+-mnumerics
+-msoft-float
+-mleaf-procedures
+-mno-leaf-procedures
+-mtail-call
+-mno-tail-call
+-mcomplex-addr
+-mno-complex-addr
+-mcode-align
+-mno-code-align
+-mic-compat
+-mic2.0-compat
+-mic3.0-compat
+-masm-compat
+-mintel-asm
+-mstrict-align
+-mno-strict-align
+-mold-align
+-mno-old-align
+
+<P>
+
+
+
+<I>DEC Alpha 选项</I>
+
+<BR>
+
+-mfp-regs
+-mno-fp-regs
+-mno-soft-float
+-msoft-float
+
+<P>
+
+
+
+<I>System V 选项</I>
+
+<BR>
+
+-G
+-Qy
+-Qn
+-YP,<I>paths</I>
+
+-Ym,<I>dir</I>
+
+<DT><B>代码生成选项 (Code Generation Option)</B>
+
+<DD>
+-fcall-saved-<I>reg</I>
+
+-fcall-used-<I>reg</I>
+
+-ffixed-<I>reg</I>
+
+-finhibit-size-directive
+-fnonnull-objects
+-fno-common
+-fno-ident
+-fno-gnu-linker
+-fpcc-struct-return
+-fpic
+-fPIC
+-freg-struct-return
+-fshared-data
+-fshort-enums
+-fshort-double
+-fvolatile
+-fvolatile-global
+-fverbose-asm
+
+
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>总体选项 (Overall Option)</H2>
+
+<DL COMPACT>
+<DT><B>-x </B><I>language</I>
+
+<DD>
+明确 指出 后面 输入文件 的 语言 为
+<I>language</I> (而不是 从 文件名后缀 得到的 默认选择). 这个选项 应用于 后面 所有的
+输入文件, 直到 遇着 下一个 `<B>-x</B>' 选项. <I>language</I> 的 可选值 有
+`<B>c</B>', `<B>objective-c</B>', `<B>c-header</B>', `<B>c++</B>',
+`<B>cpp-output</B>', `<B>assembler</B>', 和 `<B>assembler-with-cpp</B>'.
+<DT><B>-x none</B>
+
+<DD>
+关闭 任何 对 语种 的 明确说明, 因此 依据 文件名后缀 处理 后面 的 文件
+(就象是 从未 使用过 `<B>-x</B>'
+选项).
+</DL>
+<P>
+
+如果 只操作 四个阶段 (预处理, 编译, 汇编, 连接) 中的 一部分,
+可以 使用
+`<B>-x</B>' 选项 (或 文件名后缀) 告诉 <B>gcc</B> 从 哪里 开始, 用 `<B>-c</B>', `<B>-S</B>', 或 `<B>-E</B>' 选项 告诉
+<B>gcc</B> 到 哪里 结束. 注意, 某些 选项组合 (例如,
+`<B>-x cpp-output -E</B>') 使 <B>gcc</B> 不作 任何事情.
+<DL COMPACT>
+<DT><B>-c</B>
+
+<DD>
+编译 或 汇编 源文件, 但是 不作 连接. 编译器 输出 对应于 源文件 的 目标文件.
+
+<P>
+
+
+
+缺省情况下, GCC 通过 用 `<B>.o</B>' 替换 源文件名后缀 `<B>.c</B>', `<B>.i</B>', `<B>.s</B>', 等等, 产生 目标文件名. 可以 使用
+<B>-o</B> 选项 选择 其他 名字.
+
+<P>
+
+
+
+GCC 忽略
+<B>-c</B>
+
+选项 后面 任何 无法 识别 的 输入文件 (他们 不需要 编译 或 汇编).
+<DT><B>-S</B>
+
+<DD>
+编译 后 即停止, 不进行 汇编. 对于 每个 输入的 非汇编语言 文件, 
+输出文件 是 汇编语言 文件.
+
+<P>
+
+
+
+缺省情况下, GCC 通过 用 `<B>.o</B>' 替换 源文件名后缀 `<B>.c</B>', `<B>.i</B>', 等等, 产生 目标文件名. 可以 使用
+<B>-o</B> 选项 选择 其他 名字.
+
+<P>
+
+
+
+GCC 忽略 任何 不需要 编译 的 输入文件.
+<DT><B>-E</B>
+
+<DD>
+预处理 后 即停止, 不进行 编译. 预处理后的 代码 送往 标准输出.
+
+<P>
+
+
+
+GCC 忽略 任何 不需要 预处理 的 输入文件.
+<DT><B>-o </B><I>file</I>
+
+<DD>
+指定 输出文件 为 <I>file</I>.  该选项 不在乎 GCC 产生 什么 输出, 无论是 可执行文件, 目标文件,
+汇编文件 还是 预处理后的 C 代码.
+
+<P>
+
+
+
+由于 只能 指定 一个 输出文件, 因此 编译 多个 输入文件 时, 使用 `<B>-o</B>' 选项 没有 意义, 除非 输出 一个 可执行文件.
+
+<P>
+
+
+
+如果 没有 使用 `<B>-o</B>' 选项, 默认的 输出 结果 是: 可执行文件 为 `<B>a.out</B>',  `<I>source</I><B>.</B><I>suffix</I> ' 的 目标文件 是`<I>source</I><B>.o</B>', 汇编文件 是 `<I>source</I><B>.s</B>', 而 预处理后的 C 源代码 送往 标准输出.
+<DT><B>-v</B>
+
+<DD>
+(在 标准错误) 显示 执行 编译 阶段 的 命令. 同时 显示 编译器 驱动程序,
+预处理器, 编译器 的 版本号.
+<DT><B>-pipe</B>
+
+<DD>
+在 编译过程 的 不同 阶段 间 使用 管道 而非 临时文件 进行 通信.
+这个 选项 在 某些 系统 上 无法 工作, 因为 那些 系统 的 汇编器 不能 从 管道
+读取 数据. GNU 的 汇编器 没有 这个问题.
+</DL>
+<P>
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>语言选项 (LANGUAGE OPTIONS)</H2>
+
+下列 选项 控制 编译器 能够 接受 的 C &quot;方言&quot;:
+<DL COMPACT>
+<DT><B>-ansi</B>
+
+<DD>
+支持 符合 ANSI 标准的 C 程序.
+
+<P>
+
+
+
+这样 就会 关闭 GNU C 中 某些 不兼容 ANSI C 的 特性, 例如 <B>asm</B>, <B>inline</B> 和 <B>typeof</B>
+
+关键字, 以及 诸如 <B>unix</B> 和 <B>vax</B>
+
+这些 表明 当前系统 类型 的 预定义宏. 同时 开启 不受欢迎 和 极少使用的
+ANSI trigraph 特性, 以及 禁止 `<B>$</B>' 成为 标识符 的 一部分.
+<P>
+
+<P>
+
+
+
+尽管 使用了 `<B>-ansi</B>' 选项, 下面 这些 可选的 关键字, <B>__asm__</B>, <B>__extension__</B>,
+<B>__inline__</B> 和 <B>__typeof__</B> 仍然 有效. 你 当然 不会 把 他们 用在 ANSI C 程序 中, 但可以 把 他们 放在
+头文件 里, 因为 编译 包含 这些 头文件 的 程序 时, 可能会 指定 `<B>-ansi</B>' 选项.  另外一些 预定义宏, 如 <B>__unix__</B> 和 <B>__vax__</B>, 无论 有没有 使用 `<B>-ansi</B>' 选项, 始终 有效.
+<P>
+
+<P>
+
+
+
+使用 `<B>-ansi</B>' 选项 不会 自动 拒绝 编译  非ANSI程序, 除非 增加 `<B>-pedantic</B>' 选项 作为 `<B>-ansi</B>' 选项 的 补充.
+<P>
+
+<P>
+
+
+
+使用 `<B>-ansi</B>' 选项 的 时候, 预处理器 会 预定义 一个 <B>__STRICT_ANSI__</B> 宏. 有些 头文件 关注 此宏, 以 避免 声明 某些函数, 或者 避免 定义 某些宏,
+这些 函数 和 宏 不被 ANSI 标准 调用; 这样 就不会 干扰 在 其他地方 使用 这些
+名字 的 程序 了.
+<P>
+<DT><B>-fno-asm</B>
+
+<DD>
+不把 <B>asm</B>, <B>inline</B> 或 <B>typeof</B> 当作 关键字, 因此 这些 词 可以 用做 标识符. 用 <B>__asm__</B>, <B>__inline__</B> 和 <B>__typeof__</B> 能够 替代 他们.
+`<B>-ansi</B>' 隐含声明了 `<B>-fno-asm</B>'.
+<DT><B>-fno-builtin</B>
+
+<DD>
+不接受 不是 两个 下划线 开头 的 内建函数 (built-in function). 
+目前 受影响 的 函数 有 <B>_exit</B>,
+<B>abort</B>, <B>abs</B>, <B>alloca</B>, <B>cos</B>, <B>exit</B>,
+<B>fabs</B>, <B>labs</B>, <B>memcmp</B>, <B>memcpy</B>, <B>sin</B>,
+<B>sqrt</B>, <B>strcmp</B>, <B>strcpy</B>, 和 <B>strlen</B>.
+
+<P>
+
+
+
+`<B>-ansi</B>' 选项 能够 阻止 <B>alloca</B> 和 <B>_exit</B> 成为 内建函数.
+<P>
+<DT><B>-fhosted</B>
+
+<DD>
+按 宿主环境 编译; 他 隐含 声明了 `<B>-fbuiltin</B>' 选项, 而且 警告 不正确的
+<B>main</B> 函数 声明.
+<DT><B>-ffreestanding</B>
+
+<DD>
+按 独立环境 编译; 他 隐含 声明了 `<B>-fno-builtin</B>' 选项, 而且 对
+<B>main</B> 函数 没有 特别要求.
+<P>
+(译注: 宿主环境 (hosted environment) 下 所有的 标准库 可用, main 函数 返回
+一个 int 值, 典型例子 是 除了 内核 以外 几乎 所有的 程序. 对应的 独立环境
+(freestanding environment) 不存在 标准库, 程序 入口 也 不一定是 main, 最明显
+的 例子 就是 操作系统内核. 详情 参考 gcc 网站 最近的 资料)
+<P>
+<DT><B>-fno-strict-prototype</B>
+
+<DD>
+对于 没有 参数 的 函数声明, 例如 `<B>int foo</B>
+
+();', 按 C 风格 处理---即 不说明 参数 个数 或 类型. (仅针对 C++).
+正常情况下, 这样的 函数 <B>foo</B> 在 C++ 中 意味着 参数 为 空.
+<P>
+<DT><B>-trigraphs</B>
+
+<DD>
+支持 ANSI C trigraphs. `<B>-ansi</B>' 选项 隐含声明了 `<B>-trigraphs</B>'.
+<P>
+<DT><B>-traditional</B>
+
+<DD>
+试图 支持 传统 C 编译器 的 某些方面. 详见 GNU C 手册, 我们 已经把 细节清单
+从这里 删除, 这样 当内容 过时后, 人们 也不会 埋怨 我们.
+
+<P>
+
+
+
+除了 一件事: 对于 C++ 程序 (不是 C),  `<B>-traditional</B>' 选项 带来 一个 附加效应, 允许 对
+<B>this</B>
+
+赋值.  他 和 `<B>-fthis-is-variable</B>' 选项 的 效果 一样.
+<P>
+<DT><B>-traditional-cpp</B>
+
+<DD>
+试图 支持 传统 C 预处理器 的 某些方面. 特别是 上面 提到 有关 预处理器 的
+内容, 但是 不包括 `<B>-traditional</B>' 选项 的 其他 效应.
+<P>
+<DT><B>-fdollars-in-identifiers</B>
+
+<DD>
+允许 在 标识符(identifier) 中 使用 `<B>$</B>' 字符 (仅针对 C++). 你 可以 指定
+`<B>-fno-dollars-in-identifiers</B>' 选项 显明 禁止 使用 `<B>$</B>' 符.  (GNU C++ 在 某些 目标系统 缺省允许 `<B>$</B>' 符, 但不是 所有系统.)
+<P>
+<DT><B>-fenum-int-equiv</B>
+
+<DD>
+允许 <B>int</B> 类型 到 枚举类型 (enumeration) 的 隐式转换 (仅限于 C++). 正常情况下
+GNU C++ 允许 从 <B>enum</B> 到 <B>int</B> 的 转换, 反之则 不行.
+<P>
+<DT><B>-fexternal-templates</B>
+
+<DD>
+为 模板声明 (template declaration) 产生 较小的 代码 (仅限于 C++),
+方法 是 对于 每个 模板函数 (template function), 只在 定义 他们 的 地方
+生成 一个 副本. 想要 成功 使用 这个选项, 你 必须 在 所有 使用 模板 的 
+文件 中, 标记 `<B>#pragma implementation</B>' (定义) 或 `<B>#pragma interface</B>' (声明).
+<P>
+当 程序 用 `<B>-fexternal-templates</B>' 编译 时, 模板实例 (template instantiation) 全部是 外部类型.
+你 必须 让 需要的 实例 在 实现文件 中 出现. 可以 通过 <B>typedef</B> 实现 这一点, 他 引用 所需的 每个 实例.
+相对应的, 如果 编译时 使用 缺省选项 `<B>-fno-external-templates</B>', 所有 模板实例 明确的 设为 内置.
+<P>
+<DT><B>-fall-virtual</B>
+
+<DD>
+所有 可能的 成员函数 默认为 虚函数. 所有的 成员函数 (除了 构造子函数 和
+<B>new</B>
+
+或
+<B>delete</B>
+
+成员操作符) 视为 所在类 的 虚函数.
+
+<P>
+
+
+
+这 不表明 每次 调用 成员函数 都将 通过 内部 虚函数表. 有些 情况 下,
+编译器 能够 判断出 可以 直接 调用 某个 虚函数; 这时 就 直接 调用.
+<P>
+<DT><B>-fcond-mismatch</B>
+
+<DD>
+允许 条件表达式 的 第二 和 第三个 参数 的 类型 不匹配.
+这种 表达式 的 值 是 void.
+<P>
+<DT><B>-fthis-is-variable</B>
+
+<DD>
+允许 对 <B>this</B> 赋值 (仅对 C++). 合并 用户自定义 的 自由存储管理 机制 到 C++ 后,
+使 可赋值 的 `<B>this</B>' 显得 不合时宜. 因此, 默认 情况 下, 类成员函数 内部 对 <B>this</B> 赋值 是 无效操作. 然而 为了 向后兼容, 你 可以 通过 `<B>-fthis-is-variable</B>' 选项 使 这种 操作 有效.
+<P>
+<DT><B>-funsigned-char</B>
+
+<DD>
+把 <B>char</B> 定义为 无符号 类型, 如同 <B>unsigned char</B>.
+
+<P>
+
+
+
+各种 机器 都有 自己 缺省的 <B>char</B> 类型.  既 可能 是 <B>unsigned char</B> 也 可能是
+<B>signed char</B> .
+
+<P>
+
+
+
+理想情况下, 当 依赖于 数据的 符号性 时, 一个 可移植程序 总是 应该 使用 <B>signed char</B> 或
+<B>unsigned char</B>. 但是 许多 程序 已经 写成 只用 简单的 <B>char</B>, 并且 期待 这是 有符号数 (或者 无符号数, 具体情况 取决于 编写 程序
+的 目标机器). 这个选项, 和 它的 反义选项, 使 那样的 程序 工作在 对应的
+默认值 上.
+
+<P>
+
+
+
+<B>char</B>
+
+的 类型 始终 应该 明确定义 为
+<B>signed char</B> 或 <B>unsigned char</B>, 即使 它 表现的 和 其中之一 完全一样.
+<P>
+<DT><B>-fsigned-char</B>
+
+<DD>
+把 <B>char</B> 定义为 有符号 类型, 如同 <B>signed char</B>.
+
+<P>
+
+
+
+这个 选项 等同于 `<B>-fno-unsigned-char</B>', 他是
+the negative form of `<B>-funsigned-char</B>' 的 相反 选项.  同样, `<B>-fno-signed-char</B>' 等价于 `<B>-funsigned-char</B>'.
+<P>
+<DT><B>-fsigned-bitfields</B>
+
+<DD>
+<DT><B>-funsigned-bitfields</B>
+
+<DD>
+<DT><B>-fno-signed-bitfields</B>
+
+<DD>
+<DT><B>-fno-unsigned-bitfields</B>
+
+<DD>
+如果 没有 明确 声明 `<B>signed</B>' 或 `<B>unsigned</B>' 修饰符, 这些 选项 用来 定义 有符号位域 (bitfield) 或 无符号位域. 
+缺省情况下, 位域 是 有符号 的, 因为 他们 继承的 基本 整数类型, 如
+<B>int</B>, 是 有符号数.
+
+<P>
+
+
+
+然而, 如果 指定了 `<B>-traditional</B>' 选项, 位域 永远 是 无符号数.
+<P>
+<DT><B>-fwritable-strings</B>
+
+<DD>
+把 字符串常量 存储到 可写数据段, 而且 不做 特别 对待.
+这是 为了 兼容 一些 老程序, 他们 假设 字符串常量 是 可写的. `<B>-traditional</B>' 选项 也有 相同 效果.
+
+<P>
+
+
+
+篡改 字符串常量 是一个 非常 糟糕的 想法; ``常量'' 就应该是 常量.
+<P>
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>预处理器选项 (Preprocessor Option)</H2>
+
+下列 选项 针对 C 预处理器, 预处理器 用在 正式 编译 以前, 对 C 源文件
+进行 某种处理.
+<P>
+
+如果 指定了 `<B>-E</B>' 选项, GCC 只进行 预处理 工作. 下面的 某些 选项 必须 和 `<B>-E</B>' 选项 一起 才 有意义, 因为 他们的 输出结果 不能 用于 编译.
+<P>
+<DL COMPACT>
+<DT><B>-include </B><I>file</I>
+
+<DD>
+在 处理 常规 输入文件 之前, 首先 处理 文件 <I>file</I>, 其结果是, 文件 <I>file</I> 的 内容 先得到 编译.  命令行上 任何 `<B>-D</B>'
+和 `<B>-U</B>' 选项 永远 在 `<B>-include </B><I>file</I>' 之前 处理, 无论 他们 在 命令行上 的 顺序 如何. 然而 `<B>-include</B>' 和 `<B>-imacros</B>' 选项 按 书写顺序 处理.
+<P>
+<DT><B>-imacros </B><I>file</I>
+
+<DD>
+在 处理 常规 输入文件 之前, 首先 处理 文件 <I>file</I>, 但是 忽略 输出结果. 由于 丢弃了 文件
+<I>file</I> 的 输出内容, `<B>-imacros </B><I>file</I>' 选项 的 唯一 效果 就是 使 文件 <I>file</I> 中 的 宏定义 生效, 可以 用于 其他 输入文件. 在 处理 `<B>-imacros</B><I>file</I>' 选项 之前, 预处理器 首先 处理 `<B>-D</B>' 和 `<B>-U</B>' 选项, 并不在乎 他们 在 命令行上 的 顺序. 然而 `<B>-include</B>' 和 `<B>-imacros</B>' 选项 按 书写顺序 处理.
+<P>
+<DT><B>-idirafter </B><I>dir</I>
+
+<DD>
+把 目录 <I>dir</I> 添加到 第二包含路径 中. 如果 某个 头文件 在 主包含路径 (用`<B>-I</B>' 添加的 路径) 中 没有 找到, 预处理器 就搜索 第二包含路径.
+<P>
+<DT><B>-iprefix </B><I>prefix</I>
+
+<DD>
+指定 <I>prefix</I> 作为 后续 `<B>-iwithprefix</B>'
+选项 的 前缀.
+<P>
+<DT><B>-iwithprefix </B><I>dir</I>
+
+<DD>
+把 目录 添加到 第二包含路径 中. 目录名 由 <I>prefix</I> 和 <I>dir</I> 合并 而成, 这里 <I>prefix</I>
+
+被 先前的 `<B>-iprefix</B>' 选项 指定.
+<P>
+<DT><B>-nostdinc</B>
+
+<DD>
+不要 在 标准系统目录 中 寻找 头文件. 只 搜索 `<B>-I</B>' 选项 指定的 目录 (以及 当前目录, 如果 合适).
+
+<P>
+
+
+
+结合 使用 `<B>-nostdinc</B>' 和 `<B>-I-</B>' 选项, 你 可以 把 包含文件 搜索 限制在 显式 指定的 目录.
+<P>
+<DT><B>-nostdinc++</B>
+
+<DD>
+不要 在 C++ 专用标准目录 中 寻找 头文件, 但是 仍然 搜索 其他 标准目录.
+(当 建立 `<B>libg++</B>' 时 使用 这个选项.)
+<DT><B>-undef</B>
+
+<DD>
+不要 预定义 任何 非标准宏. (包括 系统结构 标志).
+<P>
+<DT><B>-E</B>
+
+<DD>
+仅运行 C 预处理器. 预处理 所有 指定的 C 源文件, 结果 送往 标准输出
+或 指定的 输出文件.
+<P>
+<DT><B>-C</B>
+
+<DD>
+告诉 预处理器 不要 丢弃 注释. 配合 `<B>-E</B>' 选项 使用.
+<P>
+<DT><B>-P</B>
+
+<DD>
+告诉 预处理器 不要 产生 `<B>#line</B>' 命令. 配合 `<B>-E</B>' 选项 使用.
+<P>
+<DT><B>-M&nbsp; [ -MG ]</B>
+
+<DD>
+告诉 预处理器 输出 一个 适合 <B>make</B>
+
+的 规则, 用于 描述 各目标文件的 依赖 关系. 对于 每个 源文件,
+预处理器 输出 一个 <B>make</B>
+
+规则, 该规则 的 目标项 (target) 是 源文件 对应的 目标文件名, 依赖项
+(dependency) 是 源文件中 `<B>#include</B> 引用的 所有文件. 生成的 规则 可以是 单行, 但如果 太长, 就用 `<B>\</B>'-换行符 续成 多行. 规则 显示在 标准输出, 不产生 预处理过的 C 程序.
+
+<P>
+
+
+
+`<B>-M</B>' 隐含了 `<B>-E</B>' 选项.
+
+<P>
+
+
+
+`<B>-MG</B>' 要求 把 缺失的 头文件 按 存在 对待, 并且 假定 他们 和 源程序文件
+在 同一目录 下. 必须 和 `<B>-M</B>' 选项 一起用.
+<P>
+<DT><B>-MM&nbsp; [ -MG ]</B>
+
+<DD>
+和 `<B>-M</B>' 选项 类似, 但是 输出结果 仅涉及 用户头文件, 象 这样 `<B>#include </B><I>file</I>&quot;'.  忽略 系统头文件 如 `<B>#include &lt;</B><I>file</I>&gt;'.
+<P>
+<DT><B>-MD</B>
+
+<DD>
+和 `<B>-M</B>' 选项 类似, 但是 把 依赖 信息 输出在 文件中, 文件名 通过 把 输出文件名
+末尾的 `<B>.o</B>' 替换为 `<B>.d</B>' 产生. 同时 继续 指定的 编译工作 ---`<B>-MD</B>' 不象 `<B>-M</B>' 那样 阻止 正常的 编译任务.
+
+<P>
+
+
+
+Mach 的 实用工具 `<B>md</B>' 能够 合并 `<B>.d</B>' 文件, 产生 适用于 `<B>make</B>' 命令 的 单一的 依赖文件.
+<P>
+<DT><B>-MMD</B>
+
+<DD>
+和 `<B>-MD</B>' 选项 类似, 但是 输出结果 仅涉及 用户头文件, 忽略 系统头文件.
+<P>
+<DT><B>-H</B>
+
+<DD>
+除了 其他 普通 的 操作, GCC 显示 引用过的 头文件 名.
+<P>
+<DT><B>-A</B><I>question</I><B>(</B><I>answer</I><B>)</B>
+
+<DD>
+如果 预处理器 做 条件测试, 如 `<B>#if #</B><I>question</I><B>(</B><I>answer</I><B>)</B>', 该选项 可以 断言 (Assert)
+<I>question</I>
+
+的 答案 是
+<I>answer.</I>
+
+<B>-A-</B>' 关闭 一般用于 描述 目标机 的 标准 断言.
+<P>
+<DT><B>-D</B><I>macro</I>
+
+<DD>
+定义 宏 <I>macro</I>, 宏 的 内容 定义为 字符串 `<B>1</B>'.
+<P>
+<DT><B>-D</B><I>macro</I><B>=</B><I>defn</I>
+
+<DD>
+定义 宏 <I>macro</I> 的 内容 为 <I>defn</I>. 命令行 上 所有的 `<B>-D</B>' 选项 在 `<B>-U</B>' 选项 之前 处理.
+<P>
+<DT><B>-U</B><I>macro</I>
+
+<DD>
+取消 宏 <I>macro</I>.  `<B>-U</B>' 选项 在 所有的 `<B>-D</B>' 选项 之后 处理, 但是 优先于 任何 `<B>-include</B>' 或 `<B>-imacros</B>' 选项.
+<P>
+<DT><B>-dM</B>
+
+<DD>
+告诉 预处理器 输出 有效的 宏定义 列表 (预处理 结束时 仍然 有效的 宏定义).
+该选项 需 结合 `<B>-E</B>'
+选项 使用.
+<P>
+<DT><B>-dD</B>
+
+<DD>
+告诉 预处理器 把 所有的 宏定义 传递到 输出端, 按照 出现的 顺序 显示.
+<P>
+<DT><B>-dN</B>
+
+<DD>
+和 `<B>-dD</B>'选项 类似, 但是 忽略 宏的 参量 或 内容. 只在 输出端 显示 `<B>#define </B><I>name</I>.<P>
+</DL>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>汇编器选项 (ASSEMBLER OPTION)</H2>
+
+<DL COMPACT>
+<DT><B>-Wa,</B><I>option</I>
+
+<DD>
+把 选项 <I>option</I> 传递给 汇编器.  如果 <I>option</I>
+
+含有 逗号, 就在 逗号 处 分割成 多个 选项.
+<P>
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H2>连接器选项 (LINKER OPTION)</H2>
+
+下面的 选项 用于 编译器 连接 目标文件, 输出 可执行文件 的 时候.
+如果 编译器 不进行 连接, 他们 就 毫无意义.
+<P>
+<DL COMPACT>
+<DT><I>object-file-name</I>
+
+<DD>
+如果 某些文件 没有 特别明确的 后缀 a special recognized suffix,
+GCC 就 认为 他们 是 目标文件 或 库文件. (根据 文件内容, 连接器 能够 区分
+目标文件 和 库文件). 如果 GCC 执行 连接 操作, 这些 目标文件 将 成为
+连接器 的 输入文件.
+<P>
+<DT><B>-l</B><I>library</I>
+
+<DD>
+连接 名为 <I>library</I> 的 库文件.
+
+<P>
+
+
+
+连接器 在 标准搜索目录 中 寻找 这个 库文件, 库文件 的 真正 名字 是 `<B>lib</B><I>library</I>.a'.  连接器 会 当做 文件名 得到 准确 说明 一样 引用 这个文件.
+
+<P>
+
+
+
+搜索目录 除了 一些 系统标准目录 外, 还包括 用户 以 `<B>-L</B>' 选项 指定 的 路径.
+
+<P>
+
+
+
+一般说来 用 这个方法 找到的 文件 是 库文件---即由 目标文件 组成的 
+归档文件 (archive file).
+连接器 处理 归档文件 的 方法 是: 扫描 归档文件, 寻找 某些 成员,
+这些 成员 的 符号 目前 已 被引用, 不过 还没有 被定义.
+但是, 如果 连接器 找到 普通的 目标文件, 而不是 库文件, 就把 这个 目标文件
+按 平常方式 连接 进来. 指定 `<B>-l</B>' 选项 和 指定 文件名 的 唯一 区别 是, `<B>-l</B>选项 用 `<B>lib</B>' 和 `<B>.a</B>' 把 
+<I>library</I>
+
+包裹 起来, 而且 搜索 一些 目录.
+<P>
+<DT><B>-lobjc</B>
+
+<DD>
+这个
+<B>-l</B>
+
+选项 的 特殊形式 用于 连接 Objective C 程序.
+<P>
+<DT><B>-nostartfiles</B>
+
+<DD>
+不连接 系统 标准启动文件, 而 标准库文件 仍然 正常 使用.
+<P>
+<DT><B>-nostdlib</B>
+
+<DD>
+不连接 系统 标准启动文件 和 标准库文件. 只把 指定的 文件 传递给 连接器.
+<P>
+<DT><B>-static</B>
+
+<DD>
+在 支持 动态连接 (dynamic linking) 的 系统 上, 阻止 连接 共享库.
+该选项 在 其他系统上 无效.
+<P>
+<DT><B>-shared</B>
+
+<DD>
+生成 一个 共享目标文件, 他 可以 和 其他 目标文件 连接 产生 可执行文件.
+只有 部分 系统 支持 该选项.
+<P>
+<DT><B>-symbolic</B>
+
+<DD>
+建立 共享目标文件 的 时候, 把 引用 绑定到 全局符号上.
+对 所有 无法解析的 引用 作出 警告 (除非 用 连接编辑选项 `<B>-Xlinker -z -Xlinker defs</B>' 取代).  
+只有 部分 系统 支持 该选项.
+<P>
+<P>
+<DT><B>-Xlinker </B><I>option</I>
+
+<DD>
+把 选项 <I>option</I>
+
+传递给 连接器. 可以 用 他 传递 系统 特定的 连接 选项, GNU CC 无法 识别 
+这些 选项.
+
+<P>
+
+
+
+如果 需要 传递 携带 参数 的 选项, 你 必须 使用 两次 `<B>-Xlinker</B>', 一次 传递 选项, 另一次 传递 他的 参数. 例如, 如果 传递 `<B>-assert definitions</B>', 你 必须 写成 `<B>-Xlinker -assert -Xlinker definitions</B>',  而不能 写成 `<B>-Xlinker &quot;-assert definitions&quot;</B>', 因为 这样 会把 整个 字符串 当做 一个 参数 传递, 显然 这 不是
+连接器 期待的.
+<P>
+<DT><B>-Wl,</B><I>option</I>
+
+<DD>
+把 选项 <I>option</I> 传递给 连接器.  如果 <I>option</I> 中 含有 逗号, 就在 逗号 处 分割成 多个 选项. 
+<P>
+<DT><B>-u </B><I>symbol</I>
+
+<DD>
+使 连接器 认为 取消了
+<I>symbol</I>
+
+的 符号定义, 从而 连接 库模块 以 取得 定义. 你 可以 使用 多个 `<B>-u</B>' 选项, 各自 跟上 不同的 符号, 使得 连接器 调入 附加的 库模块.
+<P>
+</DL>
+<A NAME="lbAL">&nbsp;</A>
+<H2>目录选项 (DIRECTORY OPTION)</H2>
+
+下列 选项 指定 搜索路径, 用于 查找 头文件, 库文件, 或 编译器 的 某些成员:
+<DL COMPACT>
+<DT><B>-I</B><I>dir</I>
+
+<DD>
+在 头文件 的 搜索路径 列表 中 添加
+<I>dir </I>
+
+目录.
+<P>
+<DT><B>-I-</B>
+
+<DD>
+任何 在 `<B>-I-</B>' 前面 用 `<B>-I</B>' 选项 指定 的 搜索路径 只适用于 `<B>#include &quot;</B><I>file</I><B>&quot;</B>' 这种 情况; 他们 不能 用来 搜索 `<B>#include &lt;</B><I>file</I>&gt;' 包含 的 头文件.
+
+<P>
+
+
+
+如果 用 `<B>-I</B>' 选项 指定的 搜索路径 位于 `<B>-I-</B>' 选项 后面, 就可以 在 这些 路径 中 搜索 所有的 `<B>#include</B>'
+指令. (一般说来
+<B>-I</B>
+
+选项 就是 这么 用的.)
+
+<P>
+
+
+
+还有, `<B>-I-</B>' 选项 能够 阻止 当前目录 (存放 当前 输入文件 的 地方) 成为 搜索 `<B>#include &quot;</B><I>file</I><B>&quot;</B>' 的 第一选择. 没有 办法 克服 `<B>-I-</B>' 选项 的 这个效应.  你 可以 指定 `<B>-I.</B>' 搜索 那个目录, 它 在 调用 编译器 时 是 当前目录. 
+这 和 预处理器 的 默认行为 不完全 一样, 但是 结果 通常 令人满意.
+
+<P>
+
+
+
+`<B>-I-</B>' 不影响 使用 系统标准目录, 因此, `<B>-I-</B>' 和 `<B>-nostdinc</B>' 是 不同的 选项.
+<P>
+<DT><B>-L</B><I>dir</I>
+
+<DD>
+在 `<B>-l</B>' 选项 的 搜索路径 列表 中 添加 <I>dir</I> 目录.
+<P>
+<DT><B>-B</B><I>prefix</I>
+
+<DD>
+这个选项 指出 在何处 寻找 可执行文件, 库文件, 以及 编译器 自己 的 数据文件.
+
+<P>
+
+
+
+编译器 驱动程序 需要 执行 某些 下面的 子程序: `<B>cpp</B>', `<B>cc1</B>' (或 C++ 的 `<B>cc1plus</B>'), `<B>as</B>' 和 `<B>ld</B>'.  他 把 
+<I>prefix</I> 当作 欲执行的 程序 的 前缀, 既可以 包括 也可以 不包括 `<I>machine</I><B>/</B><I>version</I><B>/</B>'.
+
+<P>
+
+
+
+对于 要运行的 子程序, 编译器 驱动程序 首先 试着 加上 `<B>-B</B>' 前缀 (如果存在).  如果 没有 找到 文件, 或 没有 指定 `<B>-B</B>' 选项, 编译器 接着 会 试验 两个 标准 前缀 `<B>/usr/lib/gcc/</B>' 和 `<B>/usr/local/lib/gcc-lib/</B>'.  如果 仍然 没能够 找到 所需文件, 编译器 就在 `<B>PATH</B>' 环境变量 指定的 路径 中 寻找 没加 任何 前缀 的 文件名.
+
+<P>
+
+
+
+如果 有需要, 运行时 (run-time) 支持文件 `<B>libgcc.a</B>' 也在 `<B>-B</B>' 前缀 的 搜索 范围 之内. 如果 这里 没有 找到, 就在 上面 提到的
+两个 标准 前缀 中 寻找, 仅此而已. 如果 上述 方法 没有 找到 这个 文件,
+就 不连接 他了. 多数 情况 的 多数 机器 上, `<B>libgcc.a</B>' 并非 必不可少.
+
+<P>
+
+
+
+你 可以 通过 环境变量
+<B>GCC_EXEC_PREFIX</B> 获得 近似的 效果; 如果 定义了 这个 变量, 其值 就和 上面 说的 一样
+用做 前缀. 如果 同时 指定了 `<B>-B</B>' 选项 和
+<B>GCC_EXEC_PREFIX</B> 变量, 编译器 首先 使用 `<B>-B</B>' 选项, 然后 才尝试 环境变量值.
+<P>
+</DL>
+<A NAME="lbAM">&nbsp;</A>
+<H2>警告选项 (WARNING OPTION)</H2>
+
+警告 是 针对 程序结构 的 诊断信息, 程序 不一定 有错误, 而是 存在
+风险, 或者 可能 存在 错误.
+
+<P>
+
+
+
+下列 选项 控制 GNU CC 产生 的 警告 的 数量 和 类型:
+<P>
+<DL COMPACT>
+<DT><B>-fsyntax-only</B>
+
+<DD>
+检查 程序 中 的 语法错误, 但是 不产生 输出信息.
+<DT><B>-w</B>
+
+<DD>
+禁止 所有 警告信息.
+<DT><B>-Wno-import</B>
+
+<DD>
+禁止 所有 关于
+<B>#import</B>
+
+的 警告信息.
+<DT><B>-pedantic</B>
+
+<DD>
+打开 完全服从 ANSI C 标准 所需的 全部 警告诊断; 拒绝接受 采用了
+被禁止的 语法扩展 的 程序.
+
+<P>
+
+
+
+无论 有没有 这个 选项, 符合 ANSI C 标准 的 程序 应该 能够 被 正确 编译
+(虽然 极少数 程序 需要 `<B>-ansi</B>' 选项).  然而, 如果 没有 这个 选项, 某些 GNU 扩展 和 传统 C 特性
+也 得到 支持. 使用 这个 选项 可以 拒绝 这些 程序. 没有 理由 使用 这个
+选项, 他 存在 只是 为了 满足 一些 书呆子 (pedant).
+
+<P>
+
+
+
+对于 替选关键字 (他们 以 `<B>__</B>' 开始 和 结束) `<B>-pedantic</B>' 不会 产生 警告信息. Pedantic 也 不警告 跟在
+<B>__extension__</B> 后面 的 表达式. 不过 只应该 在 系统头文件 中 使用 这种 转义措施,
+应用程序 最好 避免.
+<DT><B>-pedantic-errors</B>
+
+<DD>
+该 选项 和 `<B>-pedantic</B>' 类似, 但是 显示 错误 而不是 警告.
+<DT><B>-W</B>
+
+<DD>
+对 下列 事件 显示 额外的 警告信息:
+<DT>&nbsp;&nbsp;&nbsp;&bull;<DD>
+非易变自动变量 (nonvolatile automatic variable) 可能 在 调用
+<B>longjmp</B> 时 发生 改变. 这些 警告 仅在 优化编译 时 发生.
+
+<P>
+
+
+
+编译器 只知道 对 <B>setjmp</B> 的 调用, 他 不可能 知道 会 在哪里 调用 <B>longjmp</B>, 事实上 一个 信号处理例程 可以 在 程序 的 任何 地点 调用 他.
+其结果是, 即使 程序 没有 问题, 你 也可能会 得到 警告, 因为 无法 在
+可能 出现 问题 的 地方 调用 <B>longjmp</B>.
+<P>
+<DT>&nbsp;&nbsp;&nbsp;&bull;<DD>
+既可以 返回 值, 也可以 不返回 值 的 函数. (缺少 结尾 的 函数体 被看作
+不返回 函数值) 例如, 下面的 函数 将 导致 这种 警告:
+
+<P>
+
+
+
+<PRE>
+foo (a)
+{
+  if (a &gt; 0)
+    return a;
+}
+
+
+</PRE>
+
+由于 GNU CC 不知道 某些 函数 永不返回 (含有 <B>abort</B> 和 <B>longjmp</B>), 因此 有可能 出现 虚假 警告.
+<P>
+<DT>&nbsp;&nbsp;&nbsp;&bull;<DD>
+表达式语句 或 逗号表达式 的 左侧 没有 产生 作用 (side effect).
+如果要 防止 这种 警告, 应该把 未使用的 表达式 强制转换 为 void 类型.
+例如, 这样的 表达式 `<B>x[i,j]</B>' 会 导致 警告, 而 `<B>x[(void)i,j]</B>' 就 不会.
+<P>
+<DT>&nbsp;&nbsp;&nbsp;&bull;<DD>
+无符号数 用 `<B>&gt;</B>' 或 `<B>&lt;=</B>' 和 零 做比较.
+</DL>
+<P>
+
+<P>
+<DL COMPACT>
+<DT><B>-Wimplicit-int</B>
+
+<DD>
+警告 没有 指定 类型 的 声明.
+<P>
+<DT><B>-Wimplicit-function-declaration</B>
+
+<DD>
+警告 在 声明 之前 就 使用 的 函数.
+<P>
+<DT><B>-Wimplicit</B>
+
+<DD>
+同 -Wimplicit-int 和 -Wimplicit-function-declaration.
+<P>
+<DT><B>-Wmain</B>
+
+<DD>
+如果 把
+<B>main</B>
+
+函数 声明 或 定义 成 奇怪 的 类型, 编译器 就 发出 警告.
+典型情况下, 这个 函数 用于 外部连接, 返回 
+<B>int</B> 数值, 不需要 参数, 或 指定 两个 参数.
+<P>
+<DT><B>-Wreturn-type</B>
+
+<DD>
+如果 函数 定义了 返回类型, 而 默认 类型 是 <B>int</B> 型, 编译器 就 发出 警告. 同时 警告 那些 不带 返回值 的 <B>return</B> 语句, 如果 他们 所属的 函数 并非 <B>void</B> 类型.
+<P>
+<DT><B>-Wunused</B>
+
+<DD>
+如果 某个 局部变量 除了 声明 就 没再 使用, 或者 声明了 静态函数 但是 没有
+定义, 或者 某条 语句 的 运算结果 显然 没有 使用, 编译器 就 发出 警告.
+<P>
+<DT><B>-Wswitch</B>
+
+<DD>
+如果 某条 <B>switch</B> 语句 的 参数 属于 枚举类型, 但是 没有 对应的 <B>case</B> 语句 使用 枚举元素, 编译器 就 发出 警告. ( <B>default</B> 语句 的 出现 能够 防止 这个 警告.) 超出 枚举 范围 的 <B>case</B> 语句 同样 会 导致 这个 警告.
+<P>
+<DT><B>-Wcomment</B>
+
+<DD>
+如果 注释起始序列 `<B>/*</B>' 出现在 注释 中, 编译器 就 发出 警告.
+<P>
+<DT><B>-Wtrigraphs</B>
+
+<DD>
+警告 任何 出现的 trigraph (假设 允许 使用 他们).
+<P>
+<DT><B>-Wformat</B>
+
+<DD>
+检查 对 <B>printf</B> 和 <B>scanf</B> 等 函数 的 调用, 确认 各个 参数 类型 和 格式串 中的 一致.
+<P>
+<DT><B>-Wchar-subscripts</B>
+
+<DD>
+警告 类型 是
+<B>char</B>
+
+的 数组 下标. 这是 常见 错误, 程序员 经常 忘记 在 某些 机器 上 char 有 符号.
+<P>
+<DT><B>-Wuninitialized</B>
+
+<DD>
+在 初始化 之前 就 使用 自动变量.
+
+<P>
+
+
+
+这些警告 只可能 做 优化编译 时 出现, 因为 他们 需要 数据流信息, 只有
+做 优化 的 时候 才 估算 数据流信息. 如果 不指定 `<B>-O</B>' 选项, 就不会 出现 这些警告.
+
+<P>
+
+
+
+这些警告 仅针对 等候 分配 寄存器 的 变量. 因此 不会 发生在 声明为 <B>volatile</B> 的 变量 上面, 不会 发生在 已经 取得 地址 的 变量, 或 长度 不等于 
+1, 2, 4, 8 字节 的 变量. 同样 也不会 发生在 结构, 联合 或 数组 上面, 
+即使 他们 在 寄存器 中.
+
+<P>
+
+
+
+注意, 如果 某个变量 只 计算了 一个 从未使用过 的 值, 这里 可能 不会 警告.
+因为 在 显示 警告 之前, 这样 的 计算 已经 被 数据流分析 删除 了.
+
+<P>
+
+
+
+这些警告 作为 可选项 是因为 GNU CC 还没有 智能到 判别 所有的 情况, 知道
+有些 看上去 错误 的 代码 其实 是 正确的. 下面 是 一个 这样的 例子:
+
+<P>
+
+
+
+<PRE>
+{
+  int x;
+  switch (y)
+    {
+    case 1: x = 1;
+      break;
+    case 2: x = 4;
+      break;
+    case 3: x = 5;
+    }
+  foo (x);
+}
+
+
+</PRE>
+
+如果 <B>y</B> 始终是 1, 2 或 3, 那么 <B>x</B> 总会被 初始化, 但是 GNU CC 不知道 这一点. 下面 是 另一个 普遍案例:
+
+<P>
+
+
+
+<PRE>
+{
+  int save_y;
+  if (change_y) save_y = y, y = new_y;
+  ...
+  if (change_y) y = save_y;
+}
+
+
+</PRE>
+
+这里 没有 错误, 因为 只有 设置了 <B>save_y</B> 才 使用 他.
+
+<P>
+
+
+
+把 所有 不返回 的 函数 定义为
+<B>volatile</B> 可以 避免 某些 似是而非的 警告.
+<P>
+<DT><B>-Wparentheses</B>
+
+<DD>
+在 某些 情况 下 如果 忽略了 括号, 编译器 就 发出 警告.
+<P>
+<DT><B>-Wtemplate-debugging</B>
+
+<DD>
+当 在 C++ 程序 中 使用 template 的 时候, 如果 调试 (debugging) 没有 完全 生效,
+编译器 就 发出 警告. (仅用于 C++).
+<P>
+<DT><B>-Wall</B>
+
+<DD>
+结合 所有 上述 的 `<B>-W</B>' 选项. 通常 我们 建议 避免 这些 被警告的 用法，我们 相信,
+恰当 结合 宏 的 使用 能够 轻易 避免 这些 用法。
+<P>
+</DL>
+<P>
+
+剩下的 `<B>-W...</B>' 选项 不包括 在 `<B>-Wall</B>' 中, 因为 我们 认为 在 必要情况 下, 这些 被 编译器 警告 的 程序结构, 
+可以 合理的 用在 &quot;干净的&quot; 程序 中.
+<P>
+<DL COMPACT>
+<DT><B>-Wtraditional</B>
+
+<DD>
+如果 某些 程序结构 在 传统 C 中 的 表现 和 ANSI C 不同, 编译器 就 发出 警告.
+<P>
+<DT>&nbsp;&nbsp;&nbsp;&bull;<DD>
+宏参 出现在 宏体 的 字符串常量 内部. 传统 C 会 替换 宏参, 而 ANSI C 
+则 视其为 常量 的 一部分.
+<P>
+<DT>&nbsp;&nbsp;&nbsp;&bull;<DD>
+某个函数 在 块(block) 中 声明为 外部, 但在 块 结束后 才 调用.
+<P>
+<DT>&nbsp;&nbsp;&nbsp;&bull;<DD>
+<B>switch</B> 语句 的 操作数 类型 是 <B>long</B>.
+<P>
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-Wshadow</B>
+
+<DD>
+一旦 某个 局部变量 屏蔽了 另一个 局部变量, 编译器 就 发出 警告.
+<P>
+<DT><B>-Wid-clash-</B><I>len</I>
+
+<DD>
+一旦 两个 确定的 标识符 具有 相同的 前 <I>len</I>
+
+个 字符, 编译器 就 发出 警告. 他 可以 协助 你 开发 一些 将要在
+某些 过时的, 危害大脑的 编译器 上 编译 的 程序.
+<P>
+<DT><B>-Wpointer-arith</B>
+
+<DD>
+任何 语句 如果 依赖于 函数类型 的 大小(size) 或者 <B>void</B> 类型 的 大小, 编译器 就 发出 警告.  GNU C 为了 便于 计算 <B>void *</B> 指针 和 函数指针, 就把 这些 类型 的 大小 定义 为 1.
+<P>
+<DT><B>-Wcast-qual</B>
+
+<DD>
+一旦 某个 指针 强制类型转换 以便 移除 类型修饰符 时, 编译器 就 发出 警告.
+例如, 如果 把 <B>const char *</B> 强制转换 为 普通的 <B>char *</B> 时, 警告 就会 出现.
+<P>
+<DT><B>-Wcast-align</B>
+
+<DD>
+一旦 某个 指针类型 强制转换 时, 导致 目标 所需的 地址对齐 (alignment)  
+增加, 编译器 就 发出 警告.
+例如, 某些 机器 上 只能 在 2 或 4 字节 边界 上 访问 整数, 如果 在 
+这种 机型 上 把 <B>char *</B> 强制转换 成 <B>int *</B> 类型, 编译器 就 发出 警告.
+<P>
+<DT><B>-Wwrite-strings</B>
+
+<DD>
+规定 字符串常量 的 类型 是 <B>const char[</B><I>length</I><B>]</B>, 因此, 把 这样的 地址 复制给 non-<B>const</B> <B>char *</B>
+
+指针 将 产生 警告.  
+这些 警告 能够 帮助 你 在 编译期间 发现 企图 写入 字符串常量 的 代码,
+但是 你 必须 非常 仔细 的 在 声明 和 原形 中 使用 <B>const</B>, 否则 他们 只能 带来 麻烦; 所以 我们 没有 让 `<B>-Wall</B>' 提供 这些 警告.
+<P>
+<DT><B>-Wconversion</B>
+
+<DD>
+如果 某函数原形 导致 的 类型转换 和 无函数原形 时的 类型转换 不同,
+编译器 就 发出 警告.
+这里 包括 定点数 和 浮点数 的 互相转换, 改变 定点数 的 宽度 或 符号,
+除非 他们 和 缺省声明 (default promotion) 相同.
+<P>
+<DT><B>-Waggregate-return</B>
+
+<DD>
+如果 定义 或 调用 了 返回 结构 或 联合 的 函数, 编译器 就 发出 警告.
+(从 语言角度 你 可以 返回 一个 数组, 然而 同样 会 导致 警告.)
+<P>
+<DT><B>-Wstrict-prototypes</B>
+
+<DD>
+如果 函数 的 声明 或 定义 没有 指出 参数类型, 编译器 就 发出 警告.
+(如果 函数 的 前向引用说明 指出了 参数类型, 则 允许 后面 使用 旧式风格
+的 函数定义, 而 不会产生 警告.)
+<P>
+<DT><B>-Wmissing-prototypes</B>
+
+<DD>
+如果 没有 预先 声明 函数原形 就 定义了 全局函数, 编译器 就 发出 警告.
+即使 函数定义 自身 提供了 函数原形 也会 产生 这个 警告. 他 的 目的
+是 检查 没有 在 头文件 中 声明 的 全局函数.
+<P>
+<DT><B>-Wmissing-declarations</B>
+
+<DD>
+如果 没有 预先 声明 就 定义了 全局函数, 编译器 就 发出 警告.
+即使 函数定义 自身 提供了 函数原形 也会 产生 这个 警告. 这个选项 的 目的
+是 检查 没有 在 头文件 中 声明 的 全局函数.
+<P>
+<DT><B>-Wredundant-decls</B>
+
+<DD>
+如果 在 同一个 可见域 某定义 多次 声明, 编译器 就 发出 警告, 即使 这些
+重复声明 有效 并且 毫无差别.
+<P>
+<DT><B>-Wnested-externs</B>
+
+<DD>
+如果 某 <B>extern</B> 声明 出现在 函数 内部, 编译器 就 发出 警告.
+<P>
+<DT><B>-Wenum-clash</B>
+
+<DD>
+对于 不同 枚举类型 之间 的 转换 发出 警告 (仅适用于 C++).
+<P>
+<DT><B>-Wlong-long</B>
+
+<DD>
+如果 使用了
+<B>long long </B>类型 就 发出 警告. 该 警告 是 缺省项. 使用 `<B>-Wno-long-long</B>' 选项 能够 防止 这个 警告.  `<B>-Wlong-long</B>' 和 `<B>-Wno-long-long</B>' 仅 在 `<B>-pedantic</B>' 之下 才起作用.
+<P>
+<DT><B>-Woverloaded-virtual</B>
+
+<DD>
+(仅适用于 C++.) 在继承类中, 虚函数 的 定义 必须 匹配 虚函数 在 基类
+中 声明 的 类型特征 (type signature).
+当 继承类 声明了 某个函数, 它 可能 是个 错误的 尝试 企图 定义一个 虚函数,
+使用 这个 选项 能够 产生 警告:
+就是说, 当 某个函数 和 基类 中的 虚函数 同名, 但是 类型特征 不符合 基类
+的 任何 虚函数, 编译器 将发出 警告.
+<P>
+<DT><B>-Winline</B>
+
+<DD>
+如果 某函数 不能 内嵌(inline), 无论 是 声明为 inline 或者是 指定了
+<B>-finline-functions</B>
+
+选项, 编译器 都将 发出 警告.
+<P>
+<DT><B>-Werror</B>
+
+<DD>
+视 警告 为 错误; 出现 任何 警告 即 放弃 编译.
+<P>
+</DL>
+<A NAME="lbAN">&nbsp;</A>
+<H2>调试选项 (DEBUGGING OPTION)</H2>
+
+GNU CC 拥有 许多 特别选项, 既可以 调试 用户的 程序, 也可以 对 GCC 排错:
+<DL COMPACT>
+<DT><B>-g</B>
+
+<DD>
+以 操作系统 的 本地格式 (stabs, COFF, XCOFF, 或 DWARF).
+产生 调试信息. GDB 能够 使用 这些 调试信息.
+
+<P>
+
+
+
+在 大多数 使用 stabs 格式 的 系统 上, `<B>-g</B>' 选项 启动 只有 GDB 才使用 的 额外调试信息; 这些信息 使 GDB 调试
+效果 更好, 但是 有可能 导致 其他 调试器 崩溃, 或 拒绝 读入 程序.
+如果 你 确定 要 控制 是否 生成 额外的 信息, 使用`<B>-gstabs+</B>', `<B>-gstabs</B>',
+`<B>-gxcoff+</B>', `<B>-gxcoff</B>', `<B>-gdwarf+</B>', 或 `<B>-gdwarf</B>'
+(见下文).
+
+<P>
+
+
+
+和 大多数 C 编译器 不同, GNU CC 允许 结合使用 `<B>-g</B>' 和 `<B>-O</B>' 选项. 优化的 代码 偶尔 制造 一些 惊异的 结果: 某些 声明过的 变量
+根本 不存在; 控制流程 直接 跑到 没有 预料到的 地方; 某些语句 因为 计算结果
+是 常量 或 已经确定 而 没有 执行; 某些语句 在 其他 地方 执行, 因为 他们
+被移到 循环 外面 了.
+
+<P>
+
+
+
+然而 它 证明了 调试 优化的输出 是 可能的. 对 可能 含有 错误 的 程序
+使用 优化器 是 合理的.
+</DL>
+<P>
+
+如果 GNU CC 支持 输出 多种 调试信息, 下面的 选项 则 非常有用.
+<P>
+<DL COMPACT>
+<DT><B>-ggdb</B>
+
+<DD>
+以 本地格式 (如果支持) 输出 调试信息, 尽可能 包括 GDB 扩展.
+<P>
+<DT><B>-gstabs</B>
+
+<DD>
+以 stabs 格式 (如果支持) 输出 调试信息, 不包括 GDB 扩展.
+这是 大多数 BSD 系统 上 DBX 使用 的 格式.
+<P>
+<DT><B>-gstabs+</B>
+
+<DD>
+以 stabs 格式 (如果支持) 输出 调试信息, 使用 只有 GNU 调试器 (GDB)
+理解的 GNU 扩展. 使用 这些扩展 有可能 导致 其他 调试器 崩溃 或 拒绝
+读入 程序.
+<P>
+<DT><B>-gcoff</B>
+
+<DD>
+以 COFF 格式 (如果支持) 输出 调试信息. 这是 在 System V 第四版 以前
+的 大多数 System V 系统 上 SDB 使用 的 格式.
+<P>
+<DT><B>-gxcoff</B>
+
+<DD>
+以 XCOFF 格式 (如果支持) 输出 调试信息. 这是 IBM RS/6000 系统
+上 DBX 调试器 使用 的 格式.
+<P>
+<DT><B>-gxcoff+</B>
+
+<DD>
+以 XCOFF 格式 (如果支持) 输出 调试信息, 使用 只有 GNU 调试器 (GDB)
+理解的 GNU 扩展. 使用 这些扩展 有可能 导致 其他 调试器 崩溃 或 拒绝
+读入 程序.
+<P>
+<DT><B>-gdwarf</B>
+
+<DD>
+以 DWARF 格式 (如果支持) 输出 调试信息. 这是 大多数 System V 第四版
+系统 上 SDB 使用 的 格式.
+<P>
+<DT><B>-gdwarf+</B>
+
+<DD>
+以 DWARF 格式 (如果支持) 输出 调试信息, 使用 只有 GNU 调试器 (GDB)
+理解的 GNU 扩展. 使用 这些扩展 有可能 导致 其他 调试器 崩溃 或 拒绝
+读入 程序.
+<P>
+</DL>
+<P>
+
+<B>-g</B><I>level</I>
+
+<BR>
+
+<B>-ggdb</B><I>level</I>
+
+<BR>
+
+<B>-gstabs</B><I>level</I>
+
+<BR>
+
+<B>-gcoff</B><I>level</I>
+
+<B>-gxcoff</B><I>level</I>
+
+<DL COMPACT>
+<DT><B>-gdwarf</B><I>level</I>
+
+<DD>
+请求 生成 调试信息, 同时 用 <I>level</I> 指出 需要 多少 信息. 默认的 level 值 是 2.
+
+<P>
+
+
+
+Level 1 输出 最少量 的 信息, 仅够 在 不打算 调试 的 程序段 内 backtrace.
+包括 函数 和 外部变量 的 描述, 但是 没有 局部变量 和 行号 信息.
+
+<P>
+
+
+
+Level 3 包含 更多的 信息, 如 程序中出现 的 所有 宏定义. 当 使用 `<B>-g3</B>' 选项 的 时候, 某些 调试器 支持 宏扩展.
+<P>
+<DT><B>-p</B>
+
+<DD>
+产生 额外代码, 用于 输出 profile 信息, 供 分析程序 <B>prof</B> 使用.
+<P>
+<DT><B>-pg</B>
+
+<DD>
+产生 额外代码, 用于 输出 profile 信息, 供 分析程序 <B>gprof</B> 使用.
+<P>
+<DT><B>-a</B>
+
+<DD>
+产生 额外代码, 用于 输出 基本块 (basic block) 的 profile 信息,
+它 记录 各个 基本块 的 执行 次数, 供 诸如 <B>tcov</B> 此类 的 程序 分析.  但是 注意, 这个 数据格式 并非 <B>tcov</B> 期待的. 最终 GNU <B>gprof</B> 将 处理 这些数据.
+<DT><B>-ax</B>
+
+<DD>
+产生 额外代码, 用于 从 'bb.in' 文件 读取 基本块 的 profile 参数, 
+把 profile 的 结果 写到 'bb.out' 文件.
+`bb.in' 包含 一张 函数 列表. 一旦 进入 列表 中的 某个 函数, profile 操作
+就 开始, 离开 最外层 的 函数 后, profile 操作 就 结束.
+以 `-' 为 前缀名 的 函数 排除在 profile 操作 之外. 
+如果 函数名 不是 唯一的, 它 可以 写成
+`/path/filename.d:functionname' 来 澄清. `bb.out' 将 列出 一些 有效的
+文件名. 这四个 函数名 具有 特殊含义:
+`__bb_jumps__' 导致 跳转 (jump) 频率 写进 `bb.out'.
+`__bb_trace__' 导致 基本块 序列 通过 管道 传到 `gzip', 输出 `bbtrace.gz' 文件.
+`__bb_hidecall__' 导致 从 跟踪 (trace) 中 排除 call 指令.
+`__bb_showret__' 导致 在 跟踪 中 包括 返回指令.
+<P>
+<DT><B>-d</B><I>letters</I>
+
+<DD>
+编译 的 时候, 在 <I>letters</I> 指定 的 时刻 做 调试转储 (dump). 用于 调试 编译器.
+大多数 转储 的 文件名 通过 源文件名 添加 字词 获得 (例如  `<B>foo.c.rtl</B>' 或 `<B>foo.c.jump</B>').
+<P>
+<DT><B>-dM</B>
+
+<DD>
+预处理 结束 的 时候 转储 所有的 宏定义, 不输出到 文件.
+<P>
+<DT><B>-dN</B>
+
+<DD>
+预处理 结束 的 时候 转储 所有的 宏名.
+<P>
+<DT><B>-dD</B>
+
+<DD>
+预处理 结束 的 时候 转储 所有的 宏定义, 同时 进行 正常 输出.
+<P>
+<DT><B>-dy</B>
+
+<DD>
+语法分析 (parse) 的 时候 在 标准错误 转储 调试信息.
+<P>
+<DT><B>-dr</B>
+
+<DD>
+RTL 阶段 后 转储到 `<I>file</I><B>.rtl</B>'.
+<P>
+<DT><B>-dx</B>
+
+<DD>
+仅对 函数 生成 RTL, 而不是 编译. 通常 和 `<B>r</B>' 联用.
+<P>
+<DT><B>-dj</B>
+
+<DD>
+第一次 跳转优化 后 转储到 `<I>file</I><B>.jump</B>'.
+<P>
+<DT><B>-ds</B>
+
+<DD>
+CSE (包括 有时候 跟在 CSE 后面的 跳转优化) 后 转储到 `<I>file</I><B>.cse</B>'.
+<P>
+<DT><B>-dL</B>
+
+<DD>
+循环优化 后 转储到 `<I>file</I><B>.loop</B>'.
+<P>
+<DT><B>-dt</B>
+
+<DD>
+第二次 CSE 处理 (包括 有时候 跟在 CSE 后面的 跳转优化) 后 转储到 `<I>file</I><B>.cse2</B>'.
+<P>
+<DT><B>-df</B>
+
+<DD>
+流程分析 (flow analysis) 后 转储到 `<I>file</I><B>.flow</B>'.
+<P>
+<DT><B>-dc</B>
+
+<DD>
+指令组合 (instruction combination) 后 转储到 `<I>file</I><B>.combine</B>'.
+<P>
+<DT><B>-dS</B>
+
+<DD>
+第一次 指令安排 (instruction schedule) 后 转储到 `<I>file</I><B>.sched</B>'.
+<P>
+<DT><B>-dl</B>
+
+<DD>
+局部寄存器分配 后 转储到 `<I>file</I><B>.lreg</B>'.
+<P>
+<DT><B>-dg</B>
+
+<DD>
+全局寄存器分配 后 转储到 `<I>file</I><B>.greg</B>'.
+<P>
+<DT><B>-dR</B>
+
+<DD>
+第二次 指令安排 (instruction schedule) 后 转储到 `<I>file</I><B>.sched2</B>'.
+<P>
+<DT><B>-dJ</B>
+
+<DD>
+最后一次 跳转优化 后 转储到 `<I>file</I><B>.jump2</B>'.
+<P>
+<DT><B>-dd</B>
+
+<DD>
+推迟分支调度 (delayed branch scheduling) 后 转储到 `<I>file</I><B>.dbr</B>'.
+<P>
+<DT><B>-dk</B>
+
+<DD>
+寄存器-堆栈转换 后 转储到 `<I>file</I><B>.stack</B>'.
+<P>
+<DT><B>-da</B>
+
+<DD>
+产生 以上 所有的 转储.
+<P>
+<DT><B>-dm</B>
+
+<DD>
+运行结束后, 在 标准错误 显示 内存使用统计.
+<P>
+<DT><B>-dp</B>
+
+<DD>
+在 汇编输出 加注 指明 使用了 哪些 模式 (pattern) 及其 替代模式.
+<P>
+<DT><B>-fpretend-float</B>
+
+<DD>
+交叉编译 的 时候, 假定 目标机 和 宿主机 使用 同样的 浮点格式. 
+它 导致 输出 错误的 浮点常数, 但是 在 目标机 上 运行 的 时候, 
+真实的 指令序列 有可能 和 GNU CC 希望 的 一样.
+<P>
+<DT><B>-save-temps</B>
+
+<DD>
+保存 那些 通常 是 ``临时'' 的 中间文件; 置于 当前目录 下,
+并且 根据 源文件 命名. 因此, 用 `<B>-c -save-temps</B>' 选项 编译 `<B>foo.c </B>' 会 生成 ` <B>foo.cpp</B>' 和 `<B>foo.s</B>' 以及 `<B>foo.o</B>' 文件.
+<P>
+<DT><B>-print-file-name=</B><I>library</I>
+
+<DD>
+显示 库文件 
+<I>library</I>
+
+
+ 的 全路径名, 连接 时 会 使用 这个库 --- 其他 什么事情 都不作.
+根据 这个选项, GNU CC 既不编译, 也不连接, 仅仅 显示 文件名.
+<P>
+<DT><B>-print-libgcc-file-name</B>
+
+<DD>
+和 `<B>-print-file-name=libgcc.a</B>' 一样.
+<P>
+<DT><B>-print-prog-name=</B><I>program</I>
+
+<DD>
+类似于 `<B>-print-file-name</B>', 但是 查找 程序 program 如 `<B>cpp</B>'.
+<P>
+</DL>
+<A NAME="lbAO">&nbsp;</A>
+<H2>优化选项 (OPTIMIZATION OPTION)</H2>
+
+这些选项 控制 多种 优化措施:
+<DL COMPACT>
+<DT><B>-O</B>
+
+<DD>
+<DT><B>-O1</B>
+
+<DD>
+优化. 对于 大函数, 优化编译 占用 稍微多 的 时间 和 相当大 的 内存.
+
+<P>
+
+
+
+不使用 `<B>-O</B>' 选项 时, 编译器 的 目标 是 减少 编译 的 开销, 使 编译结果 能够 调试.
+语句 是 独立的: 如果 在 两条语句 之间 用 断点 中止 程序, 你 可以 对
+任何 变量 重新 赋值, 或者 在 函数体 内 把 程序计数器 指到 其他语句,
+以及 从 源程序 中 精确地 获取 你 期待 的 结果.
+
+<P>
+
+
+
+不使用 `<B>-O</B>' 选项 时, 只有 声明了 <B>register</B> 的 变量 才 分配使用 寄存器.  编译结果 比 不用 `<B>-O</B>' 选项 的 PCC 要 略逊一筹.
+
+<P>
+
+
+
+使用了 `<B>-O</B>' 选项, 编译器 会试图 减少 目标码 的 大小 和 执行时间.
+
+<P>
+
+
+
+如果 指定了 `<B>-O</B>' 选项, `<B>-fthread-jumps</B>' 和 `<B>-fdefer-pop</B>' 选项 将被 打开. 在 有 delay slot 的 机器 上, `<B>-fdelayed-branch</B>' 选项 将被 打开. 在 即使 没有 帧指针 (frame pointer) 也支持 调试 
+的 机器 上, `<B>-fomit-frame-pointer</B>' 选项 将被 打开. 某些机器 上 还可能会 打开 其他选项.
+<P>
+<DT><B>-O2</B>
+
+<DD>
+多优化一些. 除了 涉及 空间 和 速度 交换 的 优化选项, 执行 几乎 所有的
+优化工作. 例如 不进行 循环展开 (loop unrolling) 和 函数内嵌 (inlining). 和 <B>-O</B> 选项 比较, 这个选项 既增加了 编译时间, 也提高了 生成代码 的 运行效果.
+<P>
+<DT><B>-O3</B>
+
+<DD>
+优化的更多. 除了 打开
+<B>-O2</B>
+
+所做的 一切, 它 还 打开 了
+<B>-finline-functions</B>
+
+选项.
+<P>
+<DT><B>-O0</B>
+
+<DD>
+不优化.
+
+<P>
+
+
+
+如果 指定了 多个
+<B>-O</B>
+
+选项, 不管 带不带 数字, 最后一个 选项 才是 生效 的 选项.
+<P>
+</DL>
+<P>
+
+诸如 `<B>-f</B><I>flag</I>' 此类 的 选项 描述 一些 机器无关 的 开关. 大多数 开关 具有 肯定 和 
+否定 两种格式; `<B>-ffoo</B>' 开关选项 的 否定格式 应该是 `<B>-fno-foo</B>'.  下面的 列表 只展示了 一种 格式 --- 那个 不是 默认选项 的 格式.
+你 可以 通过 去掉 或 添加 `<B>no-</B>' 构造出 另一种 格式.
+<P>
+<DL COMPACT>
+<DT><B>-ffloat-store</B>
+
+<DD>
+不要 在 寄存器 中 存放 浮点变量. 这样 可以 防止 某些 机器 上 不希望
+的 过高 精度, 如 68000 的 浮点寄存器 (来自 68881) 保存的 精度 超过了 <B>double</B> 应该 具有的 精度.
+
+<P>
+
+
+
+对于 大多数 程序, 过高 精度 只有 好处. 但是 有些 程序 严格 依赖于 IEEE 浮点数
+的 定义. 对 这样的 程序 可以 使用 `<B>-ffloat-store</B>' 选项.
+<P>
+<DT><B>-fmemoize-lookups</B>
+
+<DD>
+<DT><B>-fsave-memoized</B>
+
+<DD>
+使用 探索法 (heuristic) 进行 更快的 编译 (仅对 C++). 
+默认情况下 不使用 探索法. 由于 探索法 只对 某些 输入文件 有效, 
+其他程序 的 编译速度 会变得 更慢.
+
+<P>
+
+
+
+第一次 编译器 必须 对 成员函数 (或对 成员数据 的 引用) 建立 一个 调用.
+它 必须 (1) 判断出 这个类 是否 实现了 那个 名字 的 成员函数; (2) 决定
+调用 哪个 成员函数 (涉及到 推测 需要 做 哪种 类型转换); (3) 检查 成员函数
+对 调用者 是否 可见. 所有 这些 构成 更慢的 编译.
+一般情形, 第二次 对 成员函数 (或对 成员数据 的 引用) 建立 的 调用, 必须
+再次 经过 相同 长度 的 处理. 这 意味着 象 这样的 代码
+
+<P>
+
+
+
+  cout &lt;&lt; &quot;This &quot; &lt;&lt; p &lt;&lt; &quot; has &quot; &lt;&lt; n &lt;&lt; &quot; legs.\n&quot;;
+
+<P>
+
+
+
+对 整个 三步骤 要做 六次 遍历. 通过 使用 软件缓存, ``命中'' 
+能够 显著地 减少 这种 代价. 然而 不幸的 是, 使用 这种 缓存 必须
+实现 其他 机制, 带来了 它 自己的 开销. `<B>-fmemoize-lookups</B>' 选项 打开 软件缓存.
+
+<P>
+
+
+
+因为 函数 的 正文环境 不同, 函数 对 成员 和 成员函数 的 访问权 (可见性)
+也可能 不同,
+<B>g++</B>
+
+可能 需要 刷新 缓存. 使用 `<B>-fmemoize-lookups</B>' 选项, 每 编译完 一个 函数 就 刷新 缓存. 而 `-fsave-memoized' 选项 也 启用 同样的 缓存, 但是 当 编译器 发觉 最后 编译 的 函数
+的 正文环境 产生 的 访问权 和 下一个 待编译的 函数 相同, 编译器 就 保留
+缓存 内容.
+这对 某个类 定义 许多 成员函数 时 非常 有用: 除了 某些 其他类 的 友函数,
+每个 成员函数 拥有 和 其他 成员函数 完全一样 的 访问权, 因而 无需 刷新 缓存.
+<P>
+<DT><B>-fno-default-inline</B>
+
+<DD>
+默认为 不要 把 成员函数 内嵌, 因为 它们 定义在 类的 作用域 内 (仅C++).
+<P>
+<DT><B>-fno-defer-pop</B>
+
+<DD>
+一旦 函数 返回, 参数 就 立即 弹出. 对于 那些 调用 函数 后 必须 弹出 参数
+的 机器, 编译器 一般情况下 让 几次 函数调用 的 参数 堆积 在 栈 上,
+然后 一次 全部 弹出.
+<P>
+<DT><B>-fforce-mem</B>
+
+<DD>
+做 数学运算 前 把 将要 使用的 内存操作数 送入 寄存器. 通过 把 内存访问
+转换成 潜在的 公共子表达式, 它 可能 产生 较好的 目标码. 如果 它们 不是
+公共子表达式, 指令组合 应该 消除 各自的 寄存器载荷. 我 乐意 倾听 不同意见.
+<P>
+<DT><B>-fforce-addr</B>
+
+<DD>
+做 数学运算 前 把 将要 使用的 内存地址常数 送入 寄存器. 它 可能 和 `<B>-fforce-mem</B>' 一样 产生 较好的 目标码. 我 乐意 倾听 不同意见.
+<P>
+<DT><B>-fomit-frame-pointer</B>
+
+<DD>
+对于 不需要 帧指针 (frame pointer) 的 函数, 不要 在 寄存器 中 保存 帧指针.
+这样 能够 避免 保存, 设置 和 恢复 帧指针 的 指令; 同时 对 许多 函数 提供
+一个 额外的 寄存器. <I>但是 在 大多数 机器 上将 无法 调试</I>.
+
+<P>
+
+
+
+某些机器上, 如 Vax, 这个 选项 无效, 因为 标准调用序列 自动 处理 帧指针,
+通过 假装 不存在 而 不保存 任何 东西. 机器描述宏 <B>FRAME_POINTER_REQUIRED</B> 控制 目标机 是否 支持 这个选项.
+<P>
+<DT><B>-finline-functions</B>
+
+<DD>
+把 所有 简单的 函数 集成进 调用者. 编译器 探索式地 决定 哪些 函数 足够
+简单, 值得 这种 集成.
+
+<P>
+
+
+
+如果 集成了 所有 给定函数 的 调用, 而且 函数 声明为 <B>static</B>, 那么 一般说来 GCC 有权 不按 汇编代码 输出 函数.
+<P>
+<DT><B>-fcaller-saves</B>
+
+<DD>
+允许 在 寄存器 里 分配 数值, 但是 这个方案 通常 受到 各个 函数调用 的 冲击,
+因此 GCC 生成 额外的 代码, 在 函数调用 的 前后 保存 和 复原 寄存器 内容.
+仅当 生成代码 看上去 优于 反之结果 时 才 实现 这样 的 分配.
+
+<P>
+
+
+
+某些 机器 上 该选项 默认为 允许, 通常 这些 机器 没有 调用保护寄存器 
+代替 使用.
+<P>
+<DT><B>-fkeep-inline-functions</B>
+
+<DD>
+即使 集成了 某个 函数 的 所有 调用, 而且 该函数 声明为 <B>static</B>, 仍然 输出 这个函数 一个 独立的, 运行时 可调用 的 版本.
+<P>
+<DT><B>-fno-function-cse</B>
+
+<DD>
+不要 把 函数地址 存入 寄存器; 让 调用 固定函数 的 指令 显式 给出 函数地址.
+
+<P>
+
+
+
+这个选项 产生 效率 较低 的 目标码, 但是 如果 不用 这个选项, 某些 不寻常
+的 hack, 改变 汇编器 的 输出, 可能 因 优化 而 带来 困惑.
+<P>
+<DT><B>-fno-peephole</B>
+
+<DD>
+禁止 任何 机器相关的 peephole 优化.
+<P>
+<DT><B>-ffast-math</B>
+
+<DD>
+这个选项 出于 速度优化, 允许 GCC 违反 某些 ANSI 或 IEEE 规则/规格.
+例如, 它 允许 编译器 假设 <B>sqrt</B> 函数 的 参数 是 非负数.
+
+<P>
+
+
+
+这个选项 不被 任何 `<B>-O</B>' 选项 打开, 因为 对于 严格 依靠 IEEE 或 ANSI 规则/规格 实现
+的 数学函数, 程序 可能 会产生 错误的 结果.
+<P>
+</DL>
+<P>
+
+下列 选项 控制 特定的 优化. `<B>-O2</B>' 选项 打开 下面的 大多数 优化项, 除了 `<B>-funroll-loops</B>' 和 `<B>-funroll-all-loops</B>' 项.
+<P>
+
+而 `<B>-O</B>' 选项 通常 打开 `<B>-fthread-jumps</B>' 和 `<B>-fdelayed-branch</B>' 优化项, 但是 特定的 机器 上的 默认优化项 有可能 改变.
+<P>
+
+如果 特别情况 下 非常 需要 ``微调'' 优化, 你 可以 使用 下面的 选项.
+<P>
+<DL COMPACT>
+<DT><B>-fstrength-reduce</B>
+
+<DD>
+执行 循环强度缩小 (loop strength reduction) 优化, 并且 消除 重复变量.
+<P>
+<DT><B>-fthread-jumps</B>
+
+<DD>
+执行 优化 的 地点 是, 如果 某个 跳转分支 的 目的地 存在 另一个 条件比较,
+而且 该 条件比较 包含在 前一个 比较语句 之内, 那么 执行 优化.
+根据 条件 是 true 或者 false, 前面 那条 分支 重定向 到 第二条 分支
+的 目的地 或者 紧跟在 第二条 分支 后面.
+<P>
+<DT><B>-funroll-loops</B>
+
+<DD>
+执行 循环展开 (loop unrolling) 优化. 仅对 循环次数 能够 在 编译时 或
+运行时 确定 的 循环 实行.
+<P>
+<DT><B>-funroll-all-loops</B>
+
+<DD>
+执行 循环展开 (loop unrolling) 优化. 对 所有 循环 实行. 通常 使 
+程序 运行的 更慢.
+<P>
+<DT><B>-fcse-follow-jumps</B>
+
+<DD>
+在 公共子表达式消元 (common subexpression elimination) 的 时候,
+如果 没有 其他 路径 到达 某个 跳转 的 目的地, 就 扫过 这条 jump 指令.
+例如, 如果 CSE 遇到 带有 <B>else</B>从句 的 <B>if</B> 语句, 当 条件测试 为 false 时, CSE 就 跟在 jump 后面.
+<P>
+<DT><B>-fcse-skip-blocks</B>
+
+<DD>
+它 类似于 `<B>-fcse-follow-jumps</B>' 选项, 但是 CSE 跟在 条件跳转 后面, 条件跳转 跳过了 语句块(block).
+如果 CSE 遇到 一条 简单的 <B>if</B> 语句, 不带 else 从句, `<B>-fcse-skip-blocks</B>' 选项 将导致 CSE 跟在 <B>if</B> 产生 的 跳转 后面.
+<P>
+<DT><B>-frerun-cse-after-loop</B>
+
+<DD>
+执行 循环优化 后, 重新 进行 公共子表达式消元.
+<P>
+<DT><B>-felide-constructors</B>
+
+<DD>
+如果 看上去 合理 就 省略 构造子 (仅C++). 
+根据 这个选项, 对于 下面的 代码, GNU C++ 直接 从 调用 <B>foo</B> 初始化 <B>y</B>, 而无需 通过 临时变量: 
+
+<P>
+
+
+
+A foo ();
+A y = foo ();
+
+<P>
+
+
+
+如果 没有 这个选项, GNU C++ 首先 通过 调用 类型 <B>A </B>合适的  构造子 初始化 <B>y</B>; 然后 把 <B>foo</B> 的 结果 赋给 临时变量; 最后, 用 临时变量 替换 `<B>y</B>' 的 初始值.
+
+<P>
+
+
+
+ANSI C++ 标准草案 规定了 默认行为 (`<B>-fno-elide-constructors</B>'). 如果 程序的 构造子 存在 副效应, `<B>-felide-constructors</B>' 选项 能够 使 程序 有 不同的 表现, 因为 可能 忽略 一些 构造子 的 调用.
+<P>
+<DT><B>-fexpensive-optimizations</B>
+
+<DD>
+执行 一些 相对 开销 较大 的 次要 优化.
+<P>
+<DT><B>-fdelayed-branch</B>
+
+<DD>
+如果 对 目标机 支持 这个 功能, 它 试图 重新 排列 指令, 以便 利用
+延迟分支 (delayed branch) 指令 后面的 指令 空隙.
+<P>
+<DT><B>-fschedule-insns</B>
+
+<DD>
+如果 对 目标机 支持 这个 功能, 它 试图 重新 排列 指令, 以便 消除 因
+数据未绪 造成的 执行停顿. 这可以 帮助 浮点运算 或 内存访问 较慢 的 机器
+调取 指令, 允许 其他 指令 先执行, 直到 调取 指令 或 浮点运算 完成.
+<P>
+<DT><B>-fschedule-insns2</B>
+
+<DD>
+类似于 `<B>-fschedule-insns</B>' 选项, 但是 在 寄存器分配 完成后, 需要 一个 额外的 指令调度 过程.
+对于 寄存器 数目 相对 较少, 而且 取内存指令 大于 一个周期 的 机器,
+这个选项 特别 有用.
+<P>
+</DL>
+<A NAME="lbAP">&nbsp;</A>
+<H2>目标机选项 (TARGET OPTION)</H2>
+
+缺省情况下, GNU CC 编译出 本机 类型 的 目标码. 然而 也可以 把他 安装成
+交叉编译器, 为 其他 机型 编译 程序. 事实上, 针对 不同的 目标机, 可以 
+同时 安装 GNU CC 相应 的 配置. 然后 用 `<B>-b</B>' 选项 指定 目标机种.
+<P>
+<P>
+
+顺便提一下, 新版本 和 旧版本 的 GNU CC 可以 共存. 其中一个 版本 (可能是
+最新的 那个) 为 缺省 版本, 但是 有时候 你 希望 使用 其他 版本.
+<P>
+<DL COMPACT>
+<DT><B>-b </B><I>machine</I>
+
+<DD>
+参数 <I>machine</I> 指出 编译的 目标机种. 这个 选项 用于 安装为 交叉编译器 的 GNU CC.
+
+<P>
+
+
+
+参数 <I>machine</I> 的 值 和 配置 GNU CC 交叉编译器 时 设置 的 机器类型 一样.
+例如, 如果 交叉编译器 配置有 `<B>configure</B>
+
+i386v', 意思是 编译 80386 上的 System V 目标码, 那么 你 可以 通过 `<B>-b i386v</B>' 运行 交叉编译器.
+
+<P>
+
+
+
+如果 没有 指定 `<B>-b</B>' 选项, 通常 指 编译 本机 目标码.
+<P>
+<DT><B>-V </B><I>version</I>
+
+<DD>
+参数 <I>version</I> 指出 运行 哪个 版本 的 GNU CC. 这个 选项 用于 安装了 多个 版本 的 GCC.
+例如, 如果
+<I>version</I> 是 `<B>2.0</B>', 意味着 运行 GNU CC 2.0 版.
+
+<P>
+
+
+
+如果 没有 指定 `<B>-V</B>' 选项, 缺省版本 取决于 GNU CC 的 安装方式, 一般说来 推荐 使用 通用版本.
+<P>
+<P>
+</DL>
+<A NAME="lbAQ">&nbsp;</A>
+<H2>机器相关选项 (MACHINE DEPENDENT OPTION)</H2>
+
+每一种 目标机型 都有 自己的 特别选项, 这些 选项 用 `<B>-m </B>' 开关 引导, 选择 不同的 硬件 型号 或 配置 --- 例如, 68010 还是 68020, 
+有没有 浮点协处理器. 通过 指定 选项, 安装 编译器 的 一个 版本 能够 为 所有的
+型号 或 配置 进行 编译.
+<P>
+<P>
+
+此外, 编译器 的 某些 配置 支持 附加的 特殊选项, 通常 是 为了 在 命令行 上
+兼容 这个 平台 的 其他 编译器.
+<P>
+<P>
+
+下面是 针对 68000 系列 定义 的 `<B>-m</B>' 选项:
+<DL COMPACT>
+<DT><B>-m68000</B>
+
+<DD>
+<DT><B>-mc68000</B>
+
+<DD>
+输出 68000 的 目标码. 
+如果 编译器 按 基于 68000 的 系统 配置, 这个 选项 就是 缺省选项.
+<P>
+<DT><B>-m68020</B>
+
+<DD>
+<DT><B>-mc68020</B>
+
+<DD>
+输出 68020 的 目标码 (而不是 68000).  
+如果 编译器 按 基于 68020 的 系统 配置, 这个 选项 就是 缺省选项.
+<P>
+<DT><B>-m68881</B>
+
+<DD>
+输出 包含 68881 浮点指令 的 目标码.
+对于 大多数 基于 68020 的 系统 这是 缺省选项, 除非 设置 编译器 时 指定了
+<B>-nfp .</B>
+
+<P>
+<DT><B>-m68030</B>
+
+<DD>
+输出 68030 的 目标码.  
+如果 编译器 按 基于 68030 的 系统 配置, 这个 选项 就是 缺省选项.
+<P>
+<DT><B>-m68040</B>
+
+<DD>
+输出 68040 的 目标码.  
+如果 编译器 按 基于 68040 的 系统 配置, 这个 选项 就是 缺省选项.
+<P>
+<DT><B>-m68020-40</B>
+
+<DD>
+输出 68040 的 目标码, 但是 不使用 新指令. 生成 的 代码 可以 在 68020/68881 
+上, 也可以 在 68030 或 68040 上 较有效地 运行.
+<P>
+<DT><B>-mfpa</B>
+
+<DD>
+输出 包含 SUN FPA 浮点指令 的 目标码.
+<P>
+<DT><B>-msoft-float</B>
+
+<DD>
+输出 包含 浮点库调用 的 目标码.
+<I>警告:</I>
+
+所需的库 不是 GNU CC 的 组成部分. 一般说来 GCC 使用 该机型 本地 C 编译器 的
+相应部件, 但是 作 交叉编译 时 却不能 直接 使用. 你 必须 自己 管理 提供 合适的
+函数库 用于 交叉编译.
+<P>
+<DT><B>-mshort</B>
+
+<DD>
+认为 <B>int</B> 类型 是 16 位宽, 相当于 <B>short int</B>.
+<P>
+<DT><B>-mnobitfield</B>
+
+<DD>
+不使用 位域 (bit-field) 指令.  `<B>-m68000</B>' 隐含指定了
+`<B>-mnobitfield</B>'.
+<P>
+<DT><B>-mbitfield</B>
+
+<DD>
+使用 位域指令.  `<B>-m68020</B>' 隐含指定了
+`<B>-mbitfield</B>'.  如果 你 使用 未改装的 gcc, 这就是 默认选项.
+<P>
+<DT><B>-mrtd</B>
+
+<DD>
+采用 另一种 函数调用约定, 函数 接受 固定 数目的 参数, 用 <B>rtd</B>
+
+指令 返回, 该指令 返回时 弹出 栈内的 参数. 这个 方法 能够 使 调用者
+节省 一条 指令, 因为 他 这里 不需要 弹出 参数.
+
+<P>
+
+
+
+这种 调用约定 不兼容 UNIX 的 正常 调用. 因此 如果 你 需要 调用 UNIX
+编译器 编译的 库函数, 你 就不能 使用 这个选项.
+
+<P>
+
+
+
+此外, 所有 参数数量 可变地 函数 必须 提供 函数原型 (包括 <B>printf</B>); 否则 编译器 会生成 错误的 调用 代码.
+
+<P>
+
+
+
+另外, 如果 调用 函数 时 携带了 过多的 参数, 编译器 将 生成 严重错误的
+代码. (正常情况下, 多余的 参数 被 安全无害的 忽略.)
+
+<P>
+
+
+
+68010 和 68020 处理器 支持 <B>rtd</B> 指令, 但是 68000 不支持.
+<P>
+</DL>
+<P>
+
+下面是 针对 VAX 定义 的 `<B>-m</B>' 选项:
+<P>
+<DL COMPACT>
+<DT><B>-munix</B>
+
+<DD>
+禁止 输出 某些 跳转指令 (<B>aobleq</B> 等等), VAX 的 UNIX 汇编器 无法 跨越 长范围 (long ranges) 进行 处理.
+<P>
+<DT><B>-mgnu</B>
+
+<DD>
+如果 使用 GNU 汇编器, 则 输出 那些 跳转指令, 
+<P>
+<DT><B>-mg</B>
+
+<DD>
+输出 g-format 浮点数, 取代 d-format.
+<P>
+</DL>
+<P>
+
+下面是 SPARC 支持的 `<B>-m</B>' 选项开关:
+<P>
+<P>
+
+<B>-mfpu</B>
+
+<DL COMPACT>
+<DT><B>-mhard-float</B>
+
+<DD>
+输出 包含 浮点指令 的 目标码. 这是 缺省选项.
+<P>
+</DL>
+<P>
+
+<B>-mno-fpu</B>
+
+<DL COMPACT>
+<DT><B>-msoft-float</B>
+
+<DD>
+输出 包含 浮点库调用 的 目标码.
+<I>警告:</I>
+
+没有 为 SPARC 提供 GNU 浮点库. 一般说来 使用 该机型 本地 C 编译器 的
+相应部件, 但是 不能 直接 用于 交叉编译. 你 必须 自己 安排, 提供 用于
+交叉编译 的 库函数.
+
+<P>
+
+
+
+<B>-msoft-float</B>
+
+改变了 输出文件 中的 调用约定; 因此 只有 用 这个 选项 编译
+<I>整个</I>
+
+程序 才有 意义.
+<P>
+</DL>
+<P>
+
+<B>-mno-epilogue</B>
+
+<DL COMPACT>
+<DT><B>-mepilogue</B>
+
+<DD>
+使用
+<B>-mepilogue</B>
+
+(缺省) 选项 时, 编译器 总是 把 函数 的 退出 代码 放在 函数 的 尾部.
+任何 在 函数 中间 的 退出 语句 (例如 C 中的 return 语句) 将 产生出 
+跳转指令 指向 函数 尾部.
+
+<P>
+
+
+
+使用
+<B>-mno-epilogue</B>
+
+选项 时, 编译器 尽量 在 每个 函数 退出点 嵌入 退出 代码.
+<P>
+</DL>
+<P>
+
+<B>-mno-v8</B>
+
+<DL COMPACT>
+<DT><B>-mv8</B>
+
+<DD>
+<DT><B>-msparclite</B>
+
+<DD>
+这三个 选项 选择 不同种类 的 SPARC 系统.
+
+<P>
+
+
+
+默认情况下 (除非 特别为 Fujitsu SPARClite 配置), GCC 生成 SPARC v7 目标码.
+
+<P>
+
+
+
+<B>-mv8</B>
+
+生成 SPARC v8 目标码. 他 和 v7 目标码 唯一的 区别 是, 编译器 生成 整数乘法
+和 整数除法 指令, SPARC v8 支持 该指令, 而 v7 体系 不支持.
+
+<P>
+
+
+
+<B>-msparclite</B>
+
+生成 SPARClite 目标码. 增加了 SPARClite 支持的 整数乘法, 整数除法单步扫描
+(integer divide step and scan (ffs)) 指令. v7 体系 不支持 这些 指令.
+<P>
+</DL>
+<P>
+
+<B>-mcypress</B>
+
+<DL COMPACT>
+<DT><B>-msupersparc</B>
+
+<DD>
+这两个 选项 选择 处理器 型号, 针对 处理器 进行 代码 优化.
+
+<P>
+
+
+
+<B>-mcypress</B>
+
+选项 (默认项) 使 编译器 对 Cypress CY7C602 芯片 优化 代码, 
+SparcStation/SparcServer 3xx 系列 使用 这种 芯片. 该选项 也 适用于 老式的
+SparcStation 1, 2, IPX 等 机型..
+
+<P>
+
+
+
+<B>-msupersparc</B>
+
+选项 使 编译器 对 SuperSparc 处理器 优化 代码, 
+SparcStation 10, 1000 和 2000 系列 使用 这种 芯片. 同时 该选项 启用
+完整的 SPARC v8 指令集.
+<P>
+</DL>
+<P>
+
+下面是 针对 Convex 定义 的 `<B>-m</B>' 选项:
+<P>
+<DL COMPACT>
+<DT><B>-mc1</B>
+
+<DD>
+输出 C1 的 目标码. 当 编译器 对 C1 配置时, 这是 默认选项.
+<DT><B>-mc2</B>
+
+<DD>
+输出 C2 的 目标码. 当 编译器 对 C2 配置时, 这是 默认选项.
+<DT><B>-margcount</B>
+
+<DD>
+在 每个 参数列表 的 前面 放置 一个 参数计数字 (argument count word). 
+某些 不可移植 的 Convex 和 Vax 程序 需要 这个 参数计数字.
+(调试器 不需要 他, 除非 函数 带有 变长参数 列表; 这个 信息 存放在 符号表 中.)
+<P>
+<DT><B>-mnoargcount</B>
+
+<DD>
+忽略 参数计数字. 如果 你 使用 未改装 的 gcc, 这是 默认 选项.
+<P>
+</DL>
+<P>
+
+下面是 针对 AMD Am29000 定义 的 `<B>-m</B>' 选项:
+<DL COMPACT>
+<DT><B>-mdw</B>
+
+<DD>
+生成的 目标码 认为 DW 置位, 就是说, 字节 和 半字 操作 由 硬件 直接 支持.
+该选项 是 默认选项.
+<DT><B>-mnodw</B>
+
+<DD>
+生成的 目标码 认为 DW 没有 置位.
+<DT><B>-mbw</B>
+
+<DD>
+生成的 目标码 认为 系统 支持 字节 和 半字 写操作. 该选项 是 默认选项.
+<DT><B>-mnbw</B>
+
+<DD>
+生成的 目标码 认为 系统 不支持 字节 和 半字 写操作. 该选项 隐含 开启 了 `<B>-mnodw</B>' 选项.
+<DT><B>-msmall</B>
+
+<DD>
+使用 小内存模式, 小内存模式 假设 所有 函数 的 地址 位于 某个 256 KB 段内,
+或者 所有 函数 的 绝对地址 小于 256K. 这样 就可以 用 <B>call</B> 指令 代替 <B>const</B>, <B>consth</B>, <B>calli</B> 指令 序列.
+<DT><B>-mlarge</B>
+
+<DD>
+假设 不能 使用 <B>call</B> 指令; 这是 默认选项.
+<DT><B>-m29050</B>
+
+<DD>
+输出 Am29050 的 目标码.
+<DT><B>-m29000</B>
+
+<DD>
+输出 Am29000 的 目标码. 这是 默认选项.
+<DT><B>-mkernel-registers</B>
+
+<DD>
+生成的 目标码 引用 <B>gr64-gr95</B> 寄存器 而不是
+<B>gr96-gr127</B> 寄存器. 该选项 可以 用于 编译 内核代码, 内核 需要 一组 全局寄存器,
+这些 全局寄存器 和 用户模式 使用的 寄存器 完全无关.
+
+<P>
+
+
+
+注意, 使用 这个 选项 时, `<B>-f</B>' 选项 中的 寄存器名字 必须是 normal, user-mode, names.
+<P>
+<DT><B>-muser-registers</B>
+
+<DD>
+使用 普通 全局寄存器集 <B>gr96-gr127</B>.  这是 默认选项.
+<DT><B>-mstack-check</B>
+
+<DD>
+在 每次 堆栈 调整 后 插入 一条 <B>__msp_check</B> 调用. 这个选项 常用于 内核代码.
+<P>
+</DL>
+<P>
+
+下面是 针对 Motorola 88K 体系 定义 的 `<B>-m</B>' 选项:
+<DL COMPACT>
+<DT><B>-m88000</B>
+
+<DD>
+生成的 目标码 可以 在 m88100 和 m88110 上 正常工作.
+<DT><B>-m88100</B>
+
+<DD>
+生成的 目标码 在 m88100 上 工作的 最好, 但也可以 在 m88110 上 运行.
+<DT><B>-m88110</B>
+
+<DD>
+生成的 目标码 在 m88110 上 工作的 最好, 可能 不能 在 m88100 上 运行.
+<DT><B>-midentify-revision</B>
+
+<DD>
+在 汇编器 的 输出端 包含 一条 <B>ident</B> 指令, 记录 源文件名, 编译器名字 和 版本, 时标, 以及 使用的 编译选项,
+<DT><B>-mno-underscores</B>
+
+<DD>
+在 汇编器 的 输出端, 符号名字 前面 不添加 下划线. 默认情况 是 在 每个
+名字 前面 增加 下划线 前缀.
+<DT><B>-mno-check-zero-division</B>
+
+<DD>
+<DT><B>-mcheck-zero-division</B>
+
+<DD>
+早期 型号 的 88K 系统 在 除零操作 上 存在 问题, 特定情况下 许多 机器
+无法 自陷. 使用 这些 选项 可以 避免包含 (或 可以 显明包含) 附加的 代码, 
+这些代码 能够 检查 除零错, 发送 例外信号. GCC 所有 88K 的 配置 默认 使用 `<B>-mcheck-zero-division</B>' 选项.
+<DT><B>-mocs-debug-info</B>
+
+<DD>
+<DT><B>-mno-ocs-debug-info</B>
+
+<DD>
+包含 (或忽略) 附加的 调试信息 (关于 每个 栈架结构 中 寄存器 的 使用),
+88Open Object Compatibility Standard, ``OCS'', 对 此信息 做了 说明.
+GDB 不需要 这些 额外信息.
+DG/UX, SVr4, 和 Delta 88 SVr3.2 的 默认配置 是 包含 调试信息, 其他
+88k 机型 的 默认配置 是 忽略 这个信息.
+<DT><B>-mocs-frame-position</B>
+
+<DD>
+<DT><B>-mno-ocs-frame-position</B>
+
+<DD>
+强制 (或 不要求) 把 寄存器值 存储到 栈架结构 中的 指定位置 (按 OCS 的说明).
+DG/UX, Delta88 SVr3.2 和 BCS 的 默认配置 使用 `<B>-mocs-frame-position</B>' 选项; 其他 88k 机型 的 默认配置 是 `<B>-mno-ocs-frame-position</B>'.
+<DT><B>-moptimize-arg-area</B>
+
+<DD>
+<DT><B>-mno-optimize-arg-area</B>
+
+<DD>
+控制 如何 在 堆栈结构 中 存储 函数参数. `<B>-moptimize-arg-area</B>' 节省 空间, 但是 有可能 宕掉 某些 调试器 (不是 GDB). `<B>-mno-optimize-arg-area</B>' 证实 比 标准选项 好. 默认情况下 GCC 不优化 参数域.
+<P>
+<DT><B>-mshort-data-</B><DD>
+<I>num</I>
+
+通过 和 <B>r0</B> 关联, 产生 较小的 数据引用 (data reference), 这样 就可以 用 单指令
+调入 一个 数值 (而不是 平常的 双指令). 用户 通过 选项中的 <I>num</I> 控制 改变 哪种 数据引用. 例如, 如果 你 指定了 `<B>-mshort-data-512</B>', 那么 受影响的 数据引用 是 小于 512 字节 的 数据移动. <B>-mshort-data-</B><I>num</I>选项 对 大于 64K 的 <I>num </I>无效.
+<P>
+</DL>
+<P>
+
+<B>-mserialize-volatile</B>
+
+<DL COMPACT>
+<DT><B>-mno-serialize-volatile</B>
+
+<DD>
+产生, 或 不产生 代码 来保证 对 易变内存访问 的 结果一致.
+
+<P>
+
+
+
+对于 常用的 处理器 子型号, GNU CC 始终 默认 保证 这种 一致性.
+如何实现 结果一致 取决于 处理器 子型号.
+
+<P>
+
+
+
+m88100 处理器 不对 内存引用 重新安排, 因此 访问结果 始终一致.
+如果 使用了 `<B>-m88100</B>' 选项, GNU CC 不产生 任何 针对 结果一致 的 特别指令.
+
+<P>
+
+
+
+m88110 处理器 的 内存引用顺序 并不始终 符合 指令 请求的 引用顺序.
+特别是 某条 读取指令 可能 在 先前的 存储指令 之前 执行.
+多处理器 环境下, 乱序访问 扰乱了 易变内存访问 的 结果一致.
+因此 当使用 `<B>-m88000</B>' 或 `<B>-m88110</B>' 选项时, GNU CC 在 适当的时候 产生 特别的指令 迫使 执行顺序 正确.
+
+<P>
+
+
+
+这些 用于 保证 一致性 的 额外代码 有可能 影响 程序 的 性能. 如果 你 确认
+能够 安全地 放弃 这种 保证, 你 可以 使用 `<B>-mno-serialize-volatile</B>' 选项.
+
+<P>
+
+
+
+如果 你 使用 `<B>-m88100</B>' 选项, 但是 需要 在 m88110 处理器 上 运行时 的 结果一致, 
+你 应该 加上 `<B>-mserialize-volatile</B>' 选项.
+<P>
+<P>
+</DL>
+<P>
+
+<B>-msvr4</B>
+
+<DL COMPACT>
+<DT><B>-msvr3</B>
+
+<DD>
+打开 (`<B>-msvr4</B>') 或 关闭 (`<B>-msvr3</B>') 和 System V 第四版 (SVr4) 相关的 编译器扩展. 效果 如下:
+<DT>&nbsp;&nbsp;&nbsp;&bull;<DD>
+输出 哪种 汇编语法 (你 可以 使用 `<B>-mversion-03.00</B>' 选项 单独 选择).
+<DT>&nbsp;&nbsp;&nbsp;&bull;<DD>
+`<B>-msvr4</B>' 使 C 预处理器 识别 `<B>#pragma weak</B>' 指令
+<DT>&nbsp;&nbsp;&nbsp;&bull;<DD>
+`<B>-msvr4</B>' 使 GCC 输出 额外的 声明指令(declaration directive), 用于 SVr4.
+</DL>
+<P>
+
+除了 SVr4 配置, `<B>-msvr3</B>' 是 所有 m88K 配置 的 默认选项.
+<P>
+<DL COMPACT>
+<DT><B>-mtrap-large-shift</B>
+
+<DD>
+<DT><B>-mhandle-large-shift</B>
+
+<DD>
+包含 一些 指令, 用于 检测 大于 31 位 的 位移 (bit-shift); 
+根据 相应的 选项, 对 这样 的 位移 发出 自陷 (trap) 或 执行 适当 的 处理代码.
+默认情况下, GCC 对 大位移 不做 特别处理.
+<P>
+<DT><B>-muse-div-instruction</B>
+
+<DD>
+很早以前 的 88K 型号 没有 (div) 除法指令, 因此 默认情况下 GCC 避免 产生
+这条 指令. 而 这个 选项 告诉 GCC 该指令 是 安全的.
+<P>
+<DT><B>-mversion-03.00</B>
+
+<DD>
+在 DG/UX 配置 中 存在 两种 风格 的 SVr4. 这个选项 修改
+<B>-msvr4 ,</B>
+
+选择 hybrid-COFF 或 real-ELF 风格. 其他 配置 均 忽略 该选项.
+<P>
+<DT><B>-mwarn-passed-structs</B>
+
+<DD>
+如果 某个函数 把 结构 当做 参数 或 结果 传递, GCC 发出 警告.
+随着 C 语言 的 发展, 人们 已经 改变了 传递 结构 的 约定, 它 往往 导致
+移植问题. 默认情况下, GCC 不会 发出 警告.
+<P>
+</DL>
+<P>
+
+下面的选项 用于 IBM RS6000:
+<P>
+
+<B>-mfp-in-toc</B>
+
+<DL COMPACT>
+<DT><B>-mno-fp-in-toc</B>
+
+<DD>
+控制 是否 把 浮点常量 放到 内容表 (TOC) 中, 内容表 存放 所有的 全局变量
+和 函数地址. 默认情况下, GCC 把 浮点常量 放到 这里; 如果 TOC 溢出, `<B>-mno-fp-in-toc</B>' 选项 能够 减少 TOC 的 大小, 这样 就可以 避免 溢出.
+<P>
+</DL>
+<P>
+
+下面的 `<B>-m</B>' 选项 用于 IBM RT PC:
+<DL COMPACT>
+<DT><B>-min-line-mul</B>
+
+<DD>
+对于 整数乘法 使用 嵌入代码. 这是 默认选项.
+<DT><B>-mcall-lib-mul</B>
+
+<DD>
+对于 整数乘法 使用 <B>lmul$$</B> .
+<DT><B>-mfull-fp-blocks</B>
+
+<DD>
+生成 全尺寸 浮点数据块, 包括 IBM 建议 的 最少数量 的 活动空间 (scratch space).
+这是 默认选项.
+<DT><B>-mminimum-fp-blocks</B>
+
+<DD>
+不要 在 浮点数据块 中 包括 额外的 活动空间. 这样 就 产生 较小 但是 略慢
+的 可执行程序, 因为 活动空间 必须 动态分配.
+<DT><B>-mfp-arg-in-fpregs</B>
+
+<DD>
+采用 不兼容 IBM 调用约定 的 调用序列, 通过 浮点寄存器 传送 浮点参数.
+注意, 如果 指定了 这个选项, <B>varargs.h</B> 和 <B>stdargs.h</B> 将 无法 支持 浮点单元.
+<P>
+<DT><B>-mfp-arg-in-gregs</B>
+
+<DD>
+使用 正常的 调用约定 处理 浮点参数. 这是 默认选项.
+<P>
+<DT><B>-mhc-struct-return</B>
+
+<DD>
+通过 内存 返回 大于 一个字 的 结构, 而不是 通过 寄存器.
+用于 兼容 MetaWare HighC (hc) 编译器. 使用 `<B>-fpcc-struct-return</B>' 选项 可以 兼容 Portable C 编译器 (pcc).
+<P>
+<DT><B>-mnohc-struct-return</B>
+
+<DD>
+如果可以, 通过 寄存器 返回 某些 大于 一个字 的 结构. 这是 默认选项.
+如果 打算 兼容 IBM 提供 的 编译器, 请使用 `<B>-fpcc-struct-return</B>' 或
+`<B>-mhc-struct-return</B>' 选项.
+<P>
+</DL>
+<P>
+
+下面的  `<B>-m</B>' 选项 用于 MIPS 家族 的 计算机:
+<DL COMPACT>
+<DT><B>-mcpu=</B><I>cpu-type</I>
+
+<DD>
+生成 指令 的 时候, 假设 默认的 机器类型 是
+<I>cpu-type .</I>
+
+默认情况下 的
+<I>cpu-type</I>
+
+是
+<B>default</B>,
+
+GCC 将选取 任何机型 上 都是 最长周期时间 的 指令, 这样 才能使 代码
+在 所有的 MIPS 处理器 上 以 合理 的 速度 运行. 
+<I>cpu-type</I>
+
+的 其他 选择 是
+<B>r2000</B>,
+
+<B>r3000</B>,
+
+<B>r4000</B>,
+
+和
+<B>r6000</B>.
+
+虽然 选定 某个 
+<I>cpu-type</I>
+
+后, GCC 将 针对 选定的 芯片 安排 对应的 工作, 但是 如果 不指定
+<B>-mips2</B>
+
+或
+<B>-mips3</B>
+
+选项, 编译器 不会 输出 任何 不符合 MIPS ISA (instruction set architecture)
+一级 的 代码.
+<P>
+<DT><B>-mips2</B>
+
+<DD>
+输出 MIPS ISA 二级指令 (可能的扩展, 如平方根指令).
+<B>-mcpu=r4000</B>
+
+或
+<B>-mcpu=r6000</B>
+
+选项 必须 和
+<B>-mips2</B>
+
+联用.
+<P>
+<DT><B>-mips3</B>
+
+<DD>
+输出 MIPS ISA 三级指令 (64位指令).
+<B>-mcpu=r4000</B>
+
+选项 必须 和
+<B>-mips2</B>
+
+联用. (译注: 疑为 -mips3)
+<P>
+<DT><B>-mint64</B>
+
+<DD>
+<DT><B>-mlong64</B>
+
+<DD>
+<DT><B>-mlonglong128</B>
+
+<DD>
+这些 选项 目前 不起作用.
+<P>
+<DT><B>-mmips-as</B>
+
+<DD>
+产生 用于 MIPS 汇编器 的 代码, 同时 使用
+<B>mips-tfile</B>
+
+添加 普通的 调试信息. 对于 大多数 平台 这是 默认选项, 除了
+OSF/1 参考平台, 它 使用 OSF/rose 目标 格式. 如果 打开了 任一个
+<B>-ggdb</B>,
+
+<B>-gstabs</B>,
+
+或
+<B>-gstabs+</B>
+
+选项开关,
+<B>mips-tfile</B>
+
+程序 就把 stab 封装在 MIPS ECOFF 里面.
+<P>
+<DT><B>-mgas</B>
+
+<DD>
+产生 用于 GNU 汇编器 的 代码.  在 OSF/1 参考平台 上 这是 默认选项,
+它 使用 OSF/rose 目标 格式.
+<P>
+<DT><B>-mrnames</B>
+
+<DD>
+<DT><B>-mno-rnames</B>
+
+<DD>
+<B>-mrnames</B>
+
+开关选项 告诉 输出代码 使用 MIPS 软件名称 说明 寄存器, 而不是 硬件名称
+(就是说, 用
+<B>a0</B>
+
+代替
+<B>$4</B>).
+
+GNU 汇编器 不支持
+<B>-mrnames</B>
+
+选项, 而 MIPS 汇编器 则 运行 MIPS C 预处理器 处理 源文件.
+<B>-mno-rnames</B>
+
+是 默认选项.
+<P>
+<DT><B>-mgpopt</B>
+
+<DD>
+<DT><B>-mno-gpopt</B>
+
+<DD>
+<B>-mgpopt</B>
+
+开关选项 要求 在 正文段 中 把 所有的 数据声明 写到 指令 前面, 使 各种 MIPS 
+汇编器 对 短类型 全局 或 静态 数据项 (short global or static data items)
+输出 单字内存访问 而不是 双字内存访问.
+当 打开 编译优化 时, 这是 默认功能.
+<P>
+<P>
+<DT><B>-mstats</B>
+
+<DD>
+<DT><B>-mno-stats</B>
+
+<DD>
+每次 处理完 非嵌入函数 (non-inline function) 后,
+<B>-mstats</B>
+
+开关选项 使 编译器 向 标准错误文件 输出 一行 关于 程序 的 统计资料
+(保存的 寄存器 数目, 堆栈 大小, 等等).
+<P>
+<DT><B>-mmemcpy</B>
+
+<DD>
+<DT><B>-mno-memcpy</B>
+
+<DD>
+<B>-mmemcpy</B>
+
+开关选项 使 所有 的 块移动 操作 调用 适当的 string 函数
+(<B>memcpy</B>
+
+或
+<B>bcopy</B>),
+
+而不是 生成 嵌入代码.
+<P>
+<DT><B>-mmips-tfile</B>
+
+<DD>
+<DT><B>-mno-mips-tfile</B>
+
+<DD>
+当 MIPS 汇编器 生成
+<B>mips-tfile</B>
+
+文件 (用于 帮助 调试) 后, 
+<B>-mno-mips-tfile</B>
+
+开关选项 阻止 编译器 使用 
+<B>mips-tfile</B>
+
+后期处理 (postprocess) 目标文件. 不运行
+<B>mips-tfile</B>
+
+就 没有 调试器 关注的 局部变量. 另外, 
+<B>stage2</B>
+
+和
+<B>stage3</B>
+
+目标文件 将把 临时文件名 传递给 汇编器, 嵌在 目标文件 中, 这 意味着
+不比较 目标文件 是否 相同.
+<P>
+<DT><B>-msoft-float</B>
+
+<DD>
+输出 包含 浮点库调用.
+<I>警告: </I>
+
+所需库 不是 GNU CC 的 一部分. 一般说来 使用 该机型 本地 C 编译器 的
+相应部件, 但是 不能 直接 用于 交叉编译, 你 必须 自己 安排, 提供
+交叉编译 适用的 库函数.
+<P>
+<DT><B>-mhard-float</B>
+
+<DD>
+输出 包含 浮点指令. 如果 编译器 没有 被改动, 这就是 默认选项.
+<P>
+<DT><B>-mfp64</B>
+
+<DD>
+编译器 认为 状态字 的
+<B>FR</B>
+
+置位(on), 也就是说 存在 32 64-bit 浮点寄存器, 而不是 32 32-bit 浮点寄存器.
+同时 必须 打开
+<B>-mcpu=r4000</B>
+
+和
+<B>-mips3</B>
+
+开关.
+<P>
+<DT><B>-mfp32</B>
+
+<DD>
+认为 存在 32 32-bit 浮点寄存器. 这是 默认选项.
+<P>
+</DL>
+<P>
+
+<B>-mabicalls</B>
+
+<DL COMPACT>
+<DT><B>-mno-abicalls</B>
+
+<DD>
+输出 (或 不输出)
+<B>.abicalls</B>,
+
+<B>.cpload</B>,
+
+和
+<B>.cprestore</B>
+
+伪指令, 某些 System V.4 版本 用于 位置无关代码.
+<P>
+<DT><B>-mhalf-pic</B>
+
+<DD>
+<DT><B>-mno-half-pic</B>
+
+<DD>
+<B>-mhalf-pic</B>
+
+开关选项 要求 把 外部引用 的 指针 放到 数据段, 并且 载入 内存, 而不放到
+正文段. 该选项 目前 不起作用.
+<P>
+<DT><B>-G num</B>
+
+<DD>
+把 小于等于
+<I>num</I>
+
+字节 的 全局 或 静态 数据 放到 小的 数据段 或 bss 段, 而不是
+普通的 数据段 或 bss 段. 这样 汇编器 可以 输出 基于 全局指针
+(<B>gp</B>
+
+或
+<B>$28</B>),
+
+的 单字内存访问指令 而非 普通的 双字指令.
+默认情况下, 用 MIPS 汇编器 时
+<I>num</I>
+
+是 8, 而 GNU 汇编器 则为 0. 另外,
+<B>-G</B><I>num</I>
+
+选项 也被 传递 给 汇编器 和 连接器. 所有 的 模块 必须在 相同的
+<B>-G</B><I>num</I>
+
+值下 编译.
+<P>
+<DT><B>-nocpp</B>
+
+<DD>
+汇编 用户汇编文件
+(带有 `<B>.s</B>' 后缀) 时, 告诉 MIPS 汇编器 不要 运行 预处理器.
+<P>
+</DL>
+<P>
+
+下面的 `<B>-m</B>' 选项 用于 Intel 80386 族 计算机:
+<B>-m486</B>
+
+<DL COMPACT>
+<DT><B>-mno-486</B>
+
+<DD>
+控制 是否 生成 对 486 优化 的 代码.
+<P>
+<DT><B>-msoft-float</B>
+
+<DD>
+输出 包含 浮点库调用.
+<I>警告: </I>
+
+所需库 不是 GNU CC 的 一部分. 一般说来 使用 该机型 本地 C 编译器 的
+相应部件, 但是 不能 直接 用于 交叉编译, 你 必须 自己 安排, 提供 
+交叉编译 适用的 库函数.
+
+<P>
+
+
+
+在 函数 把 浮点返回值 放在 80387 寄存器栈 的 机器 上, 即使 设置了 `<B>-msoft-float</B>' 选项, 也可能会 发出 一些 浮点操作码. 
+<P>
+<DT><B>-mno-fp-ret-in-387</B>
+
+<DD>
+不用 FPU 寄存器 返回 函数值.
+
+<P>
+
+
+
+通常 函数调用约定 把
+<B>float</B> 和 <B>double</B> 的 返回值 放在 FPU 寄存器 中, 即使 不存在 FPU. 这种作法 的 理念
+是 操作系统 应该 仿真出 FPU.
+
+<P>
+
+
+
+而 `<B>-mno-fp-ret-in-387</B>' 选项 使 浮点值 通过 普通的 CPU 寄存器 返回.
+<P>
+</DL>
+<P>
+
+下面的 `<B>-m</B>' 选项 用于 HPPA 族 计算机:
+<DL COMPACT>
+<DT><B>-mpa-risc-1-0</B>
+
+<DD>
+生成 PA 1.0 处理器 的 目标码.
+<DT><B>-mpa-risc-1-1</B>
+
+<DD>
+生成 PA 1.1 处理器 的 目标码.
+<P>
+<DT><B>-mkernel</B>
+
+<DD>
+生成 适用于 内核 的 目标码. 特别要 避免 <B>add</B> 指令, 它 有 一个 参数 是 DP 寄存器; 用 <B>addil</B> 代替 <B>add</B>指令. 这样 可以 避免 HP-UX 连接器 的 某个 严重 bug.
+<P>
+<DT><B>-mshared-libs</B>
+
+<DD>
+生成 能够 连接 HP-UX 共享库 的 目标码. 该选项 还没有 实现 全部功能, 对
+PA 目标 默认为 关闭. 使用 这个选项 会 导致 编译器 生成 错误的 目标码.
+<P>
+<DT><B>-mno-shared-libs</B>
+
+<DD>
+不生成 连接 HP-UX 共享库 的 目标码. 这是 PA 目标 的 默认选项.
+<P>
+<DT><B>-mlong-calls</B>
+
+<DD>
+生成的 目标码 允许 同一个 源文件 中的 函数调用, 调用点 和 被调函数
+的 距离 可以 超过 256K 之远. 不需要 打开 这个 开关选项, 除非 连接器
+给出 ``branch out of range errors`` 这样的 错误.
+<P>
+<DT><B>-mdisable-fpregs</B>
+
+<DD>
+防止 任何情况下 使用 浮点寄存器. 编译 内核 需要 这个选项, 内核 切换
+浮点寄存器 的 执行环境 速度 非常缓慢. 如果 打开了 这个 开关选项 同时
+试图 浮点操作, 编译 将 失败.
+<P>
+<DT><B>-mdisable-indexing</B>
+
+<DD>
+防止 编译器 使用 索引地址模式 (indexing address mode).
+这样 在 MACH 上 编译 MIG 生成的 代码 时, 可以 避免 一些 非常 晦涩的 问题.
+<P>
+<DT><B>-mtrailing-colon</B>
+
+<DD>
+在 标记定义 (label definition) 的 末尾 添加 一个 冒号 (用于 ELF 汇编器).
+<P>
+</DL>
+<P>
+
+下面的 `<B>-m</B>' 选项 用于 Intel 80960 族 计算机:
+<DL COMPACT>
+<DT><B>-m</B><I>cpu-type</I>
+
+<DD>
+默认 机器 类型 为
+<I>cpu-type ,</I>
+
+使 编译器 产生 对应的 指令, 地址模式 和 内存对齐. 默认的
+<I>cpu-type</I>
+
+是
+<B>kb</B>;
+
+其他 选择 有
+<B>ka</B>,
+
+<B>mc</B>,
+
+<B>ca</B>,
+
+<B>cf</B>,
+
+<B>sa</B>,
+
+和
+<B>sb</B>.
+
+<P>
+<DT><B>-mnumerics</B>
+
+<DD>
+<DT><B>-msoft-float</B>
+
+<DD>
+<B>-mnumerics</B>
+
+开关选项 指出 处理器 不支持 浮点指令.
+<B>-msoft-float</B>
+
+开关选项 指出 不应该 认为 机器 支持 浮点操作.
+<P>
+<DT><B>-mleaf-procedures</B>
+
+<DD>
+<DT><B>-mno-leaf-procedures</B>
+
+<DD>
+企图 (或防止) 改变 叶过程 (leaf procedure), 使其 可被
+<I>bal</I>
+
+指令 以及
+<I>call</I>
+
+指令 调用. 对于 直接函数调用, 如果
+<I>bal</I>
+
+指令 能够 被 汇编器 或 连接器 替换, 这 可以 产生 更有效 的 代码,
+但是 其他 情况下 产生 较低效 的 代码, 例如 通过 函数指针 调用 函数,
+或 使用了 不支持 这种 优化 的 连接器.
+<P>
+<DT><B>-mtail-call</B>
+
+<DD>
+<DT><B>-mno-tail-call</B>
+
+<DD>
+执行 (或不执行) 更多的 尝试 (除过 编译器 那些 机器无关 部分), 优化
+进入 分支 的 尾递归 (tail-recursive) 调用. 你 可能 不需要 这个,
+因为 检测 什么 地方 无效 没有 全部 完成. 默认 开关 是
+<B>-mno-tail-call</B>.
+
+<P>
+<DT><B>-mcomplex-addr</B>
+
+<DD>
+<DT><B>-mno-complex-addr</B>
+
+<DD>
+认为 (或 不认为) 在 当前的 i960 设备 上, 值得 使用 复合地址模式
+(complex addressing mode). 复合地址模式 可能 不值得 用到 K 系列, 但是
+一定 值得 用在 C 系列. 目前 除了 CB 和 CC 处理器, 其他 处理器 上
+<B>-mcomplex-addr</B>
+
+是 默认选项.
+<P>
+<DT><B>-mcode-align</B>
+
+<DD>
+<DT><B>-mno-code-align</B>
+
+<DD>
+把 目标码 对齐到 8 字节 边界 上 (或者 不必), 这样 读取 会 快一些.
+目前 只对 C 系列 默认 打开.
+<P>
+<DT><B>-mic-compat</B>
+
+<DD>
+<DT><B>-mic2.0-compat</B>
+
+<DD>
+<DT><B>-mic3.0-compat</B>
+
+<DD>
+兼容 iC960 v2.0 或 v3.0.
+<P>
+<DT><B>-masm-compat</B>
+
+<DD>
+<DT><B>-mintel-asm</B>
+
+<DD>
+兼容 iC960 汇编器.
+<P>
+<DT><B>-mstrict-align</B>
+
+<DD>
+<DT><B>-mno-strict-align</B>
+
+<DD>
+不允许 (或允许) 边界不对齐 的 访问.
+<P>
+<DT><B>-mold-align</B>
+
+<DD>
+使 结构对齐 (structure-alignment) 兼容 Intel 的 gcc 发行版本 1.3 
+(基于 gcc 1.37). 目前 这个选项 有点问题, 因为
+<B>#pragma align 1</B>
+
+总是 作 同样的 设定, 而且 无法 关掉.
+<P>
+</DL>
+<P>
+
+下面的 `<B>-m</B>' 选项 用于 DEC Alpha 设备:
+<DL COMPACT>
+<DT><B>-mno-soft-float</B>
+
+<DD>
+<DT><B>-msoft-float</B>
+
+<DD>
+使用 (或 不使用) 硬件浮点指令 进行 浮点运算. 打开 <B>-msoft-float</B> 时, 将 使用 `<B>libgcc1.c</B>' 中的 函数 执行 浮点运算. 除非 它们 被 仿真 浮点操作 的 例程 替换,
+或者 类似, 它们 被 编译为 调用 仿真例程, 这些 例程 将发出 浮点操作.
+如果 你 为 不带 浮点操作 的 Alpha 编译 程序, 你 必须 确保 建立了 这个 库,
+以便 不调用 仿真例程.
+
+<P>
+
+
+
+注意, 不带 浮点操作 的 Alpha 也要求 拥有 浮点寄存器.
+<P>
+<DT><B>-mfp-reg</B>
+
+<DD>
+<DT><B>-mno-fp-regs</B>
+
+<DD>
+生成 使用 (或 不使用) 浮点寄存器群 的 目标代码.
+<B>-mno-fp-regs</B> 包含有 <B>-msoft-float</B> 开关选项.  如果 不使用 浮点寄存器, 浮点操作数 就象 整数 一样 通过
+整数寄存器 传送, 浮点运算结果 放到 $0 而不是 $f0. 这是 非标准 调用,
+因此 任何 带有 浮点 参数或返回值 的 函数, 如果 被 <B>-mno-fp-regs</B> 开关 编译过的 目标码 调用, 它 也必须 用这个 选项 编译.
+
+<P>
+
+
+
+这个选项 的 典型用法 是 建立 内核, 内核 不使用 任何 浮点寄存器,
+因此 没必要 保存 和 恢复 这些 寄存器.
+<P>
+</DL>
+<P>
+
+下面 附加的 选项 出现在 System V 第四版 中, 用于 兼容 这些 系统 中的
+其他 编译器:
+<DL COMPACT>
+<DT><B>-G</B>
+
+<DD>
+在 SVr4 系统 中, <B>gcc</B> 出于 兼容 接受了 `<B>-G</B>' 选项 (然后 传递给 连接器). 可是 我们 建议 使用 `<B>-symbolic</B>' 或 `<B>-shared</B>'选项, 而不在 <B>gcc</B>
+
+命令行 上 出现 连接选项.
+<P>
+<DT><B>-Qy</B>
+
+<DD>
+验证 编译器 用的 工具 的 版本, 输出到 <B>.ident</B> 汇编指令.
+<P>
+<DT><B>-Qn</B>
+
+<DD>
+制止 输出端 的 <B>.ident</B> 指令 (默认选项).
+<P>
+<DT><B>-YP,</B><I>dirs</I>
+
+<DD>
+对于 `<B>-l</B>' 指定的 库文件, 只搜索 <I>dirs</I>. 你 可以 在
+<I>dirs</I> 中 用 冒号 隔开 各个 目录项.
+<P>
+<DT><B>-Ym,</B><I>dir</I>
+
+<DD>
+在 <I>dir</I> 目录 中 寻找 M4 预处理器. 汇编器 使用 这个 选项.
+<P>
+</DL>
+<A NAME="lbAR">&nbsp;</A>
+<H2>代码生成选项 (CODE GENERATION OPTION)</H2>
+
+下面的 选项 和 平台 无关, 用于 控制 目标码生成 的 接口约定.
+<P>
+
+大部分 选项 以 `-f' 开始. 这些选项 拥有 确定 和 否定 两种 格式; `<B>-ffoo</B>' 的 否定格式 是 `<B>-fno-foo</B>'. 后面的 描述 将 只列举 其中 的 一个 格式 --- 非默认 的 格式.
+你 可以 通过 添加或去掉 `<B>no-</B>' 推测出 另一个 格式.
+<P>
+<DL COMPACT>
+<DT><B>-fnonnull-objects</B>
+
+<DD>
+假设 通过 引用 (reference) 取得的 对象 不为 null (仅 C++).
+
+<P>
+
+
+
+一般说来, GNU C++ 对 通过 引用 取得的 对象 作 保守 假设.
+例如, 编译器 一定会 检查 下似 代码 中的 <B>a</B>
+
+不为 null:
+
+<P>
+
+
+
+obj &amp;a = g ();
+a.f (2);
+
+<P>
+
+
+
+检查 类似 的 引用 需要 额外的 代码, 然而 对于 很多 程序 是 不必要的.
+如果 你的 程序 不要求 这种检查, 你 可以 用 `<B>-fnonnull-objects</B>' 选项 忽略它.
+<P>
+<DT><B>-fpcc-struct-return</B>
+
+<DD>
+函数 返回 <B>struct</B> 和 <B>union</B>
+
+值时, 采用 和 本地编译器 相同的 参数约定. 对于 较小的结构, 这种约定
+的 效率 偏低, 而且 很多 机器 上 不能 重入; 它的 优点 是 允许 GCC 编译
+的 目标码 和 PCC 编译 的 目标码 互相调用.
+<P>
+<DT><B>-freg-struct-return</B>
+
+<DD>
+一有可能 就 通过 寄存器 返回
+<B>struct</B>
+
+和
+<B>union</B>
+
+函数值. 对于 较小的结构, 它 比
+<B>-fpcc-struct-return</B>
+
+更有效率.
+
+<P>
+
+
+
+如果 既没有 指定
+<B>-fpcc-struct-return ,</B>
+
+也没有 指定
+<B>-freg-struct-return</B>,
+
+GNU CC 默认使用 目标机 的 标准约定. 如果 没有 标准约定, GNU CC 默认采用
+<B>-fpcc-struct-return</B>.
+
+<P>
+<DT><B>-fshort-enums</B>
+
+<DD>
+给 <B>enum</B> 类型 只分配 它 声明的 值域范围 的 字节数. 就是说, <B>enum</B> 类型 等于 大小足够 的 最小整数类型.
+<P>
+<DT><B>-fshort-double</B>
+
+<DD>
+使
+<B>double</B>
+
+类型 的 大小 和
+<B>float</B>
+
+ 一样.
+<P>
+<DT><B>-fshared-data</B>
+
+<DD>
+要求 编译结果 的 数据 和 非 <B>const</B> 变量 是 共享数据, 而不是 私有数据.
+这种差别 仅在 某些 操作系统 上面 有意义, 那里的 共享数据 在 同一个
+程序 的 若干 进程 间 共享, 而 私有数据 在 每个 进程 内 都有 副件.
+<P>
+<DT><B>-fno-common</B>
+
+<DD>
+即使 未初始化 的 全局变量 也 分配在 目标文件 的 bss 段, 而不是 把 它们
+当做 普通块 (common block) 建立. 这样的 结果 是, 如果 在 两个 不同 的 
+编译结果 中 声明了 同一个 变量 (没使用 <B>extern </B>), 连接 它们 时 会 产生 错误. 这个选项 可能 有用 的 唯一情况 是,
+你 希望 确认 程序 能 在 其他系统 上 运行, 而 其他系统 总是 这么 做.
+<P>
+<DT><B>-fno-ident</B>
+
+<DD>
+忽略 `<B>#ident</B>' 指令.
+<P>
+<DT><B>-fno-gnu-linker</B>
+
+<DD>
+不要 把 全局初始化部件 (如 C++ 的 构造子 和 解构子) 输出为 GNU 连接器
+使用 的 格式 (在 GNU 连接器 是 标准方法 的 系统 上).
+当你 打算 使用 非 GNU 连接器 的 时候 可以用 这个选项, 非GNU连接器 也需要
+<B>collect2</B> 程序 确保 系统连接器 放入 构造子 (constructor) 和 解构子 (destructor).
+(GNU CC 的 发布包 中 包含有 <B>collect2</B> 程序.) 对于 <I>必须 </I> 使用 <B>collect2</B> 的 系统, 编译器驱动程序 <B>gcc</B> 自动 配置为 这么做.
+<P>
+<DT><B>-finhibit-size-directive</B>
+
+<DD>
+不要 输出 <B>.size</B> 汇编指令, 或其他 类似指令, 当 某个函数 一分为二, 两部分 在 内存 中
+距离 很远 时 会 引起 问题. 当 编译 `<B>crtstuff.c</B>' 时 需要 这个选项; 其他情况下 都不应该 使用.
+<P>
+<DT><B>-fverbose-asm</B>
+
+<DD>
+输出 汇编代码 时 放些 额外的 注释信息. 这个选项 仅用于 确实 需要
+阅读 汇编输出 的 时候 (可能 调试 编译器 自己 的 时候).
+<P>
+<DT><B>-fvolatile</B>
+
+<DD>
+使 编译器 认为 所有 通过 指针 访问 的 内存 是 易变内存 (volatile).
+<P>
+<DT><B>-fvolatile-global</B>
+
+<DD>
+使 编译器 认为 所有的 外部和全局变量 是 易变内存.
+<P>
+<DT><B>-fpic</B>
+
+<DD>
+如果 支持 这种 目标机, 编译器 就生成 位置无关目标码.
+适用于 共享库 (shared library).
+<P>
+<DT><B>-fPIC</B>
+
+<DD>
+如果 支持 这种 目标机, 编译器 就输出 位置无关目标码.
+适用于 动态连接 (dynamic linking), 即使 分支 需要 大范围 转移.
+<P>
+<DT><B>-ffixed-</B><I>reg</I>
+
+<DD>
+把 名为 <I>reg</I> 的 寄存器 按 固定寄存器 看待 (fixed register); 生成的 目标码
+不应该 引用 它 (除了 或许 用作 栈指针, 帧指针, 或其他 固定的角色).
+
+<P>
+
+
+
+<I>reg</I> 必须是 寄存器 的 名字. 寄存器 名字 取决于 机器, 用 机器描述宏文件 的 <B>REGISTER_NAMES</B>
+
+宏 定义.
+
+<P>
+
+
+
+这个选项 没有 否定格式, 因为 它 列出 三路选择.
+<P>
+<DT><B>-fcall-used-</B><I>reg</I>
+
+<DD>
+把 名为 <I>reg</I> 的 寄存器 按 可分配寄存器 看待, 不能 在 函数调用 间 使用.
+可以 临时使用 或 当做 变量 使用, 生存期 不超过 一个 函数.
+这样编译的 函数 无需 保存 和 恢复 <I>reg</I> 寄存器.
+
+<P>
+
+
+
+如果 在 可执行模块 中, 把 这个选项 说明的 寄存器 用作 固定角色 将会
+产生 灾难性结果, 如 栈指针 或 帧指针.
+
+<P>
+
+
+
+这个选项 没有 否定格式, 因为 它 列出 三路选择.
+<P>
+<DT><B>-fcall-saved-</B><I>reg</I>
+
+<DD>
+把 名为 <I>reg</I> 的 寄存器 按 函数 保护 的 可分配寄存器 看待. 可以 临时使用 或 当做 变量
+使用, 它 甚至能 在 函数 间 生存. 这样编译的 函数 会 保存 和 恢复 使用中 的 <I>reg</I> 寄存器.
+
+<P>
+
+
+
+如果 在 可执行模块 中, 把 这个选项 说明的 寄存器 用作 固定角色 将会
+产生 灾难性结果, 如 栈指针 或 帧指针.
+
+<P>
+
+
+
+另一种 灾难 是 用 这个选项 说明的 寄存器 返回 函数值.
+
+<P>
+
+
+
+这个选项 没有 否定格式, 因为 它 列出 三路选择.
+<P>
+</DL>
+<A NAME="lbAS">&nbsp;</A>
+<H2>PRAGMAS</H2>
+
+GNU C++ 支持 两条 `<B>#pragma</B>' 指令 使 同一个 头文件 有 两个用途: 对象类 的 接口定义, 对象类 完整的
+内容定义.
+<P>
+<DL COMPACT>
+<DT><B>#pragma interface</B>
+
+<DD>
+(仅对 C++) 在 定义 对象类 的 头文件 中, 使用 这个指令 可以 节省 大部分
+采用 该类 的 目标文件 的 大小. 
+一般说来, 某些信息 (内嵌成员函数 的 备份副件, 调试信息, 实现 虚函数 的 
+内部表格等) 的 本地副件 必须 保存在 包含 类定义 的 各个 目标文件 中.
+使用 这个 pragma 指令 能够 避免 这样的 复制.
+当 编译 中 引用 包含 `<B>#pragma interface</B>' 指令 的 头文件 时, 就 不会 产生 这些 辅助信息
+(除非 输入的 主文件 使用了 `<B>#pragma implementation</B>'指令). 作为替代, 目标文件 将包含 可被 连接时 解析的 引用 (reference).
+<P>
+<DT><B>#pragma implementation</B>
+
+<DD>
+<DT><B>#pragma implementation &quot;</B><I>objects</I><B>.h&quot;</B><DD>
+(仅对 C++) 如果 要求 从 头文件 产生 完整的 输出 (并且 全局可见),
+你 应该 在 主输入文件 中 使用 这条 pragma. 头文件 中 应该 依次 使用 `<B>#pragma interface</B>' 指令. 在 implementation 文件 中 将 产生 全部 内嵌成员函数 的 备份,
+调试信息, 实现 虚函数 的 内部表格等.
+
+<P>
+
+
+
+如果 `<B>#pragma implementation</B>' 不带 参数, 它 指的是 和 源文件 有 相同基本名 的 包含文件; 例如, `<B>allclass.cc</B>' 中, `<B>#pragma implementation</B>' 等于 `<B>#pragma implementation allclass.h</B>'. 如果 某个 implementation 文件 需要 从 多个 头文件 引入 代码,
+就应该 使用 这个 字符串参数.
+
+<P>
+
+
+
+不可能 把 一个头文件 里面 的 内容 分割到 多个 implementation 文件 中.
+<P>
+</DL>
+<A NAME="lbAT">&nbsp;</A>
+<H2>文件 (FILE)</H2>
+
+<PRE>
+
+file.c             C 源文件
+file.h             C 头文件 (预处理文件)
+file.i             预处理后 的 C 源文件
+file.C             C++ 源文件
+file.cc            C++ 源文件
+file.cxx           C++ 源文件
+file.m             Objective-C 源文件
+file.s             汇编语言文件
+file.o             目标文件
+a.out              连接的输出文件
+<I>TMPDIR</I>/cc*         临时文件
+<I>LIBDIR</I>/cpp         预处理器
+<I>LIBDIR</I>/cc1         C 编译器
+<I>LIBDIR</I>/cc1plus     C++ 编译器
+<I>LIBDIR</I>/collect     某些机器需要的连接器前端(front end)程序
+<I>LIBDIR</I>/libgcc.a    GCC 子例程 (subroutine) 库
+/lib/crt[01n].o    启动例程 (start-up)
+<I>LIBDIR</I>/ccrt0       C++ 的附加启动例程
+/lib/libc.a        标准 C 库, 另见 intro (3)
+/usr/include       <B>#include</B> 文件的标准目录
+<I>LIBDIR</I>/include     <B>#include</B> 文件的标准 gcc 目录
+<I>LIBDIR</I>/g++-include <B>#include</B> 文件的附加 g++ 目录
+
+
+</PRE>
+
+<I>LIBDIR</I>
+
+通常为
+<B>/usr/local/lib/</B><I>machine</I>/<I>version</I>.
+
+<BR>
+
+<I>TMPDIR</I>
+
+来自 环境变量
+<B>TMPDIR</B>
+
+(如果 存在, 缺省为
+<B>/usr/tmp ,</B>
+
+否则为
+<B>/tmp</B>).
+<P>
+<A NAME="lbAU">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+cpp">cpp</A>(1), <A HREF="/cgi-bin/man/man2html?1+as">as</A>(1), <A HREF="/cgi-bin/man/man2html?1+ld">ld</A>(1), <A HREF="/cgi-bin/man/man2html?1+gdb">gdb</A>(1), <A HREF="/cgi-bin/man/man2html?1+adb">adb</A>(1), <A HREF="/cgi-bin/man/man2html?1+dbx">dbx</A>(1), <A HREF="/cgi-bin/man/man2html?1+sdb">sdb</A>(1).
+<BR>
+
+<B>info</B>中
+`<B>gcc</B>', `<B>cpp</B>',
+
+`<B>as</B>', `<B>ld</B>',
+
+和
+`<B>gdb</B>'
+
+的 条目.
+<BR>
+
+<I>Using and Porting GNU CC (for version 2.0)</I>, Richard M. Stallman;
+<I>The C Preprocessor</I>, Richard M. Stallman;
+<I>Debugging with GDB: the GNU Source-Level Debugger</I>, Richard M. Stallman 和 Roland H. Pesch;
+<I>Using as: the GNU Assembler</I>, Dean Elsner, Jay Fenlason &amp; friends;
+<I>ld: the GNU linker</I>, Steve Chamberlain 和 Roland Pesch.
+<P>
+<A NAME="lbAV">&nbsp;</A>
+<H2>BUGS</H2>
+
+关于 报告 差错 的 指导 请 查阅 GCC 手册.
+<P>
+<A NAME="lbAW">&nbsp;</A>
+<H2>版权 (COPYING)</H2>
+
+Copyright
+
+1991, 1992, 1993 Free Software Foundation, Inc.
+<P>
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+<P>
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the
+entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+<P>
+
+Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that this permission notice may be included in
+translations approved by the Free Software Foundation instead of in
+the original English.
+<P>
+<A NAME="lbAX">&nbsp;</A>
+<H2>作者 (AUTHORS)</H2>
+
+关于 GNU CC 的 奉献者 请 查阅 GUN CC 手册.
+<P>
+<A NAME="lbAY">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;</B>
+
+<A NAME="lbAZ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2003/05/13</B>
+
+第一版
+<A NAME="lbBA">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">警告 (WARNING)</A><DD>
+<DT><A HREF="#lbAE">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAF">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAG">总体选项 (Overall Option)</A><DD>
+<DT><A HREF="#lbAH">语言选项 (LANGUAGE OPTIONS)</A><DD>
+<DT><A HREF="#lbAI">预处理器选项 (Preprocessor Option)</A><DD>
+<DT><A HREF="#lbAJ">汇编器选项 (ASSEMBLER OPTION)</A><DD>
+<DT><A HREF="#lbAK">连接器选项 (LINKER OPTION)</A><DD>
+<DT><A HREF="#lbAL">目录选项 (DIRECTORY OPTION)</A><DD>
+<DT><A HREF="#lbAM">警告选项 (WARNING OPTION)</A><DD>
+<DT><A HREF="#lbAN">调试选项 (DEBUGGING OPTION)</A><DD>
+<DT><A HREF="#lbAO">优化选项 (OPTIMIZATION OPTION)</A><DD>
+<DT><A HREF="#lbAP">目标机选项 (TARGET OPTION)</A><DD>
+<DT><A HREF="#lbAQ">机器相关选项 (MACHINE DEPENDENT OPTION)</A><DD>
+<DT><A HREF="#lbAR">代码生成选项 (CODE GENERATION OPTION)</A><DD>
+<DT><A HREF="#lbAS">PRAGMAS</A><DD>
+<DT><A HREF="#lbAT">文件 (FILE)</A><DD>
+<DT><A HREF="#lbAU">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAV">BUGS</A><DD>
+<DT><A HREF="#lbAW">版权 (COPYING)</A><DD>
+<DT><A HREF="#lbAX">作者 (AUTHORS)</A><DD>
+<DT><A HREF="#lbAY">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAZ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbBA">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

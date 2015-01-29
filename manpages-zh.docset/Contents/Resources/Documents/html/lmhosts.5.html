@@ -1,0 +1,138 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LMHOSTS</TITLE>
+</HEAD><BODY>
+<H1>LMHOSTS</H1>
+Section: File Formats (5)<BR>Updated: 11 Nov 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+lmhosts - samba的NetBIOS主机列表文件
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+lmhosts是一个samba的NetBIOS名字到IP地址映射文件。
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+此文件是samba套件的一部分。
+<P>
+
+lmhosts是一个samba的NetBIOS名字到IP地址映射文件。
+它与/etc/hosts文件的格式非常相似，除了主机名部分必须符合NetBIOS名字格式。
+<A NAME="lbAE">&nbsp;</A>
+<H2>文件格式</H2>
+
+这是一个在一行之内包含NetBIOS名字的ASCII文件。每行有两个字段用空格互相隔开。
+任何以#号开始的条目将被忽略。这个文件的每一行都包含了以下的信息：
+<DL COMPACT>
+<DT><B>IP </B>
+
+<DD>
+地址 - 点分十进制格式。 
+<DT><B>NetBIOS</B>
+
+<DD>
+名字 - 名字格式最大用十五个字符，后面可以跟以#号起头的两位十六进制值用于指出
+NetBIOS名字类型。
+<P>
+如果后跟的#被忽略，那么所给出的IP地址将返回所有与给出的名字相匹配的机器名，而不管查找
+的是何种NetBIOS名字类型。 
+</DL>
+<P>
+
+下面有个例子：
+<P>
+
+# 
+<BR>
+
+# Sample Samba lmhosts file. 
+<BR>
+
+# 
+<BR>
+
+192.9.200.1<TT>&nbsp;&nbsp;&nbsp;&nbsp;</TT>TESTPC <BR>
+<BR>
+
+192.9.200.20<TT>&nbsp;&nbsp;&nbsp;</TT>NTSERVER#20 <BR>
+<BR>
+
+192.9.200.21<TT>&nbsp;&nbsp;&nbsp;</TT>SAMBASERVER <BR>
+<BR>
+
+<P>
+
+这里包含了三个IP地址到NetBIOS名字的映射。第一和第三个将返回名字分别为&quot;TESTPC&quot;和
+&quot;SAMBASERVER&quot;的任何查询结果，而不管所需的是何种类型NetBIOS名字成份。
+<P>
+
+第二个映射将只返回当被查询的&quot;NTSERVER&quot;名字类型为&quot;0x20&quot;的值。任何其它的名字类型
+将不会被解释。
+<P>
+
+lmhosts文件的默认保存位置与smb.conf文件的目录相同。
+<A NAME="lbAF">&nbsp;</A>
+<H2>版本</H2>
+
+此手册页是针对samba套件版本2.0的。
+<A NAME="lbAG">&nbsp;</A>
+<H2>另见</H2>
+
+smb.conf (5), smbclient (1), smbpasswd (8), samba (7). 
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者</H2>
+
+samba软件和相关工具最初由Andrew Tridgell 
+<A HREF="mailto:samba-bugs@samba.org">samba-bugs@samba.org</A>创建。samba现在由开发组作为类似Linux内核开发采用的开放源代
+码计划方式来发展。
+<P>
+
+samba手册页最初由Karl 
+Auer撰写。它的源码已被转换成YODL(一种极好的开放源代码软件，可以在
+<A HREF="ftp://ftp.icce.rug.nl/pub/unix/处获得)格式并已由Jeremy">ftp://ftp.icce.rug.nl/pub/unix/处获得)格式并已由Jeremy</A> Allison更新到samba2.0版本。
+<P>
+
+请参见samba (7)查找如何获得一份完整的维护者列表以及如何提交错误报告及注解等等。
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">文件格式</A><DD>
+<DT><A HREF="#lbAF">版本</A><DD>
+<DT><A HREF="#lbAG">另见</A><DD>
+<DT><A HREF="#lbAH">作者</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

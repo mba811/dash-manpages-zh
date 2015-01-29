@@ -1,0 +1,154 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LAST,LASTB</TITLE>
+</HEAD><BODY>
+<H1>LAST,LASTB</H1>
+Section: Linux 系统管理员手册 (1)<BR>Updated: Jul 29, 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+last, lastb - 显示最近登录的用户列表
+
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>last</B>
+
+[<B>-R</B>]
+
+[<B>-</B><I>num</I>]
+
+[ -<B>n</B> <I>num</I> ]
+
+[<B>-adiox</B>]
+
+[ -<B>f</B> <I>file</I> ]
+
+[<I>name...</I>]
+
+[<I>tty...</I>]
+
+<BR>
+
+<B>lastb</B>
+
+[<B>-R</B>]
+
+[<B>-</B><I>num</I>]
+
+[ -<B>n</B> <I>num</I> ]
+
+[ -<B>f</B> <I>file</I> ]
+
+[<B>-adiox</B>]
+
+[<I>name...</I>]
+
+[<I>tty...</I>]
+
+
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>Last</B>
+
+向后检索 <B>/var/log/wtmp</B> 文件(也可以用 <B>-f</B> 选项指定被检索的文件)，并显示自这个文件创建以来所有登录（退出）系统的用户列表。在指定了用户名和终端名的情况下，<B>last</B> 只显示符合这些参数的记录。终端的名字可以简写，因此 <B>last 0</B> 等同于 <B>last tty0</B>.  
+<P>
+
+当 <B>last</B> 捕捉到了<FONT SIZE="-2">SIGINT</FONT> 信号 （产生于中断键,通常是 control-C）或 <FONT SIZE="-2">SIGQUIT</FONT> 信号（产生于退出键，通常是 control-\）时, <B>last</B> 会显示它对文件已经检索了多少；在 <FONT SIZE="-2">SIGINT</FONT> 信号的情况下 <B>last</B> 将终止运行。
+<P>
+
+每次系统重新启动时，虚用户 <B>reboot</B> 都会被记录到日志中。所以<B>last reboot</B> 会列出自日志文件创建以来的所有重新启动的日志记录。.PP
+<B>Lastb</B> 缺省上列出 <B>/var/log/btmp</B> 文件中的日志记录，这个文件包含有所有不良的登录企图。除此之外，等同于 <B>last</B>。
+
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项</H2>
+
+<DL COMPACT>
+<DT><DD>
+<B>-</B><I>num</I>指定 <B>last</B> 要显示多少行。
+<DT><DD>
+<BR>&nbsp;&quot;<B>-n</B>&nbsp;<I>num</I>&quot;等同&nbsp;<B>-</B><I>num</I>.
+<DT><DD>
+<B>-R</B>不显示主机名列。
+<DT><DD>
+<B>-a</B>在最后一列显示主机名. 和下一个选项合用时很有用
+<DT><DD>
+<B>-d</B>对于非本地的登录，Linux 不仅保存远程主机名而且保存IP地址（IP number）。这个选项可以将IP地址（IP number）转换为主机名。
+<DT><DD>
+<B>-i</B>这个选项类似于显示远程主机 IP 地址（IP number）的 <B>-d</B> 选项，只不过它用数字和点符号显示IP数
+<DT><DD>
+<B>-o</B>读取一个旧格式的 wtmp 文件 (用linux-libc5应用程序写入的).
+<DT><DD>
+<B>-x</B>显示系统关机记录和运行级别改变的日志。
+
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>注意</H2>
+
+<I>wtmp</I> 和 <I>btmp</I> 等文件也许找不到。只有这些文件存在时，系统才记录日志信息。这是一个本地配置的问题。 要想这些文件起作用，你可以用一条简单的命令  <B><A HREF="/cgi-bin/man/man2html?1+touch">touch</A></B>(1) 创建它们(如, <I>touch /var/log/wtmp</I>).
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>相关文件</H2>
+
+/var/log/wtmp.br/var/log/btmp
+
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者</H2>
+
+Miquel van Smoorenburg, <A HREF="mailto:miquels@cistron.nl">miquels@cistron.nl</A>.&quot;}}}
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>另见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+shutdown">shutdown</A></B>(8),.BR<B><A HREF="/cgi-bin/man/man2html?1+login">login</A></B>(1),.BR<B><A HREF="/cgi-bin/man/man2html?8+init">init</A></B>(8)
+
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Mirnshi &lt;<A HREF="mailto:Mirnshi@263.net">Mirnshi@263.net</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/07/15</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">选项</A><DD>
+<DT><A HREF="#lbAF">注意</A><DD>
+<DT><A HREF="#lbAG">相关文件</A><DD>
+<DT><A HREF="#lbAH">作者</A><DD>
+<DT><A HREF="#lbAI">另见</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,562 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SMBCLIENT</TITLE>
+</HEAD><BODY>
+<H1>SMBCLIENT</H1>
+Section:  (1)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+smbclient - 类似FTP操作方式的访问SMB/CIFS服务器资源的客户端
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<P>
+<B>smbclient</B> {servicename} [password] [-b &lt;buffer size&gt;] [-d
+debuglevel] [-D Directory] [-U username] [-W workgroup] [-M &lt;netbios
+name&gt;] [-m maxprotocol] [-A authfile] [-N] [-l logfile] [-L &lt;netbios
+name&gt;] [-I destinationIP] [-E] [-c &lt;command string&gt;] [-i scope] [-O
+&lt;socket options&gt;] [-p port] [-R &lt;name resolve order&gt;] [-s &lt;smb config
+file&gt;] [-T&lt;c|x&gt;IXFqgbNan] [-k]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+<P>
+
+此程序是<B><A HREF="/cgi-bin/man/man2html?7+Samba">Samba</A></B>(7)套件的一部分。
+<P>
+<P>
+
+<B>smbclient</B> 是个可以和SMB/CIFS服务器"交谈"的客户端程序。它提供
+了类似FTP程序(参见<B>ftp</B> (1))的用户界面。它可以完成的操作包括象从服务
+器下载文件到本地，上传本地文件到服务器及在服务器上查找目录信息等。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+<P>
+<DL COMPACT>
+<DT>servicename<DD>
+<P>
+servicename就是你要使用的服务名称。服务名使用<I>//server/service</I>这样的形式，其中<I>server </I> 是提供服务的SMB/CIFS服务器的NetBIOS名字，而<I>service</I> 是可获得服务资源的名称。所以如果要联接服务器&quot;smbserver&quot;上的&quot;printer&quot;服务的话，应该使用这样的服务名称：<I>//smbserver/printer </I>
+<P>
+注意服务名不使用服务器的IP(或DNS)主机名，而应该用NetBIOS名，而它可能与服务器的IP主机名相同当然也可能不相同。
+<P>
+服务器名是根据<B>smbclient</B>使用的<I>-R</I> 参数或者<B><A HREF="/cgi-bin/man/man2html?5+smb.conf">smb.conf</A></B>(5)配置文件中的名称解析顺序参数来解析的。名称解析参数使管理员可以控制名称解析的顺序和方法。
+<P>
+<DT>password<DD>
+<P>
+用password指定访问服务时所需的口令。如果使用了这个选项，就假定使用了<I>-N</I>(suppress password prompt)参数，在执行过程中不出现口令提示。
+<P>
+口令没有默认值。如果在命令行上没有提供口令(或者使用这个参数，或者在<I>-U-fR参数中指定)，并且也没有使用-N</I>选项，那么即使需要的服务项不要求口令，程序也会提供要用户输入一个口令。(如果服务不需要口令，只要简单地打个回车就向服务器回应了一个空口令)
+<P>
+<BR>&nbsp;注意：有些服务器(包括OS/2和Windows&nbsp;for&nbsp;Workgroups)会强调使用大写口令，它们会拒绝小写或者大小写混合的口令。
+<P>
+在脚本中使用口令要小心。(可能有安全问题嘛！)
+<P>
+<DT>-R &lt;name resolve order&gt;<DD>
+通过指定这个选项让Samba套件中的程序决定使用怎样的名字解析服务及其次序来解决主机名和IP的对应。这个选项以一个以空格分隔的不同的名称解析方法为选项值。
+<P>
+可选值是："lmhosts"，"host"，"wins"和"bcast"。这些选项使名字解析按以下的方法来进行：
+<P>
+<B>lmhosts</B>: 向Samba的lmhosts文件查询IP地址。If the line in lmhosts has no name type attached to the NetBIOS name (see the <B><A HREF="/cgi-bin/man/man2html?5+lmhosts">lmhosts</A></B>(5) for details) then any name type matches for lookup.
+<P>
+<B>host</B>: 用标准的名字到IP地址解析方法：系统<I>/etc/hosts</I>文件，NIS或DNS查询。如何使用这个名字解析由系统决定。举例来说，在IRIX或者Solaris系统中，<I>/etc/nsswitch.conf</I>文件会处理这些问题。 Note that this method is only used if the NetBIOS name type being queried is the 0x20 (server) name type, otherwise it is ignored.
+<P>
+<B>wins</B>: 用配置文件中<I>wins server</I>选项列出的地址来查询名字。如果没有指定WINS服务器的话会略过这种方法。<BR>
+<P>
+<B>bcast</B>: 向配置文件中<I>interfaces</I>参数列出的每个已知本地接口进行广播来进行查询。这是最不可靠的名字解析方法，因为它要求目标主机在本地子网内。
+<P>
+如果不使用这个参数的话，将按 <B><A HREF="/cgi-bin/man/man2html?5+smb.conf">smb.conf</A></B>(5)配置文件中(name resolve order)参数指定的次序来进行名字解析。
+<P>
+默认的解析次序是lmhosts，host，wins，bcast，在不使用这个参数或者没有在<B><A HREF="/cgi-bin/man/man2html?5+smb.conf">smb.conf</A></B>(5)配置文件中设定<I>name resolve order </I>参数的情况下将使用这样的次序进行解析。
+<P>
+<DT>-M NetBIOS name<DD>
+使用这个选项可以让你以"WinPopup" 协议向其它计算机发送信息。一旦联接成功你就可以发送信息了，结束时可以按^D(Ctl-D).
+<P>
+如果接受方计算机也正在运行WinPopup的话，用户会收到发送的信息并且系统可能会鸣叫一声。如果对方并没有运行WinPopup的话信息就被丢弃，而不会发出出错信息。
+<P>
+如果发送的信息超过1600字节的话会自动被截断，因为这是此协议规定的极限。
+<P>
+这里有个很有用的小技巧，通过<B>smbclient</B>，用cat处理信息，例如：
+<P>
+<B> cat mymessage.txt | smbclient -M FRED </B> 将会把 <I>mymessage.txt</I> 中的信息发送给主机 FRED.
+<P>
+你也许会发现<I>-U</I>和<I>-I</I>选项很有用，因为它们允许你控制信息的源地址和目的地址部分。
+<P>
+参见<B><A HREF="/cgi-bin/man/man2html?5+smb.conf">smb.conf</A></B>(5)配置文件中的<I>message command</I>参数获得如何在Samba中处理新进的WinPopup消息的详细描述。
+<P>
+<B>注意</B>：如果你总是要用你的WfWg PC的WinPopup来接收消息的话可以在你的Windows机器中把它拷到"启动"中。
+<P>
+<DT>-p port<DD>
+联接服务器所用的TCP端口号。标准(众所周知)的SMB/CIFS服务器TCP端口是139，当然也是默认值。
+<P>
+<DT>-h|--help<DD>
+打印出命令行帮助信息。
+<P>
+<P>
+<DT>-I IP-address<DD>
+指定要联接的服务器IP地址。当然格式应该是"a.b.c.d"。
+<P>
+通常client会使用上面介绍过的<I>name resolve order</I>参数中描述的NetBIOS名字解析机制通过查询尝试查找一个已命名的SMB/CIFS服务器。使用这个参数会强制客户端程序采用指定的IP地址而忽略要联接的服务资源的NetBIOS名部分。
+<P>
+这个参数并没有默认值。如果不指定的话程序会用上面说的方法来自动检测。
+<P>
+<DT>-E<DD>
+当使用了这个参数后，程序会把信息写到标准错误流(stderr)而不是标准输入流中。
+<P>
+默认情况下，程序会把信息写入标准输入中 - 典型的例子是用户的tty。
+<P>
+<DT>-L<DD>
+此选项允许你查看服务器上可以获得的服务资源。使用<B>smbclient -L host</B> 命令会显示一份列表。如果你的NetBIOS名与TCP/IP域名不匹配或者要在其它网络上查找主机时，<I>-I </I>  选项会非常有用。
+<P>
+<DT>-t terminal code<DD>
+用这个选项告诉<B>smbclient</B>怎样解释从远程服务器上传来的文件名。通常，UNIX系统对亚洲多字节的语言的实现与SMB/CIFS服务器使用的字符集不同(例如用<B>EUC</B>代替<B> SJIS</B>)。设置这个参数可以让<B>smbclient</B> 在UNIX文件名与SMB文件名之间进行正确的转换。不过，这个选项还没有经过严格的测试，所以可能会有些问题。
+<P>
+终端编码包含CWsjis, CWeuc, CWjis7, CWjis8, CWjunet, CWhex, CWcap. 当然这个列表并不完整，要获取完整列表请查看samba 源码。
+<P>
+<DT>-b buffersize<DD>
+在对服务器进行上/下传文件时可以用这个选项来改变传输缓冲大小。默认值是65520个字节。当从一个Win9x的服务器上进行文件传输时，把这个值设为稍小一点的值(例如1200字节)可以得到一些速度提升。
+<P>
+<DT>-V<DD>
+Prints the program version number.
+<P>
+<P>
+<DT>-s &lt;configuration file&gt;<DD>
+指定的这个文件包含服务器需要的配置详细信息。文件中的信息包含针对服务器的信息，比如使用什么printcap文件，还有所有服务器提供的服务的描述。参见<I>smb.conf</I>来获得更多信息。默认的配置文件名是在编译时指定的。
+<P>
+<DT>-d|--debug=debuglevel<DD>
+<I>debuglevel</I> 调试等级是个从0到10的整数。参数未指定时默认值为0。
+<P>
+如果这个值越高，越多关于服务器的详细活动信息将被记录到文件中。在0调试级时，只记录紧急错误和严重警告。对于平日的运行服务，1调试级是个合理的等级，它只产生小量的关于执行操作的信息。
+<P>
+1以上的调试级将产生相当多的记录数据，并且只在解决问题时才有用。3以上的调试级只被设计为让开发者使用并会产生极大数量的记录数据，而且其中很多部分非常难以理解。
+<P>
+注意在此使用这个参数将越过在<I>smb.conf</I> (5)文件中的<I>log level</I>参数。
+<P>
+<DT>-l|--logfile=logbasename<DD>
+指定一个记录和调试的文件名。文件会被添加<B>.client</B>扩展名。记录文件无法被客户端删除。
+<P>
+<DT>-N<DD>
+如果指定了这个选项，就会省略通常的口令提示。当访问无需口令的服务资源时它很有用。
+<P>
+除非在命令行上输入了口令或者使用了上述这个选项，否则用户将被提示要求输入一个口令。
+<P>
+<DT>-k<DD>
+Try to authenticate with kerberos. Only useful in an Active Directory environment.
+<P>
+<P>
+<DT>-A|--authfile=filename<DD>
+This option allows you to specify a file from which to read the username and password used in the connection. The format of the file is
+<P>
+<P>
+<PRE>
+
+username = &lt;value&gt;
+password = &lt;value&gt;
+domain   = &lt;value&gt;
+</PRE>
+
+<P>
+<P>
+Make certain that the permissions on the file restrict access from unwanted users.
+<P>
+<P>
+<DT>-U|--user=username[%password]<DD>
+这个参数指定程序联接时使用的用户名或者用户名和密码
+<P>
+如果没指定%password，将提示用户输入。程序会使用环境变量USER或LOGNAME，如果任何一个存在就会被转换为大写。如果既没有用户名也不存在环境变量的话，将使用<B>GUEST</B>作为用户名。
+<P>
+A third option is to use a credentials file which contains the plaintext of the username and password. This option is mainly provided for scripts where the admin does not wish to pass the credentials on the command line or via environment variables. If this method is used, make certain that the permissions on the file restrict access from unwanted users. See the <I>-A</I> for more details.
+<P>
+在脚本中包含口令或者使用PASSWD环境变量时要小心。而且在很多系统中，运行的命令行可以通过<B>ps</B>命令来查看，所以让<B>rpcclient</B>提示输入口令并直接键入会比较安全。
+<P>
+<DT>-n &lt;primary NetBIOS name&gt;<DD>
+使用这个选项让你越过机器的主机名而使用你要用的NetBIOS名。这样作和设置<I>smb.conf</I>文件中的<I>netbios name</I>选项作用相同。但是，命令行设置比配置文件中的设置优先级高。
+<P>
+<DT>-i &lt;scope&gt;<DD>
+这个参数指定一个产生NetBIOS名字时<B>nmblookup</B>用来通信所需要的NetBIOS范围。对于NetBIOS范围这个概念，可以参见rfc1001.txt和rfc1002.txt这两个文件中的详细定义。实际上这个NetBIOS范围的概念<B>很少</B>被用到，仅当你作为负责整个NetBIOS通信的管理员时才要设置。
+<P>
+<DT>-W|--workgroup=domain<DD>
+设置用户名的SMB域。这个选项越过了smb.conf配置文件中的默认域。如果指定的域与服务器NetBIOS名相同，会使得用户使用服务器本地安全管理local SAM来登录(与域SAM相反).
+<P>
+<DT>-O socket options<DD>
+TCP套接字选项用来在客户端设定套接字方面的功能。参见<I><A HREF="/cgi-bin/man/man2html?5+smb.conf">smb.conf</A></I>(5)手册页中的socket options参数获得合法的选项列表。
+<P>
+<DT>-T tar options<DD>
+我们可以用smbclient来对位于SMB/CIFS共享资源上的所有文件建立兼容<B><A HREF="/cgi-bin/man/man2html?1+tar">tar</A>(1) </B> 格式的备份。可使用的tar选项是以下这些： 
+<P>
+<I>c</I> - 在unix系统上建立一个tar文件。当然了，卷文件名，目标设备都必须给出，或者用&quot;-&quot;代表标准输出。如果用标准输出，你必须把记录等级调到它的最低值-d0以避免影响产生的tar文件。这个标志的功能正好与<I>x</I>标志相反。 <BR>
+<P>
+<I>x</I> - 用这个标志可以把本地的一个tar备份文件释放(恢复)到共享资源上。除非使用了-D选项，tar备份文件将从共享资源的顶层开始恢复。当然了，使用这个参数时后面必须紧跟一个想要恢复的文件名，设备，或者用&quot;-&quot;代表标准输入。与上面一样，这个标志的功能正好与<I>c</I>标志的功能相反。恢复后文件的建立时间(mtime)会被tar文件中保存的日期来替换, 而目录无法做到这一点的。 
+<P>
+<I>I</I> - 用这个标志可以包含文件和目录。当在用-T参数时指定了一个文件名的话这就是默认的操作了。在释放或建立时tar文件都会包含这些内容(同时不会包含其他的内容)。参见下面的示例。文件名通配符有两种方式，参见下面<I>r</I> 。
+<P>
+<I>X</I> - 排除文件和目录。在释放或者建立备份时使这些文件或目录不被包含在内。请看下面的示例文件名通配符有两种方式，参见下面<I>r</I> 。
+<P>
+<I>b</I> - 块大小。在这个标志后必须用一个合法的块大小(大于0)。使建立备份时写入到块大小*TBLOCK(通常是512字节)这样大小的块中。 <BR>
+<P>
+<I>g</I> - 增量备份。只备份设置了归档位的文件。必须与<I>c</I>标志一起使用。 
+<P>
+<I>q</I> - 静态工作。当操作进行时没有输出。它的意义与tar相应的静态工作模式一样。
+<P>
+<I>r</I> - 用正则表达式来描述包含或排除操作。当用HAVE_REGEX_H编译的话，用通常的正则表达式可以描述排除操作及要排除的文件，但是这种模式工作非常慢。如果没有用HAVE_REGEX_H的话，仅仅可以用通配符'*'和'?'。 
+<P>
+<I>N</I> - 时间更新(newer)的文件.在这个标志后面必须是一个用来与共享中的文件创建时间做比较的文件名。只有共享中的文件比指定的文件要新的时候才会被备份。必须与<I>c</I>标志一起使用。<BR>
+<P>
+<I>a</I> -设定归档位。使用这个标志在备份时对文件设置归档位。必须与<I>g</I>和fIc标志一起用.
+<P>
+<B>Tar Long File Names</B>
+<P>
+<B>smbclient</B>的tar选项现在可以在备份与恢复操作时支持长文件名了。但是，文件的完整路径描述必须小于1024 个字节。而且，当建立了一个归档包时，<B>smbclient</B>的tar选面会用文件相对路径写入归档包中，而不是绝对路径。
+<P>
+<B>Tar Filenames</B>
+<P>
+所有的文件名都要以DOS路径名(以'\\'作分隔符)或UNIX路径名(以'/'作分隔符)给出。 
+<P>
+<P>
+<B>示例 </B>
+<P>
+把备份文件<I>backup.tar</I>恢复到位于mypc上的myshare中(无须口令)
+<P>
+<B>smbclient //mypc/yshare &quot;&quot; -N -Tx backup.tar </B>
+<P>
+恢复除了<I>users/docs</I>以外的所有内容
+<P>
+<B>smbclient //mypc/myshare &quot;&quot; -N -TXx backup.tar users/docs</B>
+<P>
+在<I> users/docs</I>下建立一个备份文件
+<P>
+<B>smbclient //mypc/myshare &quot;&quot; -N -Tc backup.tar users/docs </B>
+<P>
+与上面操作相同，不过用的是DOS路径名
+<P>
+<B>smbclient //mypc/myshare &quot;&quot; -N -tc backup.tar users\docs </B>
+<P>
+对共享资源上所有内容(文件和目录)作一完整的备份
+<P>
+<B>smbclient //mypc/myshare &quot;&quot; -N -Tc backup.tar * </B>
+<P>
+<P>
+<DT>-D initial directory<DD>
+在开始前用这个参数来改变初始目录。可能只在用tar的-T选项才用。
+<P>
+<DT>-c command string<DD>
+命令字符串串是一个以单引号("'")分隔的用来替换标准输入提示的一系列命令列表，这个参数意味着<I> -N</I>。
+<P>
+当使用脚本或者要打印标准输入信息到服务器时这个选项就非常有用了，例如：<B>-c 'print -'</B>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>操作 OPERATIONS</H2>
+
+<P>
+<P>
+
+一旦运行了这个命令，就会在用户的提示行出现以下信息：
+<P>
+<P>
+
+smb:\&gt;
+<P>
+<P>
+
+反斜杠符(&quot;\\&quot;)指出了在服务器上用户当前的工作路径，如果这个路径改变了的话，相同的提示也会改变。
+<P>
+<P>
+
+提示符表示用户准备好并等待执行一个用户命令。每个命令都是一个单独的词，一般随后可以有选择地指定一些命令所需的参数。命令和参数之间用空格来分隔，除非有其它规定。当然所有命令都区分大小写，而参数可能不一定要区分大小写，不过这应该由命令来决定。
+<P>
+<P>
+
+要在文件名中使用空格的话必须用双引号封闭，例如：&quot;a long file name&quot;。
+<P>
+<P>
+
+以方括号(&quot;[]&quot;)封闭的参数是可选项，如果没有使用，命令还是以默认的情况执行；而以尖括号&lt;&gt;封闭的参数就是必须的了。
+<P>
+<P>
+
+注意，所有对服务器的命令操作实际上是完成的是向服务器发送一个请求。因而，这种动作可能在服务器到服务器之间会作些改变，这由服务器的实现方式来决定。 
+<P>
+<P>
+
+下面以字母次序给出可以使用的命令。 
+<P>
+<DL COMPACT>
+<DT>? [command]<DD>
+如果指定了<I>command</I> ，那么?命令就显示该命令的一些简单介绍信息。如果单独使用?的话，它会 给出一份给用命令的列表。
+<P>
+<DT>! [shell command]<DD>
+如果指定了 <I>shell command</I>，那么!命令会执行一个本地的命令解释器并运行指定的shell命令。如果不指定 要运行哪个shell命令，那么就只执行一个本地命令解释器。
+<P>
+<DT>altname file<DD>
+The client will request that the server return the &quot;alternate&quot; name (the 8.3 name) for a file or directory.
+<P>
+<P>
+<DT>cancel jobid0 [jobid1] ... [jobidN]<DD>
+The client will request that the server cancel the printjobs identified by the given numeric print job ids.
+<P>
+<P>
+<DT>chmod file mode in octal<DD>
+This command depends on the server supporting the CIFS UNIX extensions and will fail if the server does not. The client requests that the server change the UNIX permissions to the given octal mode, in standard UNIX format.
+<P>
+<P>
+<DT>chown file uid gid<DD>
+This command depends on the server supporting the CIFS UNIX extensions and will fail if the server does not. The client requests that the server change the UNIX user and group ownership to the given decimal values. Note there is currently no way to remotely look up the UNIX uid and gid values for a given name. This may be addressed in future versions of the CIFS UNIX extensions.
+<P>
+<P>
+<DT>cd [directory name]<DD>
+如果指定了&quot;directory name&quot;，那么服务器的当前工作路径就改为用户指定的路径。如果指定了任何不可访问的目录的话，该操作就失败了。
+<P>
+如果不指定目录名，就向用户给出服务器当前工作路径。
+<P>
+<DT>del &lt;mask&gt;<DD>
+删除所有当前工作路径中匹配<I>mask</I>的文件。
+<P>
+<DT>dir &lt;mask&gt;<DD>
+列出所有当前工作路径中匹配<I>mask</I>的文件。
+<P>
+<DT>exit<DD>
+终止联接并退出程序。
+<P>
+<DT>get &lt;remote file name&gt; [local file name]<DD>
+把服务器上名为<I>remote file name</I>的文件到拷贝到本地，名称为<I>local file name</I>。要注意的是，<B>smbclient</B>所用的传送模式为二进制模式。同时参见lowercase命令。 
+<P>
+<DT>help [command]<DD>
+同以上的?命令相同。
+<P>
+<P>
+<DT>lcd [directory name]<DD>
+把本机目录改为<I>directory name</I>指定的地点。如果要换的目录是不可访问的话，操作将会失败。
+<P>
+如果不指定目录名，则显示当前本机的工作路径。
+<P>
+<DT>link source destination<DD>
+This command depends on the server supporting the CIFS UNIX extensions and will fail if the server does not. The client requests that the server create a hard link between the source and destination files. The source file must not exist.
+<P>
+<DT>lowercase<DD>
+在get和mget命令中选用小写字符作为文件名。
+<P>
+当选择了小写状态时，用get和mget命令时会把本地文件名都转换为小写。从服务器上拷贝MSDOS 文件时这个选项非常有用，因为小写文件名是UNIX系统的标准。
+<P>
+<DT>ls &lt;mask&gt;<DD>
+同以上的dir命令。
+<P>
+<DT>mask &lt;mask&gt;<DD>
+此命令允许用户设置在mget和mput命令的递归形式操作中使用的一个掩码(通配符)。
+<P>
+当选择了递归复制目录时，mget和mput命令指定这个掩码(通配符)作为目录过滤器。
+<P>
+用mask命令指定的掩码可以用来过滤目录中的文件。例如，如果在mget命令中指定了掩码&quot;source*&quot;，并且用mask命令指定了文件掩码&quot;*.c&quot;，并且选择了递归复制目录的话，mget命令会下载所有在当前工作目录中匹配&quot;source*&quot;的目录以及其下所有匹配&quot;*.c&quot; 的文件。
+<P>
+注意掩码(通配符)默认值是空(等价于&quot;*&quot;)，除非使用mask命令来改变它。它会一直保持最近一次指定的值。为了避免出现意外的结果，在使用了mget和mput命令之后把值改回&quot;*&quot;是比较明智的。
+<P>
+<DT>md &lt;directory name&gt;<DD>
+同以上的mkdir命令。
+<P>
+<DT>mget &lt;mask&gt;<DD>
+复制服务器上所有匹配<I>mask</I> 的文件到本机。
+<P>
+注意<I>mask</I>在命令的递归调用和非递归调用两种方法之间有不同的解释含义 - 请参考recurse和mask命令获得更多信息。其次就是<B>smbclient</B>传送的方式是二进制的。另见lowercase命令。
+<P>
+<DT>mkdir &lt;directory name&gt;<DD>
+在服务器上建立指定名称的目录(当然用户要有相应的访问权限)。
+<P>
+<DT>mput &lt;mask&gt;<DD>
+复制本机上当前目录内所有匹配<I>mask</I> 的文件到服务器当前工作目录。
+<P>
+注意<I>mask</I>在命令的递归调用和非递归调用两种方法之间有不同的解释含义 - 请参考recurse和mask命令获得更多信息。其次就是<B>smbclient</B> 传送的方式是二进制的。
+<P>
+<DT>print &lt;file name&gt;<DD>
+打印本机上指定的文件到服务器的可打印资源上。
+<P>
+参见printmode命令。
+<P>
+<DT>printmode &lt;graphics or text&gt;<DD>
+设定打印模式以适应二进制数据(例如图形信息)或文本，这样后续的打印命令皆使用当前设好的打印模式。
+<P>
+<DT>prompt<DD>
+在执行mget和mput命令时使用对文件名的提示。
+<P>
+当用提示时，在执行命令期间会提示用户对每个要传送的文件进行确认。反之，所有传送操作都不会出现提示。
+<P>
+<DT>put &lt;local file name&gt; [remote file name]<DD>
+<BR>&nbsp;从本机拷贝名为<I>local&nbsp;file&nbsp;name</I>的文件到服务器上并取名为<I>remote&nbsp;file&nbsp;name</I>。与上面提到的一样，<B>smbclient</B>&nbsp;传送用的是二进制模式。参见lowercase命令。
+<P>
+<DT>queue<DD>
+用来显示打印队列、任务标识、名称、容量大小和当前状态。
+<P>
+<DT>quit<DD>
+参见exit命令。
+<P>
+<DT>rd &lt;directory name&gt;<DD>
+参见rmdir命令。
+<P>
+<DT>recurse<DD>
+以目录递归方式运行mget和mput命令。
+<P>
+当使用了递归方式时，这些执行的命令会处理源目录下所有的子目录，进入匹配通配符的子目录。只有与mask命令指定的通配符相符的文件才会被处理。参见mask命令。
+<P>
+当没有使用这种递归方式时，只有源主机当前工作目录中与匹配通配符的文件才会被复制。mask命令指定的通配符将被忽略。
+<P>
+<DT>rm &lt;mask&gt;<DD>
+删除所有服务器上当前工作目录中与<I>mask</I>相符的文件。
+<P>
+<DT>rmdir &lt;directory name&gt;<DD>
+从服务器上删除指定的目录，当然了，需要一定的用户访问权限。
+<P>
+<DT>setmode &lt;filename&gt; &lt;perm=[+|\-]rsha&gt;<DD>
+与DOS命令attrib类似的东东，用来设定文件权限，例如：
+<P>
+<B>setmode myfile +r </B>
+<P>
+将把myfile设为只读。
+<P>
+<DT>symlink source destination<DD>
+This command depends on the server supporting the CIFS UNIX extensions and will fail if the server does not. The client requests that the server create a symbolic hard link between the source and destination files. The source file must not exist. Note that the server will not create a link to any path that lies outside the currently connected share. This is enforced by the Samba server.
+<P>
+<P>
+<DT>tar &lt;c|x&gt;[IXbgNa]<DD>
+执行一个tar操作。参见上面的 <I>-T </I> 命令行选项。tarmode命令可能会影响具体的行为。还有就是g(增量方式)和N(新建方式)会改变tarmode设定。这里要注意的是 tar x参数前加&quot;-&quot;可能会导致命令不执行，应当使用命令行选项方式。
+<P>
+<DT>blocksize &lt;blocksize&gt;<DD>
+块大小。参数后必须跟一上合法的(就是比0大的数啦)块尺寸。因为在执行命令时，tar文件要被写到一个大小为<I>blocksize</I>*TBLOCK(一般是512字节)的块中。
+<P>
+<DT>tarmode &lt;full|inc|reset|noreset&gt;<DD>
+根据归档位来改变tar的行为。当用完全备份时，tar会备份所有的内容而不管归档位是如何设置的，这正好是默认的工作模式。当为增量模式时，它只备份置有归档位的文件。而用重组模式时，tar会对所有要备份文件的归档位进行复位(同时读/写共享)。
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>注意 NOTES</H2>
+
+<P>
+<P>
+
+一些服务器对用户提供的用户名、口令、共享资源名(也就是服务名)和机器名的大小写形式非常挑剔。如果你联接失败，试一下全部用大写。
+<P>
+<P>
+
+通常你在联接某种服务器时用-n选项会方便一点。例如OS/2 LanManager会强调要使用合法的NetBIOS名字，所以你需要提供让服务器可以理解的合法名字。
+<P>
+<P>
+
+smbclient支持在服务器使用LANMAN2及更高的协议时使用长文件名。
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>环境变量 ENVIRONMENT VARIABLES</H2>
+
+<P>
+<P>
+
+<B>USER</B>变量包含使用客户端的用户的用户名。只有当连接的协议等级足够高，支持会话级别的口令时才使用此信息。
+<P>
+<P>
+
+<B>PASSWD</B>变量包含使用客户端的用户的口令。只有当连接的协议等级足够高，支持会话级别的口令时才使用此信息。
+<P>
+<P>
+
+The variable <B>LIBSMB_PROG</B> may contain the path, executed with system(), which the client should connect to instead of connecting to a server. This functionality is primarily intended as a development aid, and works best when using a LMHOSTS file
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>安装 INSTALLATION</H2>
+
+<P>
+<P>
+
+存放这个程序的位置对于个人的系统管理员来说也是件麻烦事。下面仅仅是一些建议。
+<P>
+<P>
+
+推荐你把smbclient软件包安装到<I>/usr/local/samba/bin/</I>或<I> /usr/samba/bin/</I>目录中，而这个目录对所有人来说应该是只读的，对root才是可写的。程序本身可以被所有人调用，但是它<B>不</B>是setuid或者setgid的。
+<P>
+<P>
+
+而程序的记录文件应该放在一个用户可读写的目录中。
+<P>
+<P>
+
+要测试这个程序，你要先知道运行SMB/CIFS的服务器名。这个服务器可能运行着<B><A HREF="/cgi-bin/man/man2html?8+smbd">smbd</A></B>(8) a守护进程并提供一个用户可以访问的端口(通常端口号大于1024)，这样用户就可以用这些数据来测试了。
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>诊断 DIAGNOSTICS</H2>
+
+<P>
+<P>
+
+通常情况下诊断信息都记录到指定好的记录文件中。这个文件的名称是在编译时指定的，但也可以用命令行来指定。
+<P>
+<P>
+
+用户可以得到的诊断信息的数量和种类取决于用户执行客户端程序时所用的调试等级。如果你发现有问题的话，把调试级设到3并详细阅读记录文件里的内容。
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>版本 VERSION</H2>
+
+<P>
+<P>
+
+此手册页是针对Samba套件版本2.2的。
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+<P>
+<P>
+
+samba软件和相关工具最初由Andrew Tridgell创建。samba现在由Samba Team 作为开源软件来发展，类似linux内核的开发方式。
+<P>
+<P>
+
+最初的samba手册页是 Karl Auer写的。
+手册页源码已经转换为YODL格式(另一种很好的开源软件，可以在<A HREF="ftp://ftp.ice.rug.nl/pub/unix找到)，由Jeremy">ftp://ftp.ice.rug.nl/pub/unix找到)，由Jeremy</A> Sllison 更新到Samba2.0 版本。
+Gerald Carter 在Samba2.2中将它转化为DocBook 格式。
+Alexander Bokovoy 在Samba 3.0中实现了DocBook XML4.2 格式的转换。
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">操作 OPERATIONS</A><DD>
+<DT><A HREF="#lbAG">注意 NOTES</A><DD>
+<DT><A HREF="#lbAH">环境变量 ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAI">安装 INSTALLATION</A><DD>
+<DT><A HREF="#lbAJ">诊断 DIAGNOSTICS</A><DD>
+<DT><A HREF="#lbAK">版本 VERSION</A><DD>
+<DT><A HREF="#lbAL">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAM">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAN">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAO">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,143 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE SCHEMA</TITLE>
+</HEAD><BODY>
+<H1>CREATE SCHEMA</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE SCHEMA - 定义一个新的模式
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE SCHEMA <I>schemaname</I> [ AUTHORIZATION <I>username</I> ] [ <I>schema_element</I> [ ... ] ]
+CREATE SCHEMA AUTHORIZATION <I>username</I> [ <I>schema_element</I> [ ... ] ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE SCHEMA</B> 将在当前数据库里输入一个新的模式。 该模式名将在当前数据库里现存的所有模式名中唯一。
+<P>
+
+<BR>&nbsp;模式实际上是一个名字空间：&nbsp;它包含命名对象（表，数据类型，函数和操作符）这些名字可以和其它模式里存在的其它对象重名。&nbsp;命名对象要么是通过用模式名作为前缀&quot;修饰&quot;这些它们的名字进行访问，&nbsp;要么是通过设置一个搜索路径包含所需要的模式。&nbsp;无修饰的对象都是在当前模式中创建的（在搜索路径最前面的；可以用函数&nbsp;current_schema&nbsp;来判断）。
+<P>
+
+<BR>&nbsp;另外，CREATE&nbsp;SCHEMA&nbsp;可以包括在新模式中创建对象的子命令。&nbsp;这些子命令和那些在创建完模式后发出的命令没有任何区别，只不过是如果使用了&nbsp;AUTHORIZATION&nbsp;子句，&nbsp;那么所有创建的对象都将被该用户拥有。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>schemaname</I><B></B><DD>
+<BR>&nbsp;要创建的模式名字。如果省略，则使用用户名作为模式名。
+<DT><B></B><I>username</I><B></B><DD>
+<BR>&nbsp;将拥有该模式的用户名。如果省略，缺省为执行该命令的用户名。&nbsp;只有超级用户才能创建不属于自己的模式。
+<DT><B></B><I>schema_element</I><B></B><DD>
+<BR>&nbsp;一个&nbsp;SQL&nbsp;语句，定义一个要在模式里创建的对象。&nbsp;目前，只有&nbsp;CREATE&nbsp;TABLE，CREATE&nbsp;VIEW，&nbsp;和&nbsp;GRANT&nbsp;是在&nbsp;CREATE&nbsp;SCHEMA&nbsp;里面可以接受的子句。&nbsp;其它类型的对象可以在创建完模式之后的独立的命令里创建。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;要创建模式，调用该命令的用户必需在当前数据库上有&nbsp;CREATE&nbsp;权限。（当然，超级用户绕开这个检查。）
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;创建一个模式：
+<P>
+<PRE>
+CREATE SCHEMA myschema;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;为用户&nbsp;joe&nbsp;创建模式&nbsp;---&nbsp;模式也会叫&nbsp;joe：
+<P>
+<PRE>
+CREATE SCHEMA AUTHORIZATION joe;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;创建一个模式并且在里面创建一个表：
+<P>
+<PRE>
+CREATE SCHEMA hollywood
+    CREATE TABLE films (title text, release date, awards text[])
+    CREATE VIEW winners AS
+        SELECT title, release FROM films WHERE awards IS NOT NULL;
+
+</PRE>
+
+<BR>&nbsp;请注意上面的独立的子命令不是由分号结尾的。
+<P>
+
+<BR>&nbsp;下面的命令是实现同样结果的等效语句：
+<P>
+<PRE>
+CREATE SCHEMA hollywood;
+CREATE TABLE hollywood.films (title text, release date, awards text[]);
+CREATE VIEW hollywood.winners AS
+    SELECT title, release FROM hollywood.films WHERE awards IS NOT NULL;
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;SQL&nbsp;标准允许在&nbsp;CREATE&nbsp;SCHEMA&nbsp;里面有一个&nbsp;DEFAULT&nbsp;CHARACTER&nbsp;SET&nbsp;子句，以及比目前&nbsp;PostgreSQL&nbsp;可以接受的更多的子命令。
+<P>
+
+<BR>&nbsp;SQL&nbsp;标准声明在&nbsp;CREATE&nbsp;SCHEMA&nbsp;里的子命令可以以任意顺序出现。&nbsp;目前&nbsp;PostgreSQL&nbsp;&nbsp;里的实现还不能处理所有子命令里需要提前引用的情况；有时候可能需要重排一下子命令的顺序以避免前向引用。
+<P>
+
+<BR>&nbsp;在&nbsp;SQL&nbsp;标准里，模式的所有者总是拥有其中的所有对象。&nbsp;PostgreSQL&nbsp;允许模式包含非模式所有者所有的对象。&nbsp;只有在模式所有者&nbsp;CREATE&nbsp;了自己的模式的权限给了其它人才可能出现。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+ALTER SCHEMA [<B><A HREF="/cgi-bin/man/man2html?7+alter_schema">alter_schema</A></B>(7)], DROP SCHEMA [<B><A HREF="/cgi-bin/man/man2html?l+drop_schema">drop_schema</A></B>(l)]
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

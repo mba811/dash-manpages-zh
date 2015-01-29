@@ -1,0 +1,318 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PG_RESTORE</TITLE>
+</HEAD><BODY>
+<H1>PG_RESTORE</H1>
+Section: PostgreSQL Client Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+pg_restore - 从一个由 pg_dump 创建的备份文件中恢复 PostgreSQL 数据库。
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>pg_restore</B> [ <B></B><I>option</I><B></B>...<B> </B>] [ <B></B><I>filename</I><B> </B>]
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION  描述</H2>
+
+<P>
+
+<B>pg_restore</B> 是一种用于恢复由 <B><A HREF="/cgi-bin/man/man2html?1+pg_dump">pg_dump</A></B>(1)  创建的任何非纯文本输出格式中的 PostgreSQL 数据库的应用。 它将发出必要的命令来重新构造数据库，以便于把它恢复成保存它的时候的样子。 归档（备份）文件还允许pg_restore 有选择地进行恢复， 甚至在恢复前重新排列条目的顺序。归档的文件设计成可以在不同的硬件体系之间移植。
+<P>
+
+<B>pg_restore</B> 可以以两种模式操作：如果声明了数据库名字， 那么归档是直接恢复到数据库里。大对象只能用直接数据库联接进行恢复。 否则，先创建一个包含重建数据库所必须的 SQL 命令的脚本（并且写入到一个文件或者标准输出）， 类似 pg_dump 输出纯文本格式的时候创建的那种脚本。 因此，一些控制脚本输出的选项就是摹拟 pg_dump 的操作。
+<P>
+
+显然，<B>pg_restore</B> 无法恢复那些不存在归档文件中的信息； 比如，如果归档是用&quot;把数据转储为 INSERT命令&quot;选项制作的， 那么 pg_restore 将不能使用 COPY 语句装载数据。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<B>pg_restore</B> 接受下列命令行参数。
+<DL COMPACT>
+<DT><B></B><I>filename</I><B></B><DD>
+<BR>&nbsp;声明要恢复的备份文件的位置。如果没有声明，则使用标准输入。
+<DT><B>-a</B><DD>
+<DT><B>--data-only</B><DD>
+<BR>&nbsp;只恢复数据，而不恢复表模式（数据定义）。
+<DT><B>-c</B><DD>
+<DT><B>--clean</B><DD>
+<BR>&nbsp;创建数据库对象前先清理（删除）它们。
+<DT><B>-C</B><DD>
+<DT><B>--create</B><DD>
+<BR>&nbsp;在恢复数据库之前先创建它。（如果出现了这个选项，和&nbsp;<B>-d</B>&nbsp;&nbsp;在一起的数据库名只是用于发出最初的&nbsp;CREATE&nbsp;DATABASE&nbsp;命令。&nbsp;所有数据都恢复到名字出现在归档中的数据库中去。）
+<DT><B>-d </B><I>dbname</I><B></B><DD>
+<DT><B>--dbname=</B><I>dbname</I><B></B><DD>
+<BR>&nbsp;与数据库&nbsp;dbname&nbsp;联接并且直接恢复到该数据库中。
+<DT><B>-f </B><I>filename</I><B></B><DD>
+<DT><B>--file=</B><I>filename</I><B></B><DD>
+<BR>&nbsp;声明生成的脚本的输出文件，或者出现&nbsp;<B>-l</B>&nbsp;选项时用于列表的文件，缺省是标准输出。
+<DT><B>-F </B><I>format</I><B></B><DD>
+<DT><B>--format=</B><I>format</I><B></B><DD>
+<BR>&nbsp;声明备份文件的格式。因为pg_restore&nbsp;会自动判断格式，所以如果声明了，它可以是下面之一：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>t</B><DD>
+<BR>&nbsp;备份是一个&nbsp;tar&nbsp;归档。&nbsp;使用这个格式允许在恢复数据库的时候重新排序和/或把表模式元素排除出去。&nbsp;同时还可能在恢复的时候限制装载的数据。
+<DT><B>c</B><DD>
+<BR>&nbsp;备份的格式是来自&nbsp;pg_dump&nbsp;的客户化格式。&nbsp;这是最灵活的格式，因为它允许重新对数据排序，也允许重载表模式元素。&nbsp;缺省时这个格式是压缩的。
+</DL>
+</DL>
+
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>-i</B><DD>
+<DT><B>--ignore-version</B><DD>
+<BR>&nbsp;忽略数据库版本检查。
+<DT><B>-I </B><I>index</I><B></B><DD>
+<DT><B>--index=</B><I>index</I><B></B><DD>
+<BR>&nbsp;只恢复命名的索引。
+<DT><B>-l</B><DD>
+<DT><B>--list</B><DD>
+<BR>&nbsp;列出备份的内容。这个操作的输出可以用&nbsp;-L&nbsp;选项限制和重排所恢复的项目。
+<DT><B>-L </B><I>list-file</I><B></B><DD>
+<DT><B>--use-list=</B><I>list-file</I><B></B><DD>
+<BR>&nbsp;只恢复在&nbsp;list-file&nbsp;里面的元素，以它们在文件中出现的顺序。&nbsp;你可以移动各个行并且也可以通过在行开头放&nbsp;';'&nbsp;的方式注释。（见下文获取例子。）
+<DT><B>-N</B><DD>
+<DT><B>--orig-order</B><DD>
+<BR>&nbsp;以最初在&nbsp;pg_dump&nbsp;里生成的转储顺序恢复项目。&nbsp;这个选项没有什么实际的用途，因为&nbsp;pg_dump&nbsp;会以自己方便的顺序生成项，&nbsp;这个顺序不可能是恢复这些数据的安全顺序。&nbsp;（这个顺序不是项最后在归档的内容列表中列出的顺序。）&nbsp;又见&nbsp;-r。
+<DT><B>-o</B><DD>
+<DT><B>--oid-order</B><DD>
+<BR>&nbsp;以&nbsp;OID&nbsp;顺序恢复项目。这个选项用处很小，&nbsp;因为&nbsp;OID&nbsp;只是最初创建顺序的一个近似指示。&nbsp;如果还声明了&nbsp;-N，那么这个选项还覆盖它。又见&nbsp;-r。
+<DT><B>-O</B><DD>
+<DT><B>--no-owner</B><DD>
+<BR>&nbsp;不要输出设置对象的权限，以便与最初的数据库匹配的命令。&nbsp;缺省时，pg_restore&nbsp;发出&nbsp;<B>SET&nbsp;SESSION&nbsp;AUTHORIZATION</B>&nbsp;语句设置创建出来的模式元素的所有者权限。&nbsp;如果最初的数据库连接不是由超级用户（或者是拥有所有创建出来的对象的同一个用户）发起的，那么这些语句将失败。&nbsp;使用&nbsp;-O，那么任何用户都可以用于初始的连接，并且这个用户将拥有所有创建出来的对象。
+<DT><B>-P </B><I>function-name(argtype [, ...])</I><B></B><DD>
+<DT><B>--function=</B><I>function-name(argtype [, ...])</I><B></B><DD>
+<BR>&nbsp;只恢复指定的命名函数。请注意仔细拼写函数名及其参数，应该和转储的内容列表中的完全一样。
+<DT><B>-r</B><DD>
+<DT><B>--rearrange</B><DD>
+<BR>&nbsp;以对象类型重排项目（这个发生在以&nbsp;-N&nbsp;或者&nbsp;-o&nbsp;排序之后）。&nbsp;重排是为了给出最大可能的性能。
+<P>
+如果没有 <B>-N</B>, <B>-o</B>, 和<B>-r</B>，那么 pg_restore 以项目出现在归档
+的内容列表中的顺序恢复他们， 或者按照他们在 list-file 里面的顺序恢复他们
+--- 假如给出了 -L 的话。 -o 和 -r 的组合复制了 pg_dump 在创建归档的内容列表
+之前进行的排序， 因此，这个选项通常没必要声明。
+<DT><B>-R</B><DD>
+<DT><B>--no-reconnect</B><DD>
+<BR>&nbsp;这个选项已经废弃了，但是为了保持向下兼容仍然接受。
+<DT><B>-s</B><DD>
+<DT><B>--schema-only</B><DD>
+<BR>&nbsp;只恢复表结构（数据定义）。不恢复数据，序列值将重置。
+<DT><B>-S </B><I>username</I><B></B><DD>
+<DT><B>--superuser=</B><I>username</I><B></B><DD>
+<BR>&nbsp;设置关闭触发器时声明超级用户的用户名。&nbsp;只有在设置了&nbsp;<B>--disable-triggers</B>&nbsp;的时候才有用。
+<DT><B>-t </B><I>table</I><B></B><DD>
+<DT><B>--table=</B><I>table</I><B></B><DD>
+<BR>&nbsp;只恢复表指定的表的定义和/或数据。
+<DT><B>-T </B><I>trigger</I><B></B><DD>
+<DT><B>--trigger=</B><I>trigger</I><B></B><DD>
+<BR>&nbsp;只恢复指定的触发器。
+<DT><B>-v</B><DD>
+<DT><B>--verbose</B><DD>
+<BR>&nbsp;声明冗余模式。
+<DT><B>-x</B><DD>
+<DT><B>--no-privileges</B><DD>
+<DT><B>--no-acl</B><DD>
+<BR>&nbsp;避免&nbsp;ACL&nbsp;的恢复（grant/revoke&nbsp;命令）。
+<DT><B>-X use-set-session-authorization</B><DD>
+<DT><B>--use-set-session-authorization</B><DD>
+<BR>&nbsp;这个选项已经废弃了，但是出于向下兼容，仍然接受。&nbsp;pg_restore&nbsp;现在总是表现得像以前选中这个选项一样。
+<DT><B>-X disable-triggers</B><DD>
+<DT><B>--disable-triggers</B><DD>
+<BR>&nbsp;这个选项只有在执行仅恢复数据的时候才相关。它告诉&nbsp;pg_restore&nbsp;&nbsp;在装载数据的时候执行一些命令临时关闭在目标表上的触发器。&nbsp;如果你在表上有完整性检查或者其它触发器，&nbsp;而你又不希望在装载数据的时候激活它们，那么可以使用这个选项。
+<P>
+<BR>&nbsp;目前，为&nbsp;<B>--disable-triggers</B>&nbsp;发出的命令必须以超级用户发出。&nbsp;因此，你应该也要用&nbsp;-S&nbsp;声明一个超级用户名，或者更好是设置&nbsp;<B>--use-set-session-authorization</B>&nbsp;并且以&nbsp;PostgreSQL&nbsp;&nbsp;超级用户身份运行&nbsp;pg_restore。
+</DL>
+<P>
+
+<P>
+
+<B>pg_restore</B> 还接受下面的命令行参数做为联接参数：
+<DL COMPACT>
+<DT><B>-h </B><I>host</I><B></B><DD>
+<DT><B>--host=</B><I>host</I><B></B><DD>
+<BR>&nbsp;声明服务器运行的机器的主机名。&nbsp;如果数值以斜扛开头，那么它被用做&nbsp;Unix&nbsp;域套接字的目录。&nbsp;缺省是从&nbsp;PGHOST&nbsp;环境变量中获取的（如果设置了），&nbsp;否则将尝试进行&nbsp;Unix&nbsp;域套接字。
+<DT><B>-p </B><I>port</I><B></B><DD>
+<DT><B>--port=</B><I>port</I><B></B><DD>
+<BR>&nbsp;声明服务器侦听的&nbsp;TCP&nbsp;端口或者本地的&nbsp;Unix&nbsp;域套接字文件扩展。&nbsp;缺省是环境变量&nbsp;PGPORT&nbsp;的值（如果设置了的话），&nbsp;否则就说编译的缺省。
+<DT><B>-U </B><I>username</I><B></B><DD>
+<BR>&nbsp;以给出用户身分联接。
+<DT><B>-W</B><DD>
+<BR>&nbsp;强制给出口令提示。如果服务器要求口令认证，那么这个应该自动发生。
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+<DL COMPACT>
+<DT><B>PGHOST</B><DD>
+<DT><B>PGPORT</B><DD>
+<DT><B>PGUSER</B><DD>
+<BR>&nbsp;缺省连接参数。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>DIAGNOSTICS 诊断</H2>
+
+<P>
+
+<BR>&nbsp;当使用-d选项声明了直接数据库联接时，&nbsp;pg_restore&nbsp;在内部执行&nbsp;SQL&nbsp;语句。如果你运行&nbsp;pg_restore&nbsp;出了毛病，&nbsp;请确保你能用类似&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1)&nbsp;这样的东西从数据库中选取信息。
+<A NAME="lbAH">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;如果你的安装给template1数据库增加了任何你自己的东西，&nbsp;那么请注意把&nbsp;pg_dump&nbsp;的输出恢复到一个真正空的数据库中；&nbsp;否则你可能会收到因为重复定义所追加的对象而造成的错误信息。要制作一个没有任何本地附属物的数据库，&nbsp;可以从template0而不是template1拷贝，比如：
+<P>
+<PRE>
+CREATE DATABASE foo WITH TEMPLATE template0;
+
+</PRE>
+
+<P>
+
+<B>pg_restore</B> 的局限在下面列出。
+<DL COMPACT>
+<DT>&bull;<DD>
+<BR>&nbsp;当向一个已经存在的表恢复数据，并且还使用了&nbsp;<B>--disable-triggers</B>&nbsp;选项时，&nbsp;pg_restore&nbsp;&nbsp;在插入数据前放出一些查询关闭用户表上的触发器，&nbsp;在数据插入完成后重新打开它们。如果恢复的中途停止，那么系统表可能处于错误状态。
+<DT>&bull;<DD>
+<B>pg_restore</B> 将不会为单一的表恢复大对象。 如果一个归档包含大对象，那么所有大对象都将被恢复。
+</DL>
+<P>
+
+<P>
+
+<BR>&nbsp;又见参阅&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+pg_dump">pg_dump</A></B>(1)&nbsp;的文挡获取有关&nbsp;pg_dump&nbsp;的局限的细节。
+<P>
+
+<BR>&nbsp;一旦完成恢复，最好在每个恢复的对象上运行&nbsp;<B>ANALYZE</B>，&nbsp;以便给优化器有用的统计。
+<A NAME="lbAI">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;把一个包含大对象的叫&nbsp;mydb&nbsp;的数据库转储到一个tar文件：
+<P>
+<PRE>
+$ <B>pg_dump -Ft -b mydb &gt; db.tar</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;把这个数据库恢复到现有的叫&nbsp;newdb&nbsp;的数据库中（连同BLOB）：
+<P>
+<PRE>
+$ <B>pg_restore -d newdb db.tar</B>
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;要对项目重新排序，首先必须转储归档的目录：
+<P>
+<PRE>
+$ <B>pg_restore -l archive.file &gt; archive.list</B>
+
+</PRE>
+
+<BR>&nbsp;这个文件由一行头和每个项目一行组成，比如。
+<P>
+<PRE>
+;
+; Archive created at Fri Jul 28 22:28:36 2000
+;     dbname: birds
+;     TOC Entries: 74
+;     Compression: 0
+;     Dump Version: 1.4-0
+;     Format: CUSTOM
+;
+;
+; Selected TOC Entries:
+;
+2; 145344 TABLE species postgres
+3; 145344 ACL species
+4; 145359 TABLE nt_header postgres
+5; 145359 ACL nt_header
+6; 145402 TABLE species_records postgres
+7; 145402 ACL species_records
+8; 145416 TABLE ss_old postgres
+9; 145416 ACL ss_old
+10; 145433 TABLE map_resolutions postgres
+11; 145433 ACL map_resolutions
+12; 145443 TABLE hs_old postgres
+13; 145443 ACL hs_old
+
+</PRE>
+
+<BR>&nbsp;这里分号是注释分隔符，而行开头的数字代表赋给每个项目的内部归档&nbsp;ID。
+<P>
+
+<BR>&nbsp;文件内的行可以注释掉，删除和/或重新排列。比如，
+<P>
+<PRE>
+10; 145433 TABLE map_resolutions postgres
+;2; 145344 TABLE species postgres
+;4; 145359 TABLE nt_header postgres
+6; 145402 TABLE species_records postgres
+;8; 145416 TABLE ss_old postgres
+
+</PRE>
+
+<BR>&nbsp;可以用做&nbsp;pg_restore&nbsp;的输入并且只会恢复项目&nbsp;10&nbsp;和&nbsp;6，（以这个顺序）：
+<P>
+<PRE>
+$ <B>pg_restore -L archive.list archive.file</B>
+
+</PRE>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>HISTORY 历史</H2>
+
+<P>
+
+<B>pg_restore</B> 工具第一次出现在 PostgreSQL 7.1。
+<A NAME="lbAK">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+pg_dump">pg_dump</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+pg_dumpall">pg_dumpall</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1)
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION  描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAG">DIAGNOSTICS 诊断</A><DD>
+<DT><A HREF="#lbAH">NOTES 注意</A><DD>
+<DT><A HREF="#lbAI">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAJ">HISTORY 历史</A><DD>
+<DT><A HREF="#lbAK">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAL">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

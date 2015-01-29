@@ -1,0 +1,69 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of IPCCLEAN</TITLE>
+</HEAD><BODY>
+<H1>IPCCLEAN</H1>
+Section: PostgreSQL Server Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ipcclean - 从退出的PostgreSQL服务器中删除共享内存和信号灯
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>ipcclean</B>
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>ipcclean</B> 删除当前用户拥有的所有共享内存段和信号灯集。 它的目地是在
+PostgreSQL 服务器 （<B><A HREF="/cgi-bin/man/man2html?1+postmaster">postmaster</A></B>(1)）崩溃之后进行清理。 请注意的是立
+即重起服务器也会清理共享内存和信号灯，所以这条命令实际上用处不大。
+<P>
+
+应该只有数据库管理员可以运行这条命令，因为如果在多用户的环境中执行， 它会
+导致怪异的行为（也就是说，崩溃）。 如果在服务器运行时执行这条命令， 服务
+器分配的共享内存和信号灯将被删除。 这通常会导致该服务器启动的后端服务器的
+普遍失败。
+<A NAME="lbAE">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+这个脚本是个"hack"，但是从写成它的这些年来， 没有人提出等效的可移植的解决
+方法。因为 <B>postmaster</B> 现在可以清理自己，所以以后很可能不会继续改进
+ipcclean。
+<P>
+
+这个脚本对 <B>ipcs</B> 工具的输出做了一些假设， 而这些假设可能在不同的操作
+系统间是不同的。因此，它可能不能在你的系统上运行。
+<A NAME="lbAF">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">NOTES 注意</A><DD>
+<DT><A HREF="#lbAF">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

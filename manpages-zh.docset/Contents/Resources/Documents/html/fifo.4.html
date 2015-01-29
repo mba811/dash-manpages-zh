@@ -1,0 +1,103 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of FIFO</TITLE>
+</HEAD><BODY>
+<H1>FIFO</H1>
+Section: Linux Programmer's Manual (4)<BR>Updated: 20 Jun 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+fifo - 先进先出的特殊文件, 又名管道
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+一个 FIFO 特殊 文件 (又名 管道) 同 管道线 相似, 但是 它是 作为 文件 系统 的
+一部分 访问的. 可以 有 多个 进程 打开它 以供 读写. 当 进程 通过 FIFO 交换 数据
+的时候, 内核 在内部 传送 所有 数据 而 不会 把它 写入 文件 系统, 也就是说 FIFO
+特殊 文件 在 文件 系统 中 没有 任何 内容, 文件 系统 项 只是 作为  进程 可以 用
+文件 系统 中的 一个 名字 来 访问 管道 的 一个 参照点.
+<P>
+
+内核 会 为 至少 有 一个 进程 打开 了的 FIFO 特殊 文件 维护 并且 也只 维护 一个
+管道 对象. 在 数据 传给 FIFO 之前, FIFO 的 两端 (读 和 写) 必须 同时 打开.
+一般 来说 打开 FIFO 会 阻塞 直至 另一端 也 打开.
+<P>
+
+一个 进程 可以 以 非阻塞 模式 打开 一个 FIFO. 这种 情况下, 即使 写端 没有 打开,
+打开 读端 还是 会 成功, 但是, 如果 读端 没有 打开, 打开 写端 会 失败, 并且 得到
+一个 ENXIO (设备 或 地址 不存在).
+<P>
+
+在 Linux 下, 不管 是 阻塞 还是 非阻塞 模式, 打开 一个 FIFO 用作 读 和 写 都会
+成功. POSIX 关于 这种 情况 没有 定义. 这个 可以 用来 在 读端 没有 打开 的 情况
+下 打开 写端. 一个 进程 在 同时 用 FIFO 的 两端 来 和 自己 通信 的 时候 要 特别
+注意 以防 死锁.
+<A NAME="lbAD">&nbsp;</A>
+<H2>注意 (NOTES)</H2>
+
+当 一个 进程 企图 向 读端 没有 打开 的 FIFO 写 数据 的 时候, 进程 会 收到 一个
+SIGPIPE 信号. FIFO 特殊 文件 可以 用
+<B><A HREF="/cgi-bin/man/man2html?3+mkfifo">mkfifo</A></B>(3)
+
+来 创建 并且
+<I>ls -l</I>
+
+会 给它 一个 特殊 的 标记.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?3+mkfifo">mkfifo</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?1+mkfifo">mkfifo</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?2+pipe">pipe</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+socketpair">socketpair</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+open">open</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+signal">signal</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+sigaction">sigaction</A></B>(2)
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/9</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAD">注意 (NOTES)</A><DD>
+<DT><A HREF="#lbAE">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

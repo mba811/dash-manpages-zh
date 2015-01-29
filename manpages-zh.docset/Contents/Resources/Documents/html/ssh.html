@@ -1,0 +1,1498 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SSH</TITLE>
+</HEAD><BODY>
+<H1>SSH</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+<BR>BSD mandoc<BR>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+
+
+<B>ssh</B>
+
+ - OpenSSH SSH 客户端 (远程登录程序)
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>ssh</B>
+
+[-<B>l </B><I>login_name</I>
+
+
+
+]
+
+<I>hostname | <A HREF="mailto:user@hostname">user@hostname</A></I>
+
+[<I>command</I>
+
+]
+
+<P>
+
+<B>ssh</B>
+
+-words
+
+[-<B>afgknqstvxACNTX1246</B>
+
+]
+
+[-<B>b </B><I>bind_address</I>
+
+
+
+]
+
+[-<B>c </B><I>cipher_spec</I>
+
+
+
+]
+
+[-<B>e </B><I>escape_char</I>
+
+
+
+]
+
+[-<B>i </B><I>identity_file</I>
+
+
+
+]
+
+[-<B>l </B><I>login_name</I>
+
+
+
+]
+
+[-<B>m </B><I>mac_spec</I>
+
+
+
+]
+
+[-<B>o </B><I>option</I>
+
+
+
+]
+
+[-<B>p </B><I>port</I>
+
+
+
+]
+
+[-<B>F </B><I>configfile</I>
+
+
+
+]
+
+[-<B>L 
+</B>
+
+
+
+<I>port</I>
+
+ 
+<I>host</I>
+
+ 
+<I>hostport</I>
+
+
+
+
+]
+-words
+
+
+
+[-<B>R 
+</B>
+
+
+
+<I>port</I>
+
+ 
+<I>host</I>
+
+ 
+<I>hostport</I>
+
+
+
+
+]
+[-<B>D </B><I>port</I>
+
+
+
+]
+
+<I>hostname | <A HREF="mailto:user@hostname">user@hostname</A></I>
+
+[<I>command</I>
+
+]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+
+
+<B></B>
+
+
+(SSH 客户端) 用于登录远程主机, 并且在远程主机上执行命令.
+它的目的是替换 rlogin 和 rsh, 同时在不安全的网络之上, 两个互不
+信任的主机之间, 提供加密的, 安全的通信连接.
+X11 连接和任意 TCP/IP 端口均可以通过此安全通道转发(forward).
+<P>
+
+当用户通过
+<B></B>
+
+
+连接并登录主机
+<I>hostname</I>
+
+后, 根据所用的协议版本, 用户必须通过下述方法之一向远程主机证明他/她的身份:
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H3>SSH 协议第一版</H3>
+
+<P>
+
+第一, 如果发出登录命令的本地主机已经列在远程主机的
+/etc/hosts.equiv
+
+或
+/etc/ssh/shosts.equiv
+
+文件中, 并且两端的用户名相同, 则立即允许该用户登录.
+第二, 如果远程主机的用户根目录 (home 目录) 下存在
+.rhosts
+
+或
+.shosts
+
+ 
+并且其中有一行包含了客户机的名字和客户机上的用户名, 则允许该用户登录.
+一般来说, 服务器不允许单独使用这种认证方式, 因为它不安全.
+<P>
+
+第二种认证方法是
+rhosts
+
+或
+hosts.equiv
+
+文件结合基于 RSA 的主机认证. 这意味着如果
+$HOME/.rhosts
+
+ 
+$HOME/.shosts
+
+ 
+/etc/hosts.equiv
+
+ 
+或
+/etc/ssh/shosts.equiv
+
+允许登录, 并且如果服务器能够验证客户的主机密钥(host key)
+(参见
+Sx 文件(FILE)
+
+节的
+/etc/ssh/ssh_known_hosts
+
+和
+$HOME/.ssh/known_hosts
+
+), 主机才允许客户登录.
+这个认证方法关闭了因 IP 欺骗, DNS 欺骗和路由欺骗造成的安全漏洞.
+[系统管理员注意: 一般说来
+/etc/hosts.equiv
+
+ 
+$HOME/.rhosts
+
+ 
+和 rlogin/rsh 协议的本质是不可靠地, 要安全就应该关掉它们.]
+<P>
+
+作为第三种认证方式, 
+<B></B>
+
+
+支持基于 RSA 的认证. 
+这种方案依托于公开密钥算法: 密码系统的加密和解密通过不同的密钥完成, 无法
+通过加密密钥推导出解密密钥. RSA 就是这种密码系统.
+每个用户创建一对公开/私密钥匙用于认证.
+服务器知道用户的公钥, 只有用户知道他自己的私钥.
+$HOME/.ssh/authorized_keys
+
+文件列出允许登录的(用户的)公钥. 当用户开始登录,
+<B></B>
+
+
+程序告诉服务器它准备使用哪对钥匙(公钥)做认证.
+服务器检查这只密钥(公钥)是否获得许可, 如果许可, 服务器向用户
+(实际上是用户面前运行的
+<B></B>
+
+
+程序) 发出测试, 用用户的公钥加密一个随机数. 这个随机数只能用正确的私钥解密.
+随后用户的客户程序用私钥解出测试数字, 即可证明他/她掌握私钥, 
+而又无需(把私钥)暴露给服务器.
+<P>
+
+<B></B>
+
+
+能够自动执行 RSA 认证协议. 用户通过运行
+ssh-keygen1
+
+
+创建他/她的 RSA 密钥对. 私钥存放在用户根目录下的
+$HOME/.ssh/identity
+
+中, 而公钥存放在
+$HOME/.ssh/identity.pub
+
+中. 随后, 用户应该把
+identity.pub
+
+复制到远程服务器中, 作为
+$HOME/.ssh/authorized_keys
+
+存放到他/她的用户根目录下 (
+authorized_keys
+
+对应传统的
+$HOME/.rhosts
+
+文件, 每一行只有一只密钥, 尽管一行可以很长).
+用户无须密码就可以直接登录. RSA 认证远比 rhosts 认证安全.
+<P>
+
+RAS 认证最便捷的用法大概就是使用认证代理(authentication agent) 了. 详见
+ssh-agent1
+
+
+手册页.
+<P>
+
+如果这些认证方式都失败了,
+<B></B>
+
+
+就提示用户输入口令(password), 然后把口令送到服务器做验证. 由于整个通信过程是
+加密的, 因此别人不可能通过侦听网络获得这个口令.
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H3>SSH 协议第二版</H3>
+
+<P>
+
+当用户以协议第二版连接时, 类似的认证方法一样有效. 如果使用了
+<B>PreferredAuthentications</B>
+
+的默认内容, 客户端首先试着用基于主机的认证方法进行连接; 如果这个方法失败了
+就用公开密钥方法作认证; 最后, 如果它也失败了, 就进入键盘操作, 试试
+用户口令认证.
+<P>
+
+这个公开密钥方法类似于上一节描述的 RAS 认证, 并且允许使用 RAS 或 DSA 算法:
+客户端用他的私钥 (
+$HOME/.ssh/id_dsa
+
+或
+$HOME/.ssh/id_rsa 
+
+) 对会话标识符(session identifier)签名, 然后把结果送到服务器. 
+服务器检查
+$HOME/.ssh/authorized_keys
+
+中是否有匹配的公钥, 如果密钥和签名都正确, 访问就可以继续进行.
+会话标识符来自共享的 Diffie-Hellman 值, 只有客户端和服务器端才知道这个值.
+<P>
+
+如果公钥认证失败或无效, 用户口令将会加密后送到远端主机来证明用户的身份.
+<P>
+
+另外,
+<B></B>
+
+
+支持基于主机或测试应答的认证方式.
+<P>
+
+协议第二版提供附加机制增强保密性
+(数据流用 3DES, Blowfish, CAST128 或 Arcfour 加密) 和完整性
+(hmac-md5, hmac-sha1).
+注意, 协议第一版缺少强有力的机制确保连接的完整性.
+<P>
+
+<A NAME="lbAG">&nbsp;</A>
+<H3>登录会话和远程执行</H3>
+
+<P>
+
+服务器接受用户身份后, 服务器即可以执行给定的命令, 也可以让用户登录并给他
+一个正常的 shell. 所有和远端命令或 shell 的通信被自动加密.
+<P>
+
+如果分配了伪终端(pseudo-terminal)(普通的登录会话), 用户可以使用后面将
+提到的 escape 字符.
+<P>
+
+如果没有分配伪终端, 则会话是透明的(transparent), 能够可靠的传送二进制数据.
+大多数系统上, 即使分配了终端, 把 escape 字符设为
+``none''
+
+也可以让会话透明.
+<P>
+
+当远程主机上的命令或 shell 退出时, 会话即结束, 并关闭所有 X11 和 TCP/IP 连接.
+远端程序的返回码做为
+<B></B>
+
+
+的返回码返回.
+<P>
+
+<A NAME="lbAH">&nbsp;</A>
+<H3>Escape 字符</H3>
+
+<P>
+
+如果启用了伪终端, 
+<B></B>
+
+
+能够通过 escape 字符支持一组功能.
+<P>
+
+单独的波浪符可以用
+<B>~~</B>
+
+送出去, 只要后面不跟下面列举的字符, 也可以把它直接送出去.
+escape 字符必须接在换行(newline)后面, 这样才具有特别含义.
+在配置文件中可以用
+<B>EscapeChar</B>
+
+命令更改 escape 字符, 在命令行上可以用
+-<B>e</B>
+
+选项更改.
+<P>
+
+已支持的 escape 命令 (假设是默认的
+`~'
+
+)
+有:
+<DL COMPACT>
+<P>
+
+<DT><B>~.</B>
+
+
+<DD>
+断开连接
+<DT><B>~^Z</B>
+
+
+<DD>
+把 ssh 送到后台
+<DT><B>~#</B>
+
+
+<DD>
+列出转发的连接 (forwarded connection)
+<DT><B>~&amp;</B>
+
+
+<DD>
+当等待转发的连接/X11会话结束时, ssh 在后台退出登录
+<DT><B>~?</B>
+
+
+<DD>
+显示 escape 字符的列表
+<DT><B>~C</B>
+
+
+<DD>
+打开命令行 (仅用于
+-<B>L</B>
+
+和
+-<B>R</B>
+
+选项增加端口转发)
+<DT><B>~R</B>
+
+
+<DD>
+请求连接的重建(rekeying) (仅用于SSH协议第二版, 且对方支持)
+</DL>
+<P>
+
+<P>
+
+<A NAME="lbAI">&nbsp;</A>
+<H3>X11 和 TCP 转发 (forwarding)</H3>
+
+<P>
+
+如果
+<B>ForwardX11</B>
+
+变量设为
+``yes''
+
+(或参见后面对
+-<B>X</B>
+
+和
+-<B>x</B>
+
+选项的描述), 并且用户正在使用 X11 (设置了
+<B>DISPLAY</B>
+
+环境变量), 和 X11 显示器的连接将自动以这种形式转发到远端:
+任何用 shell 或命令启动的 X11 程序将穿过加密的通道, 从本地机器连接真正的
+X 服务器. 用户不应该手动设置
+<B>DISPLAY</B>
+
+ 
+可以在命令行上, 也可以在配置文件中设置 X11 连接的转发.
+<P>
+
+<B></B>
+
+
+设置的
+<B>DISPLAY</B>
+
+值将指向服务器, 但是显示器号大于零. 这很自然, 因为
+<B></B>
+
+
+在服务器上创建了一个
+``proxy''
+
+X 服务器, 把连接通过加密通道转发出去.
+<P>
+
+<B></B>
+
+
+将自动在服务器上设置 Xauthority 数据. 目的是这样的:
+SSH 生成一个随机的授权 cookie, 存放在服务器的 Xauthority 中.
+SSH 检查并确保转发的连接携带了这个 cookie, 打开连接后,
+把它替换为真正的 cookie.
+真正的认证 cookie 绝不会送往服务器 (也不会有任何明文传送的 cookie).
+<P>
+
+如果
+<B>ForwardAgent</B>
+
+变量设为
+``yes''
+
+(或参见后面对
+-<B>A</B>
+
+和
+-<B>a</B>
+
+选项的描述), 并且用户正在使用认证代理(authentication agent), 
+则和代理的连接将自动转发到远程主机.
+<P>
+
+既可以在命令行上, 也可以在配置文件中指定通过加密通道转发的任何 TCP/IP 连接.
+TCP/IP 转向的应用有, 比如说, 和电子钱包的安全连接, 或者是穿过防火墙等.
+<P>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H3>服务器认证</H3>
+
+<P>
+
+<B></B>
+
+
+自动维护并检查一个身份数据库, 它包含所有(成功)来访的主机的身份数据.
+主机密钥存放在用户根目录下的
+$HOME/.ssh/known_hosts
+
+文件中. 另外, SSH 自动检查
+/etc/ssh/ssh_known_hosts
+
+里面已知的主机. 任何新主机将被自动添加到用户文件中.
+如果某个主机的身份发生改变,
+<B></B>
+
+
+就会发出警告, 并且关闭对它的密码认证, 以防止特洛伊木马窃取用户密码.
+这个机制的另一个目的是防止中间人攻击, 否则这种攻击可能会绕过加密系统.
+<B>StrictHostKeyChecking</B>
+
+选项用来防止登录到主机密钥不能识别或发生改变的那些机器.
+<P>
+
+命令行选项有:
+<DL COMPACT>
+<P>
+
+<DT><B>-a</B>
+
+
+<DD>
+禁止转发认证代理的连接.
+<DT><B>-A</B>
+
+
+<DD>
+允许转发认证代理的连接. 
+可以在配置文件中对每个主机单独设定这个参数.
+<P>
+
+代理转发须谨慎. 
+某些用户能够在远程主机上绕过文件访问权限 (由于代理的 UNIX 域 socket),
+他们可以通过转发的连接访问本地代理.
+攻击者不可能从代理获得密钥内容, 但是他们能够操作这些密钥, 利用加载到代理上
+的身份信息通过认证.
+<DT><B>-b </B><I>bind_address</I>
+
+
+
+
+<DD>
+在拥有多个接口或地址别名的机器上, 指定收发接口.
+<DT><B>-c </B><I>blowfish|3des|des</I>
+
+
+
+
+<DD>
+选择加密会话的密码术.
+<I>3des</I>
+
+是默认算法.
+<I>3des</I>
+
+(triple-des) 用三支不同的密钥做加密-解密-加密三次运算, 被认为比较可靠.
+<I>blowfish</I>
+
+是一种快速的分组加密术(block cipher), 非常安全, 而且速度比
+<I>3des</I>
+
+快的多.
+<I>des</I>
+
+仅支持
+<B></B>
+
+
+客户端, 目的是能够和老式的不支持
+<I>3des</I>
+
+的协议第一版互操作. 由于其密码算法上的弱点, 强烈建议避免使用.
+<DT><B>-c </B><I>cipher_spec</I>
+
+
+
+
+<DD>
+另外, 对于协议第二版, 这里可以指定一组用逗号隔开, 按优先顺序排列的密码术.
+详见
+<B>Ciphers</B>
+
+ 
+<DT><B>-e </B><I>ch|^ch|none</I>
+
+
+
+
+<DD>
+设置 pty 会话的 escape 字符 (默认字符:
+`~'
+
+) .
+escape 字符只在行首有效, escape 字符后面跟一个点
+(`.'
+
+)
+
+表示结束连接, 跟一个 control-Z 表示挂起连接(suspend), 跟 escape 字符自己
+表示输出这个字符. 把这个字符设为
+``none''
+
+则禁止 escape 功能, 使会话完全透明.
+<DT><B>-f</B>
+
+
+<DD>
+要求
+<B></B>
+
+
+在执行命令前退至后台. 它用于当
+<B></B>
+
+
+准备询问口令或密语, 但是用户希望它在后台进行. 该选项隐含了
+-<B>n </B>
+
+选项. 在远端机器上启动 X11 程序的推荐手法就是类似于
+<B>ssh -f host xterm </B>
+
+的命令.
+<DT><B>-g</B>
+
+
+<DD>
+允许远端主机连接本地转发的端口.
+<DT><B>-i </B><I>identity_file</I>
+
+
+
+
+<DD>
+指定一个 RSA 或 DSA 认证所需的身份(私钥)文件. 默认文件是协议第一版的
+$HOME/.ssh/identity
+
+以及协议第二版的
+$HOME/.ssh/id_rsa
+
+和
+$HOME/.ssh/id_dsa
+
+文件. 也可以在配置文件中对每个主机单独指定身份文件.
+可以同时使用多个
+-<B>i</B>
+
+选项 (也可以在配置文件中指定多个身份文件).
+<DT><B>-I </B><I>smartcard_device</I>
+
+
+
+
+<DD>
+指定智能卡(smartcard)设备. 参数是设备文件,
+<B></B>
+
+
+能够用它和智能卡通信, 智能卡里面存储了用户的 RSA 私钥.
+<DT><B>-k</B>
+
+
+<DD>
+禁止转发 Kerberos 门票和 AFS 令牌. 
+可以在配置文件中对每个主机单独设定这个参数.
+<DT><B>-l </B><I>login_name</I>
+
+
+
+
+<DD>
+指定登录远程主机的用户.
+可以在配置文件中对每个主机单独设定这个参数.
+<DT><B>-m </B><I>mac_spec</I>
+
+
+
+
+<DD>
+另外, 对于协议第二版, 这里可以指定一组用逗号隔开, 按优先顺序排列的
+MAC(消息验证码)算法 (message authentication code). 详情以
+<B>MACs </B>为关键字查询.
+
+
+
+<DT><B>-n</B>
+
+
+<DD>
+把 stdin 重定向到
+/dev/null
+
+(实际上防止从 stdin 读取数据).
+<B></B>
+
+
+在后台运行时一定会用到这个选项. 它的常用技巧是远程运行 X11 程序. 例如,
+<B>ssh -n shadows.cs.hut.fi emacs</B>
+
+ 
+将会在 shadows.cs.hut.fi 上启动 emacs, 同时自动在加密通道中转发 X11 连接.
+<B></B>
+
+
+在后台运行. (但是如果
+<B></B>
+
+
+要求口令或密语, 这种方式就无法工作; 参见
+-<B>f</B>
+
+选项.)
+<DT><B>-N</B>
+
+
+<DD>
+不执行远程命令. 用于转发端口. (仅限协议第二版)
+<DT><B>-o </B><I>option</I>
+
+
+
+
+<DD>
+可以在这里给出某些选项, 格式和配置文件中的格式一样.
+它用来设置那些没有命令行开关的选项.
+<DT><B>-p </B><I>port</I>
+
+
+
+
+<DD>
+指定远程主机的端口. 可以在配置文件中对每个主机单独设定这个参数.
+<DT><B>-q</B>
+
+
+<DD>
+安静模式. 消除所有的警告和诊断信息.
+<DT><B>-s</B>
+
+
+<DD>
+请求远程系统激活一个子系统. 子系统是 SSH2 协议的一个特性, 能够协助
+其他应用程序(如 sftp)把SSH用做安全通路. 子系统通过远程命令指定.
+<DT><B>-t</B>
+
+
+<DD>
+强制分配伪终端.
+可以在远程机器上执行任何全屏幕(screen-based)程序, 所以非常有用,
+例如菜单服务. 并联的
+-<B>t</B>
+
+选项强制分配终端, 即使 
+<B></B>
+
+
+没有本地终端.
+<DT><B>-T</B>
+
+
+<DD>
+禁止分配伪终端.
+<DT><B>-v</B>
+
+
+<DD>
+冗详模式. 使
+<B></B>
+
+
+打印关于运行情况的调试信息. 在调试连接, 认证和配置问题时非常有用. 并联的
+-<B>v</B>
+
+选项能够增加冗详程度. 最多为三个.
+<DT><B>-x</B>
+
+
+<DD>
+禁止 X11 转发.
+<DT><B>-X</B>
+
+
+<DD>
+允许 X11 转发. 可以在配置文件中对每个主机单独设定这个参数.
+<P>
+
+应该谨慎使用 X11 转发. 如果用户在远程主机上能够绕过文件访问权限
+(根据用户的X授权数据库), 他就可以通过转发的连接访问本地 X11 显示器.
+攻击者可以据此采取行动, 如监视键盘输入等.
+<DT><B>-C</B>
+
+
+<DD>
+要求进行数据压缩 (包括 stdin, stdout, stderr 以及转发 X11 和 TCP/IP 连接
+的数据).  压缩算法和
+<A HREF="/cgi-bin/man/man2html?1+gzip">gzip</A>(1)
+
+
+的一样, 协议第一版中, 压缩级别
+``level''
+
+用
+<B>CompressionLevel</B>
+
+选项控制. 压缩技术在 modem 线路或其他慢速连接上很有用, 但是在高速网络上反而
+可能降低速度. 可以在配置文件中对每个主机单独设定这个参数. 另见
+<B>Compression</B>
+
+选项.
+<DT><B>-F </B><I>configfile</I>
+
+
+
+
+<DD>
+指定一个用户级配置文件. 如果在命令行上指定了配置文件, 系统级配置文件
+(/etc/ssh/ssh_config
+
+)
+
+将被忽略. 默认的用户级配置文件是
+$HOME/.ssh/config
+
+ 
+<DT><B>-L </B><I>port:host:hostport</I>
+
+
+
+
+<DD>
+将本地机(客户机)的某个端口转发到远端指定机器的指定端口.
+工作原理是这样的, 本地机器上分配了一个 socket 侦听
+<I>port</I>
+
+端口, 一旦这个端口上有了连接, 该连接就经过安全通道转发出去,
+同时远程主机和
+<I>host</I>
+
+的
+<I>hostport</I>
+
+端口建立连接. 可以在配置文件中指定端口的转发. 只有 root 才能转发特权端口.
+IPv6 地址用另一种格式说明:
+<I>port/host/hostport</I>
+
+<DT><B>-R </B><I>port:host:hostport</I>
+
+
+
+
+<DD>
+将远程主机(服务器)的某个端口转发到本地端指定机器的指定端口.
+工作原理是这样的, 远程主机上分配了一个 socket 侦听
+<I>port</I>
+
+端口, 一旦这个端口上有了连接, 该连接就经过安全通道转向出去,
+同时本地主机和
+<I>host</I>
+
+的
+<I>hostport</I>
+
+端口建立连接. 可以在配置文件中指定端口的转发. 只有用 root 登录远程主机
+才能转发特权端口. IPv6 地址用另一种格式说明:
+<I>port/host/hostport</I>
+
+<DT><B>-D </B><I>port</I>
+
+
+
+
+<DD>
+指定一个本地机器
+``动态的''
+
+应用程序端口转发. 工作原理是这样的, 本地机器上分配了一个 socket 侦听
+<I>port</I>
+
+端口, 一旦这个端口上有了连接, 该连接就经过安全通道转发出去,
+根据应用程序的协议可以判断出远程主机将和哪里连接. 目前支持 SOCKS4 协议, 
+<B></B>
+
+
+将充当 SOCKS4 服务器. 只有 root 才能转发特权端口.
+可以在配置文件中指定动态端口的转发.
+<DT><B>-1</B>
+
+
+<DD>
+强制
+<B></B>
+
+
+只使用协议第一版.
+<DT><B>-2</B>
+
+
+<DD>
+强制
+<B></B>
+
+
+只使用协议第二版.
+<DT><B>-4</B>
+
+
+<DD>
+强制
+<B></B>
+
+
+只使用 IPv4 地址.
+<DT><B>-6</B>
+
+
+<DD>
+强制
+<B></B>
+
+
+只使用 IPv6 地址.
+</DL>
+<P>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>配置文件 (CONFIGURATION FILES)</H2>
+
+<B></B>
+
+
+可以从用户级配置文件和系统级配置文件中获取更多的配置数据.
+配置文件的格式及其内容参见
+ssh_config5.
+
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>环境变量 (ENVIRONMENT)</H2>
+
+<B></B>
+
+
+一般将设置下面的环境变量:
+<DL COMPACT>
+<P>
+
+<DT><B>DISPLAY</B>
+
+
+<DD>
+环境变量
+<B>DISPLAY</B>
+
+指出 X11 服务器的位置. 
+<B></B>
+
+
+自动设置这个变量, 变量指向
+``hostname:n''
+
+格式的数据, 其中 hostname 指出运行 shell 的主机, 而 n 是大于等于 1 的整数.
+<B></B>
+
+
+根据这个数据, 用安全通路转发 X11 连接. 用户一般不需要主动设置
+<B>DISPLAY</B>
+
+变量, 否则会导致 X11 连接不安全 (而且会导致用户手工复制所需的授权 cookie).
+<DT><B>HOME</B>
+
+
+<DD>
+设置为用户根目录的路径.
+<DT><B>LOGNAME</B>
+
+
+<DD>
+等于
+<B>USER</B>
+
+ 
+用来兼容使用这个变量的系统.
+<DT><B>MAIL</B>
+
+
+<DD>
+设置为用户邮箱的路径.
+<DT><B>PATH</B>
+
+
+<DD>
+设置为默认的
+<B>PATH</B>
+
+ 
+如同编译
+<B>ssh </B>
+
+时要求的一样.
+<DT><B>SSH_ASKPASS</B>
+
+
+<DD>
+如果
+<B></B>
+
+
+需要一个密语(passphrase), 只要它是终端上启动的, 它会从当前终端上读取. 如果
+<B></B>
+
+
+没有联接终端, 但是设置了
+<B>DISPLAY</B>
+
+和
+<B>SSH_ASKPASS</B>
+
+变量,
+<B></B>
+
+
+就运行
+<B>SSH_ASKPASS</B>
+
+指定的程序, 打开一个 X11 窗口读取密语. 当从
+.Xsession
+
+或类似的 script 中调用
+<B></B>
+
+
+时, 这个功能特别有用. (注意, 某些机器上可能需要将输入重定向为
+/dev/null
+
+才能工作.)
+<DT><B>SSH_AUTH_SOCK</B>
+
+
+<DD>
+标识某个 UNIX 域 socket 的路径, 用于和代理通信.
+<DT><B>SSH_CONNECTION</B>
+
+
+<DD>
+标识连接的客户端和服务器端. 变量包含四个用空格隔开的字段: 客户端IP地址,
+客户端端口号, 服务器IP地址, 服务器端口号.
+<DT><B>SSH_ORIGINAL_COMMAND</B>
+
+
+<DD>
+如果强制执行了某条命令, 该变量就保存了最初的命令行. 可以用它获取初始参数.
+<DT><B>SSH_TTY</B>
+
+
+<DD>
+设置为关联当前 shell 或命令的终端名字(设备的路径).
+如果会话没有终端, 就不设置这个变量.
+<DT><B>TZ</B>
+
+
+<DD>
+如果启动后台进程(daemon)时设置了时区, 就设置这个时区变量, 指出现在的时区
+(就是说, 后台进程会把这个变量传给新建连接).
+<DT><B>USER</B>
+
+
+<DD>
+设置为登录的用户名.
+</DL>
+<P>
+
+<P>
+
+另外, 如果允许用户改变他们的环境数据, 而且有
+$HOME/.ssh/environment
+
+这个文件,
+<B></B>
+
+
+将读取其中数据, 把
+``VARNAME=value''
+
+这种格式的数据行添加进环境数据区. 另见
+sshd_config5
+
+
+的
+<B>PermitUserEnvironment</B>
+
+选项.
+<A NAME="lbAM">&nbsp;</A>
+<H2>文件 (FILES)</H2>
+
+<DL COMPACT>
+<P>
+
+<DT><B>$HOME/.ssh/known_hosts
+
+</B>
+<DD>
+主机密钥的记录, 记录有用户登录上来, 但是没有列在 
+/etc/ssh/ssh_known_hosts 
+
+中的主机. 参见
+<A HREF="/cgi-bin/man/man2html?8+sshd">sshd</A>(8).
+
+
+<DT><B>$HOME/.ssh/identity, $HOME/.ssh/id_dsa, $HOME/.ssh/id_rsa
+
+</B>
+<DD>
+包含了用户的身份信息. 它们分别是协议第一版的 RSA, 协议第二版的 DSA,
+协议第二版的 RSA. 这些文件存有敏感信息, 只应由该用户读取, 不允许其他用户
+访问(读/写/执行). 注意, 如果一个私钥文件能够让其他用户访问,
+<B></B>
+
+
+将忽略这个文件. 在生成密钥的时候可以指定一个密语(passphrase), 用这个密语和
+3DES 加密文件的敏感部分.
+<DT><B>$HOME/.ssh/identity.pub, $HOME/.ssh/id_dsa.pub, $HOME/.ssh/id_rsa.pub
+
+</B>
+<DD>
+包含认证用的公钥 (以文本格式保存的身份文件的公开部分).
+如果用户希望用协议第一版的 RSA 认证登录这些机器,
+$HOME/.ssh/identity.pub
+
+的内容应该添加到所有机器的
+$HOME/.ssh/authorized_keys
+
+中. 如果用户希望用协议第二版的 DSA/RSA 认证登录这些机器,
+$HOME/.ssh/id_dsa.pub
+
+和
+$HOME/.ssh/id_rsa.pub
+
+的内容应该添加到所有机器的
+$HOME/.ssh/authorized_keys
+
+中. 这些文件没有敏感数据, 可以(但不是必须)让任何人读取. 
+ssh 绝不会自动访问这些文件, 它们也不是不可或缺; 
+只是为了用户方便才提供这些文件.
+<DT><B>$HOME/.ssh/config
+
+</B>
+<DD>
+用户级配置文件. 
+ssh_config5
+
+
+描述了文件格式及其配置选项.
+<DT><B>$HOME/.ssh/authorized_keys
+
+</B>
+<DD>
+存放 RSA/DSA 公钥, 用户通过它登录机器. 
+<A HREF="/cgi-bin/man/man2html?8+sshd">sshd</A>(8)
+
+
+手册页描述了这个文件的格式. 最简单的文件格式和 .pub 身份文件一样.
+文件内容并非高度敏感, 但是仍然建议仅让此文件的用户读写, 而拒绝其他用户的访问.
+<DT><B>/etc/ssh/ssh_known_hosts
+
+</B>
+<DD>
+已知的主机密钥的系统级列表. 系统管理员应该准备好这个文件, 把所需主机的公钥
+保存在文件里面. 这个文件应该能够全局读取. 文件中一行一支公钥, 格式是
+(字段用空格隔开): 系统名字, 公钥, 可选的注释域. 如果同一个机器使用了多个名字,
+所有名字都应该(用逗号隔开)列出来. 文件格式在
+<A HREF="/cgi-bin/man/man2html?8+sshd">sshd</A>(8)
+
+
+手册页中有描述.
+<P>
+
+登录的时候,
+<A HREF="/cgi-bin/man/man2html?8+sshd">sshd</A>(8)
+
+
+用规范的系统名字(名字服务器返回的)确认客户机; 其他名字也需要, 因为校验密钥前
+<B></B>
+
+
+不会把用户提供的名字转换为规范名字, 防止能够操作名字服务器的人欺骗主机认证.
+<DT><B>/etc/ssh/ssh_config
+
+</B>
+<DD>
+系统级配置文件. 
+ssh_config5
+
+
+描述了文件格式和配置选项.
+<DT><B>/etc/ssh/ssh_host_key, /etc/ssh/ssh_host_dsa_key, /etc/ssh/ssh_host_rsa_key
+
+</B>
+<DD>
+这三个文件包含了主机密钥的私有部分, 它们用于
+<B>RhostsRSAAuthentication</B>
+
+和
+<B>HostbasedAuthentication</B>
+
+ 
+如果使用了协议第一版的
+<B>RhostsRSAAuthentication</B>
+
+方法,
+<B></B>
+
+
+必须是 setuid root, 因为只有 root 才能读取主机密钥. 而对于协议第二版的
+<B>HostbasedAuthentication</B>
+
+方法,
+<B></B>
+
+
+使用
+ssh-keysign8
+
+
+访问主机密钥. 这样消除了验证身份时对
+<B></B>
+
+
+setuid root 的要求. 默认情况下
+<B></B>
+
+
+不是 setuid root.
+<DT><B>$HOME/.rhosts
+
+</B>
+<DD>
+该文件用于
+.rhosts
+
+认证, 里面列出允许登录的主机/用户对. 
+(注意 rlogin 和 rsh 也使用这个文件, 导致这个文件的应用变得不安全)
+文件中的每一行包括一个主机名字(用名字服务器返回的规范名字), 和主机上的
+用户名字, 用空格隔开. 某些机器上, 如果用户根目录位于 NFS 分区, 
+这个文件可能需要全局可读, 因为
+<A HREF="/cgi-bin/man/man2html?8+sshd">sshd</A>(8)
+
+
+以 root 身份读它. 此外, 该文件必须属于这个用户, 其他人不允许持有写权限.
+对大多数机器推荐的访问权限是, 它的用户可以读写, 而不让其他人访问.
+<P>
+
+注意, 默认情况下会安装
+<A HREF="/cgi-bin/man/man2html?8+sshd">sshd</A>(8)
+
+
+, 因此在允许 <FONT SIZE="+2">.</FONT>rhosts 认证前, 
+<A HREF="/cgi-bin/man/man2html?8+sshd">sshd</A>(8)
+
+
+要求成功进行了 RSA 主机验证. 如果没有
+/etc/ssh/ssh_known_hosts
+
+文件存放客户的主机密钥, 密钥可以存放在
+$HOME/.ssh/known_hosts 
+
+中. 最简单的做法是用 ssh 从服务器回连客户机; 这样会自动把主机密钥添加到
+$HOME/.ssh/known_hosts
+
+ 
+<DT><B>$HOME/.shosts
+
+</B>
+<DD>
+这个文件的用法和
+.rhosts
+
+完全一样. 它的目的是允许
+<B></B>
+
+
+做 rhosts 认证的同时防止
+<B>rlogin</B>
+
+或
+<A HREF="/cgi-bin/man/man2html?1+rsh">rsh</A>(1)
+
+
+登录.
+<DT><B>/etc/hosts.equiv
+
+</B>
+<DD>
+.rhosts 认证
+
+使用这个文件. 它包含规范的主机名字, 一行一个(
+<A HREF="/cgi-bin/man/man2html?8+sshd">sshd</A>(8)
+
+
+手册页描述了完整的格式). 如果文件中发现了客户机的名字, 
+而且客户机和服务器的用户名相同, 则自动允许登录.
+另外, 一般情况下要求 RSA 主机认证成功. 这个文件只应该让 root 可写.
+<DT><B>/etc/ssh/shosts.equiv
+
+</B>
+<DD>
+这个文件的用法和
+/etc/hosts.equiv
+
+完全一样. 用于允许
+<B></B>
+
+
+登录, 但不允许 rsh/rlogin 的时候.
+<DT><B>/etc/ssh/sshrc
+
+</B>
+<DD>
+当用户登录后, 运行 shell (或命令)前, 
+<B></B>
+
+
+执行这个文件中的命令. 详见
+<A HREF="/cgi-bin/man/man2html?8+sshd">sshd</A>(8)
+
+
+手册页.
+<DT><B>$HOME/.ssh/rc
+
+</B>
+<DD>
+当用户登录后, 运行 shell (或命令)前, 
+<B></B>
+
+
+执行这个文件中的命令. 详见
+<A HREF="/cgi-bin/man/man2html?8+sshd">sshd</A>(8)
+
+
+手册页.
+<DT><B>$HOME/.ssh/environment
+
+</B>
+<DD>
+含有关于环境变量的附加定义, 另见前面的
+Sx ENVIRONMENT
+
+节.
+</DL>
+<P>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>诊断 (DIAGNOSTICS)</H2>
+
+<B></B>
+
+
+结束时的状态码就是远端命令结束时的返回码, 如果发生了错误就返回255.
+<A NAME="lbAO">&nbsp;</A>
+<H2>作者 (AUTHORS)</H2>
+
+OpenSSH 源自最初 Tatu Ylonen 发表的自由 ssh 1.2.12.
+Aaron Campbell, Bob Beck, Markus Friedl, Niels Provos,
+Theo de Raadt 和 Dug Song 消除了许多 BUGS, 增加新的特征, 从而创建了 OpenSSH.
+Markus Friedl 贡献了对 SSH 协议1.5版和2.0版的支持.
+<A NAME="lbAP">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+rsh">rsh</A>(1),
+
+
+<A HREF="/cgi-bin/man/man2html?1+scp">scp</A>(1),
+
+
+<A HREF="/cgi-bin/man/man2html?1+sftp">sftp</A>(1),
+
+
+ssh-add1,
+
+
+ssh-agent1,
+
+
+ssh-keygen1,
+
+
+<A HREF="/cgi-bin/man/man2html?1+telnet">telnet</A>(1),
+
+
+ssh_config5,
+
+
+ssh-keysign8,
+
+
+<A HREF="/cgi-bin/man/man2html?8+sshd">sshd</A>(8)
+
+
+<DL COMPACT><DT><DD>
+T. Ylonen
+T. Kivinen
+M. Saarinen
+T. Rinne
+S. Lehtinen
+<I>&quot;SSH Protocol Architecture&quot;</I>
+draft-ietf-secsh-architecture-12.txt
+January 2002
+work in progress material
+</DL>
+
+<A NAME="lbAQ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;
+<A NAME="lbAR">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2004/06/11 第一版
+<A NAME="lbAS">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DL>
+<DT><A HREF="#lbAE">SSH 协议第一版</A><DD>
+<DT><A HREF="#lbAF">SSH 协议第二版</A><DD>
+<DT><A HREF="#lbAG">登录会话和远程执行</A><DD>
+<DT><A HREF="#lbAH">Escape 字符</A><DD>
+<DT><A HREF="#lbAI">X11 和 TCP 转发 (forwarding)</A><DD>
+<DT><A HREF="#lbAJ">服务器认证</A><DD>
+</DL>
+<DT><A HREF="#lbAK">配置文件 (CONFIGURATION FILES)</A><DD>
+<DT><A HREF="#lbAL">环境变量 (ENVIRONMENT)</A><DD>
+<DT><A HREF="#lbAM">文件 (FILES)</A><DD>
+<DT><A HREF="#lbAN">诊断 (DIAGNOSTICS)</A><DD>
+<DT><A HREF="#lbAO">作者 (AUTHORS)</A><DD>
+<DT><A HREF="#lbAP">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAQ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAR">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAS">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

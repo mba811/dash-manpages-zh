@@ -1,0 +1,107 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of tk_chooseDirectory</TITLE>
+</HEAD><BODY>
+<H1>tk_chooseDirectory</H1>
+Section: Tk Built-In Commands (3tk)<BR>Updated: 8.3<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tk_chooseDirectory - 弹出让用户选择一个目录的一个对话框。
+<P>
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>tk_chooseDirectory </B>?<I>option value ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+过程 <B>tk_chooseDirectory</B> 弹出一个对话框让用户选择一个目录。下列的<I>选项-值</I>对是可能的命令行参数:
+<DL COMPACT>
+<DT><B>-initialdir</B> <I>dirname</I><DD>
+指定在对话框弹出的时候应当显示在 <I>directory</I>中的目录。如果未指定这个参数，则显示在当前工作目录中的目录。如果这个参数指定了一个相对路径，返回值将把这个相对路径转换成一个绝对路径。这个选项在 Macintosh 上不是总可以工作的。但这不是一个缺陷，而是在 Mac 上的 <I>General Controls</I> 控制面板允许最终用户屏弃应用的缺省目录。
+<DT><B>-parent</B> <I>window</I><DD>
+使 <I>window</I> 成为这个对话框的逻辑父窗口。这个对话框显示在它的父窗口的顶上。
+<DT><B>-title</B> <I>titleString</I><DD>
+把一个字符串指定为这个对话框的标题。如果未指定这个选项，则显示一个缺省标题。
+<DT><B>-mustexist</B> <I>boolean</I><DD>
+指定用户是否可以指定不存在的目录。如果这个参数是真，则用户只能选择现存的目录。缺省为假。
+</DL>
+<P>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+tk_getOpenFile, tk_getSaveFile
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+directory selection dialog
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/05/17</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

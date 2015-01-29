@@ -1,0 +1,222 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CHGRP</TITLE>
+</HEAD><BODY>
+<H1>CHGRP</H1>
+Section: User Commands  (1)<BR>Updated: August 2000<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+chgrp - 改变文件的组所有权
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>chgrp [</B><I>选项</I><B>] </B><I>组文件...</I>
+
+<P>
+POSIX 选项:
+<B>[-R] [--]</B>
+
+<P>
+Austin 草拟选项:
+<B>[-hHLPR]</B>
+
+<P>
+GNU 团体指示:
+<B>[--reference=</B><I>rfile</I><B>]</B>
+
+<P>
+GNU 选项 (简易格式):
+<B>[-cfvR]</B>
+
+<B>[--help] [--version]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>chgrp</B>
+
+为给出的
+<B>file(文件)</B>
+
+改变它的组所有权.
+<I>group(组)</I>,
+
+可以是组名和组ID数字两者之一.
+<A NAME="lbAE">&nbsp;</A>
+<H2>POSIX 选项</H2>
+
+<DL COMPACT>
+<DT><B>-R</B>
+
+<DD>
+递归的改变目录和它的内容的组所有权
+(即使遇到错误也继续.)
+<DT><B>--</B>
+
+<DD>
+结束选项列表.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>AUSTIN 草拟选项</H2>
+
+<DL COMPACT>
+<DT><B>-h</B>
+
+<DD>
+对于给出的文件是符号链接的, 就改变符号链接的本身,这
+比改变它指乡的对象更好.如果系统不支持符号链接的组所
+有权,那就对它不起作用.
+<DT><B>-H</B> (half-logical[半逻辑？])
+
+<DD>
+(当和
+<B>-R</B>
+
+一起给出)
+给出的文件操作数书指向目录的符号链接时,改变这个目录
+和目录中文件的组所有权
+<DT><B>-L</B> (logical[(全)逻辑,想来是和上面的对应的])
+
+<DD>
+(当和
+<B>-R</B>
+
+一起给出.)
+给出的文件,不论是命令行操作数还是遍历整个树,操作数书
+指向目录的符号链接时, 改变这个目录和目录中文件的组所
+有权.
+<DT><B>-P</B> (physical)
+
+<DD>
+(当和
+<B>-R</B>
+
+一起给出.)
+对于一个文件,不论是命令行操作数还是遍历整个树, 是符号
+链接的,只改变它本身, 优于(改变)指向的对象如果系统不支
+持符号链接的组所有权,那就对它不起作用.这是默认值.
+<DT><B>-R</B>
+
+<DD>
+递归的改变目录和它的内容的组所有权
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>额外的 GNU 描述</H2>
+
+一个 GNU 扩展(最新的在fileutils 4.0里)允许
+<B>--reference=</B><I>rfile</I>
+
+作为组的描述:和
+<I>rfile</I>
+
+一样的组.
+<A NAME="lbAH">&nbsp;</A>
+<H2>GNU 选项</H2>
+
+<DL COMPACT>
+<DT><B>-c, --changes</B>
+
+<DD>
+详细描述对每一个文件的动作:实际上改变了哪个组。
+<DT><B>-f, --silent, --quiet</B>
+
+<DD>
+不列出错误信息.(那些组不能被改变).
+<DT><B>-h, --no-dereference</B>
+
+<DD>
+作用于符号链接本身代替它所指向的.
+仅可用于
+<B>lchown</B>
+
+系统调用被提供时.
+<DT><B>-v, --verbose</B>
+
+<DD>
+详细描述作用或没作用的所有
+<I>文件</I>.
+
+<DT><B>-R, --recursive</B>
+
+<DD>
+递归的改变目录和它的内容的组所有权
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>GNU 标准选项</H2>
+
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+显示使用方法到标准输出并退出.
+<DT><B>--version</B>
+
+<DD>
+显示版本信息到标准输出并退出.
+</DL>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>环境变量</H2>
+
+有以下变量是有通常的意义的 LANG, LC_ALL, LC_CTYPE 和 
+LC_MESSAGES.对于XSI-conforming系统:NLSPATH有通常的意
+义.
+<A NAME="lbAK">&nbsp;</A>
+<H2>符合到</H2>
+
+POSIX 1003.2 仅要求 -R 选项.使用其它选项不一定有效.
+<A NAME="lbAL">&nbsp;</A>
+<H2>注意</H2>
+
+这份
+<B>chgrp</B>
+
+描述同样可以在fileutils-4.0 包中找到;
+其它版本也许些微有些差别.
+把修正和更新邮到 <A HREF="mailto:aeb@cwi.nl">aeb@cwi.nl</A>.
+漏洞报告邮到 <A HREF="mailto:fileutils-bugs@gnu.ai.mit.edu">fileutils-bugs@gnu.ai.mit.edu</A>.
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Scorpio &lt;<A HREF="mailto:rawk@chinese.com">rawk@chinese.com</A>&gt;</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/19</B>
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">POSIX 选项</A><DD>
+<DT><A HREF="#lbAF">AUSTIN 草拟选项</A><DD>
+<DT><A HREF="#lbAG">额外的 GNU 描述</A><DD>
+<DT><A HREF="#lbAH">GNU 选项</A><DD>
+<DT><A HREF="#lbAI">GNU 标准选项</A><DD>
+<DT><A HREF="#lbAJ">环境变量</A><DD>
+<DT><A HREF="#lbAK">符合到</A><DD>
+<DT><A HREF="#lbAL">注意</A><DD>
+<DT><A HREF="#lbAM">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAN">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAO">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

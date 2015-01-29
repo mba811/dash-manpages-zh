@@ -1,0 +1,269 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of FINGER</TITLE>
+</HEAD><BODY>
+<H1>FINGER</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+<BR>BSD mandoc<BR>
+Linux NetKit (0.16)
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>finger</B>
+
+ - 用户信息查找程序
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>finger</B>
+
+[-<B>lmsp</B>
+
+]
+
+[<I>user ...</I>
+
+]
+
+[<I><A HREF="mailto:user@host">user@host</A> ...</I>
+
+]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+The
+<B>finger</B>
+
+显示关于系统用户的信息
+<P>
+
+参数:
+<DL COMPACT>
+<P>
+
+<DT><B>-s</B>
+
+
+<DD>
+<B>Finger</B>
+
+显示用户的登录名, 真名, 终端名 以及写
+状态(如果写被禁止，在终端名后显示一个``*''),
+空闲时间,登录时间,办公地点和电话等。
+<P>
+
+登录时间显示为月,天,小时和分钟，如果是超过6个月以前，则
+显示年份，而不是小时和分钟。
+<P>
+
+不明设备以及不存在的空闲时间和登录时间显示为一个星号。
+<P>
+
+<DT><B>-l</B>
+
+
+<DD>
+产生一个多行显示来描述信息
+-<B>s</B>
+
+关于用户家目录，家庭电话，登录脚本，邮件状态和文件的内容
+``.plan
+
+''
+
+和
+``.project
+
+''
+
+和
+``.forward
+
+''
+
+从用户的家目录.
+<P>
+
+11位数字电话号码显示为 ``+N-NNN-NNN-NNNN''.
+十位或七位数字可以显示为它的子集。
+五位数字电话号码显示为 ``xN-NNNN''.
+四位数字电话号码显示为 ``xNNNN''.
+<P>
+
+如果对设备写被禁止, 短语 ``(messages off)''
+被附加在有此设备的行后边.
+每一个用户有一个条目，用
+-<B>l</B>
+
+选项; 如果一个用户多次登录, 终端信息
+按每次登录重复显示。.
+<P>
+
+如果什么邮件都没有，邮件信息显示为``No Mail.'', 如果当新邮件来后，
+已经查看过信箱，为``Mail last read DDD MMM ## HH:MM YYYY (TZ)'' 
+如果有新邮件，则为 ``New mail received ...'',``  Unread since ...''
+<P>
+
+<DT><B>-p</B>
+
+
+<DD>
+防止
+<B>finger</B>
+
+-<B>l</B>
+
+选项
+显示
+``.plan
+
+''
+
+<BR>&nbsp;和
+``.project
+
+''
+
+文件的内容。
+<DT><B>-m</B>
+
+
+<DD>
+防止
+<I>user</I>
+
+名字的匹配.
+<I>User</I>
+
+通常是一个登录名; 可是, 也会对用户的真实名字
+进行匹配, 除非提供
+-<B>m</B>
+
+选项.
+所有由
+<B>finger</B>
+
+进行的名字匹配是区分大小写的
+</DL>
+<P>
+
+<P>
+
+不指定
+<B>finger</B>
+
+的选项
+如果提供操作者的话，
+缺省设为
+-<B>l</B>
+
+输出风格，否则为
+-<B>s</B>
+
+风格.
+注意在两种格式中，如果信息不足，
+都有一些域可能丢失,
+<P>
+
+如果没有指定参数
+<B>finger</B>
+
+会为当前登录的每个用户打印一个条目.
+<P>
+
+<B>Finger</B>
+
+可以用来查看远地机器上的用户信息
+格式是指定
+<I>user</I>
+
+为
+``<B><A HREF="mailto:user@host">user@host</A></B>
+
+''
+
+ 
+或
+``<B>@host</B>
+
+''
+
+ 
+前者的缺省输出为
+-<B>l</B>
+
+风格, 后者的缺省输出为
+-<B>s</B>
+
+风格.
+-<B>l</B>
+
+是唯一的向远地机器传递的选项.
+<P>
+
+如果标准输出是一个socket 
+<B>finger</B>
+
+会在每个换行符前插入回车符。这是为了处理由以下调用的远程finger请求
+<A HREF="/cgi-bin/man/man2html?8+fingerd">fingerd</A>(8).
+
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 </H2>
+
+<A HREF="/cgi-bin/man/man2html?1+chfn">chfn</A>(1),
+
+
+<A HREF="/cgi-bin/man/man2html?1+passwd">passwd</A>(1),
+
+
+<A HREF="/cgi-bin/man/man2html?1+w">w</A>(1),
+
+
+<A HREF="/cgi-bin/man/man2html?1+who">who</A>(1)
+
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>历史 </H2>
+
+<B>finger</B>
+
+命令出现在
+BSD 3.0 
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+hunter77 &lt;<A HREF="mailto:tzb@kali.com.cn">tzb@kali.com.cn</A>&gt;
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2001/04/01
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">参见 </A><DD>
+<DT><A HREF="#lbAF">历史 </A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,124 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of BLOCKDEV</TITLE>
+</HEAD><BODY>
+<H1>BLOCKDEV</H1>
+Section: Maintenance Commands (8)<BR>Updated: May 2000<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+blockdev - 从命令行调用区块设备控制程序
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览（SYNOPSIS）</H2>
+
+<B>blockdev</B>
+
+[<I>options</I>]
+
+<I>commands devices</I>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述（DESCRIPTION）</H2>
+
+<B>blockdev</B>
+
+工具允许从命令行调用区块设备控制程序。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项（OPTIONS）</H2>
+
+<DL COMPACT>
+<DT><B>-V</B>
+
+<DD>
+打印版本信息并退出。
+<DT><B>-q</B>
+
+<DD>
+安静。
+<DT><B>-v</B>
+
+<DD>
+详细信息。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>命令（COMMANDS）</H2>
+
+<DL COMPACT>
+<DT><B>--setro</B>
+
+<DD>
+设置只读模式。
+<DT><B>--setrw</B>
+
+<DD>
+设置读写模式。
+<DT><B>--getro</B>
+
+<DD>
+只读模式检测。如果是只读模式，显示1，否则显示0。
+<DT><B>--getss</B>
+
+<DD>
+用字节为单位打印扇区大小——一般是512字节。
+<DT><B>--getsize</B>
+
+<DD>
+显示设备容量（使用512个字节大小的扇区为单位）
+<DT><B>--setra</B><I> N</I>
+
+<DD>
+设置预读扇区（512字节）为
+<I>N</I>
+
+个。
+<DT><B>--getra</B>
+
+<DD>
+打印预读扇区（512字节）
+<DT><B>--flushbufs</B>
+
+<DD>
+刷新缓存。
+<DT><B>--rereadpt</B>
+
+<DD>
+重读分区表。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>billpan &lt;<A HREF="mailto:billpan@netease.com">billpan@netease.com</A>&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002/01/10</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览（SYNOPSIS）</A><DD>
+<DT><A HREF="#lbAD">描述（DESCRIPTION）</A><DD>
+<DT><A HREF="#lbAE">选项（OPTIONS）</A><DD>
+<DT><A HREF="#lbAF">命令（COMMANDS）</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

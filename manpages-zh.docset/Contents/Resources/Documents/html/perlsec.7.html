@@ -1,0 +1,659 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of PERLSEC</TITLE>
+</HEAD><BODY>
+<H1>PERLSEC</H1>
+Section: Perl Programmers Reference Guide (7)<BR>Updated: 2003-11-25<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+perlsec - Perl 安全
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<A NAME="ixAAC"></A>
+Perl可以轻松写出安全的程序，即使运行时有特殊权限，比如setuid或setgid程序。许多脚本的命令行里有多项替换语句，Perl却不是这样，它使用更多传统方法而少有艰深。而且，由于perl语言有更多内在功能，它可以更少的依赖于其他（可能不可信的）程序来完成根本目的。
+<P>
+
+<BR>&nbsp;当Perl检测到程序中真实的用户或组ID与有效用户或组ID不同时，它自动地开启一种叫做“污染模式”特殊的安全性检测。setuid的unix的权限位是04000，setgid&nbsp;的UNIX权限位是02000；它们都有可能被设置。你也可以用命令行标识&nbsp;<B>-T</B>&nbsp;明确地开启“污染模式”。强烈建议服务器程序或者在以其他人身份运行的程序（比如CGI脚本）使用此标识符。一旦污染模式被打开，它在脚本的余下内容中一直开启。
+<P>
+
+在“污染模式”中，Perl使用叫做“污染检测”的特殊预防方法来防止明显的和不易被察觉的陷阱。一些检测相当简单，如检查路径目录以确定它们对其他人是不可写的；小心的程序员一向做此类检测。其他的检测已经得到Perl本身最好的支持，这些检测尤其使写一个set-id的Perl程序比相应的C程序更安全。
+<P>
+
+你不可以使用来自程序之外的数据来影响程序之外的事情——至少不是偶然的。所有命令行参数，环境变量，本地信息（参见perllocale），特定系统调用的结果（readdir(),readlink(),shmread()的变量,msgrcv()的返回信息,getpwxxx()调用返回的密码、gcos和shell域）和所有文件输入都被标记成“污染的”。“污染的”数据既不可以直接或间接在任何调用一个子shell命令中使用，也不能在任何修改文件、目录或进程的命令中使用，但有以下例外：
+<DL COMPACT>
+<DT>&bull;<DD>
+print和syswrite的参数不被检查是否被污染。
+<DT>&bull;<DD>
+符号方法
+
+
+<P>
+
+
+
+
+<PRE>
+    $obj-&gt;$method(@args);
+
+</PRE>
+
+
+
+
+<P>
+
+
+以及符号的子引用
+
+
+<P>
+
+
+
+
+<PRE>
+    &amp;{$foo}(@args);
+    $foo-&gt;(@args);
+
+</PRE>
+
+
+
+
+<P>
+
+
+不会被检查是否被污染。这要求额外的小心，除非你希望外部数据影响你的控制流。除非你小心地限制这些符号值是什么，人们可以从 Perl 代码外部调用函数，类似 POSIX::system，来运行任意外部代码。
+</DL>
+<P>
+
+为了效率原因，Perl 对数据是否已被污染持保守的看法。如果一个表达式包含污染的数据，任何子表达式都被认为污染的，即使自表达式的值与污染的数据无关
+<P>
+
+由于污染与每个标量值相关，一个数组或散列的元素可以只有一部分被污染。散列的键永远不会被污染。
+<P>
+
+例如：
+<P>
+
+
+
+<PRE>
+    $arg = shift;               # $arg 是污染的
+    $hid = $arg, 'bar';         # $hid 也是污染的
+    $line = &lt;&gt;;                 # 污染的
+    $line = &lt;STDIN&gt;;            # 仍旧是污染的
+    open FOO, &quot;/home/me/bar&quot; or die $!;
+    $line = &lt;FOO&gt;;              # 还是污染的
+    $path = $ENV{'PATH'};       # 污染的, 但是请看下面
+    $data = 'abc';              # 非污染的
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    system &quot;echo $arg&quot;;         # 不安全的
+    system &quot;/bin/echo&quot;, $arg;   # 认为不安全
+                                # (Perl 不知道 /bin/echo)
+    system &quot;echo $hid&quot;;         # 不安全的
+    system &quot;echo $data&quot;;        # 如果PATH被设定，那么才是安全的
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $path = $ENV{'PATH'};       # $path 现在是污染的
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $ENV{'PATH'} = '/bin:/usr/bin';
+    delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $path = $ENV{'PATH'};       # $path 现在不是污染的
+    system &quot;echo $data&quot;;        # 现在是安全的!
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    open(FOO, &quot;&lt; $arg&quot;);        # OK - 只读文件
+    open(FOO, &quot;&gt; $arg&quot;);        # Not OK - 试图去写
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    open(FOO,&quot;echo $arg|&quot;);     # Not OK
+    open(FOO,&quot;-|&quot;)
+        or exec 'echo', $arg;   # 同样 not OK
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $shout = `echo $arg`;       # 不安全的, $shout 现在是污染的
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    unlink $data, $arg;         # 不安全的
+    umask $arg;                 # 不安全的
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    exec &quot;echo $arg&quot;;           # 不安全的
+    exec &quot;echo&quot;, $arg;          # 不安全的
+    exec &quot;sh&quot;, '-c', $arg;      # 非常不安全！
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    @files = &lt;*.c&gt;;             # 不安全的 (使用 readdir() 或其他)
+    @files = glob('*.c');       # 不安全的 (使用 readdir() 或其他)
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    # In Perl releases older than 5.6.0 the &lt;*.c&gt; and glob('*.c') would
+    # have used an external program to do the filename expansion; but in
+    # either case the result is tainted since the list of filenames comes
+    # from outside of the program.
+
+</PRE>
+
+
+<P>
+
+
+
+<PRE>
+    $bad = ($arg, 23);          # $bad will be tainted
+    $arg, `true`;               # Insecure (although it isn't really)
+
+</PRE>
+
+
+<P>
+
+如果你试图做一些不安全的事情，你会得到类似&quot;Insecure dependency&quot;或&quot;Insecure $ENV{PATH}&quot;的致命错误。
+
+<BR>
+
+
+
+<P>
+
+<B>Laundering and Detecting Tainted Data 清洗和检测污染数据</B>
+<P>
+
+
+<A NAME="ixAAD"></A>
+测试一个变量是否含有污染的数据，谁的用法会引发一条&quot;Insecure dependency&quot;信息，在你附近的CPAN镜像查找Taint.pm模块，它应该在1997年左右就可以得到 。或者你可以用is_tainted()函数。
+<P>
+
+
+
+<PRE>
+    sub is_tainted {
+        return ! eval { eval(&quot;#&quot; . substr(join(&quot;&quot;, @_), 0, 0)); 1 };
+    }
+
+</PRE>
+
+
+<P>
+
+此函数利用了“表达式中任何一部分存在的污染数据致使整个表达式都被污染”。操作员测试每个参数是否被污染会使效率低下。相反，稍稍高效且稳定的方法是，只要一个表达式中任何一部分存取一个被污染的值，那么这个表达式被认为是被污染的。
+<P>
+
+但是仅仅测试数据是否被污染还不够。有时你必须清除数据的污染。唯一的通过污染机制的方法是引用正则表达式中的一个子模式。Perl假定如果你用$1, $2等等引用一个子串，那么你就知道你在做什么。也就是说你必须思考而不是盲目的解除污染，或者违抗整个机制。校验变量是否只含有好的字符（已知的好的字符）比检查它是否含有坏的字符要好。是因为很可能就把意料之外的坏字符漏掉。
+<P>
+
+下面的例子是一个检查数据中是否只含有单词（字母、数字、下划线）、连字符、'@'符号或者是'.'。
+<P>
+
+
+
+<PRE>
+    if ($data =~ /^([-\@\w.]+)$/) {
+        $data = $1;                     # $data now untainted
+    } else {
+        die &quot;Bad data in '$data'&quot;;      # log this somewhere
+    }
+
+</PRE>
+
+
+<P>
+
+这完全没有问题，因为//从理论上讲会不安全，因为它匹配任何字符，而Perl将不再检查它们。我们的经验是当你解除污染时，必须对匹配模式极其的小心。使用正则表达式清洗数据是解除污染的唯一机制，除非你使用下面才详细叙述的派生一个特权被降低的字进程的方法。
+<P>
+
+如果程序中使用了use locale，那么上面的例子将不会解除$data的污染，因为��符是由locale决定的。Perl认为locale的定义是不可信的，因为它们包含程序之外 的数据。如果你在写一个locale-aware的程序，并且想使用包含��表达式之前加上no locale。参见perllocale/SECURITY以获 得更多的信息。
+
+<BR>
+
+
+
+<P>
+
+<B>#!行的开关</B>
+<P>
+
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>``#!''行的开关</B>
+<P>
+
+
+
+<A NAME="ixAAE"></A>
+当你使脚本程序可执行，就是可以像命令一样让它们工作时，系统会把&quot;#!&quot;行的开关传递给Perl。Perl检查setuid（或setgid）程序的任何和&quot;#!&quot;行开关匹配的命令行开关。一些Unix或Unix-like系统环境强制在&quot;#!&quot;行使用一个开关，所以你也许必须用类似-wU的开关而不是-w -U。（这个问题只出现在支持#!、setuid、setgid脚本的Unix或Unix-like系统环境中）
+
+<BR>
+
+
+
+<P>
+
+<B>Taint mode and @INC</B>
+<P>
+
+
+
+
+<BR>
+
+
+
+<P>
+
+<B>Taint mode and <TT>@INC</TT></B>
+<P>
+
+
+
+<A NAME="ixAAF"></A>
+When the taint mode (<TT>&quot;-T&quot;</TT>) is in effect, the ``.'' directory is removed
+from <TT>@INC</TT>, and the environment variables <TT>&quot;PERL5LIB&quot;</TT> and <TT>&quot;PERLLIB&quot;</TT>
+are ignored by Perl. You can still adjust <TT>@INC</TT> from outside the
+program by using the <TT>&quot;-I&quot;</TT> command line option as explained in
+perlrun. The two environment variables are ignored because
+they are obscured, and a user running a program could be unaware that
+they are set, whereas the <TT>&quot;-I&quot;</TT> option is clearly visible and
+therefore permitted.
+<P>
+
+Another way to modify <TT>@INC</TT> without modifying the program, is to use
+the <TT>&quot;lib&quot;</TT> pragma, e.g.:
+<P>
+
+
+
+<PRE>
+  perl -Mlib=/foo program
+
+</PRE>
+
+
+<P>
+
+The benefit of using <TT>&quot;-Mlib=/foo&quot;</TT> over <TT>&quot;-I/foo&quot;</TT>, is that the former
+will automagically remove any duplicated directories, while the later
+will not.
+
+<BR>
+
+
+
+<P>
+
+<B>Cleaning Up Your Path 清理路径</B>
+<P>
+
+
+<A NAME="ixAAG"></A>
+对于&quot;Insecure $ENV{PATH}&quot;这样的信息，你必须把$ENV{PATH}设置为已知的，并且路径中的任何目录都对于非本用户或非本组成员不可写。你也许会在即使路径名是完全合法的情况下收到那条信息表示非常惊讶。当你没有提供程序一个完整的路径时，它不会被引起；相反，若你从未设置PATH环境变量，或者你没有把它设置安全，它就会被引起。因为Perl不能保证可疑的可执行程序是不是它本身将执行其他的依赖于PATH的程序，它确定是你设定的PATH。
+<P>
+
+PATH不是唯一可能导致问题的变量。因为一些shell会使用IFS，CDPATH，ENV和BASH_ENV，Perl在开始子进程时检查它们是否也为空或者未污染。你也许会在你的set-id和污染检测模式下的脚本程序中加入这些东西：
+<P>
+
+
+
+<PRE>
+    delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};   # 使 %ENV 更安全
+
+</PRE>
+
+
+<P>
+
+当然，无论是否使用污染变量都有可能出现麻烦。在处理任何由用户提供的文件名的文件时，要做周密的测试。必须时，可以在去掉用户（或组！）的特权之后再进行类似open的操作。Perl不阻止你打开污染的文件名并读取内容，所以要小心对待打印出的内容。污染机制的目的是防止愚蠢的错误，不是使人懒惰不去思考。
+<P>
+
+当你传递给system和exec明确的参数列表而非含有通配符的字符串时，Perl不会调用shell去扩展通配符。不幸的是，open，glob，backtick（译注：backtick为反引号）函数并不提供这样的特性，所以当使用它们的时候必须非常仔细。
+<P>
+
+Perl为从一个setuid或setgid程序打开文件或管道提供了一个安全的方法：创建一个减少权限的子进程来为你完成那些“肮脏”的工作。首先，用特殊的OPEN语法创建一个子进程，使其和父进程通过一个管道相连。现在子进程把它的ID和其他诸如环境变量，umask，当前工作目录的性质重新设置回原始的或安全的变量。然后让该不具有任何特权的子进程来完成OPEN和其他的系统调用。最终，子进程把它成功存取的数据传递给父进程。因为文件或管道是由运行于比父进程权限低的子进程打开的，所以它不容易被欺骗去做它不该做的事情。
+<P>
+
+这里有一个安全使用backtick的方法。注意当shell可能扩展时，exec是如何不被调用的。这是目前来调用可能被shell转义的东西最好的方法：从不调用shell。
+<P>
+
+
+
+<PRE>
+        use English '-no_match_vars';
+        die &quot;Can't fork: $!&quot; unless defined($pid = open(KID, &quot;-|&quot;));
+        if ($pid) {           # parent
+            while (&lt;KID&gt;) {
+                # do something
+            }
+            close KID;
+        } else {
+            my @temp     = ($EUID, $EGID);
+            my $orig_uid = $UID;
+            my $orig_gid = $GID;
+            $EUID = $UID;
+            $EGID = $GID;
+            # Drop privileges
+            $UID  = $orig_uid;
+            $GID  = $orig_gid;
+            # Make sure privs are really gone
+            ($EUID, $EGID) = @temp;
+            die &quot;Can't drop privileges&quot;
+                unless $UID == $EUID  &amp;&amp; $GID eq $EGID;
+            $ENV{PATH} = &quot;/bin:/usr/bin&quot;; # Minimal PATH.
+            # Consider sanitizing the environment even more.
+            exec 'myprog', 'arg1', 'arg2'
+                or die &quot;can't exec myprog: $!&quot;;
+        }
+
+</PRE>
+
+
+<P>
+
+<BR>&nbsp;使用类似的策略可以让glob使用通配符扩展，虽然也可以用readdir。
+<P>
+
+当你虽然相信自己并没有写有问题的程序，但并不信任程序的最终使用者不会企图让它做坏事时，污染检测最为有用。此类安全检查对set-id和以其他用户身份运行的程序（如CGI）非常有用。
+<P>
+
+若连程序的作者都不可信的话，情况就不同了。当某人给你一段程序并和你说，“给，试试看。”对于此类安全问题，使用包含在Perl发行版中的Safe模块。这个模块允许程序员建立特殊的隔间，在其中所有的系统调用都被截获，并且名字空间入口被严格控制。
+
+<BR>
+
+
+
+<P>
+
+<B>Security Bugs 安全问题</B>
+<P>
+
+
+<A NAME="ixAAH"></A>
+除了源于赋予像脚本一样灵活的系统特权这类明显的问题，在许多Unix版本中，set-id脚本从一开始就是天生不安全的。问题出在内核的条件竞争。在内核打开文件来查看应该运行哪个解释器和当（现在已set-id）解释器回过头来重新打开文件并解释它的这两个事件之间，可疑的文件也许已经改变了，特别是当系统中有符号连接时。
+<P>
+
+幸运的是，这个内核的“特性”有时可以被关闭。不幸的是，有两个方法来关闭它。系统可以简单的宣布任何含有set-id位的脚本都是不合法的，这个显然用处不大。另一个是忽略脚本中的set-id位。如果后者被设置为真，那么当Perl注意到其它脚本中无效的setuid/gid位时,它可以模仿 setuid和setgid的机制。这是通过一个叫做suidperl的特殊程序来实现的，它在需要时自动被调用。
+<P>
+
+但是，如果内核的set-id脚本特性没有被关闭，Perl就会大声抱怨你的set-id程序是不安全的。你要么需要关闭内核的set-id脚本特性，要么为脚本制作一个C Wrapper。一个C Wrapper就是一个除了调用你的Perl程序其他什么都不干的已编译程序。已编译程序不受此内核问题的影响去找set-id脚本的麻烦。这里有一个简单的C Wrapper：
+<P>
+
+
+
+<PRE>
+    #define REAL_PATH &quot;/path/to/script&quot;
+    main(ac, av)
+        char **av;
+    {
+        execv(REAL_PATH, av);
+    }
+
+</PRE>
+
+
+<P>
+
+把此C Wrapper编译成可执行二进制文件，对它setuid或setgid而不是你的脚本。
+<P>
+
+近几年，软件商开始提供没有此安全问题的系统。在它们中，当内核把将要被打开的set-id脚本的名字传递给解释器时，它将不会传递可能出现问题的路径名而是传递/dev/fd/3。这是一个已经在脚本上打开的特殊文件，所以将不会出现条件竞争问题。在这些系统中，Perl需要在编译时带上-DSETUID_SCRIPTS_ARE_SECURE_NOW参数。Configure程序将自己完成这个任务，所以你永远不必要自己指出此点。现在SVR4和BSD4.4都采用此种方法来避免内核条件竞争。
+<P>
+
+在Perl 5.6.1 发行之前，suidperl的代码问题可能导致安全漏洞。
+
+<BR>
+
+
+
+<P>
+
+<B>Protecting Your Programs 保护你的程序</B>
+<P>
+
+
+<A NAME="ixAAI"></A>
+有很多种方法可以隐藏你的Perl程序源代码，它们具有不同等级的“安全性”。
+<P>
+
+首先，你不能去掉“读”权限，因为源代码必须在被读取之后才能编译和解释。（这并不意味着CGI脚本的源代码在网上是可被读取的）所以你必须把权限设置为对外界友好的0755。这使在你本地系统上的人只能查看源代码。
+<P>
+
+一些人错误的认为这是一个安全问题。如果你的程序不安全，而你依赖人们不知道如何利用这些漏洞，这是不安全的。通常某些人在没有看源代码的情况下就可以利用这些漏洞。以隐藏来实现所谓的“安全”而不是修复漏洞，是非常不安全的。
+<P>
+
+你可以试着通过源代码过滤器（CPAN上的Filter::*）来实现加密。但是骇客有可能把它解密。你可以试着使用下面描述的字节码编译器和解释器，但是骇客有可能把它反编译。这些对想看你代码的人造成不同难度的困难。但是没有一种可以完全的避免（不光是Perl，所有语言都一样）。
+<P>
+
+如果你担心有人会通过你的程序得利，那么你可以在最低行写一个限制性的许可证来寻求法律保护。当然如果你用类似“这是某某公司的私人程序，你无权使用它”的声明来授权你的软件并发布它的话，那会是非常危险的。你应该找一个律师确定你的许可证的措辞可以在法庭上站得住脚。
+
+<BR>
+
+
+
+<P>
+
+<B>Unicode</B>
+<P>
+
+
+<A NAME="ixAAJ"></A>
+Unicode is a new and complex technology and one may easily overlook
+certain security pitfalls.  See perluniintro for an overview and
+perlunicode for details, and ``Security Implications of Unicode'' in perlunicode for security implications in particular.
+
+<BR>
+
+
+
+<P>
+
+<B>Algorithmic Complexity Attacks</B>
+<P>
+
+
+<A NAME="ixAAK"></A>
+Certain internal algorithms used in the implementation of Perl can
+be attacked by choosing the input carefully to consume large amounts
+of either time or space or both.  This can lead into the so-called
+<I>Denial of Service</I> (DoS) attacks.
+<DL COMPACT>
+<DT>&bull;<DD>
+Hash Function - the algorithm used to ``order'' hash elements has been
+changed several times during the development of Perl, mainly to be
+reasonably fast.  In Perl 5.8.1 also the security aspect was taken
+into account.
+
+
+<P>
+
+
+In Perls before 5.8.1 one could rather easily generate data that as
+hash keys would cause Perl to consume large amounts of time because
+internal structure of hashes would badly degenerate.  In Perl 5.8.1
+the hash function is randomly perturbed by a pseudorandom seed which
+makes generating such naughty hash keys harder.
+See ``<FONT SIZE="-1">PERL_HASH_SEED</FONT>'' in perlrun for more information.
+
+
+<P>
+
+
+The random perturbation is done by default but if one wants for some
+reason emulate the old behaviour one can set the environment variable
+<FONT SIZE="-1">PERL_HASH_SEED</FONT> to zero (or any other integer).  One possible reason
+for wanting to emulate the old behaviour is that in the new behaviour
+consecutive runs of Perl will order hash keys differently, which may
+confuse some applications (like Data::Dumper: the outputs of two
+different runs are no more identical).
+
+
+<P>
+
+
+<B>Perl has never guaranteed any ordering of the hash keys</B>, and the
+ordering has already changed several times during the lifetime of
+Perl 5.  Also, the ordering of hash keys has always been, and
+continues to be, affected by the insertion order.
+
+
+<P>
+
+
+Also note that while the order of the hash elements might be
+randomised, this ``pseudoordering'' should <B>not</B> be used for
+applications like shuffling a list randomly (use <I>List::Util::shuffle()</I>
+for that, see List::Util, a standard core module since Perl 5.8.0;
+or the <FONT SIZE="-1">CPAN</FONT> module Algorithm::Numerical::Shuffle), or for generating
+permutations (use e.g. the <FONT SIZE="-1">CPAN</FONT> modules Algorithm::Permute or
+Algorithm::FastPermute), or for any cryptographic applications.
+<DT>&bull;<DD>
+Regular expressions - Perl's regular expression engine is so called
+<FONT SIZE="-1">NFA</FONT> (Non-Finite Automaton), which among other things means that it can
+rather easily consume large amounts of both time and space if the
+regular expression may match in several ways.  Careful crafting of the
+regular expressions can help but quite often there really isn't much
+one can do (the book ``Mastering Regular Expressions'' is required
+reading, see perlfaq2).  Running out of space manifests itself by
+Perl running out of memory.
+<DT>&bull;<DD>
+Sorting - the quicksort algorithm used in Perls before 5.8.0 to
+implement the <I>sort()</I> function is very easy to trick into misbehaving
+so that it consumes a lot of time.  Nothing more is required than
+resorting a list already sorted.  Starting from Perl 5.8.0 a different
+sorting algorithm, mergesort, is used.  Mergesort is insensitive to
+its input data, so it cannot be similarly fooled.
+</DL>
+<P>
+
+See &lt;<A HREF="http://www.cs.rice.edu/~scrosby/hash/">http://www.cs.rice.edu/~scrosby/hash/</A>&gt; for more information,
+and any computer science text book on the algorithmic complexity.
+<A NAME="lbAD">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<A NAME="ixAAL"></A>
+perlrun中关于清理环境变量的描述
+<A NAME="lbAE">&nbsp;</A>
+<H2>中文版维护人</H2>
+
+<B>nan1nan1  &lt;<A HREF="mailto:nan1nan1@hotmail.com">nan1nan1@hotmail.com</A>&gt;</B>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>中文版最新更新</H2>
+
+<B>2001年12月23日星期日</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>中文手册页翻译计划</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAD">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAE">中文版维护人</A><DD>
+<DT><A HREF="#lbAF">中文版最新更新</A><DD>
+<DT><A HREF="#lbAG">中文手册页翻译计划</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,128 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MKFIFO</TITLE>
+</HEAD><BODY>
+<H1>MKFIFO</H1>
+Section: User Commands  (1)<BR>Updated: 1998年11月<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称）</H2>
+
+mkfifo - 创建FIFO(命名管道）
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览）</H2>
+
+<B>mkfifo [</B><I>options</I><B>] </B><I>file...</I>
+
+<P>
+POSIX options(选项）：
+<B>[-m </B><I>mode</I><B>]</B>
+
+<P>
+GNU options(选项）（最短格式）：
+<B>[-m </B><I>mode</I><B>] [--help] [--version] [--]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<B>mkfifo</B>
+
+使用指定的文件名创建FIFO(也称为&quot;命名管道&quot;).
+<P>
+
+&quot;FIFO&quot;是一种特殊的文件类型，它允许独立的进程通讯.
+一个进程打开FIFO文件进行写操作,而另一个进程对之进行读操作,
+然后数据便可以如同在shell或者其它地方常见的的匿名管道一样流线执行.
+<P>
+
+默认情况下,创建的FIFO的模式为0666('a+rw')减去umask中设置的位.
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS(选项)</H2>
+
+<DL COMPACT>
+<DT><B>-m </B><I>mode</I><B>, --mode=</B><I>mode</I>
+
+<DD>
+设置创建的FIFO的模式为
+<I>mode</I>,
+
+这可以是
+<B><A HREF="/cgi-bin/man/man2html?1+chmod">chmod</A>(1)</B>
+
+中的符号模式,并使用默认模式作为起始点.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>GNU STANDARD OPTIONS(GNU标准选项)</H2>
+
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+在标准输出上打印一条用法信息,并以成功状态退出.
+<DT><B>--version</B>
+
+<DD>
+在标准输出上打印版本信息,然后以成功状态退出.
+<DT><B>--</B>
+
+<DD>
+终止选项列表.
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>ENVIRONMENT(环境变量)</H2>
+
+变量LANG, LC_ALL, LC_CTYPE和LC_MESSAGES取其常用义.
+<A NAME="lbAH">&nbsp;</A>
+<H2>CONFORMING TO(遵循规则)</H2>
+
+POSIX 1003.2
+<A NAME="lbAI">&nbsp;</A>
+<H2>NOTES(备注）</H2>
+
+本页介绍了包含在fileutils-4.0包中的
+<B>mkfifo ;</B>
+
+其他版本可能会有细微差别.
+请把您的修正和增补建议发邮件到<A HREF="mailto:aeb@cwi.nl">aeb@cwi.nl</A>.报告程序中的bug请发到
+<A HREF="mailto:fileutils-bugs@gnu.ai.mit.edu">fileutils-bugs@gnu.ai.mit.edu</A>.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/19</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称）</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览）</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAE">OPTIONS(选项)</A><DD>
+<DT><A HREF="#lbAF">GNU STANDARD OPTIONS(GNU标准选项)</A><DD>
+<DT><A HREF="#lbAG">ENVIRONMENT(环境变量)</A><DD>
+<DT><A HREF="#lbAH">CONFORMING TO(遵循规则)</A><DD>
+<DT><A HREF="#lbAI">NOTES(备注）</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,127 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of HEAD</TITLE>
+</HEAD><BODY>
+<H1>HEAD</H1>
+Section: FSF (1)<BR>Updated: 1999年12月<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+head - 输出文件的开始部分
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>../src/head</B>
+
+[<I>OPTION</I>]... [<I>FILE</I>]...
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+
+<P>
+
+在标准输出上显示每个FILE的起始10行.
+如果多于一个FILE,则一个接一个地显示,
+并且在每个文件显示的首部给出文件名.
+如果没有FILE,或者FILE为-,
+那么就从标准输入上读取.
+<DL COMPACT>
+<DT><B>-c</B>, <B>--bytes</B>=<I>SIZE</I><DD>
+打印起始的SIZE字节
+<DT><B>-n</B>, <B>--lines</B>=<I>NUMBER</I><DD>
+显示起始的NUMBER行,而非默认的起始10行
+<DT><B>-q</B>, <B>--quiet</B>, <B>--silent</B><DD>
+从不显示给出文件名的首部
+<DT><B>-v</B>, <B>--verbose</B><DD>
+总是显示给出文件名的首部
+<DT><B>--help</B><DD>
+显示帮助后退出
+<DT><B>--version</B><DD>
+输出版本信息后退出
+</DL>
+<P>
+
+SIZE可以有一个倍数后缀:
+b表示512,k表示1K,m表示1M.
+如果第一个OPTION(选项)为<B>-VALUE</B>,
+当后面连接着倍数bkm之一时,则读为<B>-c</B> VALUE,
+否则读为<B>-n</B> VALUE.
+<A NAME="lbAE">&nbsp;</A>
+<H2>AUTHOR(作者)</H2>
+
+David MacKenzie.
+<A NAME="lbAF">&nbsp;</A>
+<H2>REPORTING BUGS(报告bugs)</H2>
+
+请报告bugs到&lt;<A HREF="mailto:bug-textutils@gnu.org">bug-textutils@gnu.org</A>&gt;.
+<A NAME="lbAG">&nbsp;</A>
+<H2>COPYRIGHT(版权)</H2>
+
+Copyright &#169; 1999 Free Software Foundation, Inc.
+<BR>
+
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<B>head</B>
+
+的完整文档是以Texinfo手册形式维护的.
+如果
+<B>info</B>
+
+和
+<B>head</B>
+
+程序在你那儿都已经安装好了,那么命令
+<DL COMPACT>
+<DT><DD>
+<B>info head</B>
+
+</DL>
+<P>
+
+应该会让你访问到整篇手册.
+<P>
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/14</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAE">AUTHOR(作者)</A><DD>
+<DT><A HREF="#lbAF">REPORTING BUGS(报告bugs)</A><DD>
+<DT><A HREF="#lbAG">COPYRIGHT(版权)</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

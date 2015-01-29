@@ -1,0 +1,210 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MINGETTY</TITLE>
+</HEAD><BODY>
+<H1>MINGETTY</H1>
+Section: Linux Programmer's Manual (8)<BR>Updated: 6 Apr 1996<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+mingetty - 控制台最小的 getty
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>mingetty</B>
+
+[--noclear] [--nonewline] [--noissue] [--nohangup] [--nohostname]
+[--long-hostname] [--loginprog=/bin/login] [--nice=10] [--delay=5]
+[--chdir=/home] [--chroot=/chroot] [--autologin username]
+<I>tty</I>
+
+<P>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<B>mingetty </B>
+
+是一个用于虚拟终端的最小的 getty。不像
+<B><A HREF="/cgi-bin/man/man2html?8+agetty">agetty</A></B>(8)
+
+，
+<B>mingetty</B>
+
+不适于串行线。我建议使用
+<B><A HREF="/cgi-bin/man/man2html?8+mgetty">mgetty</A></B>(8)
+
+来替代。
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 OPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>--noclear</B>
+
+<DD>
+在提示输入用户名之前不进行清屏操作 (通常屏幕被清除)。
+<DT><B>--nonewline</B>
+
+<DD>
+不在向 <I>/etc/issue</I> 输出之前打印一个信行符。
+<DT><B>--noissue</B>
+
+<DD>
+不输出 /etc/issue.
+<DT><B>--nohangup</B>
+
+<DD>
+不调用 vhangup() 来禁止其他应用程序对此 tty 的写入。
+<DT><B>--nohostname</B>
+
+<DD>
+不在提示登录之前打印主机名。
+<DT><B>--long-hostname</B>
+
+<DD>
+默认情况下，主机名只打印第一个句点符 (dot) 前面的部分。允许这个选项之后，将显示 gethostname() 得到的全文。
+<DT><B>--loginprog /bin/login</B>
+
+<DD>
+改变登录程序。
+<DT><B>--nice 10</B>
+
+<DD>
+调用 nice() 来改变优先级。
+<DT><B>--delay 5</B>
+
+<DD>
+启动 <B>mingetty</B> 之后，睡眠这么多秒。
+<DT><B>--chdir /home</B>
+
+<DD>
+调用登录程序之前，切换到这个目录。
+<DT><B>--chroot /chroot</B>
+
+<DD>
+调用 chroot() ，以这个目录名作为参数。
+<DT><B>--autologin username</B>
+
+<DD>
+自动地以指定的用户登录，不询问用户名和密码。为此请检查
+<B>/bin/login</B>
+
+的 -f 选项。
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>ISSUE ESCAPES</H2>
+
+<B>mingetty </B>
+
+可以识别下列可以内置于
+<I>/etc/issue</I>
+
+文件中的 escape 序列：
+<DL COMPACT>
+<DT><B>\d</B><DD>
+插入当前日期 (本地时间)，
+<DT><B>\l</B><DD>
+在
+<B>mingetty </B>
+
+运行的终端插入一行，
+<DT><B>\m</B><DD>
+插入机器体系结构 (<I>uname -m</I>)，
+<DT><B>\n</B><DD>
+插入机器的网络节点主机名 (<I>uname -n</I>)，
+<DT><B>\o</B><DD>
+插入域名，
+<DT><B>\r</B><DD>
+插入操作系统发行版信息 (<I>uname -r</I>)，
+<DT><B>\t</B><DD>
+插入当前时间 (本地时间)，
+<DT><B>\s</B><DD>
+插入操作系统名称，
+<DT><B>\u</B><DD>
+以及 <B>\U</B>
+插入当前已登录的用户数。
+\U 插入 &quot;<I>n</I> users&quot;，但是 \u 只插入 &quot;<I>n</I>&quot;。
+<DT><B>\v</B><DD>
+插入操作系统版本号 (<I>uname -v</I>)，
+</DL>
+<P>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>范例 EXAMPLE</H2>
+
+&quot;<B>Linux&nbsp;eos&nbsp;i386&nbsp;#1&nbsp;Tue&nbsp;Mar&nbsp;19&nbsp;21:54:09&nbsp;MET&nbsp;1996</B>&quot; 是将 &quot;<B>\s&nbsp;\n&nbsp;\m&nbsp;\v</B>&quot; 写入
+<I>/etc/issue</I>
+
+产生的。
+<P>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+<I>/etc/issue</I>,
+
+<I>/var/run/utmp</I>.
+
+<P>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?8+mgetty">mgetty</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+agetty">agetty</A></B>(8).
+
+<P>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>作者 AUTHOR</H2>
+
+版权所有 1996 Florian La Roche &lt;<A HREF="mailto:laroche@redhat.com">laroche@redhat.com</A>&gt;。
+David Frey &lt;<A HREF="mailto:David.Frey@eos.lugs.ch">David.Frey@eos.lugs.ch</A>&gt; 和 Florian La Roche 书写了手册页。
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>所罗门 &lt;<A HREF="mailto:solomen@email.com.cn">solomen@email.com.cn</A>&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>Nov 9 2000</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">选项 OPTIONS</A><DD>
+<DT><A HREF="#lbAF">ISSUE ESCAPES</A><DD>
+<DT><A HREF="#lbAG">范例 EXAMPLE</A><DD>
+<DT><A HREF="#lbAH">文件 FILES</A><DD>
+<DT><A HREF="#lbAI">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAJ">作者 AUTHOR</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

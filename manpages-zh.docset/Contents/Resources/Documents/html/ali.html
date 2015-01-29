@@ -1,0 +1,118 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ALI</TITLE>
+</HEAD><BODY>
+<H1>ALI</H1>
+Section: User Commands  (1)<BR>Updated: MH.6.8<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ali - list mail aliases
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+
+<BR>
+
+ali
+[-alias&nbsp;aliasfile]
+[-list] [-nolist]
+[-normalize]
+<BR>
+
+[-nonormalize]
+[-user] [-nouser]
+[aliases&nbsp;...]
+<BR>
+
+[-version]
+[-help] 
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<I>Ali</I>对每个给出的<I>aliases</I>查找已命名的邮件别名文件。
+为那些<I>aliases</I>建立一份地址列表，并把列表写到标准输出上。
+如未给出参数，fIali会输出所有别名项目。
+<P>
+缺省情况下，当一个别名对应到多个地址时，这些地址是用逗号分
+隔并尽可能少占行数。如果指定`-list'选项的话，那么当一个地
+址对应到多个地址时，每个地址将单独占用一行。
+<P>
+`-user'开关说明让<I>ali</I>反向执行处理：不列出每个给定别
+名所对应的地址，相反，<I>ali</I>将列出每个给定地址所对应的
+别名来。如果给出`-normalize'开关的话，<I>ali</I>将追踪地
+址的正式主机名。
+<P>
+程序会读取由配置项``Aliasfile:''指定的文件以及任何由
+`-alias aliasfile'开关给出的附加别名。每个<I>alias</I>都会按
+<I>mh-alias</I>&nbsp;(5)所描述的那样进行处理。
+<P>
+^$HOME/.mh_profile~^用户配置
+^/etc/passwd~^用户列表
+^/etc/group~^组列表
+<P>
+
+^Path:~^用来决定用户的nmh目录
+<P>
+
+^Aliasfile:~^一个缺省别名文件
+<P>
+
+<A HREF="/cgi-bin/man/man2html?5+mh-alias">mh-alias</A>(5)
+<P>
+
+`-alias /etc/nmh/MailAliases'
+<P>
+
+`-nolist'
+<P>
+
+`-nonormalize'
+<P>
+
+`-nouser'
+<P>
+
+None
+<P>
+
+带有`-nonormalize'的`-user'选项并不是完全准确的，因为它
+无法用站点的正式名称来替换那些本地昵称。
+<A NAME="lbAE">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/03/26</B>
+
+第一版
+<A NAME="lbAG">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》：</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAF">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAG">《中国Linux论坛man手册页翻译计划》：</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,99 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ZDUMP</TITLE>
+</HEAD><BODY>
+<H1>ZDUMP</H1>
+Section: Maintenance Commands (8)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+zdump - 时区输出器
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<B>zdump</B>
+
+[
+<B>-v</B>
+
+] [
+<B>-c</B>
+
+cutoffyear ] [ zonename ... ]
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<I>Zdump</I>
+
+对命令行中的每一个
+<I>zonename</I>
+
+输出其当前时间。
+<P>
+
+提供了以下选项:
+<DL COMPACT>
+<DT><B>-v</B>
+
+<DD>
+对于命令行的每一个
+<I>zonename</I>
+
+,
+输出可能的最早时间值，可能的最早时间一天以后的时间值，
+它们均是能被检测到的精确时刻的1秒前的时间值，
+可能的最晚时间一天以前的时间值, 可能的最晚时间值，
+如果给出的时间是夏令时，每行以
+<B>isdst=1</B>
+
+结束，否则以
+<B>isdst=0</B>
+
+结束。
+<DT><B>-c </B><I>cutoffyear</I>
+
+<DD>
+在给定的年份开始的前后，剪切掉冗余的输出。
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>又见</H2>
+
+<A HREF="/cgi-bin/man/man2html?3+newctime">newctime</A>(3), <A HREF="/cgi-bin/man/man2html?5+tzfile">tzfile</A>(5), <A HREF="/cgi-bin/man/man2html?8+zic">zic</A>(8)
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>mhss &lt;<A HREF="mailto:jijingzhisheng@up369.com">jijingzhisheng@up369.com</A>&gt;</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2000/12/05
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">又见</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

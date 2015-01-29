@@ -1,0 +1,272 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of UTMP</TITLE>
+</HEAD><BODY>
+<H1>UTMP</H1>
+Section: File Formats (5)<BR>Updated:  July 2, 1997 <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME[名称]</H2>
+
+<P>
+
+utmp, wtmp - 登 录 记 录（login records） 
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS[总览]</H2>
+
+<P>
+
+#include 
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION[描述]</H2>
+
+<P>
+
+<B>utmp</B> 文 件 用 于 记 录 当 前 系 统 用 户 是 哪 些 人。 
+但 是 实 际 的 人 数 可 能 比 这 个 数 目 要 多 ， 因 为 并 非 所 有 用 户 都 用 utmp 登 录。 
+<P>
+<P>
+<P>
+
+<B>警告:</B> <B>utmp</B> 
+必 须 置 为 不 可 写 ， 因 为 很 多 系 统 程 序 （ 有 点 傻 的 那 种 ） 依 赖 于 它。 
+如 果 你 将 它 置 为 可 写 ， 其 他 用 户 可 能 会 修 改 它 （//* 
+导 致 程 序 运 行 出 错 ） 。 （//* （//* ）中 为 译 者 注） 
+<P>
+文 件 中 是 一 些 条 目 的 列 表 ， 条 目 的 结 构 （ 在 utmp.h 中 进 行 了 声 明 ） 见 下 ( 注 意 这 里 只 列 出
+了 一 部 分 ； 细 节 依 libc 的 版 本 有 所 不 同 ）：
+<PRE>
+
+
+#define UT_UNKNOWN 0
+#define RUN_LVL 1
+#define BOOT_TIME 2
+#define NEW_TIME 3
+#define OLD_TIME 4
+#define INIT_PROCESS 5
+#define LOGIN_PROCESS 6
+#define USER_PROCESS 7
+#define DEAD_PROCESS 8
+#define ACCOUNTING 9
+
+#define UT_LINESIZE 12
+#define UT_NAMESIZE 32
+#define UT_HOSTSIZE 256
+
+struct exit_status {
+short int e_termination; /* process termination status. */
+short int e_exit; /* process exit status. */
+};
+
+struct utmp {
+short ut_type; /* type of login */
+pid_t ut_pid; /* pid of login process */
+char ut_line[UT_LINESIZE]; /* device name of tty - &quot;/dev/&quot; */
+char ut_id[4]; /* init id or abbrev. ttyname */
+char ut_user[UT_NAMESIZE]; /* user name */
+char ut_host[UT_HOSTSIZE]; /* hostname for remote login */
+struct exit_status ut_exit; /* The exit status of a process
+marked as DEAD_PROCESS. */
+long ut_session; /* session ID, used for windowing*/
+struct timeval ut_tv; /* time entry was made. */
+int32_t ut_addr_v6[4]; /* IP address of remote host. */
+char pad[20]; /* Reserved for future use. */
+};
+
+/* Backwards compatibility hacks. */
+#define ut_name ut_user
+#ifndef _NO_UT_TIME
+#define ut_time ut_tv.tv_sec
+#endif
+#define ut_xtime ut_tv.tv_sec
+#define ut_addr ut_addr_v6[0]
+
+
+</PRE>
+
+<P>
+
+<P>
+<P>
+
+这 个 结 构 给 出 了 与 用 户 终 端 联 系 的 文 件 ， 用 户 的 登 录 名 ， 记 录 于 <I><A HREF="/cgi-bin/man/man2html?2+time">time</A></I>(2) 
+表 中 的 登 录 时 间 。 字 符 串 如 果 比 给 定 的 大 小 小 的 话 ， 则 以 <B>'\0'</B> 
+结 束 之。 
+<P>
+<P>
+
+第一个条目由 <I><A HREF="/cgi-bin/man/man2html?8+init">init</A></I>(8) 
+执行 <I><A HREF="/cgi-bin/man/man2html?5+inittab">inittab</A></I>(5)而产生。然而，在产生条目以前， 
+<I><A HREF="/cgi-bin/man/man2html?8+init">init</A></I>(8) 先将 utmp 
+清空（通过设定 <B>ut_type</B> 为 <B>DEAD_PROCESS</B>来实现. 当<B>ut_type</B> 
+不是 <B>DEAD_PROCESS</B> 或 <B>RUN_LVL</B> 并且不存在进程号为 <B>ut_pid</B> 
+的进程时,通过用空串清空 <B>ut_user</B>, <B>ut_host</B> 和 <B>ut_time</B> 
+来实现。如果不存在 <B>ut_id</B> 的空记录, init（初始化时） 
+会创建一个。它将会依据 inittab 来设置 <B>ut_id</B> , 设置<B> ut_pid</B> 
+和 <B>ut_time</B> 为当前值，设置 <B>ut_type</B> 到 <B>INIT_PROCESS</B>. 
+<P>
+<P>
+
+<I><A HREF="/cgi-bin/man/man2html?8+getty">getty</A></I>(8) 
+依据进程号定位条目, 将 <B>ut_type</B> 改为 <B>LOGIN_PROCESS</B>, 改变 <B>ut_time</B>, 
+设定 <B>ut_line</B> ，然后等待连接建立。 <I><A HREF="/cgi-bin/man/man2html?8+login">login</A></I>(8), 
+在鉴别完用户后, 将 <B>ut_type</B> 改为 <B>USER_PROCESS</B>, 改变 <B>ut_time</B> 
+并设定 <B>ut_host</B> 和 <B>ut_addr</B>. 根据 <I><A HREF="/cgi-bin/man/man2html?8+getty">getty</A></I>(8) 和 <I><A HREF="/cgi-bin/man/man2html?8+login">login</A></I>(8)完成的功能, 
+可以用 <B>ut_line</B> 来定位记录，虽然用 <B>ut_pid</B> 可能更好些。 
+<P>
+<P>
+
+当 <I><A HREF="/cgi-bin/man/man2html?8+init">init</A></I>(8) 
+发现有进程存在时, 它通过 <B>ut_pid</B> 来定位它的 utmp 条目, 设定 <B>ut_type</B> 
+为 <B>DEAD_PROCESS</B> ，然后用零字节清空 <B>ut_user</B>, <B>ut_host</B> 和 <B>ut_time</B> 
+。
+<P>
+<P>
+
+<I><A HREF="/cgi-bin/man/man2html?1+xterm">xterm</A></I>(1) 
+和其他终端仿真器直接创建 <B>USER_PROCESS</B> 记录并通过使用<B> 
+/dev/ttyp</B><I>%c</I> 的最后两个字母或用<B> p</B><I>%d</I> <B>（/dev/pts/</B><I>%d</I>）来产生<B> 
+ut_id</B> 。 如果它们找到这个 id 的 <B>DEAD_PROCESS</B> , 
+它们就使用它，否则就创建一个新的条目. 
+如果可能，它们将它标记为 <B>DEAD_PROCESS</B> 并将 <B>ut_line</B>, <B>ut_time</B>, 
+<B>ut_user</B> 和 <B>ut_host</B> 置为 null。
+<P>
+<P>
+
+<I><A HREF="/cgi-bin/man/man2html?8+xdm">xdm</A></I>(8) 不会创建 
+utmp 记录, 因为没有终端与它相连. 试图用它产生 utmp 
+记录会引起如下错误：finger: can not stat /dev/machine.dom. 它应该用于创建 
+wtmp 条目, 和 <I><A HREF="/cgi-bin/man/man2html?8+ftpd">ftpd</A></I>(8) 
+相似. 
+<P>
+<P>
+
+<I><A HREF="/cgi-bin/man/man2html?8+telnetd">telnetd</A></I>(8) 设定 <B>LOGIN_PROCESS</B> 
+条目并把其他的的留给 <I><A HREF="/cgi-bin/man/man2html?8+login">login</A></I>(8) 
+去做。telnet 任务结束后, <I><A HREF="/cgi-bin/man/man2html?8+telnetd">telnetd</A></I>(8) cleans up utmp 
+in the described way.（？？） 
+<P>
+<P>
+
+<B>wtmp</B> 文件记录了所有的登录和退出。它的格式与 <B>utmp</B> 
+几乎完全一样（例外是：用空用户名来表示在相关终端上的退出）。除此以外， 
+用终端名 <B>&quot;~&quot;</B> 和用户名 <B>&quot;shutdown&quot;</B> 或 <B>&quot;reboot&quot;</B> 
+表示系统关机或重启， the pair of terminal names <B>&quot;|&quot;</B>/<B>&quot;}&quot;</B> 
+logs the old/new system time when <I><A HREF="/cgi-bin/man/man2html?1+date">date</A></I>(1) changes it. <B>wtmp</B> 
+由 <I><A HREF="/cgi-bin/man/man2html?1+login">login</A></I>(1), 和 <I><A HREF="/cgi-bin/man/man2html?1+init">init</A></I>(1) 以及某些版本的 <I><A HREF="/cgi-bin/man/man2html?1+getty">getty</A></I>(1) 使用. 
+但是这些程序并不创建它,所以如果将它删除的话您就得不到记录了。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>FILES[相关文件]</H2>
+
+<P>
+<P>
+
+/var/run/utmp 
+<BR>
+
+/var/log/wtmp 
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>CONFORMING TO[遵循] </H2>
+
+<P>
+<P>
+
+Linux utmp 既不遵循 v7/BSD 也不遵循 SYSV: 它实际是两者的混合. v7/BSD 
+中域比较少; 最重要的是它没有 <B>ut_type</B> (<B>ut_type</B> 
+可以使本地的 v7/BSD-类的程序显示(以次为例) dead 或 login 条目.而且,没有为任务分配通道的文件. 
+BSD 则相反(BSD does so), 因为它缺少的是 <B>ut_id</B> 域. 在 Linux 中(SYSV 
+中也一样), 记录的 <B>ut_id</B> 域一旦设定就不再改变,它保留通道而不需要什么配置文件. 
+清除 <B>ut_id</B> 可能会引起 race conditions 从而导致安全漏洞. 就 SYSV 
+的要求来讲,用空字节填充的方式来清空上面提到的各个域不是必须的,但是这样做使得运行采用 
+BSD 语法而又不改变 utmp 的程序成为可能. 正如上面所写的,Linux 
+在句子中使用 BSD 的惯例.
+<P>
+<P>
+
+SYSV 在句子中仅使用类型域去标识它们或是登录信息(例如:. <B>&quot;new 
+time&quot;</B>). <B>UT_UNKNOWN</B> 只在 Linux 中有. SYSV 没有 <B>ut_host</B> 和 <B>ut_addr_v6</B> 
+域. 
+<P>
+<P>
+
+不象其它各种系统, 您可以通过删除文件来禁止 utmp , 在 Linux 中 
+utmp 必须一直存在. 如果你要禁止 <I><A HREF="/cgi-bin/man/man2html?1+who">who</A></I>(1) 命令,您需要使整个 
+utmp 不可读. 
+<P>
+<P>
+
+需要注意的是在 libc5 和 libc6 中 utmp 的结构是不同的.因此使用旧结构的程序会破坏 
+<I>/var/run/utmp</I> 和/or <I>/var/log/wtmp</I>. Debian 系统包含一个修补过的 
+libc5 它可以使用新的格式. 但对 wtmp, 问题依然存在因为它直接对 
+libc5 进行存取.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>RESTRICTIONS[限制]</H2>
+
+<P>
+<P>
+
+文件格式依机器而不同, 因此推荐的做法是:在创建它的机器上使用它.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>BUGS[缺憾]</H2>
+
+<P>
+<P>
+
+本手册页基于 libc5 , 现在可能情况已有不同了. 
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO[另见]</H2>
+
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?1+ac">ac</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+date">date</A></B>(1), 
+<B><A HREF="/cgi-bin/man/man2html?3+getutent">getutent</A></B>(3), 
+<B><A HREF="/cgi-bin/man/man2html?8+init">init</A></B>(8), <B><A HREF="/cgi-bin/man/man2html?1+last">last</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+login">login</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?3+updwtmp">updwtmp</A></B>(3), <B><A HREF="/cgi-bin/man/man2html?1+who">who</A></B>(1) 
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>Redcandle &lt;<A HREF="mailto:redcandle51@chinaren.com">redcandle51@chinaren.com</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001.11.08</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME[名称]</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS[总览]</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION[描述]</A><DD>
+<DT><A HREF="#lbAE">FILES[相关文件]</A><DD>
+<DT><A HREF="#lbAF">CONFORMING TO[遵循] </A><DD>
+<DT><A HREF="#lbAG">RESTRICTIONS[限制]</A><DD>
+<DT><A HREF="#lbAH">BUGS[缺憾]</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO[另见]</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

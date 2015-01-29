@@ -1,0 +1,106 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of STAT</TITLE>
+</HEAD><BODY>
+<H1>STAT</H1>
+Section: User Commands  (1)<BR>Updated: UNSUP<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+stat - 打印信息节点(inode)内容
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>stat</B>
+
+<I>filename</I>
+
+<I>[filenames ... ]</I>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<P>
+
+<I>stat</I>
+
+打印出一个信息节点的内容,它们显示为对人可读的格式的<I><A HREF="/cgi-bin/man/man2html?2+stat">stat</A>(2)</I>.
+<P>
+
+下面是<I>stat</I>的一个示例输出:
+<PRE>
+File: ``/''
+Size: 1024         Allocated Blocks: 2            Filetype: Directory
+Mode: (0755/drwxr-xr-x)         Uid: (    0/    root)  Gid: (    0/  system)
+Device:  0,0   Inode: 2         Links: 20   
+Access: Wed Jan  8 12:40:16 1986(00000.00:00:01)
+Modify: Wed Dec 18 09:32:09 1985(00021.03:08:08)
+Change: Wed Dec 18 09:32:09 1985(00021.03:08:08)
+</PRE>
+
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>DIAGNOSTICS(诊断)</H2>
+
+``Can't stat file'' or ``Can't lstat file'' 通常意味着它不存在.
+``Can't readlink file'' 暗示符号链接有错误.
+<A NAME="lbAF">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<A HREF="/cgi-bin/man/man2html?2+stat">stat</A>(2),<A HREF="/cgi-bin/man/man2html?1+ls">ls</A>(1)
+<A NAME="lbAG">&nbsp;</A>
+<H2>AUTHOR(作者)</H2>
+
+Rich Kulawiec, Purdue University
+<A NAME="lbAH">&nbsp;</A>
+<H2>BUGS</H2>
+
+输出不是完全都可理解.
+<P>
+<CENTER>
+NOT SUPPORTED BY PUCC<BR>
+</CENTER>
+
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/08/08</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAE">DIAGNOSTICS(诊断)</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO(另见)</A><DD>
+<DT><A HREF="#lbAG">AUTHOR(作者)</A><DD>
+<DT><A HREF="#lbAH">BUGS</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

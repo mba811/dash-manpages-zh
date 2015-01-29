@@ -1,0 +1,152 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of resource</TITLE>
+</HEAD><BODY>
+<H1>resource</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.0<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+resource - 操纵 Macintosh 资源
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>resource </B><I>option</I> ?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<B>resource</B> 命令为处理 Macintosh 资源提供了一些一般操作。只在Macintosh 平台上支持这个命令。每个 Macintosh 文件由两个 <B>fork</B>组成: 一个数据 fork 和一个资源 fork。你可以使用通常的open、puts、 close 等命令来操纵数据 fork。但是要与资源 fork 交互你必须使用这个命令。<I>Option</I> 指示完成什么资源命令。可以接受 <I>option</I> 的一个唯一的缩写。有效的选项有:
+<DL COMPACT>
+<DT><B>resource close </B><I>rsrcRef</I><DD>
+关闭给定的资源引用(获取自 <B>resource open</B>)。来自这个资源文件的资源将不再可获得。
+<DT><B>resource delete</B> ?<I>options</I>? <I>resourceType</I><DD>
+这个命令将删除用 <I>options</I> 和类型 <I>resourceType</I> (参见下面的RESOURCE TYPES 资源类型) 指定的资源。下列选项给出指定要删除资源的一些方式。
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>-id</B> <I>resourceId</I><DD>
+如果给出了 <B>-id</B> 选项，则使用 id <I>resourceId</I> (参见下面的RESOURCE IDS 资源ID)指定要被删除的资源。id 必须是一个数 - 要指定一个名字请使用 <B>-name</B> 选项。
+<DT><B>-name</B> <I>resourceName</I><DD>
+如果指定了 <B>-name</B>，则删除叫做 <I>resourceName</I> 的资源。如果还提供了 <B>-id</B>，则要删除的资源必须有这个名字和这个 id 二者。如果未提供名字，则使用 id 而不管实际资源的名字。
+<DT><B>-file</B> <I>resourceRef</I><DD>
+如果指定了 <B>-file</B> 选项，则从 <I>resourceRef</I>  所指向的文件中删除资源。否则删除在资源文件路径上找到的有给定的 <I>resourceName</I> 和/或 <I>resourceId</I> 的第一个资源。要检查文件路径，应使用 <I>resource files</I> 命令。
+</DL>
+</DL>
+
+<DT><B>resource files ?</B><I>resourceRef</I>?<DD>
+如果未提供 <I>resourceRef</I>，这个命令返回所有当前打开的资源文件的资源引用的一个 Tcl 列表。这个列表按 Macintosh 通常查找资源的次序来排序。如果指定了 <I>resourceRef</I>，这个命令将返回到那个记号表示的资源 fork 所在的文件的路径。
+<DT><B>resource list </B><I>resourceType</I> ?<I>resourceRef</I>?<DD>
+列出所有的类型 <I>resourceType</I> 的 id(参见下面的 RESOURCE TYPES 资源类型)。如果指定了<I>resourceRef</I> ，则这个命令把查找限制为这个特定的资源文件。否则，查找应用当前当前打开的所有资源文件。返回找到的资源的要么是资源名字要么是资源id 的一个 Tcl 列表。关于资源 id 的详情请参见下面的 RESOURCE IDS  资源 ID。
+<DT><B>resource open </B><I>fileName</I> ?<I>access</I>?<DD>
+打开文件 <I>fileName </I>的中资源。还可以指定标准文件访问权限(详情参见 <B>open</B> 手册条目)。它返回可被其他资源命令使用的一个资源引用(<I>resourceRef</I>)。如果文件不存在或文件没有资源 fork 则产生一个错误。但是，如果你打开文件时加上了写权限，则建立这个文件和/或资源 fork 而不生成一个错误。
+<DT><B>resource read </B><I>resourceType</I> <I>resourceId</I> ?<I>resourceRef</I>?<DD>
+把类型是 <I>resourceType</I> (参见下面的 RESOURCE TYPES资源类型)并且名字或 id 是 <I>resourceId</I> 的全部资源(参见下面的 RESOURCE IDS 资源  ID)读到内存中并返回这个结果。如果指定了 <I>resourceRef</I> ，则这个命令把我们的查找限制为这个特定的资源文件，否则我们查找在应用中所有打开的资源。要注意：多数  Macintosh 资源使用二进制格式，并且从这个命令返回的数据可能包含嵌入的 NULL 或其他非 ASCII 数据。
+<DT><B>resource types ?</B><I>resourceRef</I>?<DD>
+这个命令返回在 <I>resourceRef </I>所指向的资源文件中找到的所有资源类型(参见下面的 RESOURCE TYPES资源类型)的一个Tcl 列表。如果未指定 <I>resourceRef</I>  ，则它返回在应用当前打开的所有资源文件中找到的所有资源类型。
+<DT><B>resource write</B> ?<I>options</I>? <I>resourceType</I> <I>data</I><DD>
+这个命令把在 <I>data</I> 中传递进来的数据写为类型是 <I>resourceType</I> (参见下面的 RESOURCE TYPES资源类型)的一个新资源。可获得许多描述资源存储在那里和如何存储的选项。
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>-id</B> <I>resourceId</I><DD>
+如果给出了 <B>-id</B> 选项，则为新资源使用 id <I>resourceId</I> ( 参见下面的SOURCE  TYPES资源类型)，否则生成一个与任何现存的资源不冲突的一个唯一的 id。但是，id 必须是一个数 - 要指定一个名字请使用 <B>-name</B> 选项。
+<DT><B>-name</B> <I>resourceName</I><DD>
+如果指定了 <B>-name</B>，则这个资源将叫做 <I>resourceName</I>，否则它将以空串作为名字。
+<DT><B>-file</B> <I>resourceRef</I><DD>
+如果指定了 <B>-file</B> 选项，则把资源被写入 <I>resourceRef </I>所指向的文件中，否则使用最新近打开的资源。
+<DT><B>-force</B><DD>
+如果目标资源已经存在，则 Tcl 缺省的不是覆写它，而是引发一个错误。使用 -force 标志来强行覆写现存的资源。
+</DL>
+</DL>
+
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>资源类型 RESOURCE TYPES</H2>
+
+资源类型被定义为一个四字符的字符串，它被映射成一个底层 id。例如，<B>TEXT</B> 参照的 Macintosh 资源类型是文本。类型 <B>STR#</B> 是已计数的(counted)的字符串的一个列表。所有 Macintosh 资源必须是某种类型的。要得到通常使用的资源类型的一个完整列表请参见 Macintosh 文档。
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>资源 RESOURCE IDS</H2>
+
+对于本命令，一个资源的 id 的概念(notion)实际上涉及 Macintosh 资源中的两个概念。在你可以使用资源 Id 的每个地方，你可以使用资源名字或者一个资源数。查找和返回总是偏好名字而不是数。例如，如果一个资源的名字存在则 <B>resource list</B> 命令将返回这个名字，如果资源的名字是 NULL 则返回数。
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>移植要点 PORTABILITY ISSUES</H2>
+
+只在 Macintosh 上可获得这个命令。
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+open">open</A>(n)
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+open, resource
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/29</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">资源类型 RESOURCE TYPES</A><DD>
+<DT><A HREF="#lbAF">资源 RESOURCE IDS</A><DD>
+<DT><A HREF="#lbAG">移植要点 PORTABILITY ISSUES</A><DD>
+<DT><A HREF="#lbAH">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAI">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

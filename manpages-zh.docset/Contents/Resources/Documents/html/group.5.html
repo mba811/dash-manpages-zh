@@ -1,0 +1,59 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of GROUP</TITLE>
+</HEAD><BODY>
+<H1>GROUP</H1>
+Section: Linux Programmer's Manual(Linux程序员手册) (5)<BR>Updated: 1992年12月29日<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME(名称)</H2>
+
+group - 用户组文件
+<A NAME="lbAC">&nbsp;</A>
+<H2>DESCRIPTION(描述)</H2>
+
+<B>/etc/group</B> 是一个ASCII码的文件,它定义了用户所属的组.文件中每行包括一条记录,其格式如下:
+<P>
+<DL COMPACT><DT><DD>
+group_name:passwd:GID:user_list
+</DL>
+
+<P>
+字段描述如下:
+<DL COMPACT>
+<DT>group_name<DD>
+组名
+<DT>password<DD>
+(加密的)组密码.如果该字段为空,则不需要密码.
+<DT>GID<DD>
+组的数字标识.
+<DT>user_list<DD>
+组内所有成员的用户名,以逗号分隔.
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>FILES(相关文件)</H2>
+
+/etc/group
+<A NAME="lbAE">&nbsp;</A>
+<H2>SEE ALSO(另见)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+login">login</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?1+newgrp">newgrp</A></B>(1), <B><A HREF="/cgi-bin/man/man2html?5+passwd">passwd</A></B>(5)
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME(名称)</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION(描述)</A><DD>
+<DT><A HREF="#lbAD">FILES(相关文件)</A><DD>
+<DT><A HREF="#lbAE">SEE ALSO(另见)</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

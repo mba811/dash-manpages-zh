@@ -1,0 +1,97 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of END</TITLE>
+</HEAD><BODY>
+<H1>END</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+END - 提交当前的事务
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+END [ WORK | TRANSACTION ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>END</B> END 提交当前事务。 所有当前事务做的修改都可被其它事务看到并且保证在发生崩溃的情况下的持续性。 它是一个 PostgreSQL 的扩展，等效于 COMMIT [<B><A HREF="/cgi-bin/man/man2html?7+commit">commit</A></B>(7)].
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B>WORK</B><DD>
+<DT><B>TRANSACTION</B><DD>
+<BR>&nbsp;可选关键字。没有作用。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;用&nbsp;ROLLBACK&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+rollback">rollback</A></B>(7)]&nbsp;退出事务。
+<P>
+
+<BR>&nbsp;如果不在一个事务块里发出&nbsp;END&nbsp;将不会有什么损害，但是它会生成一个警告信息。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;提交当前事务，令所有改变生效：
+<P>
+<PRE>
+END;
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>END</B> 是 PostgreSQL  的扩展，提供与 COMMIT [<B><A HREF="/cgi-bin/man/man2html?7+commit">commit</A></B>(7)] 相同的功能， 后者是 SQL 标准声明的语句。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+BEGIN [<B><A HREF="/cgi-bin/man/man2html?7+begin">begin</A></B>(7)], COMMIT [<B><A HREF="/cgi-bin/man/man2html?l+commit">commit</A></B>(l)], ROLLBACK [<B><A HREF="/cgi-bin/man/man2html?l+rollback">rollback</A></B>(l)]
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

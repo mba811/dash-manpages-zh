@@ -1,0 +1,97 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of set</TITLE>
+</HEAD><BODY>
+<H1>set</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+set - 读写变量
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>set </B><I>varName </I>?<I>value</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+返回变量 <I>varName </I>的值。如果指定了 <I>value</I>，则把 <I>varName</I> 的值设置为 <I>value</I>，如果这个变量不存在，则建立一个新变量并返回它的值。如果 <I>varName</I> 包含一个开圆括号并终止于一个闭圆括号，则它引用一个数组元素: 在第一个开括号之前的字符是数组的名字，而在圆括号中的字符是在数组中的索引。否则 <I>varName</I> 引用一个标量变量。
+一般的，<I>varName</I> 是未限定的(不包括任何包容它的名字空间的名字)，读或写当前名字空间中叫这个名字的变量。如果 <I>varName</I> 中包含名字空间限定符(如果它引用一个数组元素则在数组名字中)，则读或写在指定名字空间中的变量。
+<P>
+
+如果没有活跃的过程，则 <I>varName</I> 引用一个名字空间变量(如果当前的名字空间是全局名字空间则是全局变量)。如果有一个过程是活跃的，则除非调用 <B>global</B> 命令声明 <I>varName</I> 是全局的或调用 <B>variable</B> 声明 <I>varName</I> 是一个名字空间变量，否则 <I>varName</I> 引用这个过程的一个参数或局部变量。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+expr">expr</A>(n), <A HREF="/cgi-bin/man/man2html?n+proc">proc</A>(n), <A HREF="/cgi-bin/man/man2html?n+trace">trace</A>(n), <A HREF="/cgi-bin/man/man2html?n+unset">unset</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+read, write, variable
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/30</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

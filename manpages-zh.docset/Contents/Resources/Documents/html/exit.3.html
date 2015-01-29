@@ -1,0 +1,97 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of EXIT</TITLE>
+</HEAD><BODY>
+<H1>EXIT</H1>
+Section: Linux Programmer's Manual (3)<BR>Updated: 2001-11-17<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+exit - 使程序正常中止
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<PRE>
+<B>#include &lt;<A HREF="file:///usr/include/stdlib.h">stdlib.h</A>&gt;</B>
+
+<B>void exit(int </B><I>status</I><B>);</B>
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+函数 <B>exit()</B> 使得程序正常中止，<I>status &amp; 0377</I> 的值被返回给父进程 (参见
+<B><A HREF="/cgi-bin/man/man2html?2+wait">wait</A></B>(2))
+
+。所有用 <B>atexit()</B> 和 <B>on_exit()</B> 注册的函数都以与注册时相反的顺序被依次执行。使用 <I>tmpfile()</I> 创建的文件被删除。
+<P>
+
+C 标准定义了两个值 <I>EXIT_SUCCESS</I> 和 <I>EXIT_FAILURE</I>，可以作为 <B>exit()</B> 的参数，来分别指示是否为成功退出。
+<A NAME="lbAE">&nbsp;</A>
+<H2>RETURN VALUE 返回值</H2>
+
+函数 <B>exit()</B> 不会返回。
+<A NAME="lbAF">&nbsp;</A>
+<H2>CONFORMING TO 标准参考</H2>
+
+SVID 3, POSIX, BSD 4.3, ISO 9899 (``ANSI C'')
+<A NAME="lbAG">&nbsp;</A>
+<H2>NOTES 要点</H2>
+
+在 exit 处理过程中，可能会使用 <B>atexit()</B> 和 <B>on_exit()</B> 注册其他的函数。通常，最后注册的函数被从已注册函数链中摘下来，然后执行。如果在处理过程中，又调用了 <B>exit()</B> 或 <B>longjmp()</B>，那么发生的行为是未定义的。
+<P>
+
+相对于使用 0 和非零值 1 或 -1，使用 EXIT_SUCCESS 和 EXIT_FAILURE 可以稍微增加一些可移植性 (对非 Unix 环境)。特别的，VMS 使用一种不同的约定。
+<P>
+
+BSD 试图标准化退出代码 - 参见文件
+<I>&lt;<A HREF="file:///usr/include/sysexits.h">sysexits.h</A>&gt;</I>
+
+。
+<P>
+
+<B>exit()</B> 之后，退出状态必须传递给父进程。这里有三种情况。如果父进程已设置了 SA_NOCLDWAIT，或者已将 SIGCHLD 的处理句柄设置成了 SIG_IGN，这个状态将被忽略。这时要退出的进程立即消亡。如果父进程没有表示它对退出状态不感兴趣，仅仅是不再等待，那么要退出的程序变成一个僵尸进程 (``zombie''，除了包含一个字节的退出状态外，什么也不是)。这样在父进程后来调用 <I>wait()</I> 函数族之一时，可以得到退出状态。
+<P>
+
+如果所用实现支持 SIGCHLD 信号，信号将被发送到父进程。如果父进程已设置了 SA_NOCLDWAIT，它被取消定义。(?)
+<P>
+
+如果进程是一个 session leader，它的控制终端是会话的控制终端，那么这个终端的前台进程组的每个进程都将收到 SIGHUP 信号；终端将与这个会话断开，可以再被一个新的控制进程获得。
+<P>
+
+如果进程的退出使得一个进程组成为孤儿，并且这个新近成为孤儿的进程组中任何的进程被中止，进程组中所有的进程将依次收到 SIGHUP 和 SIGCONT 信号。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+_exit">_exit</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+wait">wait</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?3+atexit">atexit</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+on_exit">on_exit</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+tmpfile">tmpfile</A></B>(3)
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">RETURN VALUE 返回值</A><DD>
+<DT><A HREF="#lbAF">CONFORMING TO 标准参考</A><DD>
+<DT><A HREF="#lbAG">NOTES 要点</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,137 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of close</TITLE>
+</HEAD><BODY>
+<H1>close</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.5<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+close - 关闭一个打开了的通道 
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>close </B><I>channelId</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+关闭由 <I>channelId</I> 给出的通道。<I>ChannelId</I>   必须是一个通道标识符，是以前的 <B>open</B> 或 <B>socket</B>   命令的返回值。向通道的输出设备刷新所有的缓冲了的输出，丢弃所有缓冲了的输入，关闭底层的文件或设备，并且  使用 <I>channelId</I>  变成无效。
+
+<BR>
+
+
+
+
+
+
+
+<P>
+
+如果通道正在阻塞(block)，在刷新所有输出之前命令不返回。如果通道未阻塞并且有未刷新的(unflushed)输出，通道保持打开而命令立即返回；将在后台刷新输出并且在刷新完成时关闭通道。
+
+
+
+
+
+
+<P>
+
+如果 <I>channelId</I>   是用于一个命令管道的一个阻塞通道，则 <B>close</B>   等待子进程完成。
+
+<BR>
+
+
+
+
+
+
+
+<P>
+
+如果通道在解释器间共享，则 <B>close</B>   使 <I>channelId</I>   在调用它的解释器中无效而在所有的共享解释器关闭这个通道之前不起其他作用。当在其中注册了这个通道的最后一个解释器调用  <B>close </B>时，上面描述的清除动作发生。关于通道共享的描述请参见  <B>interp</B>  命令。
+<P>
+
+在解释器被销毁和进程退出时自动的关闭通道。通道被切换到阻塞模式，用以确保(ensure)在进程退出之前正确的刷新所有的输出。
+
+
+
+
+
+
+<P>
+
+命令返回一个空串，如果在刷新输出时发生了错误它可以产生一个错误。 
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+file">file</A>(n), <A HREF="/cgi-bin/man/man2html?n+open">open</A>(n), <A HREF="/cgi-bin/man/man2html?n+socket">socket</A>(n), <A HREF="/cgi-bin/man/man2html?n+eof">eof</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+blocking, channel, close, nonblocking
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/07/03 </B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

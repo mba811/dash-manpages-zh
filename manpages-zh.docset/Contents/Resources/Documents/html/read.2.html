@@ -1,0 +1,196 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of READ</TITLE>
+</HEAD><BODY>
+<H1>READ</H1>
+Section: Linux Programmer's Manual (2)<BR>Updated: July 12, 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+read - 在文件描述符上执行读操作
+<A NAME="lbAC">&nbsp;</A>
+<H2>概述</H2>
+
+<PRE>
+<B>#include &lt;<A HREF="file:///usr/include/unistd.h">unistd.h</A>&gt;</B>
+
+<B>ssize_t read(int </B><I>fd</I><B>, void *</B><I>buf</I><B>, size_t </B><I>count</I><B>);</B>
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>read()</B>
+
+从文件描述符
+<I>fd</I>
+
+中读取
+<I>count</I>
+
+字节的数据并放入从
+<I>buf</I>
+
+开始的缓冲区中.
+<P>
+
+如果
+<I>count</I>
+
+为零,<B>read()</B>返回0,不执行其他任何操作.
+如果
+<I>count</I>
+
+大于SSIZE_MAX,那么结果将不可预料.
+<P>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>返回值</H2>
+
+成功时返回读取到的字节数(为零表示读到文件描述符),
+此返回值受文件剩余字节数限制.当返回值小于指定的字节数时
+并不意味着错误;这可能是因为当前可读取的字节数小于指定的
+字节数(比如已经接近文件结尾,或者正在从管道或者终端读取数
+据,或者
+<B>read()</B>被信号中断).
+发生错误时返回-1,并置
+<I>errno</I>
+
+为相应值.在这种情况下无法得知文件偏移位置是否有变化.
+<A NAME="lbAF">&nbsp;</A>
+<H2>错误代码</H2>
+
+<DL COMPACT>
+<DT><B>EINTR</B>
+
+<DD>
+在读取到数据以前调用被信号所中断.
+<DT><B>EAGAIN </B>
+
+<DD>
+使用
+<B>O_NONBLOCK</B>
+
+标志指定了非阻塞式输入输出,但当前没有数据可读.
+<DT><B>EIO</B>
+
+<DD>
+输入输出错误.可能是正处于后台进程组进程试图读取其
+控制终端,但读操作无效,或者被信号SIGTTIN所阻塞,
+或者其进程组是孤儿进程组.也可能执行的是读磁盘或者
+磁带机这样的底层输入输出错误.
+<DT><B>EISDIR</B>
+
+<DD>
+<I>fd</I>
+
+指向一个目录.
+<DT><B>EBADF</B>
+
+<DD>
+<I>fd</I>
+
+不是一个合法的文件描述符,或者不是为读操作而打开.
+<DT><B>EINVAL</B>
+
+<DD>
+<I>fd</I>
+
+所连接的对象不可读.
+<DT><B>EFAULT</B>
+
+<DD>
+<I>buf</I>
+
+超出用户可访问的地址空间.
+</DL>
+<P>
+
+也可能发生其他错误,具体情况和
+<I>fd</I>
+
+所连接的对象有关.
+POSIX 允许
+<B>read</B>
+
+在读取了一定量的数据后被信号所中断,并返回
+-1(且
+<I>errno</I>
+
+被设置为EINTR),或者返回已读取的数据量.
+<A NAME="lbAG">&nbsp;</A>
+<H2>兼容于</H2>
+
+SVr4, SVID, AT&amp;T, POSIX, X/OPEN, BSD 4.3
+<A NAME="lbAH">&nbsp;</A>
+<H2>限制</H2>
+
+在NFS文件系统中,读取小块数据仅更新时间标记,之后的调用
+不再读取服务器端的数据.这是因为客户端把数据放在缓存里.
+由于大多数情况下不存在NFS服务器向客户端的读操作,
+所以NFS客户必须将更新时间标记的操作放在服务器端,而
+数据可以放在客户端的缓存里留待以后更新.UNIX也可以禁用
+客户端的缓存,但那样的话大多数情况下会导致服务器性能下降.
+<A NAME="lbAI">&nbsp;</A>
+<H2>参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?2+close">close</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+fcntl">fcntl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+ioctl">ioctl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+lseek">lseek</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+readdir">readdir</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+readlink">readlink</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+select">select</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+write">write</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?3+fread">fread</A></B>(3)
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>byeyear &lt;<A HREF="mailto:love_my_love@263.net">love_my_love@263.net</A> &gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2002.02.02</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">概述</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">返回值</A><DD>
+<DT><A HREF="#lbAF">错误代码</A><DD>
+<DT><A HREF="#lbAG">兼容于</A><DD>
+<DT><A HREF="#lbAH">限制</A><DD>
+<DT><A HREF="#lbAI">参见</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

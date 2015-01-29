@@ -1,0 +1,9547 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of BASH</TITLE>
+</HEAD><BODY>
+<H1>BASH</H1>
+Section: User Commands  (1)<BR>Updated: 2002 July 15<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+bash - GNU Bourne-Again SHell (GNU 命令解释程序 "Bourne二世")
+<A NAME="lbAC">&nbsp;</A>
+<H2>概述(SYNOPSIS)</H2>
+
+<B>bash</B>
+
+[options]
+[file]
+<A NAME="lbAD">&nbsp;</A>
+<H2>版权所有(COPYRIGHT)</H2>
+
+Bash is Copyright (C) 1989-2002 by the Free Software Foundation, Inc.
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>描述(DESCRIPTION)</H2>
+
+<B>Bash</B>
+
+是一个与 <I>sh</I> 兼容的命令解释程序，可以执行从标准输入或者文件中读取的命令。
+<B>Bash</B>
+
+也整合了 <I>Korn</I> 和 <I>C</I> <I>Shell</I> (<B>ksh</B> 和 <B>csh</B>) 中的优秀特性。
+<P>
+
+<B>Bash</B>
+
+的目标是成为遵循 IEEE POSIX Shell and Tools specification (IEEE Working Group 1003.2，可移植操作系统规约： shell 和工具) 的实现。
+<A NAME="lbAF">&nbsp;</A>
+<H2>选项(OPTIONS)</H2>
+
+除了在 <B>set</B> 内建命令的文档中讲述的单字符选项 (option) 之外，<B>bash</B> 在启动时还解释下列选项。
+<P>
+
+
+<DL COMPACT>
+<DT><B>-c</B><I> string</I>
+
+<DD>
+如果有
+<B>-c</B>
+
+选项，那么命令将从
+<I>string</I>
+
+中读取。如果
+<I>string</I>
+
+后面有参数 (argument)，它们将用于给位置参数 (positional parameter，以
+<B>$0</B>
+
+起始) 赋值。
+<DT><B>-i</B>
+
+<DD>
+如果有
+<B>-i</B>
+
+选项，shell 将交互地执行 (
+<I>interactive</I>
+
+)。
+<DT><B>-l</B>
+
+<DD>
+选项使得
+<B>bash</B>
+
+以类似登录 shell (login shell) 的方式启动 (参见下面的
+<FONT SIZE="-1"><B>启动(INVOCATION)</B>
+
+</FONT>
+章节)。
+<DT><B>-r</B>
+
+<DD>
+如果有
+<B>-r</B>
+
+选项，shell 成为受限的 (
+<I>restricted</I>
+
+) (参见下面的
+<FONT SIZE="-1"><B>受限的shell(RESTRICTED SHELL)</B>
+
+</FONT>
+章节)。
+<DT><B>-s</B>
+
+<DD>
+如果有
+<B>-s</B>
+
+选项，或者如果选项处理完以后，没有参数剩余，那么命令将从标准输入读取。
+这个选项允许在启动一个交互 shell 时可以设置位置参数。
+<DT><B>-D</B>
+
+<DD>
+向标准输出打印一个以 <B>$</B> 为前导的，以双引号引用的字符串列表。
+这是在当前语言环境不是 <B>C</B> 或 <B>POSIX</B> 时，脚本中需要翻译的字符串。
+这个选项隐含了 <B>-n</B> 选项；不会执行命令。
+<DT><B>[-+]O [</B><I>shopt_option</I>]
+
+<DD>
+<I>shopt_option</I> 是一个
+<B>shopt</B> 内建命令可接受的选项 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节)。
+如果有 <I>shopt_option</I>，<B>-O</B> 将设置那个选项的取值；
+<B>+O</B> 取消它。
+如果没有给出 <I>shopt_option</I>，<B>shopt</B> 将在标准输出上打印设为允许的选项的名称和值。
+如果启动选项是 <B>+O</B>，输出将以一种可以重用为输入的格式显示。
+<DT><B>--</B>
+
+<DD>
+<B>--</B>
+
+标志选项的结束，禁止其余的选项处理。任何
+<B>--</B>
+
+之后的参数将作为文件名和参数对待。参数
+<B>-</B>
+
+与此等价。
+
+</DL>
+<P>
+
+<B>Bash</B>
+
+也解释一些多字节的选项。在命令行中，这些选项必须置于需要被识别的单字符参数之前。
+<P>
+
+
+<DL COMPACT>
+<DT><B>--dump-po-strings</B>
+
+<DD>
+等价于 <B>-D</B>，但是输出是 GNU <I>gettext</I>
+<B>po</B> (可移植对象) 文件格式
+<DT><B>--dump-strings</B>
+
+<DD>
+等价于 <B>-D</B>
+<DT><B>--help</B>
+
+<DD>
+在标准输出显示用法信息并成功退出
+<DT><B>--init-file</B> <I>file</I><DD>
+
+<DT><B>--rcfile</B> <I>file</I><DD>
+
+如果 shell 是交互的，执行
+<I>file</I>
+
+中的命令，而不是标准的个人初始化文件
+<I>~/.bashrc</I>
+
+(参见下面的
+<FONT SIZE="-1"><B>启动(INVOCATION)</B>
+
+</FONT>
+章节)
+<DT><B>--login</B>
+
+<DD>
+等价于 <B>-l</B>
+<DT><B>--noediting</B>
+
+<DD>
+如果 shell 是交互的，不使用 GNU
+<B>readline</B>
+
+库来读命令行
+<DT><B>--noprofile</B>
+
+<DD>
+不读取系统范围的启动文件
+
+<I>/etc/profile</I>
+
+或者任何个人初始化文件
+<I>~/.bash_profile</I>,
+
+<I>~/.bash_login</I>,
+
+或
+<I>~/.profile</I>
+
+。默认情况下，
+<B>bash</B>
+
+在作为登录 shell 启动时读取这些文件 (参见下面的
+<FONT SIZE="-1"><B>启动(INVOCATION)</B>
+
+</FONT>
+章节)
+<DT><B>--norc</B>
+
+<DD>
+如果 shell 是交互的，不读取/执行个人初始化文件
+<I>~/.bashrc</I>
+
+这个选项在 shell 以
+<B>sh</B>
+
+命令启动时是默认启用的
+<DT><B>--posix</B>
+
+<DD>
+如果默认操作与 POSIX 1003.2 标准不同的话，改变 <B>bash</B> 的行为来符合标准 (<I>posix mode</I>)
+<DT><B>--restricted</B>
+
+<DD>
+shell 成为受限的 (参见下面的
+<FONT SIZE="-1"><B>受限的shell(RESTRICTED SHELL)</B>
+
+</FONT>
+章节)
+<DT><B>--rpm-requires</B>
+
+<DD>
+产生一个为使脚本运行，需要的文件的列表。
+这个选项包含了 <B>-n</B> 选项。
+它是为了避免进行编译期错误检测时的限制－－
+Backticks, [] tests,  还有 evals 不会被解释，一些依赖关系可能丢失
+<DT><B>--verbose</B>
+
+<DD>
+等价于 <B>-v</B>
+<DT><B>--version</B>
+
+<DD>
+在标准输出显示此
+<B>bash</B>
+
+的版本信息并成功退出。
+
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参数(ARGUMENTS)</H2>
+
+如果选项处理之后仍有参数剩余，并且没有指定
+<B>-c</B>
+
+或
+<B>-s</B>
+
+选项，第一个参数将假定为一个包含 shell 命令的文件的名字。
+如果
+<B>bash</B>
+
+是以这种方式启动的，
+<B>$0</B>
+
+将设置为这个文件的名字，位置参数将设置为剩余的其他参数。
+<B>Bash</B>
+
+从这个文件中读取并执行命令，然后退出。
+<B>Bash</B> 的退出状态是脚本中执行的最后一个命令的退出状态。
+如果没有执行命令，退出状态是0。
+尝试的步骤是先试图打开在当前目录中的这个文件，接下来，
+如果没有找到，shell 将搜索脚本的
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+环境变量中的路径。
+<A NAME="lbAH">&nbsp;</A>
+<H2>启动(INVOCATION)</H2>
+
+<I>login shell</I> 登录 shell，参数零的第一个字符是
+<B>-</B>
+
+，或者启动时指定了
+<B>--login</B>
+
+选项的 shell。
+<P>
+
+<I>interactive</I> 交互的 shell，是一个启动时没有指定非选项的参数，并且没有指定
+<B>-c</B>
+
+选项，标准输出和标准输入都连接到了终端 (在
+<I><A HREF="/cgi-bin/man/man2html?3+isatty">isatty</A></I>(3)
+
+中判定) 的shell，或者启动时指定了
+<B>-i</B>
+
+选项的 shell。如果
+<B>bash</B>
+
+是交互的，
+<FONT SIZE="-1"><B>PS1</B>
+
+</FONT>
+环境变量将被设置，并且
+<B>$-</B>
+
+包含
+<B>i</B>
+
+，允许一个 shell 脚本或者一个启动文件来检测这一状态。
+<P>
+
+下列段落描述了
+<B>bash</B>
+
+如何执行它的启动文件。如果这些启动文件中的任一个存在但是不可读取，
+<B>bash</B>
+
+将报告一个错误。文件名中的波浪号 (~,tilde) 将像
+<FONT SIZE="-1"><B>EXPANSION</B>
+
+</FONT>
+章节中
+<B>Tilde Expansion</B>
+
+段描述的那样展开。
+<P>
+
+当
+<B>bash</B>
+
+是作为交互的登录 shell 启动的，或者是一个非交互的 shell 但是指定了 <B>--login</B> 选项，
+它首先读取并执行 <I>/etc/profile</I> 中的命令，只要那个文件存在。
+读取那个文件之后，它以如下的顺序查找 <I>~/.bash_profile</I>,
+<I>~/.bash_login</I>, 和 <I>~/.profile</I>, 从存在并且可读的第一个文件中读取并执行其中的命令。
+<B>--noprofile</B>
+
+选项可以用来在 shell 启动时阻止它这样做。
+<P>
+
+当一个登录 shell 退出时，
+<B>bash</B>
+
+读取并执行文件 <I>~/.bash_logout</I> 中的命令，只要它存在。
+<P>
+
+当一个交互的 shell 但不是登录 shell 启动时，
+<B>bash</B>
+
+从文件 <I>~/.bashrc</I> 中读取并执行命令，只要它存在。可以用
+<B>--norc</B>
+
+选项来阻止它这样做。
+<B>--rcfile</B> <I>file</I> 选项将强制
+<B>bash</B>
+
+读取并执行文件 <I>file</I> 中的命令，而不是 <I>~/.bashrc</I> 中的。
+<P>
+
+当
+<B>bash</B>
+
+以非交互的方式启动时，例如在运行一个 shell 脚本时，它在环境中查找变量
+<FONT SIZE="-1"><B>BASH_ENV</B>
+
+</FONT>
+，如果它存在则将它的值展开，使用展开的值作为一个文件的名称，读取并执行。
+<B>Bash</B>
+
+运作的过程就如同执行了下列命令：
+<P>
+<DL COMPACT><DT><DD>
+
+if [ -n &quot;$BASH_ENV&quot; ]; then . &quot;$BASH_ENV&quot;; fi
+</DL>
+
+<P>
+但是没有使用
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+变量的值来搜索那个文件名。
+<P>
+
+如果
+<B>bash</B>
+
+以名称
+<B>sh</B>
+
+启动，它试图模仿 (mimic)
+<B>sh</B>
+
+历史版本的启动过程，尽可能地相似，同时也遵循 POSIX 标准。
+当作为交互式登录 shell 启动时,或者是非交互但使用了 <B>--login</B> 选项
+启动的时候,它首先尝试读取并执行文件
+<I>/etc/profile</I>
+
+和
+<I>~/.profile</I>,
+
+中的命令.
+选项
+<B>--noprofile</B>
+
+用于避免这种行为.当使用命令
+<B>sh</B>
+
+来启动一个交互式的 shell 时,
+<B>bash</B>
+
+查找环境变量
+<FONT SIZE="-1"><B>ENV</B>,
+
+</FONT>
+如果有定义的话就扩展它的值,然后使用扩展后的值作为要读取和执行的文件
+的名称.由于使用
+<B>sh</B>
+
+启动的 shell 不会读取和执行任何其他的启动文件,选项
+<B>--rcfile</B>
+
+没有意义.使用名称
+<B>sh</B>
+
+启动的非交互的 shell 不会读取任何其他启动文件.当以
+<B>sh</B>
+
+启动时,
+<B>bash</B>
+
+在读取启动文件之后进入
+<I>posix</I>
+
+模式.
+<P>
+
+当
+<B>bash</B>
+
+以
+<I>posix</I>
+
+模式启动时,(和使用
+<B>--posix</B>
+
+命令行参数效果相同),它遵循 POSIX 标准.
+这种模式下,交互式 shell 扩展
+<FONT SIZE="-1"><B>ENV</B>
+
+</FONT>
+环境变量的值,读取并执行以扩展后值为文件名的配置文件.
+不会读取其他文件.
+<P>
+
+<B>Bash</B>
+
+试着检测它是不是由远程 shell 守护程序,通常为 <I>rshd</I> 启动的.如果
+<B>bash</B>
+
+发现它是由 <I>rshd</I> 启动的,它将读取并执行 <I>~/.bashrc</I> 文件中的命令,
+只要这个文件存在并且可读.如果以 <B>sh</B> 命令启动,它不会这样做.
+选项
+<B>--norc</B>
+
+可以用来阻止这种行为,选项
+<B>--rcfile</B>
+
+用来强制读取另一个文件,但是通常 <I>rshd</I> 不会允许它们,
+或者用它们来启动 shell.
+<P>
+
+如果 shell 是以与真实用户(组) id 不同的有效用户(组) id 来启动的,
+并且没有 <B>-</B> 选项,那么它不会读取启动文件, 
+也不会从环境中继承 shell 函数. 环境变量中如果出现
+<FONT SIZE="-1"><B>SHELLOPTS，</B>
+
+</FONT>
+它将被忽略.有效用户 id 将设置为真实用户 id.
+如果启动时给出了 <B>-<BR>
+</B> 选项,那么启动时的行为是类似的,
+但是不会重置有效用户 id.
+<A NAME="lbAI">&nbsp;</A>
+<H2>定义(DEFINITIONS)</H2>
+
+<P>
+
+下列定义在文档余下部分中通用.
+
+<DL COMPACT>
+<DT><B>blank 空白</B>
+
+<DD>
+一个空格或是 tab .
+<DT><B>word 词</B>
+
+<DD>
+一个字符序列, shell 将它们视为一个结构单元. 也称为一个 
+<B>token</B>片段。
+
+<DT><B>name 名称</B>
+
+<DD>
+一个只由字母,数字和下划线构成的词,并且以字符或下划线起始. 也称为一个
+<I>word </I>
+
+<B>identifier</B>标识符.
+
+<DT><B>metacharacter 元字符</B>
+
+<DD>
+一个字符, 如果不是引用的话, 将成为词的分隔符. 它是如下字符之一:
+<BR>
+
+<DL COMPACT><DT><DD>
+<P>
+
+
+<B>|  &amp; ; ( ) &lt; &gt; space tab</B>
+</DL>
+
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>control operator 控制操作符</B>
+
+<DD>
+一个 <I>token</I>(标识), 拥有控制功能. 它是如下符号之一:
+<DL COMPACT><DT><DD>
+<P>
+
+
+<B>|| &amp; &amp;&amp; ; ;; ( ) | &lt;newline&gt;</B>
+</DL>
+
+
+</DL>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>保留字(RESERVED WORDS)</H2>
+
+<I>Reserved words</I>(保留字) 是对 shell 有特殊意义的词.
+下列词被识别为保留的, 如果不是引用, 并且不是一个简单命令的起始词 (参见下面的
+<FONT SIZE="-1"><B>shell语法(SHELL GRAMMAR)</B>
+
+</FONT>
+), 也不是
+<B>case </B>
+
+或者
+<B>for</B>
+
+命令的第三个词:
+
+<P>
+
+<B>! case  do done elif else esac fi for function if in select then until while { } time [[ ]]
+</B>
+
+
+
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>shell语法(SHELL GRAMMAR)</H2>
+
+<A NAME="lbAL">&nbsp;</A>
+<H3>Simple Commands 简单命令</H3>
+
+<P>
+
+<I>simple command</I>(简单命令) 是(可选的)一系列变量赋值, 紧接着是
+<B>blank</B>(空格) 分隔的词和重定向, 然后以一个 <I>control operator</I> 结束.
+第一个词指明了要执行的命令, 它被作为第 0 个参数. 其余词被作为这个命令的参数.
+<P>
+
+<I>simple command</I> 简单命令的返回值是它的退出状态, 或是 128+<I>n</I>, 如果命令被 signal(信号) 
+<I>n</I>
+
+结束的话.
+<A NAME="lbAM">&nbsp;</A>
+<H3>Pipelines 管道</H3>
+
+<P>
+
+<I>pipeline</I>(管道) 是一个或多个命令的序列，用字符
+<B>|</B>
+
+分隔。管道的格式是这样:
+<DL COMPACT><DT><DD>
+<P>
+
+[<B>time</B> [<B>-p</B>]] [ ! ] <I>command</I> [ <B>|</B> <I>command2</I> ... ]
+</DL>
+
+<P>
+
+命令
+<I>command</I>
+
+的标准输出通过管道连接到命令
+<I>command2</I>
+
+的标准输入。连接是在命令指定的任何重定向之前进行的(参见下面的
+<FONT SIZE="-1"><B>REDIRECTION 重定向)。</B>
+
+</FONT>
+<P>
+
+如果保留字
+<B>!</B>
+
+作为管道前缀，管道的退出状态将是最后一个命令的退出状态的逻辑非值。
+否则，管道的退出状态就是最后一个命令的。
+shell 在返回退出状态值之前，等待管道中的所有命令返回。
+<P>
+
+如果保留字
+<B>time</B>
+
+作为管道前缀，管道中止后将给出执行管道耗费的用户和系统时间。
+选项 <B>-p</B> 将使输出符合 POSIX 指定的格式。
+环境变量
+<FONT SIZE="-1"><B>TIMEFORMAT</B>
+
+</FONT>
+可以设置为一个格式字符串，指定时间信息应当如何显示；参见下面的
+<B>Shell Variables 环境变量</B>
+
+中
+<FONT SIZE="-1"><B>TIMEFORMAT</B>
+
+</FONT>
+的讲述。
+<P>
+
+管道中的每个命令都作为单独的进程来执行(即，在一个子 shell 中启动)。
+<A NAME="lbAN">&nbsp;</A>
+<H3>Lists 序列</H3>
+
+<P>
+
+<I>list</I>(序列)是一个或多个管道，用操作符
+<B>;</B>,
+
+<B>&amp;</B>,
+
+<B>&amp;&amp;</B>,
+
+或
+<B>||</B>
+
+分隔的序列, 并且可以选择用
+<B>;</B>,
+
+<B>&amp;</B>,
+
+或
+<B>&lt;newline&gt;</B>新行符结束.
+
+<P>
+
+这些序列操作符中，
+<B>&amp;&amp;</B>
+
+和
+<B>||</B>
+
+优先级相同，其次是
+<B>;</B>
+
+和
+<B>&amp;,</B>
+
+它们的优先级是相同的。
+<P>
+
+序列中可以有一个或多个新行符来分隔命令，而不是使用分号分隔。
+<P>
+
+如果一个命令是由控制操作符
+<B>&amp;</B>
+
+结束的, shell 将在后台的子 shell 中执行这个命令。
+shell 不会等待命令执行结束，返回状态总是 0。以分号
+<B>;</B>
+
+分隔的命令会被顺序执行；shell 会等待每个命令依次结束。返回状态是最后执行的命令的返回状态。
+<P>
+
+控制操作符
+<B>&amp;&amp;</B>
+
+和
+<B>||</B>
+
+分别代表 AND 和 OR 序列。一个 AND 序列的形式是
+<DL COMPACT><DT><DD>
+<P>
+
+<I>command1</I> <B>&amp;&amp;</B> <I>command2</I>
+</DL>
+
+<P>
+
+<I>command2</I>
+
+只有在
+<I>command1</I>
+
+返回 0 时才被执行。
+<P>
+
+一个 OR 序列的形式是
+<DL COMPACT><DT><DD>
+<P>
+
+<I>command1</I> <B>||</B> <I>command2</I>
+<P>
+
+</DL>
+
+<P>
+
+<I>command2</I>
+
+只有在
+<I>command1</I>
+
+返回非 0 状态时才被执行。AND 和 OR 序列的返回状态是序列中最后执行的命令的返回状态。
+<A NAME="lbAO">&nbsp;</A>
+<H3>Compound Commands 复合命令</H3>
+
+<P>
+
+<I>compound command</I>(复合命令) 是如下情况之一：
+<DL COMPACT>
+<DT>(<I>list</I>)<DD>
+<I>list</I> 序列将在一个子 shell 中执行。变量赋值和影响 shell 环境变量的内建命令在命令结束后不会再起作用。
+返回值是序列的返回值。
+<DT>{ <I>list</I>; }<DD>
+<I>list</I> 序列将在当前 shell 环境中执行。序列必须以一个新行符或分号结束。
+这种做法也称为 <I>group command</I>(命令组)。返回值是序列的返回值。注意与元字符 <B>(</B> 和 <B>)</B> 不同，
+<B>{</B> 和 <B>}</B> 是 <I>reserved words</I>(保留字)，必须出现在能够识别保留字的场合。
+由于它们不会产生断词(cause a word break)，它们和序列之间必须用空格分开。
+<DT>((<I>expression</I>))<DD>
+表达式 <I>expression</I> 将被求值。求值规则在下面的
+<FONT SIZE="-1"><B>算术求值</B>(ARITHMETIC<B>EVALUATION)</B>
+
+</FONT>
+章节中描述。如果表达式的值非零，返回值就是 0；否则返回值是 1。这种做法和
+<B>let &quot;</B><I>expression</I>&quot;
+等价。
+<DT><B>[[</B> <I>expression</I> <B>]]</B><DD>
+返回 0 或 1，取决于条件表达式 <I>expression</I> 求值的情况。
+表达式是由下面
+<FONT SIZE="-1"><B>CONDITIONAL</B>EXPRESSIONS<B>条件表达式</B>
+
+</FONT>
+章节中描述的原语(primaries) 组成。
+<B>[[</B> 和 <B>]]</B> 中的词不会进行词的拆分和路径的扩展处理；
+而tilde 扩展，参数和变量扩展，算术扩展，命令替换，函数替换和引用的去除则都将进行。
+
+<P>
+
+当使用 <B>==</B> 和 <B>!=</B> 操作符时，操作符右边的字符串被认为是一个模式，根据下面
+<B>Pattern Matching</B>(模式匹配) 章节中的规则进行匹配。
+如果匹配则返回值是 0，否则返回 1。模式的任何部分可以被引用，强制使它作为一个字符串而被匹配。
+
+<P>
+
+表达式可以用下列操作符结合起来。根据优先级的降序列出如下：
+
+<P>
+
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>( </B><I>expression</I> )
+
+<DD>
+返回表达式 <I>expression</I> 的值。括号可以用来提升操作符的优先级。
+<DT><B>! </B><I>expression</I>
+
+<DD>
+返回真，如果表达式
+<I>expression</I>
+
+返回假。
+<DT><I>expression1</I> <B>&amp;&amp;</B> <I>expression2</I><DD>
+返回真，如果表达式
+<I>expression1</I>
+
+和
+<I>expression2</I>
+
+都返回真。
+<DT>
+<DD>
+<I>expression1</I> <B>||</B> <I>expression2</I>
+返回真，如果表达式
+<I>expression1</I>
+
+或者
+<I>expression2</I>
+
+二者之一返回真。
+
+</DL>
+<P>
+
+<B>&amp;&amp;</B>(与) 和
+
+<B>||</B>
+操作符不会对表达式 <I>expression2</I> 求值，如果 <I>expression1</I> 可以决定整个条件表达式的返回值的话。
+</DL>
+
+<DT><B>for</B> <I>name</I> [ <B>in</B> <I>word</I> ] ; <B>do</B> <I>list</I> ; <B>done</B><DD>
+<B>in</B> 之后的一系列词会被扩展，产生一个项目列表。变量 <I>name</I> 被依次赋以这个列表中的每个元素，
+序列 <I>list</I> 每次都被执行。如果 <B>in</B> <I>word</I> 被忽略，那么 <B>for</B> 命令遍历
+已设置的位置参数(positional parameter，参见下面的
+<FONT SIZE="-1"><B>PARAMETERS 参数)，</B>
+
+</FONT>
+为每一个执行一次序列 <I>list</I>。
+返回值是最后一个命令的返回值。如果 <B>in</B> 之后的词扩展的结果是空列表，就不会执行任何命令，返回值是 0。
+<DT><B>for</B> (( <I>expr1</I> ; <I>expr2</I> ; <I>expr3</I> )) ; <B>do</B> <I>list</I> ; <B>done</B><DD>
+首先，算术表达式 <I>expr1</I> 被根据下面
+<FONT SIZE="-1"><B>算术求值</B>(ARITHMETIC<B>EVALUATION)</B>
+
+</FONT>
+中的规则进行求值。
+然后算术表达式 <I>expr2</I> 被循环求值，直到它等于 0。每次 <I>expr2</I> 结果非零时，序列 <I>list</I> 都被执行，
+算术表达式 <I>expr3</I> 被求值。如果任何表达式被忽略，将被视为执行结果是 1。
+返回值是序列 <I>list</I> 中被执行的最后一个命令的返回值；或者是 false，如果任何表达式非法的话。
+<DT><B>select</B> <I>name</I> [ <B>in</B> <I>word</I> ] ; <B>do</B> <I>list</I> ; <B>done</B><DD>
+<B>in</B> 之后的一系列词会被扩展，产生一个项目列表。这个扩展后的词集合被输出到标准错误上，每个前面
+加上一个数字。如果 <B>in</B> <I>word</I> 被忽略，将输出位置参数 (参见下面的
+<FONT SIZE="-1"><B>PARAMETERS 参数</B>
+
+</FONT>
+章节)。
+<B>PS3</B>
+
+提示符将被显示出来，等待从标准输入得到一行输入。如果
+输入是一个数字且显示中有对应的词，那么变量
+<I>name</I>
+
+的值将设置为这个词。如果输入一个空行，那么词和提示符将再次显示出来。如果读入了一个 EOF，命令就结束。
+任何其他值将设置变量
+<I>name</I>
+
+为空。读入的行保存为变量
+<B>REPLY</B>.
+
+序列
+<I>list</I>
+
+在每次选择之后都会执行，直到执行了一个
+<B>break</B>
+
+命令。
+<B>select</B>
+
+的退出状态是序列
+<I>list</I>
+
+中执行的最后一个命令的退出状态，如果没有执行命令就是 0。
+<DT><B>case</B> <I>word</I> <B>in</B> [ [(] <I>pattern</I> [ <B>|</B> <I>pattern</I> ] ... ) <I>list</I> ;; ] ... <B>esac</B><DD>
+<B>case</B> 命令首先扩展 <I>word</I>, 然后依次试着用每个 <I>pattern</I> 来匹配它，
+使用与路径扩展相同的匹配规则(参见下面的
+<B>Pathname Expansion 路径扩展</B>
+
+章节)。如果找到一个匹配，相应的序列将被执行。找到一个匹配之后，不会再尝试其后的匹配。
+如果没有模式可以匹配，返回值是 0。否则，返回序列中最后执行的命令的返回值。
+<DT><B>if</B> <I>list</I>; <B>then</B> <I>list;</I> [ <B>elif</B> <I>list</I>; <B>then</B> <I>list</I>; ] ... [ <B>else</B> <I>list</I>; ] <B>fi</B><DD>
+序列
+<B>if </B>
+
+<I>list</I>
+
+被执行。如果退出状态是 0，<B>then</B> <I>list</I> 将被执行。否则，每个 <B>elif</B>
+将被一次执行，如果退出状态是 0，相应的 <B>then</B> <I>list</I> 将被执行，命令结束。
+否则，<B>else</B> <I>list</I> 将被执行，如果存在的话。
+退出状态是最后执行的命令的退出状态，或者是 0，如果所有条件都不满足。
+<DT><B>while</B> <I>list</I>; <B>do</B> <I>list</I>; <B>done</B><DD>
+
+<DT><B>until</B> <I>list</I>; <B>do</B> <I>list</I>; <B>done</B><DD>
+
+<B>while</B> 命令不断地执行序列 <B>do</B> <I>list</I>，直到序列中最后一个命令返回 0。
+<B>until</B> 命令和 <B>while</B> 命令等价，除了对条件的测试恰好相反；序列
+<B>do</B>
+
+<I>list</I>
+
+执行直到序列中最后一个命令返回非零状态值。
+<B>while</B> 和 <B>until</B> 命令的退出状态是序列 <B>do</B> <I>list</I> 中最后一个命令的退出状态，
+或者是 0，如果没有执行任何命令。
+<DT>[ <B>function</B> ] <I>name</I> () { <I>list</I>; }<DD>
+这样可以定义一个名为 <I>name</I> 的函数。函数体 <I>body</I> 是包含在 { 和 } 之间的命令序列 <I>list</I>。
+在指定将 <I>name</I> 作为一个命令运行的场合，这个序列将被执行。
+函数的退出状态是函数体最后执行的命令的退出状态(参见下面的
+<FONT SIZE="-1"><B>FUNCTIONS 函数</B>
+
+</FONT>
+章节)。
+</DL>
+<A NAME="lbAP">&nbsp;</A>
+<H2>注释(COMMENTS)</H2>
+
+在非交互的 shell 中或者使用内建命令
+<B>shopt</B>
+
+启用了
+<B>interactive_comments</B>
+
+选项的交互的 shell 中，以
+<B>#</B>
+
+起始的词使得这个词和所有同一行上所有剩余的字符都被忽略。没有启用
+<B>interactive_comments</B>
+
+选项的交互式 shell 不允许出现注释。这个选项在交互式 shell 中是默认启用的
+(参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节)。
+<A NAME="lbAQ">&nbsp;</A>
+<H2>引用(QUOTING)</H2>
+
+引用 <I>Quoting</I> 用来去掉特定字符或词的特殊意义。引用可以用来禁止对特殊字符的处理，
+阻止保留字被识别，还用来阻止参数的扩展。
+<P>
+
+上面在
+<FONT SIZE="-1"><B>DEFINITIONS 定义</B>
+
+</FONT>
+中列出的每个元字符 <I>metacharacters</I> 对于 shell 都有特殊意义。如果要表达它的本义，必须引用它。
+<P>
+
+在使用命令行历史扩展功能时，<I>history expansion</I> 字符，通常是 <B>!</B>，必须被引用，才不会进行历史扩展。
+<P>
+
+有三种引用机制：转义字符
+<I>(escape character)</I>,
+
+单引号和双引号。
+<P>
+
+一个未被引用的反斜杠 (<B>\</B>) 是转义字符
+<I>escape character</I>。
+
+它保留其后下一个字符的字面意义，除非那是一个新行符。
+如果 <B>\</B> 和新行符成对出现，并且反斜杠自身没有被引用，那么 <B>\</B>&lt;newline&gt;
+被视为续行标志 (意思是，它被从输入流中删除并忽略了)。
+<P>
+
+将字符放在单引号之中，将保留引用中所有字符的字面意义。单引号不能包含在单引号引用之中，即使前面加上了反斜杠。
+<P>
+
+将字符放在双引号中，同样保留所有字符的字面意义，例外的情况是
+<B>$</B>,
+
+<B>`</B>,
+
+和
+<B>\</B>。
+
+字符
+<B>$</B>
+
+和
+<B>`</B>
+
+在双引号中仍然具有特殊意义。反斜杠只有后面是下列字符时才有特殊意义：
+<B>$</B>,
+
+<B>`</B>,
+
+<B>&quot;</B>,
+<B>\</B>,
+
+或
+<B>&lt;newline&gt;</B>.
+
+双引号可以包含在双引号引用中，但要在前面加上一个反斜杠。
+<P>
+
+特殊的参数
+<B>*</B>
+
+和
+<B>@</B>
+
+在双引号中有特殊意义(参见下面的
+<FONT SIZE="-1"><B>PARAMETERS 参数</B>
+
+</FONT>
+章节)。
+<P>
+
+形式为 <B>$</B>'<I>string</I>' 的词会被特殊处理。它被扩展为 <I>string</I>，其中的反斜杠转义字符
+被替换为 ANSI C 标准中规定的字符。反斜杠转义序列，如果存在的话，将做如下转换：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>\a</B>
+
+<DD>
+alert (bell) 响铃
+<DT><B>\b</B>
+
+<DD>
+backspace 回退
+<DT><B>\e</B>
+
+<DD>
+an escape character 字符 Esc
+<DT><B>\f</B>
+
+<DD>
+form feed 进纸
+<DT><B>\n</B>
+
+<DD>
+new line 新行符
+<DT><B>\r</B>
+
+<DD>
+carriage return 回车
+<DT><B>\t</B>
+
+<DD>
+horizontal tab 水平跳格
+<DT><B>\v</B>
+
+<DD>
+vertical tab 竖直跳格
+<DT><B>\\</B>
+
+<DD>
+backslash 反斜杠
+<DT><B>\'</B>
+
+<DD>
+single quote 单引号
+<DT><B>\</B><I>nnn</I>
+
+<DD>
+一个八比特字符，它的值是八进制值 <I>nnn</I> (一到三个数字)。
+<DT><B>\x</B><I>HH</I>
+
+<DD>
+一个八比特字符，它的值是十六进制值 <I>HH</I> (一到两个十六进制数字)。
+<DT><B>\c</B><I>x</I>
+
+<DD>
+一个 ctrl-<I>x</I> 字符
+
+</DL>
+</DL>
+
+<P>
+
+扩展结果是单引号引用的，就好像 $ 符号不存在一样。
+<P>
+
+双引号引用字符串前面加上一个 <B>$</B> 符号将使得这个字符串被根据当前语言环境 (locale) 来翻译。
+如果当前语言环境是 <B>C</B> 或者 <B>POSIX</B>，这个符号将被忽略。
+如果这个字符串被翻译并替换了，那么替换结果是双引号引用的。
+<A NAME="lbAR">&nbsp;</A>
+<H2>参数(PARAMETERS)</H2>
+
+一个参数
+<I>parameter</I>
+
+是一个储存值的实体。它可以是一个名称
+<I>name</I>,
+
+一个数字或者是下面
+<B>Special Parameters 特殊参数</B>
+
+章节中列出的特殊字符之一。从 shell 的角度来看，一个变量
+<I>variable</I>
+
+是一个由名称
+<I>name</I>
+
+代表的参数。一个变量有一个值 <I>value</I> 以及零个或多个属性 <I>attibutes</I>。属性可以使用内建命令
+<B>declare</B>
+
+来设置(参见下面
+<FONT SIZE="-1"><B>shell</B>内建命令(SHELL<B>BUILTIN</B>COMMANDS)
+
+</FONT>
+章节中对
+<B>declare</B>
+
+的描述)。
+<P>
+
+如果给一个参数赋值，那么它就被定义了。空字符串是有效的值。一旦一个变量被定义了，它只能用内建命令
+<B>unset</B>
+
+来取消(参见下面
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节).
+<P>
+
+一个变量
+<I>variable</I>
+
+可以用这样的语句形式来赋值：
+<DL COMPACT><DT><DD>
+<P>
+
+<I>name</I>=[<I>value</I>]
+</DL>
+
+<P>
+
+如果没有给出值
+<I>value，</I>
+
+变量就被赋为空字符串。所有值
+<I>values</I>
+
+都经过了波浪线扩展，参数和变量扩展，命令替换，算术扩展和引用的删除(参见下面的
+<FONT SIZE="-1"><B>EXPANSION 扩展</B>
+
+</FONT>
+章节)。如果变量设置了
+<B>integer 整数</B>
+
+属性，那么值
+<I>value</I>
+
+将进行算术扩展，即使没有应用 $((...)) 扩展 (参见下面的
+<FONT SIZE="-1"><B>Arithmetic Expansion 算术扩展</B>
+
+</FONT>
+章节)。
+不会进行词的拆分，除非是下面
+<B>Special Parameters 特殊参数</B>
+
+中提到的 <B>&quot;$@&quot;</B>。
+不会进行路径的扩展。赋值语句也出现在下列内建命令中，作为它们的参数：
+<B>declare</B>,
+
+<B>typeset</B>,
+
+<B>export</B>,
+
+<B>readonly</B>,
+
+和
+<B>local</B>
+
+。
+<A NAME="lbAS">&nbsp;</A>
+<H3>Positional Parameters 位置参数</H3>
+
+<P>
+
+位置参数
+<I>positional parameter</I>
+
+是以一或多个数字代表的参数，除了 0。位置参数是在 shell 启动时，根据它的参数来赋值的，
+也可以用内建命令
+<B>set</B>
+
+来重新赋值。位置参数不能用赋值语句来赋值。在一个 shell 函数被执行的时候，位置参数会被暂时地替换掉
+(参见下面的
+<FONT SIZE="-1"><B>FUNCTIONS 函数</B>
+
+</FONT>
+章节)。
+<P>
+
+当位置参数由两个以上的数字构成时，它必须放在括号内 (参见下面的
+<FONT SIZE="-1"><B>EXPANSION 扩展</B>
+
+</FONT>
+章节)。
+<A NAME="lbAT">&nbsp;</A>
+<H3>Special Parameters 特殊参数</H3>
+
+<P>
+
+shell 对一些参数做特殊处理。这些参数只能被引用而不能被赋值。
+
+<DL COMPACT>
+<DT><B>*</B>
+
+<DD>
+扩展为位置参数，从 1 开始。如果扩展发生在双引号中，它扩展为一个词，值是各个参数，以特殊变量
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+的第一个字符分隔。也就是说，&quot;<B>$*</B>&quot; 等价于
+&quot;<B>$1</B><I>c</I><B>$2</B><I>c</I><B>...</B>&quot;，这里
+<I>c</I>
+
+是变量
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+的第一个字符。如果没有设置
+<FONT SIZE="-1"><B>IFS，</B>
+
+</FONT>
+那么参数将用空格分隔。
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+<DT><B>@</B>
+
+<DD>
+扩展为位置参数，从 1 开始。如果扩展发生在双引号中，每个参数都将扩展为一个词。也就是说，
+&quot;<B>$@</B>&quot; 等价于
+&quot;<B>$1</B>&quot; &quot;<B>$2</B>&quot; ...
+如果位置参数不存在，&quot;<B>$@</B>&quot; 和
+<B>$@</B>
+
+扩展为空 (即，它们被删除了)。
+<DT><B>#</B>
+
+<DD>
+扩展为位置参数的个数，以十进制表示。
+<DT><B>?</B>
+
+<DD>
+扩展为最近执行的前台管道的状态。
+<DT><B>-</B>
+
+<DD>
+扩展为当前选项标志。标志是在启动时或以内建命令
+<B>set</B>
+
+指定的，或者是 shell 自身设置的 (例如选项
+<B>-i</B>
+
+)。
+<DT><B>$</B>
+
+<DD>
+扩展为 shell 的进程 ID。在一个 () 子 shell 中，它扩展为当前 shell 的
+进程 ID 而不是子 shell 的。
+<DT><B>!</B>
+
+<DD>
+扩展为最近一次执行的后台 (异步) 命令的进程号。
+<DT><B>0</B>
+
+<DD>
+扩展为 shell 或者 shell 脚本的名称。这个变量是在 shell 初始化时设置的。如果
+<B>bash</B>
+
+是执行脚本文件时启动的，
+<B>$0</B>
+
+将设置为那个文件的名称。如果
+<B>bash</B>
+
+启动时的参数包含
+<B>-c，</B>
+
+那么
+<B>$0</B>
+
+被设置为启动命令行被执行后的第一个参数，如果有的话。否则，它被设置为用来启动
+<B>bash</B>
+
+的文件名，就是参数 0。
+<DT><B>_</B>
+
+<DD>
+shell 启动时，设置为 shell 或参数中被执行的 shell 脚本的绝对路径名。
+然后，在扩展时扩展为上一个命令的最后一个参数。它也被设置为被执行的每个命令的文件全名并且
+被设置到这个命令执行的环境当中。当检查邮件时，这个参数保存着正在检查的邮件文件的名称。
+
+</DL>
+<A NAME="lbAU">&nbsp;</A>
+<H3>Shell Variables 变量</H3>
+
+<P>
+
+shell 定义了下列变量：
+<P>
+
+
+<DL COMPACT>
+<DT><B>BASH</B>
+
+<DD>
+扩展为用来启动当前
+<B>bash</B>
+
+实例的文件全名。
+<DT><B>BASH_VERSINFO</B>
+
+<DD>
+一个只读数组变量，成员保存着当前 
+<B>bash</B>
+
+实例的版本信息。赋予数组元素的值是如下这些：
+<P>
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>BASH_VERSINFO[</B>0]
+
+<DD>
+主版本号 (<I>release</I>).
+<DT><B>BASH_VERSINFO[</B>1]
+
+<DD>
+次版本号 (<I>version</I>).
+<DT><B>BASH_VERSINFO[</B>2]
+
+<DD>
+补丁版本
+<DT><B>BASH_VERSINFO[</B>3]
+
+<DD>
+编译信息
+<DT><B>BASH_VERSINFO[</B>4]
+
+<DD>
+发布时的状态 (例如, <I>beta1</I>).
+<DT><B>BASH_VERSINFO[</B>5]
+
+<DD>
+<B>MACHTYPE</B> 平台类型
+
+</DL>
+</DL>
+
+<DT><B>BASH_VERSION</B>
+
+<DD>
+扩展为一个字符串，描述了这个
+<B>bash</B>.
+
+实例的版本。
+<DT><B>COMP_CWORD</B>
+
+<DD>
+<B>${COMP_WORDS}</B> 的索引，指向当前光标位置所在的词。
+这个变量只有在被可编程补全功能 (参见下面的 <B>Programmable Completion</B> 章节) 调用的 shell 函数中才可用。
+<DT><B>COMP_LINE</B>
+
+<DD>
+当前命令行。这个变量只有在被命令补全功能调用的 shell 函数和外部命令中才可用。
+<DT><B>COMP_POINT</B>
+
+<DD>
+相对于当前命令起始处的当前光标位置。如果当前光标位置是当前命令的末端，
+它的值就和 <B>${#COMP_LINE}</B> 相等。
+这个变量只有在被命令补全功能调用的 shell 函数和外部命令中才可用。
+<DT><B>COMP_WORDS</B>
+
+<DD>
+一个数组变量 (参见下面的 <B>Arrays</B>(数组)一节)，由当前命令行的各个单词构成。
+这个变量只有在被命令补全功能调用的 shell 函数中才可用。
+<DT><B>DIRSTACK</B>
+
+<DD>
+一个数组变量，包含当前目录栈的内容。栈中的目录排列的顺序就是用内建命令
+<B>dirs</B>
+
+显示时的顺序。对这个数组变量的成员赋值可以用来修改栈中已有的目录，但是要添加和删除目录就必须使用
+内建命令
+<B>pushd</B>
+
+和
+<B>popd。</B>
+
+对它赋值不会改变当前目录。如果取消了
+<FONT SIZE="-1"><B>DIRSTACK</B>
+
+</FONT>
+的定义，它就失去了它的特殊意义，即使后来重新定义它。
+<DT><B>EUID</B>
+
+<DD>
+扩展为当前用户的有效用户 ID。它在 shell 启动时设置。它是只读的。
+<DT><B>FUNCNAME</B>
+
+<DD>
+当前执行的 shell 函数名。这个变量只有在执行一个 shell 函数时存在。向
+<FONT SIZE="-1"><B>FUNCNAME</B>
+
+</FONT>
+赋值没有效果并且返回一个错误。如果取消了
+<FONT SIZE="-1"><B>FUNCNAME</B>
+
+</FONT>
+的定义，它就失去了特殊的意义，即使后来重新定义它。
+<DT><B>GROUPS</B>
+
+<DD>
+一个数组变量，包含当前用户所属的组的列表。向
+<FONT SIZE="-1"><B>GROUPS</B>
+
+</FONT>
+赋值没有效果并且返回一个错误。如果取消了
+<FONT SIZE="-1"><B>GROUPS</B>
+
+</FONT>
+的定义，它就失去了特殊的意义，即使后来重新定义它。
+<DT><B>HISTCMD</B>
+
+<DD>
+当前命令的历史编号，或者历史列表中的索引。如果取消了
+<FONT SIZE="-1"><B>HISTCMD</B>
+
+</FONT>
+的定义，它就失去了特殊的意义，即使后来重新定义它。
+<DT><B>HOSTNAME</B>
+
+<DD>
+自动设置为当前的主机名。
+<DT><B>HOSTTYPE</B>
+
+<DD>
+自动设置为一个字符串，唯一地标识着正在运行
+<B>bash</B>
+
+的机器类型。默认值是系统相关的。
+<DT><B>LINENO</B>
+
+<DD>
+每次引用这个参数时，shell 将它替换为一个指示在脚本或函数中当前行号的十进制数字(从 1 开始)。
+如果不是在脚本或函数中，替换得到的值不一定有意义。如果取消了
+<FONT SIZE="-1"><B>LINENO</B>
+
+</FONT>
+的定义，它就失去了特殊的意义，即使后来重新定义它。
+<DT><B>MACHTYPE</B>
+
+<DD>
+自动设置为一个字符串，完整的描述了正在运行
+<B>bash</B>
+
+的系统类型，格式是标准的 GNU <I>cpu-company-system</I> 格式。默认值是系统相关的。
+<DT><B>OLDPWD</B>
+
+<DD>
+上一次命令
+<B>cd</B>
+
+设置的工作目录。
+<DT><B>OPTARG</B>
+
+<DD>
+内建命令
+<B>getopts</B>
+
+处理的最后一个选项参数值 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节)。
+<DT><B>OPTIND</B>
+
+<DD>
+内建命令
+<B>getopts</B>
+
+将处理的下一个参数的索引 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节)。
+<DT><B>OSTYPE</B>
+
+<DD>
+自动设置的一个字符串，描述了正在运行
+<B>bash</B>
+
+的操作系统。默认值是系统相关的。
+<DT><B>PIPESTATUS</B>
+
+<DD>
+一个数组变量 (参见下面的
+<B>Arrays 数组</B>
+
+章节)，包含最近执行的前台管道中的进程(可能只包含一个命令)的退出状态。
+<DT><B>PPID</B>
+
+<DD>
+shell 的父进程的进程号。这个变量是只读的。
+<DT><B>PWD</B>
+
+<DD>
+由
+<B>cd</B>
+
+命令设置的当前工作目录。
+<DT><B>RANDOM</B>
+
+<DD>
+每次引用这个参数时，都会产生一个 0 到 32767 之间的随机整数。可以通过向
+<FONT SIZE="-1"><B>RANDOM</B>
+
+</FONT>
+赋值来初始化随机数序列。如果取消了
+<FONT SIZE="-1"><B>RANDOM</B>
+
+</FONT>
+的定义，它就失去了特殊的意义，即使后来重新定义它。
+<DT><B>REPLY</B>
+
+<DD>
+变量的值将作为内建命令
+<B>read</B>
+
+的输入，如果命令没有参数的话。
+<DT><B>SECONDS</B>
+
+<DD>
+每次引用这个参数时，返回 shell 自运行以来的秒数。如果向
+<FONT SIZE="-1"><B>SECONDS</B>
+
+</FONT>
+赋值，此后对它的引用将返回自赋值时起的秒数加上所赋予的值。如果取消
+<FONT SIZE="-1"><B>SECONDS</B>
+
+</FONT>
+的定义，它就失去了特殊的意义，即使后来重新定义它。
+<DT><B>SHELLOPTS</B>
+
+<DD>
+一个冒号分隔的被允许的 shell 选项列表。列表中每个词都是内置命令
+<B>set</B>
+
+的
+<B>-o</B>
+
+选项的有效参数。
+<FONT SIZE="-1"><B>SHELLOPTS</B>
+
+</FONT>
+中出现的选项也是 <B>set -o</B> 显示为
+<I>on</I>
+
+的选项。如果
+<B>bash</B>
+
+启动时从环境中找到这个变量，那么在读取任何配置文件之前，列表中的每个选项都将被设置。这个变量是只读的。
+<DT><B>SHLVL</B>
+
+<DD>
+每次启动一个
+<B>bash</B>
+
+的实例时都会增加。
+<DT><B>UID</B>
+
+<DD>
+扩展为当前用户的 ID，在启动时初始化。这个变量是只读的。
+
+</DL>
+<P>
+
+下列变量被 shell 使用。有时
+<B>bash</B>
+
+会为变量赋默认值；这些情况在下面会标出。
+<P>
+
+
+<DL COMPACT>
+<DT><B>BASH_ENV</B>
+
+<DD>
+如果 <B>bash</B> 在执行一个 shell 脚本时设定了这个变量，它的值将被解释为一个文件名，
+包含着初始化 shell 用到的命令，就像
+<I>~/.bashrc</I>
+
+中一样。
+<FONT SIZE="-1"><B>BASH_ENV</B>
+
+</FONT>
+的值在被解释为一个文件名之前要经过参数扩展，命令替换和算术扩展。不会使用
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+来查找结果文件名。
+<DT><B>CDPATH</B>
+
+<DD>
+命令
+<B>cd</B>
+
+的搜索路径。这是一个冒号分隔的目录列表，shell 从中查找
+<B>cd</B>
+
+命令的目标目录。可以是这样：
+
+&quot;.:~:/usr&quot;.
+<DT><B>COLUMNS</B>
+
+<DD>
+用在内建命令 <B>select</B> 当中，用来判断输出选择列表时的终端宽度。
+自动根据 SIGWINCH 信号来设置。
+<DT><B>COMPREPLY</B>
+
+<DD>
+一个数组变量，<B>bash</B> 从中读取可能的命令补全。
+它是由命令补全功能调用的 shell 函数产生的。
+<DT><B>FCEDIT</B>
+
+<DD>
+内建命令
+<B>fc</B>
+
+默认的编辑器。
+<DT><B>FIGNORE</B>
+
+<DD>
+一个冒号分隔的后缀名列表，在进行文件名补全时被忽略 (参见下面的
+<FONT SIZE="-1"><B>READLINE</B>
+
+</FONT>
+章节)。一个后缀满足其中之一的文件名被排除在匹配的文件名之外。可以是这样：
+
+&quot;.o:~&quot;.
+<DT><B>GLOBIGNORE</B>
+
+<DD>
+一个冒号分隔的模式列表，定义了路径名扩展时要忽略的文件名集合。
+如果一个文件名与路径扩展模式匹配，同时匹配
+<FONT SIZE="-1"><B>GLOBIGNORE</B>
+
+</FONT>
+中的一个模式时，它被从匹配列表中删除。
+<DT><B>HISTCONTROL</B>
+
+<DD>
+如果设置为
+<I>ignorespace</I>,
+
+以
+<B>space</B>
+
+开头的行将不会插入到历史列表中。如果设置为
+<I>ignoredups</I>,
+
+匹配上一次历史记录的行将不会插入。设置为
+<I>ignoreboth</I>
+
+会结合这两种选项。如果没有定义，或者设置为其他值，所有解释器读取的行都将存入历史列表，
+但还要经过
+<B>HISTIGNORE</B>
+
+处理。这个变量的作用可以被
+<B>HISTIGNORE</B>
+
+替代。多行的组合命令的第二和其余行都不会被检测，不管
+<B>HISTCONTROL</B>
+
+是什么，都会加入到历史中。
+<DT><B>HISTFILE</B>
+
+<DD>
+保存命令历史的文件名 (参见下面的
+<FONT SIZE="-1"><B>HISTORY 历史</B>
+
+</FONT>
+章节)。默认值是 <I>~/.bash_history</I>。如果取消定义，在交互式 shell 退出时
+命令历史将不会保存。
+<DT><B>HISTFILESIZE</B>
+
+<DD>
+历史文件中包含的最大行数。当为这个变量赋值时，如果需要的话，历史文件将被截断
+来容纳不超过这个值的行。默认值是 500。历史文件在交互式 shell 退出时
+也会被截断到这个值。
+<DT><B>HISTIGNORE</B>
+
+<DD>
+一个冒号分隔的模式列表，用来判断那个命令行应当保存在历史列表中。每个模式
+都定位于行首，必须匹配整行 (没有假定添加 `<B>*</B>')。在
+<B>HISTCONTROL</B>
+
+指定的测试结束后，这里的每个模式都要被测试。除了平常的 shell 模式匹配字符，
+`<B>&amp;</B>' 匹配上一个历史行。`<B>&amp;</B>' 可以使用反斜杠来转义；反斜杠在
+尝试匹配之前将被删除。多行的组合命令的第二行以及后续行都不会被测试，不管
+<B>HISTIGNORE</B>
+
+是什么，都将加入到历史中。
+<DT><B>HISTSIZE</B>
+
+<DD>
+命令历史中保存的历史数量 (参见下面的
+<FONT SIZE="-1"><B>HISTORY 历史</B>
+
+</FONT>
+章节)。默认值是 500。
+<DT><B>HOME</B>
+
+<DD>
+当前用户的个人目录；内建命令 <B>cd</B> 的默认参数。在执行波浪线扩展时也用到这个变量。
+<DT><B>HOSTFILE</B>
+
+<DD>
+包含一个格式和
+
+<I>/etc/hosts</I>
+
+相同的文件名，当 shell 需要补全主机名时要读取它。shell 运行过程中
+可以改变可能的主机名补全列表；改变之后下一次需要主机名补全时
+<B>bash</B>
+
+会将新文件的内容添加到旧列表中。如果定义了
+<FONT SIZE="-1"><B>HOSTFILE</B>
+
+</FONT>
+但是没有赋值，<B>bash</B> 将尝试读取
+
+<I>/etc/hosts</I>
+
+文件来获得可能的主机名补全列表。当取消
+<FONT SIZE="-1"><B>HOSTFILE</B>
+
+</FONT>
+的定义时，主机名列表将清空。
+<DT><B>IFS</B>
+
+<DD>
+内部字段分隔符
+<I>Internal Field Separator</I>
+
+用来在扩展之后进行分词，使用内部命令
+<B>read</B>
+
+将行划分成词。默认值是 
+``&lt;space&gt;&lt;tab&gt;&lt;newline&gt;''。
+<DT><B>IGNOREEOF</B>
+
+<DD>
+控制交互式 shell 接受到唯一一个
+<FONT SIZE="-1"><B>EOF</B>
+
+</FONT>
+字符时的行为。如果有定义，值是需要在一行的开始连续输入
+<FONT SIZE="-1"><B>EOF</B>
+
+</FONT>
+字符，直到可以使
+<B>bash</B>
+
+退出的字符个数。如果这个变量存在，但是值不是一个数字或者没有赋值，默认值是 10。
+如果变量没有定义，
+<FONT SIZE="-1"><B>EOF</B>
+
+</FONT>
+标志着输入的结束。
+<DT><B>INPUTRC</B>
+
+<DD>
+<B>readline</B>
+
+的启动配置文件，而不是默认的
+
+<I>~/.inputrc</I>
+
+(参见下面的
+<FONT SIZE="-1"><B>READLINE</B>
+
+</FONT>
+章节)。
+<DT><B>LANG</B>
+
+<DD>
+用来决定没有特地用 <B>LC_</B> 变量指定的语言环境项。
+<DT><B>LC_ALL</B>
+
+<DD>
+这个变量超越了 <B>LANG</B> 和所有其他指定语言环境项的 <B>LC_</B> 变量。
+<DT><B>LC_COLLATE</B>
+
+<DD>
+这个变量决定了为路径扩展的结果排序时的字母顺序，决定了范围表达式的行为，
+等价类，和路径扩展中的归并顺序以及模式匹配。 
+<DT><B>LC_CTYPE</B>
+
+<DD>
+这个变量决定了字符的解释和路径扩展以及模式匹配中字符类的行为。
+<DT><B>LC_MESSAGES</B>
+
+<DD>
+这个变量决定了翻译以 <B>$</B> 前导的双引号字符串时的语言环境。
+<DT><B>LC_NUMERIC</B>
+
+<DD>
+这个变量决定了格式化数字时的语言环境分类。
+<DT><B>LINES</B>
+
+<DD>
+内建命令 <B>select</B> 用它来判断输出选择列表时的列宽度。在收到 SIGWINCH 信号时自动设置。
+<DT><B>MAIL</B>
+
+<DD>
+如果这个参数设置为一个文件名，并且没有设置环境变量
+<FONT SIZE="-1"><B>MAILPATH</B>
+
+</FONT>
+的话，
+<B>bash</B>
+
+将在这个文件中通知用户有邮件到达。
+<DT><B>MAILCHECK</B>
+
+<DD>
+指定
+<B>bash</B>
+
+检查邮件的频率是多少，以秒为单位。默认值是 60 秒。需要检查邮件的时候，shell 在显示提示符之前将进行检查。
+如果取消它的定义，或者设置为并非大于等于零的数值，shell 将禁止邮件检查。
+<DT><B>MAILPATH</B>
+
+<DD>
+一个冒号分隔的文件名列表，从中检查邮件。当邮件到达某个特殊文件中时，输出的特定消息可以
+通过将文件名与消息以 `?' 分隔来指定。
+在消息的文本中，<B>$_</B> 扩展为当前邮件文件的文件名。例如：
+<DL COMPACT><DT><DD>
+<P>
+
+<B>MAILPATH</B>='/var/mail/bfox?&quot;You have mail&quot;:~/shell-mail?&quot;$_ has mail!&quot;'
+<P>
+
+<B>Bash</B>
+
+为这个变量提供默认值，但是它使用的用户邮件文件的位置是系统相关的 (例如，/var/mail/<B>$USER</B>)。
+</DL>
+
+<DT><B>OPTERR</B>
+
+<DD>
+如果设置为 1，
+<B>bash</B>
+
+显示内建命令
+<B>getopts</B>
+
+产生的错误消息 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节)。每次 shell 启动时或者一个 shell 脚本被执行时
+<FONT SIZE="-1"><B>OPTERR</B>
+
+</FONT>
+被初始化为 1。
+<DT><B>PATH</B>
+
+<DD>
+搜索命令的路径。它是一个冒号分割的目录列表，shell 从中搜索命令 (参见下面的
+<FONT SIZE="-1"><B>命令执行(COMMAND EXECUTION)</B>
+
+</FONT>
+段落)。默认的路径是系统相关的，是由安装
+<B>bash</B>
+
+的系统管理员设置的。通常它的值是
+
+``/usr/gnu/bin:/usr/local/bin:/usr/ucb:/bin:/usr/bin:.''。
+<DT><B>POSIXLY_CORRECT</B>
+
+<DD>
+如果 <B>bash</B> 启动环境中有这个变量，它将在读取启动配置文件之前进入 <I>posix mode</I>，就好像提供了
+<B>--posix</B>
+
+启动参数一样。如果 shell 运行过程中设置了它，<B>bash</B> 就启用 <I>posix mode</I>，就好像执行了
+
+<I>set -o posix</I>
+命令一样。
+<DT><B>PROMPT_COMMAND</B>
+
+<DD>
+如果有定义，它的值将作为一个命令，每次显示主提示符之前都会执行。
+<DT><B>PS1</B>
+
+<DD>
+这个参数的值被扩展 (参见下面的
+<FONT SIZE="-1"><B>PROMPTING 提示符</B>
+
+</FONT>
+段落)，用作主提示符字符串。默认值是
+``<B>\s-\v\$ </B>''。
+<DT><B>PS2</B>
+
+<DD>
+这个参数的值同
+<B>PS1</B>
+
+一起被扩展，用作次提示符字符串。默认值是
+``<B>&gt; </B>''。
+<DT><B>PS3</B>
+
+<DD>
+这个参数的值被用作内建命令
+<B>select</B>
+
+的提示符 (参见上面的
+<FONT SIZE="-1"><B>SHELL GRAMMAR 语法</B>
+
+</FONT>
+章节)。
+<DT><B>PS4</B>
+
+<DD>
+这个参数的值同
+<B>PS1</B>
+
+一起被扩展，在执行跟踪中在
+<B>bash</B>
+
+显示每个命令之前显示。需要的话，
+<FONT SIZE="-1"><B>PS4</B>
+
+</FONT>
+的第一个字符会被复制多次，来指示 indirection 的层数。默认值是 ``<B>+ </B>''。
+<DT><B>TIMEFORMAT</B>
+
+<DD>
+在前缀 time 保留字的管道中，这个参数的值用作格式字符串，
+指定计时信息如何显示。字符 <B>%</B> 引入的转义序列，被扩展为时间值
+或其他信息。转义序列和它们的含义如下所示；括号中是可选的成分。
+<P>
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>%%</B>
+
+<DD>
+一个字面上的 <B>%</B>。
+<DT><B>%[</B><I>p</I>][l]R
+
+<DD>
+经历的时间，以秒计算。
+<DT><B>%[</B><I>p</I>][l]U
+
+<DD>
+CPU 在用户模式下执行的秒数。
+<DT><B>%[</B><I>p</I>][l]S
+
+<DD>
+CPU 在系统模式下执行的秒数。
+<DT><B>%P</B>
+
+<DD>
+CPU 使用率，算法是 (%U + %S) / %R。
+
+</DL>
+</DL>
+
+<DT><DD>
+可选的 <I>p</I> 是指定精度 (小数点后数字位数) 的数值。
+如果是 0 就不输出小数点或小数值。最多指定到小数点后三位；
+如果 <I>p</I> 大于 3 就会被改为 3。如果没有指定 <I>p</I>，默认使用 3。
+<DT><DD>
+可选的 <B>l</B> 指定了长格式，包含分钟，格式是 <I>MM</I>m<I>SS</I>.<I>FF</I>s。
+<I>p</I> 的值决定了是不是包含小数位。
+<DT><DD>
+如果没有设置这个值，<B>bash</B> 假定它的值是
+<B>$'\nreal\t%3lR\nuser\t%3lU\nsys	%3lS'</B>。
+如果它是空值，就不会显示计时信息。显示格式字符串的时候，会加上
+一个前导的新行符。
+<DT><B>TMOUT</B>
+
+<DD>
+如果设置为大于 0 的值，<B>TMOUT</B> 被当作内建命令 <B>read</B> 的默认超时
+等待时间。如果等待终端输入时， <B>TMOUT</B> 秒之后仍然没有输入，
+<B>select</B> 命令将终止。在交互的 shell 中，它的值被解释为显示了
+主提示符之后等待输入的秒数。如果经过这个秒数之后仍然没有输入，
+<B>Bash</B>
+
+将退出。
+<DT><B>auto_resume</B>
+
+<DD>
+这个变量控制了 shell 如何与用户和作业控制交互。如果设置了这个变量，
+一个不包含重定向的单个词的简单命令，将作为恢复被中断的作业的指示。
+不允许出现模棱两可的情况；如果有多个作业都以这个词起始，将恢复最近运行
+的作业。在这种情形下，被中断的作业的
+<I>name</I>
+
+是用于启动它的命令行。如果值设置为
+<I>exact，</I>
+
+给出的字符串必须精确匹配被中断的作业名；如果设置为
+<I>substring</I>，
+
+给出的字符串需要匹配被中断的作业名的子串。值
+<I>substring</I>
+
+的功能与作业标识符
+<B>%?</B>
+
+功能类似 (参见下面的
+<FONT SIZE="-1"><B>JOB CONTROL 作业控制</B>
+
+</FONT>
+章节)。如果设置为任何其他值，给出的字符串必须是被中断的作业的前缀；
+这样做与作业标识符
+<B>%</B>
+
+功能类似。
+<DT><B>histchars</B>
+
+<DD>
+两到三个字符，控制着历史扩展和分段 (tokenization，参见下面的
+<FONT SIZE="-1"><B>HISTORY EXPANSION 历史扩展</B>
+
+</FONT>
+章节)。第一个字符是 <I>history expansion</I>(历史扩展) 字符，
+这个字符表明了历史扩展的开始，通常是 `<B>!</B>'。
+第二个字符是 <I>quick substitution</I>(快速替换) 字符，
+它是重新运行上次输入的命令，但将命令中的字符串替换为另一个的简写，
+默认是 `<B>^</B>'。可选的第三个字符是指示如果作为一个词的开始，那么
+一行中剩余字符是注释。通常这个字符是 `<B>#</B>'。历史注释字符使得
+对一行中剩余字符在历史替换中被跳过。它不一定使 shell 解释器将
+这一行的剩余部分当作注释。
+
+</DL>
+<A NAME="lbAV">&nbsp;</A>
+<H3>Arrays</H3>
+
+<B>Bash</B>
+
+提供了一维数组变量。任何变量都可以作为一个数组；内建命令
+<B>declare</B>
+
+可以显式地定义数组。数组的大小没有上限，也没有限制在连续对成员引用和
+赋值时有什么要求。数组以整数为下标，从 0 开始。
+<P>
+
+如果变量赋值时使用语法 <I>name</I>[<I>subscript</I>]=<I>value</I>，
+那么就会自动创建数组。
+<I>subscript</I>
+
+被当作一个算术表达式，结果必须是大于等于 0 的值。要显式地定义一个数组，使用
+<B>declare -a </B><I>name</I>
+
+(参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节)。也可以用
+<B>declare -a </B><I>name</I>[<I>subscript</I>]
+
+这时 <I> subscript</I> 被忽略。数组变量的属性可以用内建命令
+<B>declare</B>
+
+和
+<B>readonly</B>
+
+来指定。每个属性对于所有数组元素都有效。
+<P>
+
+数组赋值可以使用复合赋值的方式，形式是
+<I>name</I>=<B>(</B>value<I>1</I> ... value<I>n</I><B>)</B>，这里每个
+<I>value</I> 的形式都是 [<I>subscript</I>]=<I>string</I>。<I>string</I> 
+必须出现。如果出现了可选的括号和下标，将为这个下标赋值，否则
+被赋值的元素的下标是语句中上一次赋值的下标加一。下标从 0 开始。
+这个语法也被内建命令
+<B>declare</B>
+
+所接受。单独的数组元素可以用上面介绍的语法
+<I>name</I>[<I>subscript</I>]=<I>value</I> 来赋值。
+<P>
+
+数组的任何元素都可以用 ${<I>name</I>[<I>subscript</I>]} 来引用。
+花括号是必须的，以避免和路径扩展冲突。如果
+<I>subscript</I> 是 <B>@</B> 或是 <B>*</B>，它扩展为 <I>name</I> 的所有成员。
+这两种下标只有在双引号中才不同。在双引号中，${<I>name</I>[*]} 扩展为一个词，
+由所有数组成员的值组成，用特殊变量
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+的第一个字符分隔；${<I>name</I>[@]} 将 <I>name</I> 的每个成员扩展为一个词。
+如果数组没有成员，${<I>name</I>[@]} 扩展为空串。这种不同类似于特殊参数
+<B>*</B> 和 <B>@</B> 的扩展 (参见上面的
+<B>Special Parameters</B>
+
+段落)。${#<I>name</I>[<I>subscript</I>]} 扩展为 
+${<I>name</I>[<I>subscript</I>]} 的长度。如果 <I>subscript</I> 是 <B>*</B>
+或者是 <B>@</B>，扩展结果是数组中元素的个数。引用没有下标数组变量等价于
+引用元素 0。
+<P>
+
+内建命令
+<B>unset</B>
+
+用于销毁数组。<B>unset</B> <I>name</I>[<I>subscript</I>]
+将销毁下标是 <I>subscript</I> 的元素。
+<B>unset</B> <I>name</I>, 这里 <I>name</I> 是一个数组，或者
+<B>unset</B> <I>name</I>[<I>subscript</I>], 这里
+<I>subscript</I> 是 <B>*</B> 或者是 <B>@</B>，将销毁整个数组。
+<P>
+
+内建命令
+<B>declare</B>,
+
+<B>local</B>,
+
+和
+<B>readonly</B>
+
+都能接受
+<B>-a</B>
+
+选项，从而指定一个数组。内建命令
+<B>read</B>
+
+可以接受
+<B>-a</B>
+
+选项，从标准输入读入一列词来为数组赋值。内建命令
+<B>set</B>
+
+和
+<B>declare</B>
+
+使用一种可以重用为输入的格式来显示数组元素。
+<A NAME="lbAW">&nbsp;</A>
+<H2>扩展(EXPANSION)</H2>
+
+命令行的扩展是在拆分成词之后进行的。有七种类型的扩展：
+<I>brace expansion</I>(花括号扩展),
+
+<I>tilde expansion</I>(波浪线扩展),
+
+<I>parameter and variable expansion</I>(参数和变量扩展),
+
+<I>command substitution</I>(命令替换),
+
+<I>arithmetic expansion</I>(算术扩展),
+
+<I>word splitting</I>(词的拆分),
+
+和
+<I>pathname expansion</I>(路径扩展).
+
+<P>
+
+扩展的顺序是：brace expansion, tilde expansion,
+parameter, variable 和 arithmetic expansion 还有
+command substitution
+(按照从左到右的顺序), word splitting, 最后是 pathname
+expansion.
+<P>
+
+还有一种附加的扩展：<I>process subtitution</I> (进程替换) 只有在支持它
+的系统中有效。
+<P>
+
+只有 brace expansion, word splitting, 和 pathname expansion
+在扩展前后的词数会发生改变；其他扩展总是将一个词扩展为一个词。
+唯一的例外是上面提到的
+&quot;<B>$@</B>&quot; 和 &quot;<B>${</B><I>name</I><B>[@]}</B>&quot; (参见
+<FONT SIZE="-1"><B>PARAMETERS</B>参数)。
+
+</FONT>
+<A NAME="lbAX">&nbsp;</A>
+<H3>Brace Expansion</H3>
+
+<P>
+
+<I>Brace expansion</I>
+
+是一种可能产生任意字符串的机制。这种机制类似于
+<I>pathname expansion</I>, 但是并不需要存在相应的文件。
+花括号扩展的模式是一个可选的
+<I>preamble</I>(前导字符),
+
+后面跟着一系列逗号分隔的字符串，包含在一对花括号中，
+再后面是一个可选的
+<I>postscript</I>(附言)。
+
+前导被添加到花括号中的每个字符串前面，附言被附加到每个结果字符串之后，
+从左到右进行扩展。
+<P>
+
+花括号扩展可以嵌套。扩展字符串的结果没有排序；而是保留了从左到右的顺序。
+例如， a<B>{</B>d,c,b<B>}</B>e 扩展为 `ade ace abe'。
+<P>
+
+花括号扩展是在任何其他扩展之前进行的，任何对其他扩展有特殊意义的字符
+都保留在结果中。它是严格字面上的。
+<B>Bash</B>
+
+不会对扩展的上下文或花括号中的文本做任何语义上的解释。
+<P>
+
+正确的花括号扩展必须包含没有引用的左括号和右括号，以及至少一个没有
+引用的逗号。任何不正确的表达式都不会被改变。可以用反斜杠来引用
+<B>{</B> 或 <B>,</B> 来阻止将它们识别为花括号表达式的一部分。
+为了避免与参数扩展冲突，字符串 <B>${</B> 不被认为有效的组合。
+<P>
+
+这种结构通常用来简写字符串的公共前缀远比上例中为长的情况，例如：
+<DL COMPACT><DT><DD>
+<P>
+
+mkdir /usr/local/src/bash/{old,new,dist,bugs}
+</DL>
+
+或者：
+<DL COMPACT><DT><DD>
+chown root /usr/{ucb/{ex,edit},lib/{ex?.?*,how_ex}}
+</DL>
+
+<P>
+
+花括号扩展导致了与历史版本的
+<B>sh</B>
+
+的一点不兼容。在左括号或右括号作为词的一部分出现时，
+<B>sh</B>
+
+不会对它们进行特殊处理，会在输出中保留它们。
+<B>Bash</B>
+
+将括号从花括号扩展结果的词中删除。例如，向
+<B>sh</B>
+
+输入 <I>file{1,2}</I> 会导致不变的输出。同样的输入在
+<B>bash</B>
+
+进行扩展之后，会输出
+<I>file1 file2 .</I>
+
+如果需要同
+<B>sh</B>
+
+严格地保持兼容，需要在启动
+<B>bash</B>
+
+的时候使用
+<B>+B </B>
+
+选项，或者使用
+<B>set</B>
+
+命令加上
+<B>+B</B>
+
+选项来禁用花括号扩展 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节)。
+<A NAME="lbAY">&nbsp;</A>
+<H3>Tilde Expansion</H3>
+
+<P>
+
+如果一个词以没有引用的波浪线字符 (`<B>~</B>') 开始，所有
+在第一个没有引用的斜线 (`/') 之前的字符 (或者是这个词的所有字符，
+如果没有没引用的斜线的话) 都被认为是 <I>tilde-prefix</I>(波浪线前缀)。
+如果 tilde-prefix 中没有被引用的字符，那么波浪线之后的字符串
+被认为是 <I>login name</I>(登录名)。如果登录名是空字符串，波浪线将
+被替换为 shell 参数
+<FONT SIZE="-1"><B>HOME</B>
+
+</FONT>
+的值。如果没有定义
+<FONT SIZE="-1"><B>HOME，</B>
+
+</FONT>
+将替换为执行此 shell 的用户的个人目录。否则，tilde-prefix 被替换为
+与指定登录名相联系的个人目录。
+<P>
+
+如果 tilde-prefix 是 `~+'，将使用 shell 变量
+<FONT SIZE="-1"><B>PWD</B>
+
+</FONT>
+的值来替换。如果 tilde-prefix 是 `~-'，并且设置了 shell 变量
+<FONT SIZE="-1"><B>OLDPWD</B>,
+
+</FONT>
+将使用这个变量值来替换。如果在 tilde-prefix 中，波浪线之后的字符串
+由一个数字 <I>N</I> 组成，前缀可选的 `+' 或者 `-'，那么 tilde-prefix
+将被替换为目录栈中相应的元素，就是将 tilde-prefix 作为参数执行内建命令
+<B>dirs</B>
+
+显示的结果。如果 tilde-prefix 中波浪线之后的字符是一个数字，没有前缀，
+那么就假定有一个 `+'。
+<P>
+
+如果登录名不合法，或者波浪线扩展失败，这个词将不会变化。
+<P>
+
+在变量赋值中，对于
+<B>:</B>
+
+或
+<B>=</B>
+
+之后的字符串会立即检查未引用的 tilde-prefix。
+这种情况下，仍然会进行波浪线扩展。因此，可以使用带波浪线的文件名来为
+<FONT SIZE="-1"><B>PATH</B>,
+
+</FONT>
+<FONT SIZE="-1"><B>MAILPATH</B>,
+
+</FONT>
+和
+<FONT SIZE="-1"><B>CDPATH</B>
+
+</FONT>
+赋值，shell 将赋予扩展之后的值。
+<A NAME="lbAZ">&nbsp;</A>
+<H3>Parameter Expansion</H3>
+
+<P>
+
+字符 `<B>$</B>' 引入了参数扩展，命令替换和算术扩展。要扩展的参数名或符号
+可能包含在花括号中，花括号可选的，但是可以使得要扩展的变量不会与紧随其后
+的字符合并，成为新的名称。
+<P>
+
+使用花括号的时候，匹配的右括号是第一个 `<B>}</B>'，并且它没有被反斜杠引用
+或包含在一个引用的字符串中，也没有包含在一个嵌入的算术扩展，命令替换
+或是参数扩展中。
+<P>
+
+
+<DL COMPACT>
+<DT>${<I>parameter</I>}<DD>
+被替换为 <I>parameter</I> 的值。如果
+<I>parameter</I>
+
+是一个位置参数，并且数字多于一位时；或者当紧随
+<I>parameter</I>
+
+之后有不属于名称一部分的字符时，都必须加上花括号。
+
+</DL>
+<P>
+
+如果 <I>parameter</I> 的第一个字符是一个感叹号，将引进一层间接变量。
+<B>bash</B> 使用以 <I>parameter</I> 的其余部分为名的变量的值作为变量的名称；
+接下来新的变量被扩展，它的值用在随后的替换当中，而不是使用 
+<I>parameter</I> 自身的值。这也称为 <I>indirect expansion</I>(间接扩展).
+例外情况是下面讲到的 ${!<I>prefix</I>*}。
+<P>
+
+下面的每种情况中，<I>word</I> 都要经过波浪线扩展，参数扩展，命令替换和
+算术扩展。如果不进行子字符串扩展，<B>bash</B> 测试一个没有定义或值为空的
+参数；忽略冒号的结果是只测试未定义的参数。
+<P>
+
+
+<DL COMPACT>
+<DT>${<I>parameter</I><B>:-</B><I>word</I>}<DD>
+<B>Use Default Values</B>(使用默认值)。如果
+<I>parameter</I>
+
+未定义或值为空，将替换为
+<I>word</I>
+
+的扩展。否则，将替换为
+<I>parameter</I>
+
+的值。
+<DT>${<I>parameter</I><B>:=</B><I>word</I>}<DD>
+<B>Assign Default Values</B>(赋默认值)。如果
+<I>parameter</I>
+
+未定义或值为空，
+<I>word</I>
+
+的扩展将赋予
+<I>parameter</I>.
+
+<I>parameter</I>
+
+的值将被替换。位置参数和特殊参数不能用这种方式赋值。
+<DT>${<I>parameter</I><B>:?</B><I>word</I>}<DD>
+<B>Display Error if Null or Unset</B>(显示错误，如果未定义或值为空)。如果
+<I>parameter</I>
+
+未定义或值为空，<I>word</I> (或一条信息，如果
+<I>word</I>
+
+不存在) 的扩展将写入到标准错误；shell 如果不是交互的，则将退出。否则，
+<I>parameter</I> 的值将被替换。
+<DT>${<I>parameter</I><B>:+</B><I>word</I>}<DD>
+<B>Use Alternate Value</B>(使用可选值)。如果
+<I>parameter</I>
+
+未定义或非空，不会进行替换；否则将替换为
+<I>word</I>
+
+扩展后的值。
+<DT>${<I>parameter</I><B>:</B><I>offset</I>}<DD>
+
+<DT>${<I>parameter</I><B>:</B><I>offset</I><B>:</B><I>length</I>}<DD>
+
+<B>Substring Expansion</B>(子字符串扩展)。
+扩展为<I>parameter</I> 的最多 <I>length</I> 个字符，从 <I>offset</I> 
+指定的字符开始。如果忽略了 <I>length</I>，扩展为 <I>parameter</I> 的子字符串，
+从 <I>offset</I> 指定的字符串开始。<I>length</I> 和 <I>offset</I> 是算术表达式
+(参见下面的
+<FONT SIZE="-1"><B>ARITHMETIC EVALUATION 算术求值</B>
+
+</FONT>
+段落)。
+<I>length</I> 必须是一个大于等于 0 的数值。如果 <I>offset</I> 求值结果小于 0，
+值将当作从 <I>parameter</I> 的值的末尾算起的偏移量。如果 <I>parameter</I>
+是 <B>@</B>，结果是 <I>length</I> 个位置参数，从 <I>offset</I> 开始。
+如果 <I>parameter</I> 是一个数组名，以 @ 或 * 索引，结果是数组的
+<I>length</I> 个成员，从 ${<I>parameter</I>[<I>offset</I>]} 开始。
+子字符串的下标是从 0 开始的，除非使用位置参数时，下标从 1 开始。
+<DT>${<B>!</B><I>prefix</I><B>*</B>}<DD>
+扩展为名称以 <I>prefix</I> 开始的变量名，以特殊变量
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+的第一个字符分隔。
+<DT>${<B>#</B><I>parameter</I>}<DD>
+替换为 <I>parameter</I> 的值的长度 (字符数目)。如果
+<I>parameter</I>
+
+是
+<B>*</B>
+
+或者是 
+<B>@</B>,
+
+替换的值是位置参数的个数。如果
+<I>parameter</I>
+
+是一个数组名，下标是
+<B>*</B>
+
+或者是
+<B>@</B>,
+
+替换的值是数组中元素的个数。
+<DT>${<I>parameter</I><B>#</B><I>word</I>}<DD>
+
+<DT>${<I>parameter</I><B>##</B><I>word</I>}<DD>
+
+<I>word</I>
+
+被扩展为一个模式，就像路径扩展中一样。如果这个模式匹配
+<I>parameter</I>
+
+的值的起始，那么扩展的结果是将
+<I>parameter</I>
+
+扩展后的值中，最短的匹配 (``<B>#</B>'' 的情况) 或者最长的匹配
+(``<B>##</B>''的情况) 删除的结果。如果
+<I>parameter</I>
+
+是
+<B>@</B>
+
+或者是
+<B>*</B>,
+
+则模式删除操作将依次施用于每个位置参数，最后扩展为结果的列表。如果
+<I>parameter</I>
+
+是一个数组变量，下标是
+<B>@</B>
+
+或者是
+<B>*</B>,
+
+模式删除将依次施用于数组中的每个成员，最后扩展为结果的列表。
+<DT>${<I>parameter</I><B>%</B><I>word</I>}<DD>
+
+<DT>${<I>parameter</I><B>%%</B><I>word</I>}<DD>
+
+<I>word</I> 被扩展为一个模式，就像路径扩展中一样。如果这个模式匹配
+<I>parameter</I>
+
+扩展后的值的尾部，那么扩展的结果是将
+<I>parameter</I>
+
+扩展后的值中，最短的匹配 (``<B>%</B>'' 的情况) 或者最长的匹配
+(``<B>%%</B>''的情况) 删除的结果。如果
+<I>parameter</I>
+
+是
+<B>@</B>
+
+或者是
+<B>*</B>,
+
+则模式删除操作将依次施用于每个位置参数，最后扩展为结果的列表。如果
+<I>parameter</I>
+
+是一个数组变量，下标是
+<B>@</B>
+
+或者是
+<B>*</B>,
+
+模式删除将依次施用于数组中的每个成员，最后扩展为结果的列表。
+<DT>${<I>parameter</I><B>/</B><I>pattern</I><B>/</B><I>string</I>}<DD>
+
+<DT>${<I>parameter</I><B>//</B><I>pattern</I><B>/</B><I>string</I>}<DD>
+
+<I>patterm</I> 被扩展为一个模式，就像路径扩展中一样。<I>parameter</I>
+被扩展，其值中最长的匹配 <I>pattern</I> 的内容被替换为 <I>string</I>。
+在第一种形式中，只有第一个匹配被替换。第二种形式使得 <I>pattern</I>
+中所有匹配都被替换为 <I>string</I>。
+如果 <I>pattern</I> 以 <B>#</B> 开始，它必须匹配 <I>parameter</I> 扩展后
+值的首部。如果 <I>pattern</I> 以 <B>%</B> 开始，它必须匹配 <I>parameter</I>
+扩展后值的尾部。如果 <I>string</I> 是空值，<I>pattern</I> 的匹配都将被删除，
+<I>pattern</I> 之后的 <B>/</B> 将被忽略。如果
+<I>parameter</I>
+
+是
+<B>@</B>
+
+或者是
+<B>*</B>,
+
+则替换操作将依次施用于每个位置参数，最后扩展为结果的列表。如果
+<I>parameter</I>
+
+是一个数组变量，下标是
+<B>@</B>
+
+或者是
+<B>*</B>,
+
+模式删除将依次施用于数组中的每个成员，最后扩展为结果的列表。
+</DL>
+<A NAME="lbBA">&nbsp;</A>
+<H3>Command Substitution</H3>
+
+<P>
+
+命令替换 (<I>Command substitution</I>) 允许以命令的输出替换命令名。有
+两种形式：
+<P>
+
+<DL COMPACT><DT><DD>
+<P>
+
+<B>$(</B><I>command</I><B>)</B>
+</DL>
+
+还有
+<DL COMPACT><DT><DD>
+<B>`</B><I>command</I><B>`</B>
+</DL>
+
+<P>
+
+<B>Bash</B>
+
+进行扩展的步骤是执行 <I>command</I>，以它的标准输出替换它，并且将所有后续的
+新行符删除。内嵌的新行符不会删除，但是它们可能会在词的拆分中被删除。
+命令替换 <B>$(cat </B><I>file</I>) 可以用等价但是更快的方法
+<B>$(&lt; </B><I>file</I>) 代替。
+<P>
+
+当使用旧式的反引号 (&quot;``&quot;) 替换形式时，反斜杠只有其字面意义，除非
+后面是
+<B>$</B>,
+
+<B>`</B>,
+
+或者是
+<B>\</B>.
+
+第一个前面没有反斜杠的反引号将结束命令替换。当使用 $(<I>command</I>) 
+形式时，括号中所有字符组成了整个命令；没有被特殊处理的字符。
+<P>
+
+命令替换可以嵌套。要在使用反引号形式时嵌套，可以用反斜杠来转义内层的
+反引号。
+<P>
+
+如果替换发生在双引号之中，结果将不进行词的拆分和路径扩展。
+<A NAME="lbBB">&nbsp;</A>
+<H3>Arithmetic Expansion</H3>
+
+<P>
+
+算术扩展允许算术表达式的求值和结果的替换。算术扩展的格式是：
+<DL COMPACT><DT><DD>
+<P>
+
+<B>$((</B><I>expression</I><B>))</B>
+</DL>
+
+<P>
+
+表达式
+<I>expression</I>
+
+被视为如同在双引号之中一样，但是括号中的双引号不会被特殊处理。
+表达式中所有词都经过了参数扩展，字符串扩展，命令替换和引用的删除。
+算术替换可以嵌套。
+<P>
+
+求值根据下面
+<FONT SIZE="-1"><B>算术求值</B>(ARITHMETIC<B>EVALUATION)</B>
+
+</FONT>
+章节中列出的规则进行。如果表达式
+<I>expression</I>
+
+非法，
+<B>bash</B>
+
+输出错误提示消息，不会进行替换。
+<A NAME="lbBC">&nbsp;</A>
+<H3>Process Substitution</H3>
+
+<P>
+
+<I>Process substitution</I> (进程替换) 只有在支持命名管道 (<I>FIFOs</I>)，
+或者支持使用 <B>/dev/fd</B> 方式为打开的文件命名的系统中才可用。
+它的形式是
+<B>&lt;(</B><I>list</I><B>)</B>
+或者是
+<B>&gt;(</B><I>list</I><B>)</B>。
+进程 <I>list</I> 运行时的输入或输出被连接到一个 <I>FIFO</I> 或者 <B>/dev/fd</B>
+中的文件。文件的名称作为一个参数被传递到当前命令，作为扩展的结果。
+如果使用 <B>&gt;(</B><I>list</I><B>)</B> 形式，向文件写入相当于为 <I>list</I>
+提供输入。如果使用 <B>&lt;(</B><I>list</I><B>)</B> 形式，可以读作为参数传递
+的文件来获得 <I>list</I> 的输出。
+<P>
+
+如果可能的话，进程替换是与参数和变量扩展，命令替换和算术扩展同时发生的。
+<A NAME="lbBD">&nbsp;</A>
+<H3>Word Splitting</H3>
+
+<P>
+
+shell 检测不在双引号引用中发生的参数扩展，命令替换和算术扩展的结果，
+进行
+<I>word splitting</I>(词的拆分)。
+
+<P>
+
+shell 将
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+的每个字符都作为定界符，根据这些字符来将其他扩展的结果分成词。如果
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+没有定义，或者它的值是默认的
+<B>&lt;space&gt;&lt;tab&gt;&lt;newline&gt;</B>,
+
+那么
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+字符的任何序列都将作为分界之用。如果
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+的值是默认之外的值，那么词开头和结尾的空白字符
+<B>space</B>
+
+和
+<B>tab</B>
+
+都将被忽略，只要空白字符在
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+的值之内 (即，
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+包含空白字符)。
+任何在
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+之中但是不是
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+空白的字符，以及任何相邻的
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+空白字符，将字段分隔开来。
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+空白字符的序列也被作为分界符。如果
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+的值是空，不会发生词的拆分。
+<P>
+
+显式给出的空值参数 (<B>&quot;&quot;</B> 或 <B>''</B>) 将被保留。
+隐含的空值参数，来自于空值的参数扩展，如果没有引用则将被删除。
+如果空值的参数在双引号引用中扩展，结果是空值的参数，将被保留。
+<P>
+
+注意如果没有发生扩展，不会进行词的拆分。
+<A NAME="lbBE">&nbsp;</A>
+<H3>Pathname Expansion</H3>
+
+<P>
+
+词的拆分之后，除非设置过
+<B>-f</B>
+
+选项，
+<B>bash</B>
+
+搜索每个词，寻找字符
+<B>*</B>,
+
+<B>?</B>,
+
+和
+<B>[</B>.
+
+如果找到了其中之一，那么这个词被当作一个
+<I>pattern</I>(模式)，
+
+被替换为匹配这个模式的文件名以字母顺序排列的列表。如果没有找到匹配的文件名，
+并且 shell 禁用了
+<B>nullglob</B>
+
+选项，这个词将不发生变化。如果设置了
+<B>nullglob</B>
+
+选项并且没有找到匹配，这个词将被删除。如果启用了
+<B>nocaseglob</B>
+
+选项，匹配时将不考虑字母的大小写。当模式用作路径名扩展时，字符
+<B>``.''</B>
+
+如果在一个名称的开始或者紧随一个斜杠之后，那么它必须被显式地匹配，除非设置了
+<B>dotglob</B>
+
+shell 选项。当匹配一个路径名时，斜杠符必须被显式地匹配。其他情况下，字符
+<B>``.''</B>
+
+不会被特殊对待。参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+中对
+<B>shopt</B>
+
+的介绍，其中有 shell 选项
+<B>nocaseglob</B>,
+
+<B>nullglob</B>,
+
+和
+<B>dotglob</B>
+
+的描述。
+<P>
+
+环境变量
+<FONT SIZE="-1"><B>GLOBIGNORE</B>
+
+</FONT>
+可以用来限制匹配
+<I>pattern</I>
+
+的文件名集合。如果设置了
+<FONT SIZE="-1"><B>GLOBIGNORE，</B>
+
+</FONT>
+每个匹配的文件名如果匹配
+<FONT SIZE="-1"><B>GLOBIGNORE</B>
+
+</FONT>
+中任何一个模式的话将从匹配的列表中删除。文件名
+<B>``.''</B>
+
+和
+<B>``..''</B>
+
+总是被忽略，即使设置了
+<FONT SIZE="-1"><B>GLOBIGNORE。</B>
+
+</FONT>
+但是，设置
+<FONT SIZE="-1"><B>GLOBIGNORE</B>
+
+</FONT>
+和启用 shell 选项
+<B>dotglob</B>
+
+效果是相同的，因此所有其他以
+<B>``.''</B>
+
+开头的文件名将被匹配。要得到原来的行为 (忽略所有以
+<B>``.''</B>
+
+开头的文件名)，可以将
+<B>``.*''</B>
+
+添加为
+<FONT SIZE="-1"><B>GLOBIGNORE</B>
+
+</FONT>
+的模式之一。选项
+<B>dotglob</B>
+
+被禁用，如果
+<FONT SIZE="-1"><B>GLOBIGNORE</B>
+
+</FONT>
+没有定义时。
+<P>
+
+<B>Pattern Matching</B>
+<P>
+
+任何模式中出现的字符，除了下面描述的特殊模式字符外，都匹配它本身。
+模式中不能出现 NUL 字符。如果要匹配字面上的特殊模式字符，它必须被引用。
+<P>
+
+特殊模式字符有下述意义：
+<P>
+
+
+<DL COMPACT>
+<DT><B>*</B>
+
+<DD>
+匹配任何字符串包含空串。
+<DT><B>?</B>
+
+<DD>
+匹配任何单个字符。
+<DT><B>[...]</B>
+
+<DD>
+匹配所包含的任何字符之一。用一个连字符 (`-') 分隔的一对字符意思是一个
+<I>range expression</I> (范围表达式)；
+任何排在它们之间的字符，包含它们，都被匹配。
+排序使用当前语言环境的字符顺序和字符集。如果
+<B>[</B>
+
+之后的第一个字符是一个
+<B>!</B>
+
+或是一个
+<B>^</B>
+
+那么任何不包含在内的字符将被匹配。范围表达式中字符的顺序是由当前语言环境
+和环境变量 <B>LC_COLLATE</B> 的值 (如果设置了的话) 决定的。一个
+<B>-</B>
+
+只有作为集合中第一个或最后一个字符时才能被匹配。一个
+<B>]</B>
+
+只有是集合中第一个字符时才能被匹配。
+<BR>
+
+
+<P>
+
+在
+<B>[</B>
+
+和
+<B>]</B>
+
+中，<I>character classes</I> (字符类) 可以用 <B>[:</B><I>class</I><B>:]</B>
+这样的语法来指定，这里 <I>class</I> 是在 POSIX.2 标准中定义的下列类名之一:
+</DL>
+<P>
+
+<DL COMPACT><DT><DD>
+<B>alnum alpha ascii blank cntrl digit graph lower print punct space upper word xdigit
+</B>
+
+
+<BR>
+
+一个字符类匹配任何属于这一类的字符。<B>word</B> 字符类匹配字母，数字和字符 _。
+<BR>
+
+
+<P>
+
+在
+<B>[</B>
+
+和
+<B>]</B>
+
+中，可以用 <B>[=</B><I>c</I><B>=]</B> 这样的语法来指定 <I>equivalence class</I> 
+(等价类)。它匹配与字符 <I>c</I> 有相同归并权值 (collation weight，由当前
+语言环境定义) 的字符。
+<BR>
+
+
+<P>
+
+在
+<B>[</B>
+
+和
+<B>]</B>
+
+中，语法 <B>[.</B><I>symbol</I><B>.]</B> 匹配归并符号 (collating symbol)
+<I>symbol</I>。
+</DL>
+
+
+<P>
+
+如果使用内建命令 <B>shopt</B> 启用了 shell 选项 <B>extglob</B>，
+将识别另外几种模式匹配操作符。下面的描述中，<I>pattern-list</I> 是一个
+或多个模式以 <B>|</B> 分隔的列表。复合的模式可以使用一个或多个下列的
+子模式构造出来：
+<P>
+
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>?(</B><I>pattern-list</I><B>)</B><DD>
+匹配所给模式零次或一次出现
+<DT><B>*(</B><I>pattern-list</I><B>)</B><DD>
+匹配所给模式零次或多次出现
+<DT><B>+(</B><I>pattern-list</I><B>)</B><DD>
+匹配所给模式一次或多次出现
+<DT><B>@(</B><I>pattern-list</I><B>)</B><DD>
+准确匹配所给模式之一
+<DT><B>!(</B><I>pattern-list</I><B>)</B><DD>
+任何除了匹配所给模式之一的字串
+</DL>
+</DL>
+
+
+<A NAME="lbBF">&nbsp;</A>
+<H3>Quote Removal</H3>
+
+<P>
+
+经过前面的扩展之后，所有未引用的字符
+<B>\</B>,
+
+<B>'</B>,
+
+以及并非上述扩展结果的字符 <B>&quot;</B> 都被删除。
+<A NAME="lbBG">&nbsp;</A>
+<H2>重定向(REDIRECTION)</H2>
+
+在命令执行前，它的输入和输出可能被
+<I>redirected (重定向)，</I>
+
+使用一种 shell 可以解释的特殊记法。重定向也可以用于为当前 shell
+执行环境 打开和关闭文件。下列重定向操作符可以前置或者放在
+<I>simple command (简单命令)</I>
+
+之中的任何位置，或者放在
+<I>command</I>
+
+之后。重定向是以出现的顺序进行处理的，从左到右。
+<P>
+
+下列描述中，如果文件描述符被忽略，并且第一个重定向操作符是
+<B>&lt;</B>,
+
+那么重定向指的是标准输入 (文件描述符是 0)。如果重定向操作符的第一个字符是
+<B>&gt;</B>,
+
+那么重定向指的是标准输出 (文件描述符是 1)。
+<P>
+
+下列描述中，重定向操作符之后的词如果没有特殊说明，都要经过
+brace expansion, tilde expansion, parameter expansion, 
+command substitution, arithmetic expansion, quote removal, 
+pathname expansion, 还有 word splitting。如果扩展为多于一个词，
+<B>bash</B>
+
+将报错。
+<P>
+
+注意重定向的顺序非常重要。例如，命令
+<DL COMPACT><DT><DD>
+<P>
+
+ls <B>&gt;</B> dirlist 2<B>&gt;&amp;</B>1
+</DL>
+
+<P>
+
+将标准输出和标准错误重定向到文件
+<I>dirlist</I>,
+
+而命令
+<DL COMPACT><DT><DD>
+<P>
+
+ls 2<B>&gt;&amp;</B>1 <B>&gt;</B> dirlist
+</DL>
+
+<P>
+
+只会将标准输出重定向到文件
+<I>dirlist</I>,
+
+因为在标准输出被重定向到文件
+<I>dirlist</I>
+
+中之前，标准错误被复制为标准输出。
+<P>
+
+一些文件名在重定向中被 <B>bash</B> 特殊处理，如下表所示：
+<DL COMPACT><DT><DD>
+<P>
+
+
+<DL COMPACT>
+<DT><B>/dev/fd/</B><I>fd</I>
+
+<DD>
+如果 <I>fd</I> 是一个合法的整数，文件描述符 <I>fd</I> 将被复制。
+<DT><B>/dev/stdin</B>
+
+<DD>
+文件描述符 0 被复制。
+<DT><B>/dev/stdout</B>
+
+<DD>
+文件描述符 1 被复制。
+<DT><B>/dev/stderr</B>
+
+<DD>
+文件描述符 2 被复制。
+<DT><B>/dev/tcp/</B><I>host</I>/<I>port</I>
+
+<DD>
+如果 <I>host</I> 是一个合法的主机名或 Internet 地址，并且 <I>port</I> 是
+一个整数端口号或服务名，<B>bash</B> 试图建立与相应的 socket (套接字) 的
+TCP 连接。
+<DT><B>/dev/udp/</B><I>host</I>/<I>port</I>
+
+<DD>
+如果 <I>host</I> 是一个合法的主机名或 Internet 地址，并且 <I>port</I> 是
+一个整数端口号或服务名，<B>bash</B> 试图建立与相应的 socket (套接字) 的
+UDP 连接。
+
+</DL>
+</DL>
+
+<P>
+
+打开或创建文件错误将导致重定向出错。
+<A NAME="lbBH">&nbsp;</A>
+<H3>Redirecting Input</H3>
+
+<P>
+
+重定向输入使得以
+<I>word</I>
+
+扩展结果为名的文件被打开并通过文件描述符
+<I>n</I>
+
+读取，如果没有指定
+<I>n</I>
+
+那么就作为标准输入 (文件描述符为 0) 读取。
+<P>
+
+重定向输入的一般形式是：
+<DL COMPACT><DT><DD>
+<P>
+
+[<I>n</I>]<B>&lt;</B><I>word</I>
+</DL>
+
+<A NAME="lbBI">&nbsp;</A>
+<H3>Redirecting Output</H3>
+
+<P>
+
+重定向输出使得以
+<I>word</I>
+
+扩展结果为名的文件被打开并通过文件描述符
+<I>n</I>
+
+写入，如果没有指定
+<I>n</I>
+
+那么就作为标准输出 (文件描述符为 1) 写入。
+<P>
+
+重定向的一般形式是：
+<DL COMPACT><DT><DD>
+<P>
+
+[<I>n</I>]<B>&gt;</B><I>word</I>
+</DL>
+
+<P>
+
+如果重定向操作符是
+<B>&gt;</B>，
+
+并且启用了内建命令
+<B>set</B>
+
+的
+<B>noclobber</B>
+
+选项，那么如果 <I>word</I> 扩展后得到的文件名存在并且是一个普通的文件，
+重定向将失败。如果重定向操作符是
+<B>&gt;|</B>,
+
+或者重定向操作符是
+<B>&gt;</B>
+
+并且没有启用内建命令
+<B>set</B>
+
+的
+<B>noclobber</B>
+
+选项，那么即使 <I>word</I> 得出的文件名存在，也会尝试进行重定向。
+<A NAME="lbBJ">&nbsp;</A>
+<H3>Appending Redirected Output (添加到重定向后的输出尾部)</H3>
+
+<P>
+
+这种方式的输出重定向使得以
+<I>word</I>
+
+扩展结果为名的文件被打开并通过文件描述符
+<I>n</I>
+
+从尾部添加。如果没有指定
+<I>n</I>
+
+就使用标准输出 (文件描述符 1)。如果文件不存在，它将被创建。
+<P>
+
+重定向的一般形式是：
+<DL COMPACT><DT><DD>
+<P>
+
+[<I>n</I>]<B>&gt;&gt;</B><I>word</I>
+</DL>
+
+<P>
+
+<A NAME="lbBK">&nbsp;</A>
+<H3>Redirecting Standard Output and Standard Error</H3>
+
+<P>
+
+<B>Bash</B>
+
+允许使用这种结构将标准输出和标准错误 (文件描述符 1 和 2) 重定向到以
+<I>word</I>
+
+扩展结果为名的文件中。
+<P>
+
+有两种重定向标准输出/标准错误的形式：
+<DL COMPACT><DT><DD>
+<P>
+
+<B>&amp;&gt;</B><I>word</I>
+</DL>
+
+还有
+<DL COMPACT><DT><DD>
+<B>&gt;&amp;</B><I>word</I>
+</DL>
+
+<P>
+
+两种形式中，推荐使用第一种。它与
+<DL COMPACT><DT><DD>
+<P>
+
+<B>&gt;</B><I>word</I> 2<B>&gt;&amp;</B>1
+</DL>
+
+在语义上等价。
+<A NAME="lbBL">&nbsp;</A>
+<H3>Here Documents</H3>
+
+<P>
+
+这种重定向使得 shell 从当前源文件读取输入，直到遇到仅包含
+<I>word</I>
+
+的一行 (并且没有尾部空白，trailing blanks) 为止。直到这一点的所有行被用作
+命令的标准输入。
+<P>
+
+here-document 的格式是：
+<DL COMPACT><DT><DD>
+<P>
+
+<PRE>
+<B>&lt;&lt;</B>[<B>-</B>]<I>word</I>
+        <I>here-document</I>
+<I>delimiter</I>
+</PRE>
+
+</DL>
+
+<P>
+
+不会对
+<I>word</I>
+
+进行 parameter expansion, command substitution, arithmetic expansion,
+或者 pathname expansion。如果
+<I>word</I>
+
+中任何字符是引用的，
+<I>delimiter</I>
+
+将是对
+<I>word</I>
+
+进行引用删除的结果，here-document 中的行不会被扩展。如果 <I>word</I> 
+没有被引用，here-documnet 中的所有行都要经过
+parameter expansion, command substitution, 和 arithmetic expansion。
+在后一种情况下，字符序列
+<B>\&lt;newline&gt;</B>
+
+被忽略；必须用
+<B>\</B>
+
+来引用字符
+<B>\</B>,
+
+<B>$</B>,
+
+和
+<B>`</B>.
+
+<P>
+
+如果重定向操作符是
+<B>&lt;&lt;-</B>,
+
+那么所有前导的 tab 字符都被从输入行和包含
+<I>delimiter</I>
+
+的行中删除。这样使得 shell 脚本中的 here-document 可以被更好地缩进。
+<A NAME="lbBM">&nbsp;</A>
+<H3>Here Strings</H3>
+
+here-document 的变种，形式是
+<DL COMPACT><DT><DD>
+<P>
+
+<PRE>
+<B>&lt;&lt;&lt;</B><I>word</I>
+</PRE>
+
+</DL>
+
+<P>
+
+<I>word</I> 被扩展，提供给命令作为标准输入。
+<A NAME="lbBN">&nbsp;</A>
+<H3>Duplicating File Descriptors (复制文件描述符)</H3>
+
+<P>
+
+重定向操作符
+<DL COMPACT><DT><DD>
+<P>
+
+[<I>n</I>]<B>&lt;&amp;</B><I>word</I>
+</DL>
+
+<P>
+
+用于复制文件描述符。如果
+<I>word</I>
+
+扩展为一个或多个数字，
+<I>n</I>
+
+代表的文件描述符将成为那个文件描述符的复制。如果
+<I>word</I>
+
+中的数字并未指定一个被用于读取的文件描述符，将产生一个重定向错误。如果
+<I>word</I>
+
+扩展为
+<B>-</B>,
+
+文件描述符
+<I>n</I>
+
+将被关闭。如果没有指定
+<I>n，</I>
+
+将使用标准输入 (文件描述符 0)。
+<P>
+
+类似的，操作符
+<DL COMPACT><DT><DD>
+<P>
+
+[<I>n</I>]<B>&gt;&amp;</B><I>word</I>
+</DL>
+
+<P>
+
+用于复制输出文件描述符。如果没有指定
+<I>n，</I>
+
+将使用标准输出 (文件描述符 1)。如果
+<I>word</I>
+
+中的数字并未指定一个被用于输出的文件描述符，将产生一个重定向错误。
+特殊情况下，如果忽略了 <I>n</I>，并且 <I>word</I> 并非扩展为一个或多个数字，
+标准输出和标准错误将被重定向，和前面描述的一样。
+<A NAME="lbBO">&nbsp;</A>
+<H3>Moving File Descriptors</H3>
+
+<P>
+
+重定向操作符
+<DL COMPACT><DT><DD>
+<P>
+
+[<I>n</I>]<B>&lt;&amp;</B><I>digit</I><B>-</B>
+</DL>
+
+<P>
+
+将文件描述符 <I>digit</I> 移动为文件描述符
+<I>n</I>,
+
+或标准输入 (文件描述符 0)，如果没有指定 <I>n</I> 的话。
+<I>digit</I> 复制为 <I>n</I> 之后就被关闭了。
+<P>
+
+类似的，重定向操作符
+<DL COMPACT><DT><DD>
+<P>
+
+[<I>n</I>]<B>&gt;&amp;</B><I>digit</I><B>-</B>
+</DL>
+
+<P>
+
+将文件描述符 <I>digit</I> 移动为文件描述符
+<I>n</I>,
+
+或标准输出 (文件描述符 1)，如果没有指定 <I>n</I> 的话。
+<A NAME="lbBP">&nbsp;</A>
+<H3>Opening File Descriptors for Reading and Writing</H3>
+
+<P>
+
+重定向操作符
+<DL COMPACT><DT><DD>
+<P>
+
+[<I>n</I>]<B>&lt;&gt;</B><I>word</I>
+</DL>
+
+<P>
+
+使得以
+<I>word</I>
+
+扩展结果为名的文件被打开，通过文件描述符
+<I>n</I>
+
+进行读写。如果没有指定
+<I>n</I>
+
+那么就使用文件描述符 0。如果文件不存在，它将被创建。
+<A NAME="lbBQ">&nbsp;</A>
+<H2>别名(ALIASES)</H2>
+
+<I>Aliases</I> (别名机制) 允许将一个词来替换为一个字符串，如果它是
+一个简单命令的第一个词的话。shell 记录着一个别名列表，可以使用
+内建命令
+<B>alias</B>
+
+和
+<B>unalias</B>
+
+来定义和取消 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节)。每个命令的第一个词，如果没有引用，都将被检查是否是一个别名。
+如果是，这个词将被它所指代的文本替换。别名和替换的文本可以包含任何有效
+的 shell 输入，包含上面列出的
+<I>metacharacters (元字符)</I>
+
+，特殊情况是别名中不能包含 <I>=</I>。替换文本的第一个词也被检查是否
+是别名，但是如果它与被替换的别名相同，就不会再替换第二次。这意味着可以用
+<B>ls</B>
+
+作为
+<B>ls -F</B>
+
+的别名，
+<B>bash</B>
+
+不会递归地展开替换文本。如果别名的最后一个字符是
+<I>blank</I>,
+
+那么命令中别名之后的下一个词也将被检查是否能进行别名展开。
+<P>
+
+别名可以使用
+<B>alias</B>
+
+命令来创建或列举出来，使用
+<B>unalias</B>
+
+命令来删除。
+<P>
+
+在替换文本中没有参数机制。如果需要参数，应当使用 shell 函数 (参见下面的
+<FONT SIZE="-1"><B>FUNCTIONS (函数)</B>
+
+</FONT>
+段落)。
+<P>
+
+如果 shell 不是交互的，别名将不会展开，除非使用内建命令
+<B>shopt</B>
+
+设置了
+<B>expand_aliases</B>
+
+选项。
+<P>
+
+关于别名的定义和使用中的规则比较混乱。
+<B>Bash</B>
+
+在执行一行中的任何命令之前，总是读入至少完整一行的输入。
+别名在命令被读取时展开，而不是在执行的时候。因此，别名定义如果
+和另一个命令在同一行，那么不会起作用，除非读入了下一行。
+别名定义之后，同一行中的命令不会受新的别名影响。这种行为
+在函数执行时存在争议，因为别名替换是在函数定义被读取时发生的，
+而不是函数被执行的时候，因为函数定义本身是一个复合命令。结果，
+在函数中定义的别名只有当这个函数执行完才会生效。为了保险起见，
+应当总是将别名定义放在单独的一行，不在复合命令中使用
+<B>alias。</B>
+
+<P>
+
+不管什么情况下，别名都被 shell 函数超越 (be superseded)。
+<A NAME="lbBR">&nbsp;</A>
+<H2>函数(FUNCTIONS)</H2>
+
+一个 shell 函数，以上面
+<FONT SIZE="-1"><B>SHELL</B>GRAMMAR
+
+</FONT>
+中描述的方法定义，保存着一系列的命令，等待稍后执行。
+当 shell 函数名作为一个简单命令名使用时，这个函数名关联的命令的序列
+被执行。函数在当前 shell 的上下文环境中执行；不会创建新的进程来
+解释它们 (这与 shell 脚本的执行形成了对比)。当执行函数时，函数
+的参数成为执行过程中的位置参数 (positional parameters)。特殊参数
+<B>#</B>
+
+被更新以反映这个变化。位置参数 0 不会改变。函数执行时，
+<FONT SIZE="-1"><B>FUNCNAME</B>
+
+</FONT>
+变量被设置为函数的名称。函数和它的调用者在 shell 执行环境的所有
+其他方面都是一样的，特殊情况是
+<FONT SIZE="-1"><B>DEBUG</B>
+
+</FONT>
+陷阱 (参见下面对内建函数
+<B>trap</B>
+
+的描述，在
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节中) 不会被继承，除非函数设置了
+<B>trace</B> 属性 (参见下面对内建函数
+<FONT SIZE="-1"><B>declare</B>
+
+</FONT>
+的描述)。
+<P>
+
+函数中的局部变量可以使用内建命令
+<B>local</B>
+
+来声明。通常情况下，变量和它们的值在函数和它的调用者之间是共享的。
+<P>
+
+如果函数中执行了内建命令
+<B>return，</B>
+
+那么函数结束，执行从函数调用之后的下一个命令开始。
+函数结束后，位置参数的值以及特殊参数
+<B>#</B>
+
+都将重置为它们在函数执行前的值。
+<P>
+
+函数名和定义可以使用内建命令
+<B>declare</B>
+
+或
+<B>typeset</B>
+
+加上
+<B>-f</B>
+
+参数来列出。如果在
+<B>declare</B>
+
+或
+<B>typeset</B>
+
+命令中使用
+<B>-F</B>
+
+选项将只列出函数名。函数可以使用内建命令
+<B>export</B>
+
+加上
+<B>-f</B>
+
+参数导出，使得子 shell 中它们被自动定义。
+<P>
+
+函数可以是递归的。对于递归调用的次数没有硬性限制。
+<A NAME="lbBS">&nbsp;</A>
+<H2>算术求值(ARITHMETIC EVALUATION)</H2>
+
+在一定的环境下，shell 允许进行算术表达式的求值 (参见内建命令 <B>let</B>
+和 <B>Arithmetic Expansion</B> (算术表达式))。
+求值使用固定宽度的整数，不检查是否溢出，但是被零除会被捕获，标记为错误。
+操作数及其优先级和聚合程度与 C 语言中相同。下列操作数的列表按照相同
+优先级的操作数其级别来分组。列出的级别顺序是优先级递减的。
+<P>
+
+
+<DL COMPACT>
+<DT><B></B><I>id</I>++ <I>id</I>--
+
+<DD>
+变量自增/自减 (在后)
+<DT><B>++</B><I>id</I> --<I>id</I>
+
+<DD>
+变量自增/自减 (在前)
+<DT><B>- +</B>
+
+<DD>
+(单目的) 取负/取正
+<DT><B>! ~</B>
+
+<DD>
+逻辑和位取反
+<DT><B>**</B>
+
+<DD>
+乘幂
+<DT><B>* / %</B>
+
+<DD>
+乘，除，取余
+<DT><B>+ -</B>
+
+<DD>
+加，减
+<DT><B>&lt;&lt; &gt;&gt;</B>
+
+<DD>
+左/右位移
+<DT><B>&lt;= &gt;= &lt; &gt;</B>
+
+<DD>
+比较
+<DT><B>== !=</B>
+
+<DD>
+相等/不等
+<DT><B>&amp;</B>
+
+<DD>
+位与 (AND)
+<DT><B>^</B>
+
+<DD>
+位异或 (exclusive OR)
+<DT><B>|</B>
+
+<DD>
+位或 (OR)
+<DT><B>&amp;&amp;</B>
+
+<DD>
+逻辑与 (AND)
+<DT><B>||</B>
+
+<DD>
+逻辑或 (OR)
+<DT><B></B><I>expr</I>?<I>expr</I>:<I>expr</I>
+
+<DD>
+条件求值
+<DT><B>= *= /= %= += -= &lt;&lt;= &gt;&gt;= &amp;= ^= |=</B>
+
+<DD>
+赋值
+<DT><B></B><I>expr1</I> , <I>expr2</I>
+
+<DD>
+逗号表达式
+
+</DL>
+<P>
+
+shell 变量可以作为操作数；在表达式求值之前会进行参数扩展。
+在表达式中，可以用名称引用 shell 变量，不必使用参数扩展的语法。
+变量被引用时，其值被作为算术表达式来求值。
+shell 变量用于表达式中时，不必启用整数属性。
+<P>
+
+以 0 为前导的常量被当作八进制数，以 0x 或 0X 作为前导表明是十六进制。
+其他情况下，数字的形式是 [<I>base#</I>]n，这里 <I>base</I> 是一个 2 到 64
+的十进制数值，作为数字的基数，<I>n</I> 是在这个基数中数字的值。
+如果忽略了 <I>base#</I>，将以 10 为基数。大于 10 的数字依次以小写字母，
+大写字母，@ 和 _ 表示。如果 <I>base</I> 小于或等于 36，在表示 10 与 35 之间
+的数字时小写字母和大写字母可以互换。
+<P>
+
+操作符根据优先级顺序进行求值。圆括号中的子表达式被最先求值，可能会
+超越上面的优先级规则。
+<A NAME="lbBT">&nbsp;</A>
+<H2>条件表达式(CONDITIONAL EXPRESSIONS)</H2>
+
+条件表达式用于 <B>[[</B> 复合命令以及内建命令 <B>test</B> 和 <B>[</B> 中，
+用来测试文件属性，进行字符串和算术比较。表达式使用下面的单目或二进制操作构造。
+如果某操作的任何 <I>file</I> 参数的形式是 <I>/dev/fd/n</I>，那么将检查
+文件描述符 <I>n</I>。如果某操作的 <I>file</I> 参数是 <I>/dev/stdin</I>，
+<I>/dev/stdout</I> 或者 <I>/dev/stderr</I> 之一，将分别检查文件描述符 0，1 和 2。
+<P>
+
+<DL COMPACT>
+<DT><B>-a </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在则为真。
+<DT><B>-b </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且为块设备则为真。
+<DT><B>-c </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且为字符设备则为真。
+<DT><B>-d </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且是一个目录则为真。
+<DT><B>-e </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在则为真。
+<DT><B>-f </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且为普通文件则为真。
+<DT><B>-g </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且是设置组ID的 (sgid) 则为真。
+<DT><B>-h </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且为符号链接则为真。
+<DT><B>-k </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且设置了 ``sticky'' 位 (粘滞位) 则为真。
+<DT><B>-p </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且是一个命名管道 (FIFO) 则为真。
+<DT><B>-r </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且可读则为真。
+<DT><B>-s </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且大小大于零则为真。
+<DT><B>-t </B><I>fd</I>
+
+<DD>
+如果文件描述符
+<I>fd</I>
+
+是打开的且对应一个终端则为真。
+<DT><B>-u </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且是设置用户ID的 (suid) 则为真。
+<DT><B>-w </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且可写则为真。
+<DT><B>-x </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且可执行则为真。
+<DT><B>-O </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且为有效用户ID所拥有则为真。
+<DT><B>-G </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且为有效组ID所拥有则为真。
+<DT><B>-L </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且为符号链接则为真。
+<DT><B>-S </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且为套接字则为真。
+<DT><B>-N </B><I>file</I>
+
+<DD>
+如果 <I>file</I> 存在且上次读取后被修改过则为真。
+<DT><I>file1</I> -<B>nt</B> <I>file2</I><DD>
+如果 <I>file1</I> 比 <I>file2</I> 要新 (根据修改日期)，或者
+如果 <I>file1</I> 存在而 <I>file2</I> 不存在，则为真。
+<DT><I>file1</I> -<B>ot</B> <I>file2</I><DD>
+如果 <I>file1</I> 比 <I>file2</I> 更旧，或者
+如果 <I>file1</I> 不存在而 <I>file2</I> 存在，则为真。
+<DT><I>file1</I> <B>-ef</B> <I>file2</I><DD>
+如果 <I>file1</I> 和 <I>file2</I> 指的是相同的设备和 inode 号则为真。
+<DT><B>-o </B><I>optname</I>
+
+<DD>
+如果启用了 shell 选项
+<I>optname</I>
+
+则为真。参见下面对内建命令
+<B>set</B>
+
+的
+<B>-o</B>
+
+选项的描述中的选项列表。
+<DT><B>-z </B><I>string</I>
+
+<DD>
+如果 <I>string</I> 的长度为 0 则为真。
+<DT><B>-n </B><I>string</I>
+
+<DD>
+<DT><I>string</I><DD>
+如果 <I>string</I> 的长度非 0 则为真。
+<DT><I>string1</I> <B>==</B> <I>string2</I><DD>
+如果字符串相等则为真。<B>=</B> 可以用于使用 <B>==</B> 的场合来兼容 POSIX 规范。
+<DT><I>string1</I> <B>!=</B> <I>string2</I><DD>
+如果字符串不相等则为真。
+<DT><I>string1</I> <B>&lt;</B> <I>string2</I><DD>
+如果 <I>string1</I> 在当前语言环境的字典顺序中排在 <I>string2</I> 之前则为真。 
+<DT><I>string1</I> <B>&gt;</B> <I>string2</I><DD>
+如果 <I>string1</I> 在当前语言环境的字典顺序中排在 <I>string2</I> 之后则为真。 
+<DT><I>arg1</I> <B>OP</B> <I>arg2</I>
+
+<DD>
+<FONT SIZE="-1"><B>OP</B>
+
+</FONT>
+是
+<B>-eq</B>,
+
+<B>-ne</B>,
+
+<B>-lt</B>,
+
+<B>-le</B>,
+
+<B>-gt</B>,
+
+或
+<B>-ge</B>
+
+之一。这些算术二进制操作返回真，如果 <I>arg1</I> 与 <I>arg2</I> 分别是
+相等，不等，小于，小于或等于，大于，大于或等于关系。
+<I>Arg1</I>
+
+和
+<I>arg2</I>
+
+可以是正/负整数。
+
+</DL>
+<A NAME="lbBU">&nbsp;</A>
+<H2>简单命令扩展(SIMPLE COMMAND EXPANSION)</H2>
+
+当执行一个简单命令时，shell 进行下列扩展，赋值和重定向，从左到右。
+<DL COMPACT>
+<DT>1.<DD>
+解释器标记为与变量赋值 (在命令名之前的) 和重定向有关的词被保存等待随后处理。
+<DT>2.<DD>
+并非变量赋值或重定向的词被扩展。如果扩展后仍然有词保留下来，第一个词被
+作为命令名，其余词是参数。
+<DT>3.<DD>
+重定向按照上面
+<FONT SIZE="-1"><B>REDIRECTION</B>
+
+</FONT>
+中讲到的规则进行。
+<DT>4.<DD>
+每个变量赋值中 <B>=</B> 之后的文本在赋予变量之前要经过波浪线扩展，
+参数扩展，命令替换，算术扩展和引用删除。
+</DL>
+<P>
+
+如果没有得到命令名，变量赋值影响当前 shell 环境。否则，变量被加入
+被执行的命令的环境中，不影响当前 shell 环境。如果任何赋值动作试图
+为只读变量赋值，将导致出错，命令以非零状态值退出。
+<P>
+
+如果没有得到命令名，重定向仍会进行，但是不影响当前 shell 环境。
+重定向出错将使命令以非零状态值退出。
+<P>
+
+如果扩展后有命令名保留下来，那么执行过程如下所示。否则，命令退出。
+如果在任何扩展中包含命令替换，那么整个命令的退出状态是最后一个命令
+替换的退出状态。如果没有进行命令替换，命令以状态零退出。
+<A NAME="lbBV">&nbsp;</A>
+<H2>命令执行(COMMAND EXECUTION)</H2>
+
+命令被拆分为词之后，如果结果是一个简单命令和可选的参数列表，将执行
+下面的操作。
+<P>
+
+如果命令名中没有斜杠，shell 试图定位命令位置。如果存在同名的 shell
+函数，函数将被执行，像上面
+<FONT SIZE="-1"><B>FUNCTIONS</B>
+
+</FONT>
+中讲到的一样。如果名称不是一个函数，shell 从 内建命令中搜索它。如果找到
+对应命令，它将被执行。
+<P>
+
+如果名称既不是 shell 函数也不是一个内建命令，并且没有包含斜杠，
+<B>bash</B>
+
+搜索
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+的每个成员，查找含有此文件名 (可执行文件) 的目录。
+<B>Bash</B>
+
+使用散列表来储存可执行文件的全路径 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+中的
+<B>hash。</B>
+
+只有在散列表中没有找到此命令，才对
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+进行完整的搜索。如果搜索不成功，shell 输出错误消息，返回退出状态 127。
+<P>
+
+如果搜索成功，或者命令中包含一个或多个斜杠，shell 在单独的执行环境中
+执行这个程序。参数 0 被设置为所给名称；命令的其他参数被设置为所给的参数，
+如果有的话。
+<P>
+
+如果执行失败，因为文件不是可执行格式，并且此文件不是目录，就假定它是
+一个 <I>shell script</I> (脚本)，一个包含 shell 命令的文件。此时将孵化 
+(spawn) 出一个子 shell 来执行它。子 shell 重新初始化自身，效果就好像是
+执行了一个新的 shell 来处理脚本一样，但是父 shell 保存的命令位置仍然被
+保留 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+中的
+<B>hash)。</B>
+
+<P>
+
+如果程序是以
+<B>#!</B>
+
+开头的文件，那么第一行的其余部分指定了这个程序的解释器。
+shell 执行指定的解释器，如果操作系统不会自行处理这种可执行文件格式的话。
+解释器的参数由下面三部分组成：程序第一行中解释器名称之后的可选的一个参数，
+程序的名称，命令行参数，如果有的话。
+<A NAME="lbBW">&nbsp;</A>
+<H2>命令执行环境(COMMAND EXECUTION ENVIRONMENT)</H2>
+
+shell 有 <I>execution environment</I> (执行环境) 的概念，由下列内容组成：
+<P>
+<DL COMPACT>
+<DT>&bull;<DD>
+shell 启动时继承的打开的文件，例如在内建命令 <B>exec</B> 中使用重定向
+修改的结果
+<DT>&bull;<DD>
+当前工作目录，使用 <B>cd</B>，<B>pushd</B> 或者 <B>popd</B> 设置，或是由
+shell 在启动时继承得到
+<DT>&bull;<DD>
+文件创建模式掩码，使用 <B>umask</B> 设置或是从 shell 的父进程中继承得到
+<DT>&bull;<DD>
+当前陷阱，用 <B>trap</B> 设置
+<DT>&bull;<DD>
+shell 参数，使用变量赋值或者 <B>set</B> 设置，或者是从父进程的环境中继承得到
+<DT>&bull;<DD>
+shell 函数，在执行中定义或者是从父进程的环境中继承得到
+<DT>&bull;<DD>
+设为允许的选项，在执行时设置 (要么是默认允许的，要么是命令行给出的) 或者是
+用 <B>set</B> 设置
+<DT>&bull;<DD>
+用 <B>shopt</B> 设为允许的选项
+<DT>&bull;<DD>
+用 <B>alias</B> 定义的 shell 别名
+<DT>&bull;<DD>
+各种进程号，包含后台作业的进程号，<B>$$</B> 的值，以及 <B>$PPID</B> 的值
+</DL>
+<P>
+
+当并非 shell 函数或内置命令的简单命令执行时，它在一个由下述内容组成的
+单独的执行环境中启动。除非另外说明，值都是从 shell 中继承的。
+<P>
+<DL COMPACT>
+<DT>&bull;<DD>
+shell 打开的文件，加上对命令使用重定向修改和添加的文件
+<DT>&bull;<DD>
+当前工作目录
+<DT>&bull;<DD>
+文件创建模式掩码
+<DT>&bull;<DD>
+标记为导出 (export) 的 shell 变量，以及传递到环境中为这个命令导出的变量
+<DT>&bull;<DD>
+shell 捕捉的陷阱被重置为从 shell 的父进程中继承的值，shell 忽略的陷阱
+也被忽略
+</DL>
+<P>
+
+在单独的环境中启动的命令不能影响 shell 的执行环境。
+<P>
+
+命令替换和异步命令都在子 shell 环境中执行。子 shell 环境是原有 shell 
+环境的赋值，但 shell 捕捉的陷阱被重置为 shell 启动时从父进程中继承的值。
+作为管道一部分来执行的内建命令也在一个子 shell 环境中执行。对子 shell
+环境所作修改不能影响到原有 shell 的执行环境。
+<P>
+
+如果命令后面是 <B>&amp;</B> 并且没有启用作业控制，命令的默认标准输入将是空文件
+<I>/dev/null</I>。否则，被执行的命令从调用它的 shell 中继承被重定向修改的
+文件描述符。
+<A NAME="lbBX">&nbsp;</A>
+<H2>环境(ENVIRONMENT)</H2>
+
+当一个程序执行时，它被赋予一个字符串数组，成为环境
+<I>environment</I>。
+
+它是一个
+名称-值对 (<I>name</I>-<I>value</I>) 的列表，形式是
+<I>name</I>=value.
+
+<P>
+
+shell 提供了多种操作环境的方法。启动时，shell 扫描自身的环境，为每个找到
+的名字创建一个参数，自动地将它标记为
+<I>export</I>
+
+(向子进程导出的)。被执行的命令继承了这个环境。
+<B>export</B>
+
+和
+<B>declare -x</B>
+
+命令允许参数和函数被加入到环境中或从环境中删除。如果环境中参数的值
+被修改，新值成为环境的一部分，替换了旧值。所有被执行的命令继承的环境
+包含 shell 的初始环境 (可能值被修改过)，减去被
+<B>unset</B>
+
+命令删除的，加上通过
+<B>export</B>
+
+和
+<B>declare -x</B>
+
+命令添加的部分。
+<P>
+
+可以在任何
+<I>simple command</I>
+
+或函数的环境中设定暂时有效的参数，只要将参数赋值放在命令前面就可以了，
+参见上面
+<FONT SIZE="-1"><B>PARAMETERS</B>
+
+</FONT>
+的描述。这些赋值语句只在这个命令的环境中有效。
+<P>
+
+如果设置了内建命令
+<B>set</B>
+
+的
+<B>-k</B>
+
+选项，
+<I>所有的</I>
+
+变量赋值都将放到命令的环境中，不仅是在命令名前面的那些。
+<P>
+
+当
+<B>bash</B>
+
+执行一个外部命令时，变量
+<B>_</B>
+
+被设置为命令的文件全名，然后被传递到命令的环境之中。
+<A NAME="lbBY">&nbsp;</A>
+<H2>退出状态(EXIT STATUS)</H2>
+
+从 shell 的角度看，一个命令退出状态是 0 意味着成功退出。
+退出状态是 0 表明成功。非零状态值表明失败。当命令收到 fatal signal <I>N</I>
+退出时，bash 使用 128+<I>N</I> 作为它的退出状态。
+<P>
+
+如果没有找到命令，为执行它而创建的子进程返回 127。如果找到了命令但是
+文件不可执行，返回状态是 126。
+<P>
+
+如果命令由于扩展或重定向错误而失败，退出状态大于零。
+<P>
+
+shell 内建命令如果成功返回 0(<I>true</I>)，执行时出错则返回非零 (<I>false</I>)。
+所有内建命令返回 2 来指示不正确的用法。
+<P>
+
+<B>Bash</B> 自身返回最后执行的命令的退出状态，除非发生了语法错误，
+这时它返回非零值。参见下面的内建命令 <B>exit</B>。
+<A NAME="lbBZ">&nbsp;</A>
+<H2>信号(SIGNALS)</H2>
+
+如果 <B>bash</B> 是交互的，没有设定任何陷阱，它忽略
+<FONT SIZE="-1"><B>SIGTERM</B>
+
+</FONT>
+(这样 <B>kill 0</B> 不会杀掉交互的 shell)。
+<FONT SIZE="-1"><B>SIGINT</B>
+
+</FONT>
+被捕获并处理 (从而使内建命令 <B>wait</B> 可以中断)。在所有情况下，
+<B>bash</B> 忽略
+<FONT SIZE="-1"><B>SIGQUIT</B>。
+
+</FONT>
+如果正在使用作业控制，
+<B>bash</B>
+
+忽略
+<FONT SIZE="-1"><B>SIGTTIN</B>,
+
+</FONT>
+<FONT SIZE="-1"><B>SIGTTOU</B>,
+
+</FONT>
+和
+<FONT SIZE="-1"><B>SIGTSTP</B>.
+
+</FONT>
+<P>
+
+<B>bash</B> 开始的并行作业的信号处理句柄都设置为 shell 从父进程中继承
+的值。如果不是正在使用作业控制，异步命令还忽略
+<FONT SIZE="-1"><B>SIGINT</B>
+
+</FONT>
+和
+<FONT SIZE="-1"><B>SIGQUIT 。</B>
+
+</FONT>
+作为命令替换结果运行的命令忽略键盘产生的作业控制信号
+<FONT SIZE="-1"><B>SIGTTIN</B>,
+
+</FONT>
+<FONT SIZE="-1"><B>SIGTTOU</B>,
+
+</FONT>
+和
+<FONT SIZE="-1"><B>SIGTSTP</B>.
+
+</FONT>
+<P>
+
+如果收到信号
+<FONT SIZE="-1"><B>SIGHUP，</B>
+
+</FONT>
+shell 默认退出。在退出前，交互的 shell 向所有作业，运行的或停止的，发送
+<FONT SIZE="-1"><B>SIGHUP</B>
+
+</FONT>
+信号。shell 向停止的作业发出
+<FONT SIZE="-1"><B>SIGCONT</B>
+
+</FONT>
+信号来保证它们会收到
+<FONT SIZE="-1"><B>SIGHUP</B>.
+
+</FONT>
+要阻止 shell 向特定的作业发送信号，应当使用内建命令
+<B>disown</B>
+
+将作业从作业表中删除 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节) 或者使用
+<B>disown -h</B>
+
+来标记为不接受
+<FONT SIZE="-1"><B>SIGHUP。</B>
+
+</FONT>
+<P>
+
+如果使用
+<B>shopt</B>
+
+设置了 shell 选项
+<B>huponexit，</B>
+
+在交互的登录 shell 退出时
+<B>bash</B>
+
+向所有作业发出
+<FONT SIZE="-1"><B>SIGHUP</B>
+
+</FONT>
+信号。
+<P>
+
+当 <B>bash</B> 等待命令执行结束时，如果收到已设置了陷阱的信号，陷阱 
+(trap) 将不会执行，直到命令结束。
+当 <B>bash</B> 通过内建命令 <B>wait</B> 等待异步命令时，如果收到已设置
+了陷阱的信号，将使得内建命令 <B>wait</B> 立即以大于 128 的状态值返回。
+接着，陷阱将立即被执行。
+<A NAME="lbCA">&nbsp;</A>
+<H2>作业控制(JOB CONTROL)</H2>
+
+<I>Job control</I>
+
+(作业控制) 指的是可以选择停止 (<I>suspend</I>，挂起) 进程执行，并且
+可以在之后继续 (<I>resume</I>，恢复) 执行的能力。用户一般在交互的人机界面
+中使用这种功能。界面是由系统的终端驱动和
+<B>bash</B>
+
+共同提供的。
+<P>
+
+shell 将每个管道分配给一个
+<I>作业(job)。</I>
+
+它保存一个当前运行的作业表，可以用
+<B>jobs</B>
+
+命令来列出。当
+<B>bash</B>
+
+启动一个异步的作业时
+<I>(background，后台执行)，</I>
+
+它输出这样的一行：
+<DL COMPACT><DT><DD>
+<P>
+
+[1] 25647
+</DL>
+
+<P>
+
+表明这个作业的作业号是 1，与作业相关连的管道中最后一个进程的
+进程ID是 15647。管道中所有进程都是同一个作业的成员。
+<B>Bash</B>
+
+使用
+<I>作业(job)</I>
+
+概念作为作业控制的基础。
+<P>
+
+为简化作业控制的用户界面的实现，操作系统负责管理"当前终端的进程组"
+(<I>current terminal process group ID</I>) 的概念。这个进程组的成员
+(进程组 ID 是当前终端进程组 ID 的进程) 可以收到键盘产生的信号，例如
+<FONT SIZE="-1"><B>SIGINT</B>.
+
+</FONT>
+这些进程被称为
+<I>foreground</I>(前台的)。
+
+<I>Background (后台的)</I>
+
+进程是那些进程组 ID 与终端不同的进程；这些进程不会收到键盘产生的信号。
+只有前台进程可以从终端读或向终端写。后台进程试图读/写终端时，将收到终端驱动程序发送的
+<FONT SIZE="-1"><B>SIGTTIN (SIGTTOU)</B>
+
+</FONT>
+信号。这个信号如果没有加以捕捉，将挂起这个进程。
+<P>
+
+如果
+<B>bash</B>
+
+运行其上的操作系统支持作业控制，
+<B>bash</B>
+
+会包含使用它的设施。在一个进程正在运行的时候键入
+<I>suspend 挂起</I>
+
+字符 (通常是
+<B>^Z</B>,
+
+Control-Z) 将使这个进程暂停，将控制权还给
+<B>bash</B>.
+
+输入
+<I>delayed suspend, 延时挂起</I>
+
+字符 (通常是
+<B>^Y</B>,
+
+Control-Y) 将使这个进程在试图从终端读取输入时暂停，将控制权还给
+<B>bash</B>.
+
+用户接下来可以控制此作业的状态，使用
+<B>bg</B>
+
+命令使它在后台继续运行，
+<B>fg</B>
+
+命令使它在前台继续运行，或
+<B>kill</B>
+
+命令将它杀死。<B>^Z</B> 会立即起作用，并且还有使等待中的 (pending) 输出和输入被忽略的附加副作用。
+<P>
+
+有很多方法来指代 shell 中的作业。字符
+<B>%</B>
+
+可以引入作业名。编号为
+<I>n</I>
+
+的作业可以用
+<B>%n</B>
+
+的形式来指代。作业也可以用启动它的名称的前缀，或者命令行中的子字符串来指代。例如，
+<B>%ce</B>
+
+指代一个暂停的
+<B>ce</B>
+
+作业。如果前缀匹配多于一个作业，
+<B>bash</B>
+
+报错。另一方面，使用
+<B>%?ce</B>,
+
+可以指代任何命令行中包含字符串
+<B>ce</B>
+
+的作业。如果子字符串匹配多于一个作业，
+<B>bash</B>
+
+报错。符号
+<B>%%</B>
+
+和
+<B>%+</B>
+
+指代 shell 意义上的
+<I>current job，当前作业，</I>
+
+也就是前台被暂停的最后一个作业，或者是在后台启动的作业。
+<I>previous job，前一作业</I>
+
+可以使用
+<B>%-</B>
+
+来指代。在有关作业的输出信息中 (例如，命令
+<B>jobs</B>
+
+的输出)，当前作业总是被标记为
+<B>+</B>,
+
+前一作业标记为
+<B>-</B>.
+
+<P>
+
+简单地给出作业名，可以用来把它放到前台：
+<B>%1</B>
+
+是
+<B>``fg %1''</B>
+的同义词，将作业 1 从后台放到前台。类似的，
+<B>``%1 &amp;''</B>
+
+在后台恢复作业 1，与
+<B>``bg %1''</B>
+等价。
+<P>
+
+当某个作业改变状态时，shell 立即可以得知。通常，
+<B>bash</B>
+
+等待直到要输出一个提示符时，才会报告作业的状态变化，从而不会打断其他输出。
+如果启用了内建命令
+<B>set</B>
+
+的
+<B>-b</B>
+
+选项，
+<B>bash</B>
+
+将立即报告这些变化。对
+<FONT SIZE="-1"><B>SIGCHLD</B>
+
+</FONT>
+信号的陷阱将在每个子进程退出时执行。
+<P>
+
+如果在作业暂停时试图退出
+<B>bash，</B>
+
+shell 打印一条警告消息。命令
+<B>jobs</B>
+
+可能被用来检查作业的状态。如果再次试图退出，中间没有其他命令，shell 不会打印
+其他警告，暂停的作业将终止。
+<A NAME="lbCB">&nbsp;</A>
+<H2>提示符(PROMPTING)</H2>
+
+在交互执行时，
+<B>bash</B>
+
+在准备好读入一条命令时显示主提示符
+<FONT SIZE="-1"><B>PS1，</B>
+
+</FONT>
+在需要更多的输入来完成一条命令时显示
+<FONT SIZE="-1"><B>PS2。</B>
+
+</FONT>
+<B>Bash</B>
+
+允许通过插入一些反斜杠转义的特殊字符来定制这些提示字符串，这些字符被如下解释：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>\a</B>
+
+<DD>
+一个 ASCII 响铃字符 (07)
+<DT><B>\d</B>
+
+<DD>
+日期，格式是 &quot;星期 月份 日&quot; (例如，&quot;Tue May 26&quot;)
+<DT><B>\D{</B><I>format</I>}
+
+<DD>
+<I>format</I> 被传递给 <I><A HREF="/cgi-bin/man/man2html?3+strftime">strftime</A></I>(3)，结果被插入到提示字符串中；
+空的 <I>format</I> 将使用语言环境特定的时间格式。花括号是必需的
+<DT><B>\e</B>
+
+<DD>
+一个 ASCII 转义字符 (033)
+<DT><B>\h</B>
+
+<DD>
+主机名，第一个 `.' 之前的部分
+<DT><B>\H</B>
+
+<DD>
+主机名
+<DT><B>\j</B>
+
+<DD>
+shell 当前管理的作业数量
+<DT><B>\l</B>
+
+<DD>
+shell 的终端设备名的基本部分
+<DT><B>\n</B>
+
+<DD>
+新行符
+<DT><B>\r</B>
+
+<DD>
+回车
+<DT><B>\s</B>
+
+<DD>
+shell 的名称，
+<B>$0</B>
+
+的基本部分 (最后一个斜杠后面的部分)
+<DT><B>\t</B>
+
+<DD>
+当前时间，采用 24小时制的 HH:MM:SS 格式
+<DT><B>\T</B>
+
+<DD>
+当前时间，采用 12小时制的 HH:MM:SS 格式
+<DT><B>\@</B>
+
+<DD>
+当前时间，采用 12小时制上午/下午 (am/pm) 格式
+<DT><B>\A</B>
+
+<DD>
+当前时间，采用 24小时制上午/下午格式
+<DT><B>\u</B>
+
+<DD>
+当前用户的用户名
+the username of the current user
+<DT><B>\v</B>
+
+<DD>
+<B>bash</B> 的版本 (例如，2.00)
+<DT><B>\V</B>
+
+<DD>
+<B>bash</B> 的发行编号，版本号加补丁级别 (例如，2.00.0)
+<DT><B>\w</B>
+
+<DD>
+当前工作目录
+<DT><B>\W</B>
+
+<DD>
+当前工作目录的基本部分
+<DT><B>\!</B>
+
+<DD>
+此命令的历史编号
+<DT><B>\#</B>
+
+<DD>
+此命令的命令编号
+<DT><B>\$</B>
+
+<DD>
+如果有效 UID 是 0，就是
+<B>#</B>,
+
+其他情况下是
+<B>$</B>
+
+<DT><B>\</B><I>nnn</I>
+
+<DD>
+对应八进制数 <I>nnn</I> 的字符
+<DT><B>\\</B>
+
+<DD>
+一个反斜杠
+<DT><B>\[</B>
+
+<DD>
+一个不可打印字符序列的开始，可以用于在提示符中嵌入终端控制序列
+<DT><B>\]</B>
+
+<DD>
+一个不可打印字符序列的结束
+
+</DL>
+</DL>
+
+<P>
+
+命令编号和历史编号通常是不同的：历史编号是命令在历史列表中的位置，可能
+包含从历史文件中恢复的命令 (参见下面的
+<FONT SIZE="-1"><B>HISTORY 历史</B>
+
+</FONT>
+章节)，而命令编号是当前 shell 会话中执行的命令序列中，命令的位置。
+字符串被解码之后，它将进行扩展，要经过
+parameter expansion, command substitution, arithmetic
+expansion 和 quote removal, 最后要经过 shell 选项
+<B>promptvars</B>
+
+处理 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节中，对命令
+<B>shopt</B>
+
+的描述)。
+<A NAME="lbCC">&nbsp;</A>
+<H2>readline库(READLINE)</H2>
+
+这是在交互 shell 中处理读取输入的库，除非在 shell 启动时给出了
+<B>--noediting</B>
+
+选项。默认情况下，行编辑命令类似于 emacs 中的那些。也可以使用 vi 样式的行编辑界面。
+要在 shell 运行之后关闭行编辑，使用内置命令
+<B>set</B>
+
+的
+<B>+o emacs</B>
+
+或
+<B>+o vi</B>
+
+选项 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节)。
+<A NAME="lbCD">&nbsp;</A>
+<H3>Readline Notation</H3>
+
+<P>
+
+在这个小节中，将使用 emacs 样式的记法来表述按键。Ctrl 键记为 C-<I>key</I>，
+例如，C-n 意思是 Ctrl-N。类似的，
+<I>meta</I>
+
+键记为 M-<I>key</I>，因此 M-x 意味着 Meta-x。(在没有
+<I>meta</I>
+
+键的键盘上，M-<I>x</I> 意思是 ESC-<I>x</I>，也就是说，按下 Esc 键，然后按
+<I>x</I>
+
+键。这使得 Esc 成为 <I>meta prefix</I>。M-C-<I>x</I> 的组合意思是 Esc-Ctrl-<I>x</I>，
+也就是按 Esc 键，然后按住 Ctrl 键，同时按
+<I>x</I>
+
+键。)
+<P>
+
+readline 命令可以有数字的
+<I>参数</I>(arguments)，
+
+一般作为重复的计数。有些时候，它是重要参数的标记。给向前方进行的命令 
+(例如，<B>kill-line</B>) 传递负数参数，将使得命令向反方向进行。
+下面的命令如果接受参数时的行为与此不同，将另行说明。
+<P>
+
+当命令被描述为剪切 (<I>killing</I>) 文本时，被删除的文本被保存，等待将来使用
+(粘贴，<I>yanking</I>)。被剪切的文本保存在 <I>kill ring</I> 中。连续的剪切使得
+文本被依次加入到一个单元中，可以一次被粘贴。不剪切文本的命令将 kill ring 中的文本分离。
+<A NAME="lbCE">&nbsp;</A>
+<H3>Readline Initialization 初始化</H3>
+
+<P>
+
+readline 可以通过将命令放入初始化文件 (<I>inputrc</I> 文件) 来定制。
+文件名从变量
+<FONT SIZE="-1"><B>INPUTRC</B>
+
+</FONT>
+的值中获取。如果没有设置这个变量，默认是
+<I>~/.inputrc</I>.
+
+当使用 readline 库的程序启动时，将读取初始化文件，按键关联和变量将被设置。
+readline 初始化文件中只允许有很少的基本构造。
+空行被忽略。以 <B>#</B> 开始的行是注释。以 <B>$</B> 开始的行指示了有条件的构造。
+其他行表示按键关联和变量设置。
+<P>
+
+默认的按键关联可以使用
+<I>inputrc </I>
+
+文件改变。其他使用这个库的程序可以添加它们自己的命令和关联。
+<P>
+
+例如，将
+<DL COMPACT><DT><DD>
+<P>
+
+M-Control-u: universal-argument
+</DL>
+
+或
+<DL COMPACT><DT><DD>
+C-Meta-u: universal-argument
+</DL>
+
+放入
+<I>inputrc</I>
+
+将使得 M-C-u 执行 readline 命令
+<I>universal-argument</I>.
+
+<P>
+
+可以识别下列字符的符号名称：
+<I>RUBOUT</I>,
+
+<I>DEL</I>,
+
+<I>ESC</I>,
+
+<I>LFD</I>,
+
+<I>NEWLINE</I>,
+
+<I>RET</I>,
+
+<I>RETURN</I>,
+
+<I>SPC</I>,
+
+<I>SPACE</I>,
+
+和
+<I>TAB</I>.
+
+<P>
+
+在命令名之外，readline 允许将按键与一个字符串关联，当按下这个键时，将插入这个字符串 (一个宏，<I>macro</I>)。
+<A NAME="lbCF">&nbsp;</A>
+<H3>Readline Key Bindings</H3>
+
+<P>
+
+<I>inputrc</I>
+
+文件中的控制按键关联的语法非常简单。需要的内容是命令名或宏，以及它应当关联到的按键序列。
+名称可以以两种方式指定：一个按键的符号名称，可能带有 <I>Meta-</I> 或 <I>Control-</I> 前缀，或者是一个按键序列。
+<P>
+
+当使用 <B>keyname</B>:<I>function-name</I> 或 <I>macro</I> 形式时，
+<I>keyname</I>
+
+是按键以英文拼写的名称。例如：
+<P>
+<DL COMPACT><DT><DD>
+Control-u: universal-argument
+<BR>
+
+Meta-Rubout: backward-kill-word
+<BR>
+
+Control-o: &quot;&gt; output&quot;
+</DL>
+
+<P>
+
+在上述例子中，
+<I>C-u</I>
+
+被关联到函数
+<B>universal-argument</B>,
+
+<I>M-DEL</I>
+
+被关联到函数
+<B>backward-kill-word</B>,
+
+而
+<I>C-o</I>
+
+被关联为运行右边给出的宏 (意思是，将向行中插入
+
+``&gt; output''
+)。
+<P>
+
+在第二种形式中，<B>&quot;keyseq&quot;</B>:<I>function-name</I> 或 <I>macro</I>，
+<B>keyseq</B>
+
+不同于上面的
+<B>keyname，</B>
+
+表示整个按键序列的字符串可以通过将按键序列放在双引号引用中来指定。
+可以使用一些 GNU Emacs 样式的按键序列，如下例所示，但是不会识别按键的符号名称。
+<P>
+<DL COMPACT><DT><DD>
+&quot;\C-u&quot;: universal-argument
+<BR>
+
+&quot;\C-x\C-r&quot;: re-read-init-file
+<BR>
+
+&quot;\e[11~&quot;: &quot;Function Key 1&quot;
+</DL>
+
+<P>
+
+在上述例子中，
+<I>C-u</I>
+
+被又一次关联到函数
+<B>universal-argument</B>.
+
+<I>C-x C-r</I>
+
+被关联到函数
+<B>re-read-init-file</B>,
+
+而
+<I>ESC [ 1 1 ~</I>
+
+被关联为插入文本
+
+``Function Key 1''.
+<P>
+
+GNU Emacs 样式的转义序列的全集为：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>\C-</B>
+
+<DD>
+Ctrl 前缀
+<DT><B>\M-</B>
+
+<DD>
+Meta 前缀
+<DT><B>\e</B>
+
+<DD>
+一个 Esc 字符
+<DT><B>\\</B>
+
+<DD>
+反斜杠
+<DT><B>\</B>
+
+<DD>
+字面上的 &quot;
+<DT><B>\'</B>
+
+<DD>
+字面上的 '
+</DL>
+</DL>
+
+
+<P>
+
+除了 GNU Emacs 样式的转义序列，还有一系列反斜杠转义序列可用：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>\a</B>
+
+<DD>
+响铃
+<DT><B>\b</B>
+
+<DD>
+回退
+<DT><B>\d</B>
+
+<DD>
+删除
+<DT><B>\f</B>
+
+<DD>
+进纸
+<DT><B>\n</B>
+
+<DD>
+新行符
+<DT><B>\r</B>
+
+<DD>
+回车
+<DT><B>\t</B>
+
+<DD>
+水平跳格
+<DT><B>\v</B>
+
+<DD>
+竖直跳格
+<DT><B>\</B><I>nnn</I>
+
+<DD>
+一个八比特字符，它的值是八进制值 <I>nnn</I> (一到三个八进制数字)。
+<DT><B>\x</B><I>HH</I>
+
+<DD>
+一个八比特字符，它的值是十六进制值 <I>HH</I> (一到两个十六进制数字)。
+</DL>
+</DL>
+
+
+<P>
+
+输入宏的文本时，必须使用单引号或双引号引用来表明是宏的定义。
+没有引用的文本被当作函数名。在宏的定义体中，上述反斜杠转义被扩展。
+反斜杠将引用宏文本中所有其他字符，包括 &quot; 和 '。
+<P>
+
+<B>Bash</B>
+
+允许使用内建命令
+<B>bind</B>
+
+来显示和修改当前 readline 按键关联。在交互使用中可以用内建命令
+<B>set</B>
+
+的
+<B>-o </B>
+
+选项切换到编辑模式 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节)。
+<A NAME="lbCG">&nbsp;</A>
+<H3>Readline Variables</H3>
+
+<P>
+
+readline 包含额外的可用于定制它的行为的变量。可以在
+<I>inputrc</I>
+
+文件中设置变量，使用如下形式的语句：
+<DL COMPACT><DT><DD>
+<P>
+
+<B>set</B> <I>variable-name</I> <I>value</I>
+</DL>
+
+<P>
+
+除非另外说明，readline 变量的值总是
+<B>On</B>
+
+或
+<B>Off。</B>
+
+变量和它们的默认值是：
+<P>
+
+
+<DL COMPACT>
+<DT><B>bell-style (audible)</B>
+
+<DD>
+控制了当 readline 需要鸣终端响铃时的动作。如果设置为 <B>none</B>，
+readline 不会鸣铃。如果设置为 <B>visible</B>，readline 使用可视的响铃，如果可用的话。
+如果设置为 <B>audible</B>，readline 试着鸣终端响铃。
+<DT><B>comment-begin (``#'')</B>
+
+<DD>
+这个字符串在执行 readline 命令
+<B>insert-comment</B>
+
+时被插入。这个命令在 emacs 模式下被关联为
+<B>M-#，</B>
+
+在 vi 模式下是
+<B>#。</B>
+
+<DT><B>completion-ignore-case (Off)</B>
+
+<DD>
+如果设置为 <B>On</B>，readline 进行大小写不敏感的文件名匹配和补全。
+<DT><B>completion-query-items (100)</B>
+
+<DD>
+这个变量决定着何时向用户询问，是否查看由命令 <B>possible-completions</B> 产生的可能的补全数量。
+它可以设为任何大于或等于 0 的值。如果可能的补全数量大于或等于这个变量的值，
+用户将被提示是否愿意查看它们；否则将直接在终端上列出它们。
+<DT><B>convert-meta (On)</B>
+
+<DD>
+如果设置为 <B>On</B>，readline 将把设置了最高位的字符转换为 ASCII 按键序列，方法是
+去掉第八位，前缀一个转义字符 (实际上，使用 Esc 作为转义符 <I>meta prefix</I>)。
+<DT><B>disable-completion (Off)</B>
+
+<DD>
+如果设置为 <B>On</B>，readline 将禁止词的补全。补全字符将被插入到行中，就好像它们被
+映射为 <B>self-insert</B>。
+<DT><B>editing-mode (emacs)</B>
+
+<DD>
+控制 readline 的按键关联集合与 <I>emacs</I> 还是 <I>vi</I> 相似。
+<B>editing-mode</B>
+
+可以设置为
+<B>emacs</B>
+
+或
+<B>vi。</B>
+
+<DT><B>enable-keypad (Off)</B>
+
+<DD>
+如果设置为 <B>On</B> ，readline 在调用时将试图启用辅助键盘。
+一些系统需要设置这个来启用方向键。
+<DT><B>expand-tilde (Off)</B>
+
+<DD>
+如果设置为 <B>On</B>，readline 试图进行词的补全时会进行波浪线扩展。
+<DT><B>history-preserve-point</B>
+
+<DD>
+如果设置为 <B>On</B>，历史代码试着在 <B>previous-history</B> 或 <B>next-history</B>
+取回的每个历史行的相同位置中加点。
+<DT><B>horizontal-scroll-mode (Off)</B>
+
+<DD>
+如果设置为 <B>On</B>，将使得 readline 使用单行来显示，如果它比屏幕宽度要长，就在
+单一的屏幕行上水平滚动输入行，而不是自动回绕到新行。
+<DT><B>input-meta (Off)</B>
+
+<DD>
+如果设置为 <B>On</B>，readline 将允许八比特输入 (也就是说，它不会将它读入的字符中最高位删除)，
+不管它能支持什么样的终端要求。名称
+<B>meta-flag</B>
+
+与此变量同义。
+<DT><B>isearch-terminators (``C-[C-J'')</B>
+
+<DD>
+用于终止增量的搜索，不再将字符当作命令执行的字符串。
+如果这个变量没有赋值，字符串 <I>Esc</I> 和 <I>C-J</I> 将终止增量的搜索。
+<DT><B>keymap (emacs)</B>
+
+<DD>
+设置当前 readline 键盘映射。有效的键盘映射名称是 
+<I>emacs, emacs-standard, emacs-meta, emacs-ctlx, vi,
+vi-command</I>，还有 
+<I>vi-insert。</I>
+
+<I>vi</I> 等价于 <I>vi-command</I>; <I>emacs</I> 等价于
+<I>emacs-standard</I>。默认值是
+<I>emacs</I>;
+
+<B>editing-mode</B>
+
+的值也会影响默认的键盘映射。
+<DT><B>mark-directories (On)</B>
+
+<DD>
+如果设置为 <B>On</B>，补全的目录名会添加一个斜杠。
+<DT><B>mark-modified-lines (Off)</B>
+
+<DD>
+如果设置为 <B>On</B>，已被修改的历史行将显示为前缀一个星号 (<B>*</B>)。
+<DT><B>mark-symlinked-directories (Off)</B>
+
+<DD>
+如果设置为 <B>On</B>，补全的名称如果是到目录的符号链接，则将添加一个斜杠 (与
+<B>mark-directories</B> 的值同样处理)。
+<DT><B>match-hidden-files (On)</B>
+
+<DD>
+这个变量，如果设置为 <B>On</B>，将使得 readline 在进行文件名补全时，匹配以 `.' 开头的文件 (隐藏文件)，
+除非用户在要补全的文件名中给出了前导的 `.'。
+<DT><B>output-meta (Off)</B>
+
+<DD>
+如果设置为 <B>On</B>，readline 将直接显示设置了第八位的字符，而不是转化为一个带 meta 前缀的转义序列。
+<DT><B>page-completions (On)</B>
+
+<DD>
+如果设置为 <B>On</B>，readline 将使用内建的类似 <I>more</I> 的分页程序，
+来每次显示一屏可能的补全。
+<DT><B>print-completions-horizontally (Off)</B>
+
+<DD>
+如果设置为 <B>On</B>，readline 将匹配的补全按字母表顺序排序，然后水平排列显示出来，
+而不是在屏幕上竖直排列显示。
+<DT><B>show-all-if-ambiguous (Off)</B>
+
+<DD>
+这将调整补全函数的默认行为。如果设置为
+<B>on</B>,
+
+拥有多于一个可能的补全的词将立即列出所有匹配，而不是鸣响铃。
+<DT><B>visible-stats (Off)</B>
+
+<DD>
+如果设置为 <B>On</B>，在列出可能的补全时，将在文件名后面添加一个表示文件类型的字符，
+文件类型由 <I><A HREF="/cgi-bin/man/man2html?2+stat">stat</A></I>(2) 报告。
+
+</DL>
+<A NAME="lbCH">&nbsp;</A>
+<H3>Readline Conditional Constructs</H3>
+
+<P>
+
+readline 实现了一种功能，本质上与 C 预处理器进行条件编译的功能类似，
+允许根据测试的结果进行键盘关联和变量设置。其中使用了四种解释器指令。
+<DL COMPACT>
+<DT><B>$if</B><DD>
+<B>$if</B>
+
+结构允许根据编辑模式，正在使用的终端，使用 readline 的应用程序来设定按键关联。
+测试的文本包括一行，直到行尾；不必用字符来隔离它。
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>mode</B><DD>
+<B>$if</B> 结构的 <B>mode=</B> 形式用于测试 readline 处于 emacs 还是 vi 模式。
+这可以与命令 <B>set keymap</B> 结合使用，例如，设置 <I>emacs-standard</I> 和 <I>emacs-ctlx</I> 
+键盘映射，仅当 readline 以 emacs 模式启动。
+<DT><B>term</B><DD>
+<B>term=</B> 形式用于包含与终端相关的按键关联，也许是将按键序列输出与终端的功能键相关联。
+等号
+<B>=</B>
+
+右边的词被同终端的全名和名称中第一个 <B>-</B> 前面的一部分相比较。
+例如，允许
+<I>sun</I>
+
+同时匹配
+<I>sun</I>
+
+和
+<I>sun-cmd。</I>
+
+<DT><B>application</B><DD>
+<B>application</B> 结构用于包含应用程序相关的设置。每个使用 readline 的程序都设置 <I>application name</I>，
+初始化文件可以测试它的值。它可用于将一个按键序列与对特定的程序有用的功能相关联。
+例如，下列命令添加了一个按键序列，用以引用 bash 中当前的词或前一个词
+<P>
+<DL COMPACT><DT><DD>
+<PRE>
+<B>$if</B> Bash
+# Quote the current or previous word
+&quot;\C-xq&quot;: &quot;\eb\&quot;\ef\&quot;&quot;
+<B>$endif</B>
+</PRE>
+
+</DL>
+
+</DL>
+</DL>
+
+<DT><B>$endif</B><DD>
+上例中的这个命令，结束了一个 <B>$if</B> 命令。
+<DT><B>$else</B><DD>
+如果测试失败，<B>$if</B> 指令中这个分支的命令将被执行。
+<DT><B>$include</B><DD>
+这个指令使用单个文件名作为参数，从文件中读取命令和按键关联。例如，下列指令
+将读取 <I>/etc/inputrc</I>：
+<P>
+<DL COMPACT><DT><DD>
+<PRE>
+<B>$include</B>  <I>/etc/inputrc</I>
+</PRE>
+
+</DL>
+
+</DL>
+<A NAME="lbCI">&nbsp;</A>
+<H3>Searching</H3>
+
+<P>
+
+readline 提供了从命令历史中搜索包含给定字符串的行的命令 (参见下面的
+<FONT SIZE="-1"><B>HISTORY 历史</B>
+
+</FONT>
+章节)。有两种搜索模式：
+<I>incremental</I>
+
+和
+<I>non-incremental</I>.
+
+<P>
+
+增量的搜索在用户结束输入搜索字符串时开始。在搜索字符串的每个字符被输入的同时，
+readline 显示与已输入的字符串匹配的下一个历史条目。
+增量的搜索只要求输入能找到期望的历史条目所需的那么多字符。
+<B>isearch-terminators</B> 变量中的字符用来终止一次增量的搜索。如果
+这个变量没有被赋值，Esc 和 Ctrl-J 字符串将结束一次增量的搜索。
+Ctrl-G 将取消一次增量的搜索，恢复初始的行。当搜索终止时，包含搜索字符串
+的历史条目成为当前行。
+<P>
+
+要从历史列表中找到其他匹配的条目，适当地键入 Ctrl-S 或 Ctrl-R。
+这样将在历史中向前/向后搜索下一个匹配已输入的搜索字符串的条目。
+其他关联到某个 readline 命令的按键序列将终止搜索并执行关联的命令。
+例如，<I>newline</I> 将终止搜索，接受当前行，从而执行历史列表中的命令。
+<P>
+
+readline 可以记住上次增量搜索的字符串。如果键入两次 Ctrl-R，中间没有
+输入任何字符来定义一个新的搜索字符串，那么将使用已记住的搜索字符串。
+<P>
+
+非增量的搜索将整个搜索字符串读入，然后才开始搜索匹配的历史条目。
+搜索字符串可以由用户输入，或者是当前行的内容的一部分。
+<A NAME="lbCJ">&nbsp;</A>
+<H3>Readline Command Names</H3>
+
+<P>
+
+下面列出的是命令的名称以及默认情况下它们关联的按键序列。
+命令名称如果没有对应的按键序列，那么默认是没有关联的。在下列描述中，
+点 (<I>point</I>) 指当前光标位置，标记 (<I>mark</I>) 指命令 <B>set-mark</B> 
+保存的光标位置。point 和 mark 之间的文本被称为范围 (<I>region</I>)。
+<A NAME="lbCK">&nbsp;</A>
+<H3>Commands for Moving 移动</H3>
+
+<P>
+
+
+<DL COMPACT>
+<DT><B>beginning-of-line (C-a)</B>
+
+<DD>
+移动到当前行的开始。
+<DT><B>end-of-line (C-e)</B>
+
+<DD>
+移动到当前行的结尾。
+<DT><B>forward-char (C-f)</B>
+
+<DD>
+向前移动一字。
+<DT><B>backward-char (C-b)</B>
+
+<DD>
+向后移动一字。
+<DT><B>forward-word (M-f)</B>
+
+<DD>
+向前移动到下一词尾。词由字符 (字母和数字) 组成。
+<DT><B>backward-word (M-b)</B>
+
+<DD>
+向后移动到当前或上一词首。
+<DT><B>clear-screen (C-l)</B>
+
+<DD>
+清除屏幕，保留当前行在屏幕顶端。有参数时，刷新当前行，不清屏。
+<DT><B>redraw-current-line</B>
+
+<DD>
+刷新当前行。
+
+</DL>
+<A NAME="lbCL">&nbsp;</A>
+<H3>Commands for Manipulating the History 操纵历史行</H3>
+
+<P>
+
+
+<DL COMPACT>
+<DT><B>accept-line (Newline, Return)</B>
+
+<DD>
+接受这一行，不管光标在什么位置。如果行非空，将根据变量
+<FONT SIZE="-1"><B>HISTCONTROL</B>
+
+</FONT>
+的状态加入到历史列表中。如果行是修改过的历史行，将恢复该历史行到初始状态。
+<DT><B>previous-history (C-p)</B>
+
+<DD>
+从历史列表中取得前一个命令，从列表中向后移动。
+<DT><B>next-history (C-n)</B>
+
+<DD>
+从历史列表中取得后一个命令，从列表中向前移动。
+<DT><B>beginning-of-history (M-&lt;)</B>
+
+<DD>
+移动到历史中的第一行。
+<DT><B>end-of-history (M-&gt;)</B>
+
+<DD>
+移动到输入历史行的末尾，也就是当前输入的行的末尾。
+<DT><B>reverse-search-history (C-r)</B>
+
+<DD>
+从当前行开始向后搜索，按照需要在历史中向"上"移动。这是一个增量的搜索。
+<DT><B>forward-search-history (C-s)</B>
+
+<DD>
+从当前行开始向前搜索，按照需要在历史中向"下"移动。这是一个增量的搜索。
+<DT><B>non-incremental-reverse-search-history (M-p)</B>
+
+<DD>
+从当前行开始向后，使用非增量搜索来查找用户给出的字符串。
+<DT><B>non-incremental-forward-search-history (M-n)</B>
+
+<DD>
+从当前行开始向前，使用非增量搜索来查找用户给出的字符串。
+<DT><B>history-search-forward</B>
+
+<DD>
+从当前行开始向前搜索历史，查找从当前行首到 point 之间的字符串。
+这是一个非增量的搜索。
+<DT><B>history-search-backward</B>
+
+<DD>
+从当前行开始向后搜索历史，查找从当前行首到 point 之间的字符串。
+这是一个非增量的搜索。
+<DT><B>yank-nth-arg (M-C-y)</B>
+
+<DD>
+将前一个命令的第一个参数 (通常是上一行的第二个词) 插入到 point 位置。有参数
+<I>n</I>
+
+时，将前一个命令的第 <I>n</I> 个词 (前一个命令中的词从 0 开始计数) 
+插入到 point 位置。负数参数则插入前一个命令倒数第 <I>n</I> 个词。
+<DT><B>yank-last-arg (M-., M-_)</B>
+
+<DD>
+插入前一个命令的最后一个参数 (上一历史条目的最后一个词)。有参数时，
+行为类似于 <B>yank-nth-arg</B>。后继的 <B>yank-last-arg</B> 调用将
+从历史列表中向后移动，依次将每行的最后一个参数插入。
+<DT><B>shell-expand-line (M-C-e)</B>
+
+<DD>
+扩展行，像 shell 做的那样。其中包含别名和历史扩展，还有所有的 shell 词的扩展。
+参见下面的
+<FONT SIZE="-1"><B>HISTORY EXPANSION</B>
+
+</FONT>
+中关于历史扩展的描述。
+<DT><B>history-expand-line (M-^)</B>
+
+<DD>
+在当前行进行历史扩展。参见下面的
+<FONT SIZE="-1"><B>HISTORY EXPANSION</B>
+
+</FONT>
+中关于历史扩展的描述。
+<DT><B>magic-space</B>
+
+<DD>
+在当前行进行历史扩展，并插入一个空格。参见下面的
+<FONT SIZE="-1"><B>HISTORY EXPANSION</B>
+
+</FONT>
+中关于历史扩展的描述。
+<DT><B>alias-expand-line</B>
+
+<DD>
+在当前行进行别名扩展，参见上面的
+<FONT SIZE="-1"><B>ALIASES</B>
+
+</FONT>
+中关于别名扩展的描述。
+<DT><B>history-and-alias-expand-line</B>
+
+<DD>
+在当前行进行历史和别名扩展。
+<DT><B>insert-last-argument (M-., M-_)</B>
+
+<DD>
+与 <B>yank-last-arg</B> 同义。
+<DT><B>operate-and-get-next (C-o)</B>
+
+<DD>
+接受当前行，加以执行，从历史中取出相对当前行的下一行进行编辑。
+任何参数都被忽略。
+<DT><B>edit-and-execute-command (C-xC-e)</B>
+
+<DD>
+启动一个编辑器，编辑当前命令行，将结果作为 shell 命令运行。
+<B>Bash</B> 将依次试着运行
+<FONT SIZE="-1"><B>$FCEDIT</B>,
+
+</FONT>
+<FONT SIZE="-1"><B>$EDITOR</B>,
+
+</FONT>
+和 <I>emacs</I> 作为编辑器。
+
+</DL>
+<A NAME="lbCM">&nbsp;</A>
+<H3>Commands for Changing Text 改变文本</H3>
+
+<P>
+
+
+<DL COMPACT>
+<DT><B>delete-char (C-d)</B>
+
+<DD>
+删除 point 处的字符。如果 point 在行首，行中没有字符，最后一次输入的字符
+没有被关联到 <B>delete-char</B>，将返回
+<FONT SIZE="-1"><B>EOF</B>.
+
+</FONT>
+<DT><B>backward-delete-char (Rubout)</B>
+
+<DD>
+删除光标之后的字符。当给出一个数值的参数时，保存删除的文本到 kill ring 中。
+<DT><B>forward-backward-delete-char</B>
+
+<DD>
+删除光标下的字符，除非光标在行尾，此时删除光标后的字符。
+<DT><B>quoted-insert (C-q, C-v)</B>
+
+<DD>
+将输入的下一字符保持原样添加到行中。例如，可以用它来插入类似 <B>C-q</B> 的字符。
+<DT><B>tab-insert (C-v TAB)</B>
+
+<DD>
+插入一个跳格符号。
+<DT><B>self-insert (a,&nbsp;b,&nbsp;A,&nbsp;1,&nbsp;!,&nbsp;...)</B>
+
+<DD>
+插入键入的字符。
+<DT><B>transpose-chars (C-t)</B>
+
+<DD>
+将 point 之前的字符向前移动，越过 point 处的字符，同时也改变 point 的位置。
+如果 point 在行尾，将调换 point 之前的两个字符。负数参数没有作用。
+<DT><B>transpose-words (M-t)</B>
+
+<DD>
+将 point 之前的词向前移动，越过 point 处的词，同时也改变 point 的位置。
+如果 point 在行尾，将调换行中的最后两个词。
+<DT><B>upcase-word (M-u)</B>
+
+<DD>
+将当前 (或下一个) 词变成全大写。有负值的参数时，将前一个词变为大写，
+但是不移动 point。
+<DT><B>downcase-word (M-l)</B>
+
+<DD>
+将当前 (或下一个) 词变成全小写。有负值的参数时，将前一个词变为小写，
+但是不移动 point。
+<DT><B>capitalize-word (M-c)</B>
+
+<DD>
+将当前 (或下一个) 词变为首字大写。有负值的参数时，将前一个词变为首字大写，
+但是不移动 point。
+<DT><B>overwrite-mode</B>
+
+<DD>
+控制插入/改写模式。给出一个正整数参数时，切换为改写模式。给出一个非正数
+参数时，切换为插入模式。这个命令只影响 <B>emacs</B> 模式；<B>vi</B> 模式
+的改写与此不同。每个对 <I>readline()</I> 的调用都以插入模式开始。在改写模式下，
+关联到 <B>self-insert</B> 的字符替换 point 处的字符，而不是将它推到右边。
+关联到 <B>backward-delete-char</B> 的字符以空格替换 point 前的字符。
+默认情况下，这个命令没有关联。
+
+</DL>
+<A NAME="lbCN">&nbsp;</A>
+<H3>Killing and Yanking 剪切和粘贴</H3>
+
+<P>
+
+
+<DL COMPACT>
+<DT><B>kill-line (C-k)</B>
+
+<DD>
+剪切从 point 到行尾的文本。
+<DT><B>backward-kill-line (C-x Rubout)</B>
+
+<DD>
+反向剪切到行首。
+<DT><B>unix-line-discard (C-u)</B>
+
+<DD>
+反向剪切到行首。与 <I>backward-kill-line</I> 没有什么区别。
+剪切的文本被保存于 kill-ring 中。
+
+<DT><B>kill-whole-line</B>
+
+<DD>
+剪切当前行中所有字符，不管 point 在什么位置。
+<DT><B>kill-word  (M-d)</B>
+
+<DD>
+剪切从 point 到当前词尾，或者如果 point 在词之间，那么剪切到下一词尾。
+<DT><B>backward-kill-word (M-Rubout)</B>
+
+<DD>
+剪切 point 之后的词。词的边界与 <B>backward-word</B> 使用的相同。
+<DT><B>unix-word-rubout (C-w)</B>
+
+<DD>
+剪切 point 之后的词，使用空白作为词的边界。剪切的文本被保存于 kill-ring 中。
+<DT><B>delete-horizontal-space (M-\)</B>
+
+<DD>
+删除 point 两边的所有空格和跳格。
+<DT><B>kill-region</B>
+
+<DD>
+剪切当前 region 的文本。
+<DT><B>copy-region-as-kill</B>
+
+<DD>
+将 region 的文本复制到剪切缓冲区中。
+<DT><B>copy-backward-word</B>
+
+<DD>
+将 point 前面的词复制到剪切缓冲区中。
+词的边界与 <B>backward-word</B> 使用的相同。
+<DT><B>copy-forward-word</B>
+
+<DD>
+将 point 之后的词复制到剪切缓冲区中。
+词的边界与 <B>backward-word</B> 使用的相同。
+<DT><B>yank (C-y)</B>
+
+<DD>
+将 kill-ring 顶部的内容粘贴到 point 处的缓冲区中
+<DT><B>yank-pop (M-y)</B>
+
+<DD>
+轮转 kill-ring，粘贴新的顶部内容。只能在
+<B>yank</B>
+
+或
+<B>yank-pop</B>
+
+之后使用。
+
+</DL>
+<A NAME="lbCO">&nbsp;</A>
+<H3>Numeric Arguments 数值参数</H3>
+
+<P>
+
+
+<DL COMPACT>
+<DT><B>digit-argument (M-0, M-1, ..., M--)</B>
+
+<DD>
+将这个数字加入已有的 (already accumulating) 参数中，或者开始新的参数。
+M-- 开始一个否定的参数。
+<DT><B>universal-argument</B>
+
+<DD>
+这是指定参数的另一种方法。如果这个命令后面跟着一个或多个数字，
+可能还包含前导的负号，这些数字定义了参数。如果命令之后跟随着数字，再次执行
+<B>universal-argument</B>
+
+将结束数字参数，但是其他情况下被忽略。有一种特殊情况，如果命令之后紧接着
+一个并非数字或负号的字符，下一命令的参数计数将乘以 4。
+参数计数初始是 1，因此第一次执行这个函数，使得参数计数为 4，
+第二次执行使得参数计数为 16，以此类推。
+
+</DL>
+<A NAME="lbCP">&nbsp;</A>
+<H3>Completing 补全</H3>
+
+<P>
+
+
+<DL COMPACT>
+<DT><B>complete (TAB)</B>
+
+<DD>
+试着对 point 之前的文本进行补全。
+<B>Bash</B>
+
+依次试着将文本作为一个变量 (如果文本以 <B>$</B> 开始)，一个用户名
+(如果文本以 <B>~</B> 开始)，主机名 (如果文本以 <B>@</B> 开始)，或者命令 
+(以及别名和函数) 来补全。如果这些都没有匹配，将尝试文件名补全。
+<DT><B>possible-completions (M-?)</B>
+
+<DD>
+列出 point 之前的文本可能的补全。
+<DT><B>insert-completions (M-*)</B>
+
+<DD>
+插入 <B>possible-completions</B> 已产生的 point 之前的文本所有的补全。
+<DT><B>menu-complete</B>
+
+<DD>
+与 <B>complete</B> 相似，但是使用可能的补全列表中的某个匹配替换要补全的词。
+重复执行 <B>menu-complete</B> 将遍历可能的补全列表，插入每个匹配。
+到达补全列表的结尾时，鸣终端响铃 (按照 <B>bell-style</B> 的设置来做) 并恢复初始的文本。
+参数 <I>n</I> 将在匹配列表中向前移动 <I>n</I> 步；负数参数可以用于在列表中向后移动。
+这个命令应当与 <B>TAB</B> 键关联，但是默认情况下是没有关联的。
+<DT><B>delete-char-or-list</B>
+
+<DD>
+删除光标下的字符，如果不是在行首或行尾 (类似 <B>delete-char</B>)。
+如果在行尾，行为与 <B>possible-completions</B> 一致。
+这个命令默认没有关联。
+<DT><B>complete-filename (M-/)</B>
+
+<DD>
+尝试对 point 之前的文本进行文件名补全。
+<DT><B>possible-filename-completions (C-x /)</B>
+
+<DD>
+列出 point 之前的文本可能的补全，将它视为文件名。
+<DT><B>complete-username (M-~)</B>
+
+<DD>
+尝试对 point 之前的文本进行补全，将它视为用户名。
+<DT><B>possible-username-completions (C-x ~)</B>
+
+<DD>
+列出 point 之前的文本可能的补全，将它视为用户名。
+<DT><B>complete-variable (M-$)</B>
+
+<DD>
+尝试对 point 之前的文本进行补全，将它视为 shell 变量。
+<DT><B>possible-variable-completions (C-x $)</B>
+
+<DD>
+列出 point 之前的文本可能的补全，将它视为 shell 变量。
+<DT><B>complete-hostname (M-@)</B>
+
+<DD>
+尝试对 point 之前的文本进行补全，将它视为主机名。
+<DT><B>possible-hostname-completions (C-x @)</B>
+
+<DD>
+列出 point 之前的文本可能的补全，将它视为主机名。
+<DT><B>complete-command (M-!)</B>
+
+<DD>
+尝试对 point 之前的文本进行补全，将它视为命令名。命令补全尝试着将此文本
+依次与别名，保留字，shell 函数，shell 内建命令，最后是可执行文件名进行匹配。
+<DT><B>possible-command-completions (C-x !)</B>
+
+<DD>
+列出 point 之前的文本可能的补全，将它视为命令名。
+<DT><B>dynamic-complete-history (M-TAB)</B>
+
+<DD>
+尝试对 point 之前的文本进行补全，将此文本与历史列表中的行相比较来查找可能的补全匹配。
+<DT><B>complete-into-braces (M-{)</B>
+
+<DD>
+进行文件名补全，将可能的补全列表放在花括号中插入，使得列表可以被 shell 使用 
+(参见上面的
+<B>Brace Expansion</B>
+
+花括号扩展)。
+
+</DL>
+<A NAME="lbCQ">&nbsp;</A>
+<H3>Keyboard Macros 宏</H3>
+
+<P>
+
+
+<DL COMPACT>
+<DT><B>start-kbd-macro (C-x ()</B>
+
+<DD>
+开始保存输入字符为当前键盘宏。
+<DT><B>end-kbd-macro (C-x ))</B>
+
+<DD>
+停止保存输入字符为当前键盘宏，保存宏定义。
+<DT><B>call-last-kbd-macro (C-x e)</B>
+
+<DD>
+重新执行上次定义的键盘宏，即显示出宏中的字符，好像它们是从键盘输入的一样。
+
+</DL>
+<A NAME="lbCR">&nbsp;</A>
+<H3>Miscellaneous</H3>
+
+<P>
+
+
+<DL COMPACT>
+<DT><B>re-read-init-file (C-x C-r)</B>
+
+<DD>
+读入 <I>inputrc</I> 文件的内容，合并其中的按键关联和变量赋值。
+<DT><B>abort (C-g)</B>
+
+<DD>
+取消当前编辑命令，鸣终端响铃 (按照
+<B>bell-style</B>
+
+的设置来做)。
+<DT><B>do-uppercase-version (M-a, M-b, M-</B><I>x</I>, ...)
+
+<DD>
+如果有 Meta 前缀的字符 <I>x</I> 是小写的，那么与命令相关连的是对应的大写字符。
+<DT><B>prefix-meta (ESC)</B>
+
+<DD>
+将输入的下一个字符加上 Meta 前缀。
+<FONT SIZE="-1"><B>ESC</B>
+
+</FONT>
+<B>f</B>
+
+等价于
+<B>Meta-f</B>.
+
+<DT><B>undo (C-_, C-x C-u)</B>
+
+<DD>
+增量的撤销，分别记住每一行。
+<DT><B>revert-line (M-r)</B>
+
+<DD>
+撤销这一行的所有修改。这与执行命令
+<B>undo</B>
+
+足够多次的效果相同，将这一行恢复到初始状态。
+<DT><B>tilde-expand (M-&amp;)</B>
+
+<DD>
+对当前词进行波浪线扩展。
+<DT><B>set-mark (C-@, M-&lt;space&gt;)</B>
+
+<DD>
+在 point 处设置 mark。如果给出了数值的参数，标记被设置到那个位置。
+<DT><B>exchange-point-and-mark (C-x C-x)</B>
+
+<DD>
+交换 point 和 mark。当前光标位置被设置为保存的位置，旧光标位置被保存为 mark。
+<DT><B>character-search (C-])</B>
+
+<DD>
+读入一个字符，point 移动到这个字符下一次出现的地方。负数将搜索上一个出现。
+<DT><B>character-search-backward (M-C-])</B>
+
+<DD>
+读入一个字符，point 移动到这个字符上一次出现的地方。负数将搜索下面的出现。
+<DT><B>insert-comment (M-#)</B>
+
+<DD>
+没有数值的参数时，readline 变量
+<B>comment-begin</B>
+
+的值将被插入到当前行首。如果给出一个数值的参数，命令的行为类似于一个开关：
+如果行首字符不匹配 <B>comment-begin</B> 的值，将插入这个值，否则
+匹配 <B>comment-begin</B> 的字符将被从行首删除。在两种情况下，这一行都被接受，
+好像输入了新行符一样。<B>comment-begin</B> 的默认值使得这个命令将当前行变成
+一条 shell 注释。如果数值参数使得注释字符被删除，这一行将被 shell 执行。
+<DT><B>glob-complete-word (M-g)</B>
+
+<DD>
+point 之前的词被当作路径扩展的一个模式，尾部暗含了一个星号。这个模式被用来
+为可能的补全产生匹配的文件名列表。
+<DT><B>glob-expand-word (C-x *)</B>
+
+<DD>
+point 之前的词被当作路径扩展的一个模式，匹配的文件名的列表被插入，替换这个词。
+如果给出一个数值参数，在路径扩展之前将添加一个星号。
+<DT><B>glob-list-expansions (C-x g)</B>
+
+<DD>
+显示
+<B>glob-expand-word</B>
+
+可能产生的扩展的列表，重绘当前行。如果给出一个数值参数，在路径扩展之前将添加一个星号。
+<DT><B>dump-functions</B>
+
+<DD>
+向 readline 输出流打印所有的函数和它们的按键关联。如果给出一个数值参数，
+输出将被格式化，可以用作 <I>inputrc</I> 文件一部分。
+<DT><B>dump-variables</B>
+
+<DD>
+向 readline 输出流打印所有可设置的 readline 函数。如果给出一个数值参数，
+输出将被格式化，可以用作 <I>inputrc</I> 文件一部分。
+<DT><B>dump-macros</B>
+
+<DD>
+向 readline 输出流打印所有关联到宏的 readline 按键序列以及它们输出的字符串。
+如果给出一个数值参数，输出将被格式化，可以用作 <I>inputrc</I> 文件一部分。
+<DT><B>display-shell-version (C-x C-v)</B>
+
+<DD>
+显示当前
+<B>bash</B>
+
+实例的版本信息。
+
+</DL>
+<A NAME="lbCS">&nbsp;</A>
+<H3>Programmable Completion 可编程补全</H3>
+
+<P>
+
+当试图对一个命令的参数进行词的补全时，如果已经使用内建命令 <B>complete</B>
+定义了这个命令的补全规则 ( <B>compspec</B>)，将启动可编程补全功能 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节)。
+<P>
+
+首先，命令名被确认。如果针对这个命令有补全规则的定义，那么将使用
+规则来产生可能的词的补全的列表。如果命令词是一个路径全名，将首先搜索
+针对这个路径全名的规则。如果针对这个路径全名没有找到规则，将尝试查找
+针对最后一个斜杠后面的部分的规则。
+<P>
+
+一旦找到了一个规则，它将用作产生匹配的词。如果没有找到，将进行上面
+<B>Completing</B> 中描述的 <B>bash</B> 默认的补全。
+<P>
+
+首先，将执行规则指定的动作。只有以被补全的词开始的匹配词才会被返回。
+当在文件或目录名补全中使用
+<B>-f</B>
+
+或
+<B>-d</B>
+
+选项时，shell 变量
+<FONT SIZE="-1"><B>FIGNORE</B>
+
+</FONT>
+将用于对匹配进行过滤。
+<P>
+
+接下来，将产生所有由<B>-G</B> 选项给出的文件名扩展模式指定的补全。
+模式产生的词不必匹配要补全的词。shell 变量
+<FONT SIZE="-1"><B>GLOBIGNORE</B>
+
+</FONT>
+不会用于过滤匹配结果，但是变量
+<FONT SIZE="-1"><B>FIGNORE</B>
+
+</FONT>
+会被使用。
+<P>
+
+接下来，将考虑 <B>-W</B> 选项的参数指定的字符串。这个字符串首先被
+划分，用特殊变量
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+中的字符作为分隔符。shell 引用被当作一个词。
+接下来，每个词被扩展，使用上面
+<FONT SIZE="-1"><B>EXPANSION</B>
+
+</FONT>
+中描述的
+brace expansion, tilde expansion, parameter 和 variable expansion,
+command substitution, arithmetic expansion, 以及 pathname expansion
+规则处理。对于结果，再使用上面 <B>Word Splitting</B> 中描述的规则划分成词。
+扩展的结果与要补全的词进行前部一致的比较，匹配的词成为可能的补全。
+<P>
+
+在这些匹配被产生后，任何由 <B>-F</B> 和 <B>-C</B> 选项指定的
+shell 函数和命令将被执行。当命令或函数被执行时，变量
+<FONT SIZE="-1"><B>COMP_LINE</B>
+
+</FONT>
+和
+<FONT SIZE="-1"><B>COMP_POINT</B>
+
+</FONT>
+被赋值，使用上面 <B>Shell Variables</B> 中的规则。
+如果要执行 shell 函数，还将设置变量
+<FONT SIZE="-1"><B>COMP_WORDS</B>
+
+</FONT>
+和
+<FONT SIZE="-1"><B>COMP_CWORD</B>
+
+</FONT>
+当函数或命令被执行时，第一个参数是等待参数被补全的命令的名称，
+第二个参数是要补全的词，第三个参数是当前命令行中，要补全的词前面的词。
+对要补全的词产生的补全不会进行任何过滤；函数或命令在产生匹配时有完全的自由。
+<P>
+
+任何 <B>-F</B> 指定的函数将被首先执行。函数可以使用任何 shell 功能，
+包含内建命令 <I>compgen</I>，来产生匹配。它必须将可能的补全放到数组变量
+<FONT SIZE="-1"><B>COMPREPLY</B>
+
+</FONT>
+中。
+<P>
+
+接下来，任何 <B>-C</B> 选项指定的命令将被执行，其执行环境与命令替换
+的环境相同。它应当向标准输出打印一个补全的列表，每行一个。
+反斜杠可以用来转义一个新行符，如果需要的话。
+<P>
+
+所有可能的补全都产生之后，将对列表进行 <B>-X</B> 选项指定的任何过滤。
+过滤器是一个模式，和路径名扩展中的一样；模式中的 <B>&amp;</B> 替换为
+要补全的词。字面上的 <B>&amp;</B> 可以用反斜杠转义；反斜杠在进行匹配时被删除。
+任何匹配这个模式的补全将从列表中删除。前导的 <B>!</B> 将使模式含义相反；
+这种情况下，任何不匹配这个模式的补全将被删除。
+<P>
+
+最后，B-P 和 <B>-S</B> 指定的任何前缀和后缀被添加到补全列表的每个
+成员后面，结果返回给 readline 补全代码，作为可能的补全列表。
+<P>
+
+如果先前执行的动作没有产生任何匹配，并且在定义 compspec 规则时，为
+<B>complete</B> 命令提供了 <B>-o dirname</B> 选项，将尝试目录名补全。
+<P>
+
+默认情况下，如果找到了一个规则，它产生的任何东西都被返回给补全代码，
+作为可能的补全的全集。不再尝试默认的 <B>bash</B> 补全，readline 默认的
+文件名补全也会禁止。如果定义规则时，为 <B>complete</B> 命令提供了
+<B>-o default</B> 选项，在规则没有产生匹配时将进行 readline 默认的补全处理。
+<P>
+
+当一个规则指出期望目录名补全时，可编程补全函数强制 readline 在补全的名称
+后面添加一个斜杠，如果它是一个到目录的符号连接。然后还要经过 readline 变量
+<B>mark-directories</B> 的值处理，不管 readline 变量 
+<B>mark-symlinked-directories</B> 的值是什么。
+<A NAME="lbCT">&nbsp;</A>
+<H2>历史(HISTORY)</H2>
+
+当启用内建命令
+<B>set</B>
+
+的
+<B>-o history</B>
+
+选项时，shell 允许访问 <I>command history</I>，以前输入的命令的列表。
+<B>HISTSIZE</B> 的值用作命令列表中保存的命令数量。
+过去
+<FONT SIZE="-1"><B>HISTSIZE</B>
+
+</FONT>
+个 (默认为500) 命令将被保存。shell 将每条命令在进行参数和变量扩展之前
+保存到历史列表中 (参见上面的
+<FONT SIZE="-1"><B>EXPANSION</B>
+
+</FONT>
+段落)，但是是在历史扩展进行之后，并且要经过 shell 变量
+<FONT SIZE="-1"><B>HISTIGNORE</B>
+
+</FONT>
+和
+<FONT SIZE="-1"><B>HISTCONTROL</B>
+
+</FONT>
+处理。
+<P>
+
+在启动时，历史根据以变量
+<FONT SIZE="-1"><B>HISTFILE</B>
+
+</FONT>
+的值为名的文件 (默认是 <I>~/.bash_history</I>) 进行初始化。
+如果需要的话，以
+<FONT SIZE="-1"><B>HISTFILE</B>
+
+</FONT>
+为名的文件将被截断，来包含不超过变量
+<FONT SIZE="-1"><B>HISTFILESIZE</B>
+
+</FONT>
+的值指定的行数。当交互 shell 退出时，最后
+<FONT SIZE="-1"><B>$HISTSIZE</B>
+
+</FONT>
+行被从历史列表中复制到
+<FONT SIZE="-1"><B>$HISTFILE</B>
+
+</FONT>
+文件中。如果启用了 shell 选项
+<B>histappend</B>
+
+(参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节中对内建命令
+<B>shopt</B>
+
+的描述)，这些行被追加到历史文件中，否则历史文件被覆盖。如果
+<FONT SIZE="-1"><B>HISTFILE</B>
+
+</FONT>
+被取消定义，或者如果历史文件不可写，历史将不会保存。保存历史之后，
+历史文件被截断，以包含不超过
+<FONT SIZE="-1"><B>HISTFILESIZE</B>
+
+</FONT>
+行。如果
+<FONT SIZE="-1"><B>HISTFILESIZE</B>
+
+</FONT>
+被取消定义，不会进行截断操作。
+<P>
+
+内建命令
+<B>fc</B>
+
+(参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节) 可以用来列出或修改并重新执行历史列表中的一部分。内建命令
+<B>history</B>
+
+可以用来显示或修改历史列表，操作历史文件。当使用命令行编辑时，每种
+编辑模式都有搜索命令，提供对历史列表的访问。
+<P>
+
+shell 允许控制哪些命令被保存到历史列表中。可以设置
+<FONT SIZE="-1"><B>HISTCONTROL</B>
+
+</FONT>
+和
+<FONT SIZE="-1"><B>HISTIGNORE</B>
+
+</FONT>
+变量，来使得 shell 只保存输入命令的一个子集。shell 选项
+<B>cmdhist</B>
+
+如果被启用，将使得 shell 将多行的命令的每一行保存到同一个历史条目中，
+在需要的地方添加分号来保证语义的正确性。shell 选项
+<B>lithist</B>
+
+使得 shell 保存命令时，保留嵌入的新行而不是用分号代替。参见下面
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+中，内建命令
+<B>shopt</B>
+
+的描述，有关设置和取消 shell 选项的信息。
+<A NAME="lbCU">&nbsp;</A>
+<H2>历史扩展(HISTORY EXPANSION)</H2>
+
+<P>
+
+shell 支持历史扩展机制，类似于
+<B>csh</B>
+
+中历史扩展。这一节描述了可用的语法特征。在交互的 shell 中这一机制被默认启用，
+可以使用内建命令
+<B>set</B>
+
+的
+<B>-H</B>
+
+选项来禁用它 (参见下面的
+<FONT SIZE="-1"><B>shell 内建命令(SHELL BUILTIN COMMANDS)</B>
+
+</FONT>
+章节)。非交互的 shell 默认不进行历史扩展。
+<P>
+
+历史扩展将历史列表中的词引入输入流中，使得可以方便地重复已执行命令，
+在当前输入行中为前一个命令插入新的参数，
+或者快速修正前一个命令中的错误。
+<P>
+
+历史扩展在读入一整行后，在 shell 将它拆分成词之前立即进行。它
+由两部分组成。首先是判断替换中使用历史列表中哪一行。其次是选择那一行中要包含到当前行中的部分。
+从历史中选择的行称为 <I>event</I>，从那一行中选择的部分是 <I>words</I>。
+可以用多种多样的 <I>modifiers</I> 来操纵所选的词。在读入输入时，行被按照同样方式分解成词，
+因此多个以 <I>metacharacter</I> 分隔的词，如果被引号包含，就被当成一个词。
+历史扩展由历史扩展字符引入，默认是 <B>!</B>。只有反斜杠 (\) 和单引号可以引用历史扩展字符。
+<P>
+
+内建命令
+<B>shopt</B>
+
+可以设定多个选项值，来调整历史扩展的行为。如果 shell 选项
+<B>histverify</B>
+
+被启用 (参见内建命令
+<B>shopt</B>
+
+的描述)，并且正在使用
+<B>readline，</B>
+
+历史替换不会被立即传给 shell 解释器。与此相对，扩展后的行被重新载入
+<B>readline</B>
+
+编辑缓冲区，进行进一步的修改。如果正在使用
+<B>readline，</B>
+
+并且启用了 shell 选项
+<B>histreedit，</B>
+
+失败的历史替换将被重新载入到
+<B>readline</B>
+
+编辑缓冲区，进行改正。内建命令
+<B>history</B>
+
+的
+<B>-p</B>
+
+选项可以用来在执行之前查看历史扩展将如何进行。内建命令
+<B>history</B>
+
+的
+<B>-s</B>
+
+选项可以用来在历史列表末尾添加命令，而不真正执行它们，从而
+在接下来的调用中可以使用它们。
+<P>
+
+shell 允许控制历史扩展机制使用的多种字符 (参见上面的
+<B>Shell Variables</B>
+
+中
+<B>histchars</B>
+
+的描述)。
+<A NAME="lbCV">&nbsp;</A>
+<H3>Event Designators</H3>
+
+<P>
+
+事件指示器 (event designator) 是一个对历史列表中某个命令行条目的引用。
+<P>
+
+
+<DL COMPACT>
+<DT><B>!</B>
+
+<DD>
+开始一个命令替换，除非后面跟随的是
+<B>blank</B>,
+
+newline, = 或是 (.
+<DT><B>!</B><I>n</I>
+
+<DD>
+引用命令行
+<I>n</I>.
+
+<DT><B>!-</B><I>n</I>
+
+<DD>
+引用当前命令行减去
+<I>n</I>.
+
+<DT><B>!!</B>
+
+<DD>
+引用上一条命令。这是 `!-1' 的同义词。
+<DT><B>!</B><I>string</I>
+
+<DD>
+引用最近的以
+<I>string</I>
+
+开始的命令。
+<DT><B>!?</B><I>string</I><B>[?]</B>
+
+<DD>
+引用最近的包含
+<I>string</I>
+
+的命令。尾部的 <B>?</B> 可以被忽略，如果
+<I>string</I>
+
+之后紧接着一个新行符。
+<DT><B></B><FONT SIZE="+2"><B>^</B></FONT><B></B><I>string1</I><FONT SIZE="+2">^</FONT><I>string2</I><FONT SIZE="+2">^</FONT>
+
+<DD>
+快速替换。重复上一条命令，将
+<I>string1</I>
+
+替换为
+<I>string2</I>.
+
+与
+``!!:s/<I>string1</I>/<I>string2</I>/'' 等价
+(参见下面的 <B>修饰符 (Modifiers)</B>)。
+<DT><B>!#</B>
+
+<DD>
+到此为止输入的整个命令行。
+
+</DL>
+<A NAME="lbCW">&nbsp;</A>
+<H3>Word Designators</H3>
+
+<P>
+
+词指示器 (word designator) 用于从 event 中选择期望的词。
+<B>:</B>
+
+分隔 event 规则与 word 指示器。它可以忽略，如果词指示器以
+<B>^</B>,
+
+<B>$</B>,
+
+<B>*</B>,
+
+<B>-</B>,
+
+或
+<B>%</B>
+
+开始。词被从行首开始编号，第一个词被表示为 0。插入当前行中的词以单个空格分隔。
+<P>
+
+
+<DL COMPACT>
+<DT><B>0 (zero)</B>
+
+<DD>
+第 0 个词。对 shell 来将，这是命令名。
+<DT><I>n</I>
+
+<DD>
+第 <I>n</I> 个词。
+<DT><B>^</B>
+
+<DD>
+第一个参数。也就是，第 1 个词。
+<DT><B>$</B>
+
+<DD>
+最后的参数。
+<DT><B>%</B>
+
+<DD>
+最近一次搜索 `?<I>string</I>?' 匹配的词。
+<DT><I>x</I><B>-</B>y
+
+<DD>
+一组词；`-<I>y</I>' 是 `0-<I>y</I>' 的简写。
+<DT><B>*</B>
+
+<DD>
+所有词，除了第 0 个。这是 `<I>1-$</I>' 的同义词。如果 event 中只有一个词，使用
+<B>*</B>
+
+也不是错误；这种情况下将返回空字符串。
+<DT><B>x*</B>
+
+<DD>
+<I>x-$</I> 的简写。
+<DT><B>x-</B>
+
+<DD>
+<I>-$</I> 的简写，就像 <B>x*</B> 一样，但是忽略最后一个词。
+
+</DL>
+<P>
+
+如果给出了一个 word 指示器，没有给出 event 规则，前一个命令将用作 event。
+<A NAME="lbCX">&nbsp;</A>
+<H3>修饰符 (Modifiers)</H3>
+
+<P>
+
+可选的 word 指示器之后，可以出现一个或多个下述 modifiers 的序列，每一个都前缀有 `:'。
+<P>
+
+
+<P>
+
+<DL COMPACT>
+<DT><B>h</B>
+
+<DD>
+删除文件名组成的尾部，只保留头部。
+<DT><B>t</B>
+
+<DD>
+删除文件名组成中前面的成分，保留尾部。
+<DT><B>r</B>
+
+<DD>
+删除 <I>.xxx</I> 形式中尾部的后缀成分，保留基本名称部分。
+<DT><B>e</B>
+
+<DD>
+删除所有内容，保留尾部的后缀。
+<DT><B>p</B>
+
+<DD>
+打印新的命令，但是不执行它。
+<DT><B>q</B>
+
+<DD>
+引用替换所得的词，使它不再进行替换。
+<DT><B>x</B>
+
+<DD>
+引用替换所得的词，类似与
+<B>q</B>,
+
+但是会根据
+<B>blanks，空白</B>
+
+和新行符分解为词。
+<DT><B>s/</B><I>old</I>/<I>new</I>/
+
+<DD>
+将事件行中出现的第一个
+<I>old</I>
+
+替换为
+<I>new。</I>
+
+任何分隔符都可以用来代替 /，最后一个分隔符是可选的，如果它是事件行的最后一个字符。
+<I>old</I>
+
+和
+<I>new</I>
+
+中的分隔符可以用一个反斜杠来引用。如果 &amp; 出现在
+<I>new</I>
+
+中，它将替换为
+<I>old。</I>
+
+可以用单个反斜杠来引用 &amp;。如果
+<I>old</I>
+
+为空，它将设置为最后替换的
+<I>old，</I>
+
+或者，如果前面没有发生过历史替换，就是
+<B>!?</B><I>string</I><B>[?]</B>
+
+搜索中的最后一个
+<I>string。</I>
+
+<DT><B>&amp;</B>
+
+<DD>
+重复上一次替换。
+<DT><B>g</B>
+
+<DD>
+使得改变被整个事件行所接受。用于与 `<B>:s</B>' 或 `<B>:&amp;</B>' 结合 
+(例如，`<B>:gs/</B><I>old</I>/<I>new</I>/')。
+如果与 `<B>:s</B>' 结合使用，任何分隔符都可以用来代替 /，
+最后一个分隔符是可选的，如果它是事件行的最后一个字符。
+
+</DL>
+<A NAME="lbCY">&nbsp;</A>
+<H2>shell 内建命令(SHELL BUILTIN COMMANDS)</H2>
+
+
+<P>
+
+除非另外说明，这一章介绍的内建命令如果接受
+<B>-</B>
+
+引导的选项，那么它也接受
+<B>--</B>
+
+作为参数，来指示选项的结束
+<P>
+
+<DL COMPACT>
+<DT><B>:</B> [<I>arguments</I>]<DD>
+
+没有效果；这个命令除了扩展
+<I>arguments</I>
+
+并且作任何指定的重定向之外，不做任何事。
+退出时返回0。
+<DT><B> . </B> <I>filename</I> [<I>arguments</I>]<DD>
+
+<DT><B>source</B> <I>filename</I> [<I>arguments</I>]<DD>
+
+读取并在当前 shell 环境中执行
+<I>filename</I>
+
+中的命令，返回
+<I>filename</I>
+
+中最后一个命令的返回状态。如果
+<I>filename</I>
+
+中不包含斜杠 (slash)，系统将在
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+中查找包含
+<I>filename</I>
+
+的目录。在
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+中搜索的文件不必是可执行的。
+如果 <B>bash</B> 不是运行于 <I>posix mode</I>，当
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+中找不到文件时会在当前目录搜索。如果
+<B>shopt</B>
+
+内建命令的
+<B>sourcepath</B>
+
+选项被关闭，
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+将不会被搜索。如果有任何 <I>arguments</I> ，它们成为
+<I>filename</I> 的位置参数 (positional parameters)，否则
+位置参数不发生变化。
+返回状态是脚本中最后一个命令退出时的状态。
+没有执行命令则返回0，没有找到或不能读取
+<I>filename</I>
+
+时返回false。
+<DT><B>alias</B> [<B>-p</B>] [<I>name</I>[=<I>value</I>] ...]<DD>
+<B>Alias</B> 不带参数或者带
+<B>-p</B>
+
+参数运行时将在标准输出以这样的格式
+<B>alias</B> <I>name</I>=<I>value</I> 给出别名列表。
+如果有参数，将创建提供了 <I>value</I> 的 <I>name</I> 的别名。
+<I>value</I> 中尾部的空格使得别名被扩展时，下一个词做别名替换。
+对于参数列表中的每一个 <I>name</I>，如果 <I>value</I> 没有
+给出，这个别名的名称和值会被打印出来。
+<B>Alias</B> 返回 true 除非 <I>name</I> 没有定义为别名。
+<DT><B>bg</B> [<I>jobspec</I>]<DD>
+使挂起的程序 <I>jobspec</I> 在后台继续执行，就好像它是用
+<B>&amp;</B>
+
+启动的一样。如果没有指定 <I>jobspec</I>，shell 意义上的
+<I>current job 当前作业</I> 将被使用。
+<B>bg</B>
+
+<I>jobspec</I>
+
+返回0，除非当前禁止了作业控制，或者在允许作业控制，但
+是没有找到 <I>jobspec</I> ，或者它不是在作业控制下启动的时候。
+<DT><B>bind</B> [<B>-m</B> <I>keymap</I>] [<B>-lpsvPSV</B>]<DD>
+
+<DT><B>bind</B> [<B>-m</B> <I>keymap</I>] [<B>-q</B> <I>function</I>] [<B>-u</B> <I>function</I>] [<B>-r</B> <I>keyseq</I>]<DD>
+<DT><B>bind</B> [<B>-m</B> <I>keymap</I>] <B>-f</B> <I>filename</I><DD>
+<DT><B>bind</B> [<B>-m</B> <I>keymap</I>] <B>-x</B> <I>keyseq</I>:<I>shell-command</I><DD>
+<DT><B>bind</B> [<B>-m</B> <I>keymap</I>] <I>keyseq</I>:<I>function-name</I><DD>
+<DT><B>bind</B> <I>readline-command</I><DD>
+
+显示当前
+<B>readline</B>
+
+键和功能的，将一个按键序列和一个
+<B>readline</B>
+
+功能或宏进行关联，或者设置一个
+<B>readline</B>
+
+变量。每一个在非选项的参数都是一个命令，好像它是在
+<I>.inputrc</I>
+
+中出现的一样。但是每个关联或者命令必须作为单独的参数传递；
+也就是这样 '&quot;\C-x\C-r&quot;: re-read-init-file'。
+如果有参数，它们有如下的意义：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>-m </B><I>keymap</I>
+
+<DD>
+使用
+<I>keymap</I>
+
+作为随后的关联的keymap。可选的
+<I>keymap</I>
+
+名称是
+<I>emacs, emacs-standard, emacs-meta, emacs-ctlx, vi,
+vi-move, vi-command</I>，还有
+<I>vi-insert</I>。
+
+<I>vi</I> 和 <I>vi-command</I> 等价; <I>emacs</I> 和 <I>emacs-standard</I> 等价。
+<DT><B>-l</B>
+
+<DD>
+列出所有的 <B>readline</B> 功能。
+<DT><B>-p</B>
+
+<DD>
+以程序可读的方式显示 <B>readline</B> 功能名称和关联
+<DT><B>-P</B>
+
+<DD>
+列出当前 <B>readline</B> 功能名称和关联。
+<DT><B>-v</B>
+
+<DD>
+以程序可读的方式显示 <B>readline</B> 变量名称和值
+<DT><B>-V</B>
+
+<DD>
+列出当前 <B>readline</B> 变量和值。
+<DT><B>-s</B>
+
+<DD>
+以程序可读的方式显示 <B>readline</B> 键序列和对应的宏
+<DT><B>-S</B>
+
+<DD>
+显示 <B>readline</B> 宏对应的键序列和他们输出的字符串
+<DT><B>-f </B><I>filename</I>
+
+<DD>
+从 <I>filename</I> 中读取键序列
+<DT><B>-q </B><I>function</I>
+
+<DD>
+查询那些键将执行<I>function</I>。
+<DT><B>-u </B><I>function</I>
+
+<DD>
+取消所有关联到 <I>function</I> 的键。
+<DT><B>-r </B><I>keyseq</I>
+
+<DD>
+取消当前任何 <I>keyseq</I> 的关联。
+<DT><B>-x </B><I>keyseq</I>:<I>shell-command</I>
+
+<DD>
+使 <I>shell-command</I> 在 <I>keyseq</I> 按下时被执行。
+
+</DL>
+<P>
+
+返回值是0，除非给出了一个不能识别的选项或是产生了一个错误。
+</DL>
+
+<DT><B>break</B> [<I>n</I>]<DD>
+从一个
+<B>for</B>,
+
+<B>while</B>,
+
+<B>until</B>,
+
+或者
+<B>select</B>
+
+循环退出。
+如果指定了 <I>n</I> ，就跳出 <I>n</I> 层循环。
+<I>n</I>
+
+必须 &ge; 1。如果
+<I>n</I>
+
+比当前循环层数还要大，将跳出所有循环。
+返回值是0，除非执行
+<B>break </B>
+
+的时候 shell 不是在执行一个循环。
+<DT><B>builtin</B> <I>shell-builtin</I> [<I>arguments</I>]<DD>
+执行指定的 shell 内建命令，传递
+<I>arguments</I>
+
+，返回命令的返回值。
+这在定义了一个和 shell 内建命令同名的函数时很有用，
+在那个函数中使用它来执行相应的功能。<B>cd</B> 命令常以这种方式重新定义。
+返回状态是 false，如果指定的
+<I>shell-builtin</I>
+
+并不是一个 shell 内建命令。
+<DT><B>cd</B> [<B>-L|-P</B>] [<I>dir</I>]<DD>
+改变当前路径到 <I>dir</I>。这个变量的默认值是
+<FONT SIZE="-1"><B>HOME</B>
+
+</FONT>
+目录。环境变量
+<FONT SIZE="-1"><B>CDPATH</B>
+
+</FONT>
+定义了包含
+<I>dir</I>
+
+的搜索路径。在
+<FONT SIZE="-1"><B>CDPATH</B>
+
+</FONT>
+中可选的路径名以冒号(:) 分隔。
+<FONT SIZE="-1"><B>CDPATH</B>
+
+</FONT>
+中的空路径名与当前路径相同，就是 ``<B>.</B>''.  如果
+<I>目录名</I>
+
+以斜杠 (/,slash) 起始，那么
+<FONT SIZE="-1"><B>CDPATH</B>
+
+</FONT>
+不会被使用。
+<B>-P</B>
+
+选项是说使用物理路径结构而不是跟随符号链接，(参见
+<B>set</B>
+
+命令中的
+<B>-P</B>
+
+选项);
+<B>-L</B>
+
+选项强制跟随符号链接。另外，选项
+<B>-</B>
+
+与
+<FONT SIZE="-1"><B>$OLDPWD</B>
+
+</FONT>
+是相同的。
+返回值是 true ，如果成功地改变了目录；否则是 false。
+<DT><B>command</B> [<B>-pVv</B>] <I>command</I> [<I>arg</I> ...]<DD>
+运行
+<I>command</I>
+
+，使用
+<I>args</I>
+
+作为参数，禁止通常的查找 shell 函数的过程。只有内建命令或者
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+中包含的命令可以执行。如果给出
+<B>-p</B>
+
+参数，
+<I>command</I>
+
+的查找是以
+<B>PATH</B>
+
+的默认值进行的。这样可以保证找到所有的标准工具。如果给出
+<B>-V</B>
+
+或者
+<B>-v</B>
+
+选项，关于
+<I>command</I>
+
+的说明将被打印出来。
+<B>-v</B>
+
+选项使得表述这个命令的词，或者要执行
+<I>command</I>
+
+需要执行的文件显示出来；
+<B>-V</B>
+
+选项给出更详细的描述。如果给出
+<B>-V</B>
+
+或者
+<B>-v</B>
+
+选项，退出状态在找到了
+<I>command</I>
+
+的情况下0，没找到就是1。
+如果没有提供选项，并且产生了错误或者
+<I>command</I>
+
+没有找到，退出状态就是127。否则，
+<B>command</B>
+
+内建命令的退出状态是
+<I>command</I>
+
+的退出状态。
+<DT><B>compgen</B> [<I>option</I>] [<I>word</I>]<DD>
+根据 <I>option</I> 为 <I>word</I> 产生可能的补全。<I>option</I> 是
+内建命令
+<B>complete</B>
+
+接受的任何选项，除了 <B>-p</B> 和 <B>-r</B>，将匹配结果写到标准输出。
+当使用 <B>-F</B> 或 <B>-C</B> 选项时，可编程补全功能所设置的多数
+shell 变量如果存在，其值将不再有用。
+<P>
+产生的匹配与可编程补全代码根据补全规则加上相同的标志直接产生的结果相同。
+如果指定了 <I>word</I>，只有匹配 <I>word</I> 的补全结果将被显示出来。
+<P>
+返回值为真，除非提供了非法的选项，或者没有产生匹配。
+<DT><B>complete</B> [<B>-abcdefgjksuv</B>] [<B>-o</B> <I>comp-option</I>] [<B>-A</B> <I>action</I>] [<B>-G</B> <I>globpat</I>] [<B>-W</B> <I>wordlist</I>] [<B>-P</B> <I>prefix</I>] [<B>-S</B> <I>suffix</I>]<DD>
+<BR>
+
+[<B>-X</B> <I>filterpat</I>] [<B>-F</B> <I>function</I>] [<B>-C</B> <I>command</I>] <I>name</I> [<I>name ...</I>]
+
+<DT><B>complete</B> <B>-pr</B> [<I>name</I> ...]<DD>
+
+指定每个 <I>name</I> 的参数应当如何被补全。如果给出了 <B>-p</B> 选项，
+或者没有选项给出，现有的补全规则将被显示出来，以一种可以重用为输入
+的格式显示。<B>-r</B> 选项将一个针对每个 <I>name</I> 的补全规则删除。
+或者，如果没有给出 <I>name</I>，将删除所有补全规则。
+<P>
+尝试词的补全时，应用这些补全规则的过程在上面
+<B>Programmable Completion</B>(可编程补全) 中详述。
+<P>
+其他选项，如果给出的话，具有下列意义。<B>-G</B>, <B>-W</B>, 
+和 <B>-X</B> 选项的参数 (如果需要的话，还包括 <B>-P</B> 和 <B>-S</B> 
+选项) 应当被引用，避免在执行内建命令
+<B>complete</B>
+
+之前被扩展。
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>-o</B> <I>comp-option</I><DD>
+<I>comp-option</I> 控制着 compspec 除了简单地产生补全之外的多种行为。
+<I>comp-option</I> 可以是如下之一：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>default</B>
+
+<DD>
+使用 readline 的默认文件名补全，如果 compspec 没有得到匹配。
+<DT><B>dirnames</B>
+
+<DD>
+进行目录名补全，如果 compspec 没有得到匹配。
+<DT><B>filenames</B>
+
+<DD>
+告诉 readline，compspec 产生了文件名，使它可以进行任何文件名专用的处理
+(例如，给目录名加上斜杠或消除尾部空白)。主要用于 shell 函数。
+<DT><B>nospace</B>
+
+<DD>
+告诉 readline 不要向补全的词在行的最后添加一个空格 (这是默认行为)。
+</DL>
+</DL>
+
+<DT><B>-A</B> <I>action</I><DD>
+<I>action</I> 可以是下列之一，来产生一系列可能的补全结果：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>alias</B>
+
+<DD>
+起别名。也可以用 <B>-a</B> 指定。
+<DT><B>arrayvar</B>
+
+<DD>
+数组变量名。
+<DT><B>binding</B>
+
+<DD>
+<B>Readline</B> 按键关联。
+<DT><B>builtin</B>
+
+<DD>
+shell 内建命令的名称。也可以用 <B>-b</B> 指定。
+<DT><B>command</B>
+
+<DD>
+命令名。也可以用 <B>-c</B> 指定。
+<DT><B>directory</B>
+
+<DD>
+目录名。也可以用 <B>-d</B> 指定。
+<DT><B>disabled</B>
+
+<DD>
+被禁用的内建命令名称。
+<DT><B>enabled</B>
+
+<DD>
+启用的内建命令名称。
+<DT><B>export</B>
+
+<DD>
+被导出的 shell 变量名称。也可以用 <B>-e</B> 指定。
+<DT><B>file</B>
+
+<DD>
+文件名。也可以用 <B>-f</B> 指定。
+<DT><B>function</B>
+
+<DD>
+shell 函数的名称。
+<DT><B>group</B>
+
+<DD>
+组名。也可以用 <B>-g</B> 指定。
+<DT><B>helptopic</B>
+
+<DD>
+内建命令 <B>help</B> 接受的帮助主题。
+<DT><B>hostname</B>
+
+<DD>
+主机名，从环境变量
+<FONT SIZE="-1"><B>HOSTFILE</B>
+
+</FONT>
+指定的文件中得到。
+<DT><B>job</B>
+
+<DD>
+作业名，如果作业控制被激活的话。也可以用 <B>-j</B> 指定。
+<DT><B>keyword</B>
+
+<DD>
+shell 保留字。也可以用 <B>-k</B> 指定。
+<DT><B>running</B>
+
+<DD>
+正在运行的作业名，如果作业控制被激活的话。
+<DT><B>service</B>
+
+<DD>
+服务名。也可以用 <B>-s</B> 指定。
+<DT><B>setopt</B>
+
+<DD>
+内建命令 <B>set</B> 的 <B>-o</B> 选项的有效参数。
+<DT><B>shopt</B>
+
+<DD>
+内建命令 <B>shopt</B> 接受的 shell 选项名。
+<DT><B>signal</B>
+
+<DD>
+信号名。
+<DT><B>stopped</B>
+
+<DD>
+停止的作业名，如果作业控制被激活的话。
+<DT><B>user</B>
+
+<DD>
+用户名。也可以用 <B>-u</B> 指定。
+<DT><B>variable</B>
+
+<DD>
+shell 变量的名称。也可以用 <B>-v</B> 指定。
+</DL>
+</DL>
+
+<DT><B>-G</B> <I>globpat</I><DD>
+文件名扩展模式 <I>globpat</I> 被扩展，产生可能的补全。
+<DT><B>-W</B> <I>wordlist</I><DD>
+<FONT SIZE="-1"><I>wordlist</I> 被使用</FONT>
+<B>IFS</B>
+
+特殊变量中的字符作为定界符来拆分，每个结果的词被扩展。可能的补全是结果列表
+中匹配要补全的词的那一些。
+<DT><B>-C</B> <I>command</I><DD>
+<I>command</I> 将在一个子 shell 环境中执行，它的结果用作可能的补全。
+<DT><B>-F</B> <I>function</I><DD>
+shell 函数 <I>function</I> 将在当前 shell 环境中执行。当它结束时，可能
+的补全可以从数组元素
+<FONT SIZE="-1"><B>COMPREPLY</B>
+
+</FONT>
+中得到。
+<DT><B>-X</B> <I>filterpat</I><DD>
+<I>filterpat</I> 是一个模式，用于文件名扩展。所有前面的选项和参数产生
+的可能的补全都要经过这一步处理，每一个匹配 <I>filterpat</I> 的补全都
+被从列表中删除。为 <I>filterpat</I> 加上前导 <B>!</B> 使模式意义相反；
+这种情况下，所有不匹配 <I>filterpat</I> 的模式被删除。
+<DT><B>-P</B> <I>prefix</I><DD>
+在所有其他选项都处理过之后，<I>prefix</I> 被加到每个可能的补全前面。
+<DT><B>-S</B> <I>suffix</I><DD>
+在所有其他选项都处理过之后，<I>suffix</I> 被加到每个可能的补全后面。
+
+</DL>
+<P>
+
+返回值为真，除非给出了非法的选项，给出除 <B>-p</B> 和 <B>-r</B> 之外
+的某个选项时没有给出 <I>name</I> 参数，试图删除一条 <I>name</I> 的补全
+规则但是规则不存在，或者添加补全规则时出错。
+</DL>
+
+<DT><B>continue</B> [<I>n</I>]<DD>
+复位到外层
+<B>for</B>,
+
+<B>while</B>,
+
+<B>until</B>,
+
+或
+<B>select</B>
+
+循环的下一次开始。如果指定了
+<I>n，</I>
+
+复位到向外第 <I>n</I> 层循环的开始。
+<I>n</I>
+
+必须 &ge; 1。如果
+<I>n</I>
+
+比外部循环的层数要多，将复位到最外层的循环 (``top-level'' loop，顶层循环)。
+返回值是 0，除非执行
+<B>continue</B>
+
+时，shell 不是在循环之中。
+<DT><B>declare</B> [<B>-afFirtx</B>] [<B>-p</B>] [<I>name</I>[=<I>value</I>]]<DD>
+
+<DT><B>typeset</B> [<B>-afFirtx</B>] [<B>-p</B>] [<I>name</I>[=<I>value</I>]]<DD>
+
+声明变量且/或设置它们的属性。如果没有给出 <I>name</I> 则显示变量的值。
+选项
+<B>-p</B>
+
+将显示每个名称
+<I>name</I>
+
+的属性和值。当使用
+<B>-p</B>
+
+时，其他选项被忽略。选项
+<B>-F</B>
+
+禁止显示函数定义；只有函数名和属性会被显示。
+<B>-F</B>
+
+选项暗含
+<B>-f</B>.
+
+下列选项可用来限制只输出具有指定属性的变量，或者为变量设置属性：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>-a</B>
+
+<DD>
+每个 <I>name</I> 都是数组变量 (参见上面的
+<B>Arrays</B>
+
+段落)。
+<DT><B>-f</B>
+
+<DD>
+只使用函数名。
+<DT><B>-i</B>
+
+<DD>
+变量被当作一个整数；当变量被赋值时将进行算术运算 (参见
+<FONT SIZE="-1"><B>算术求值 (ARITHMETIC EVALUATION)</B>
+
+</FONT>
+章节)。
+<DT><B>-r</B>
+
+<DD>
+使得 <I>name</I> 只读。这些名称不能再被后续的赋值语句赋值或取消定义。
+<DT><B>-t</B>
+
+<DD>
+设置每个 <I>name</I> 的 <I>trace</I>(跟踪) 属性。被跟踪的函数继承了
+调用者 shell 的 <B>DEBUG</B> 陷阱。trace 属性对变量没有特殊意义。
+<DT><B>-x</B>
+
+<DD>
+标记 <I>name</I> 为可以通过环境导出给后续命令。
+
+</DL>
+<P>
+
+使用 `+' 代替 `-' 将关闭属性，特殊情况是 <B>+a</B> 不能用于销毁一个
+数组变量。当用于函数中时，它使得每个 <I>name</I> 成为局部的，就像
+使用了 
+<B>local</B>
+
+命令。返回值是 0，除非遇到了非法的选项，试图使用
+``-f foo=bar''
+
+定义函数，试图向只读变量赋值，试图向数组变量赋值但没有使用复合的赋值
+语法 (参见上面的
+<B>Arrays</B>
+
+段落)，<I>name</I> 之一不是有效的 shell 变量名，试图将数组变量的数组
+状态关闭，或者是试图使用 <B>-f</B> 显示一个不存在的函数。
+</DL>
+
+<DT><B>dirs [-clpv</B>] [+<I>n</I>] [-<I>n</I>]
+
+<DD>
+没有选项时显示当前保存的目录。默认输出为一行，目录名用空格分开。
+可以使用
+<B>pushd</B>
+
+命令将目录添加到列表，
+<B>popd</B>
+
+命令将列表中的条目删除。
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>+</B><I>n</I><DD>
+显示
+<B>dirs</B>
+
+在不带选项执行时显示的列表的第 <I>n</I> 个条目，从 0 开始自左算起。
+<DT><B>-</B><I>n</I><DD>
+显示
+<B>dirs</B>
+
+在不带选项执行时显示的列表的第 <I>n</I> 个条目，从 0 开始自右算起。
+<DT><B>-c</B>
+
+<DD>
+删除所有条目，清空目录栈。
+<DT><B>-l</B>
+
+<DD>
+产生长列表；默认列表格式使用波浪线来表示个人目录。
+<DT><B>-p</B>
+
+<DD>
+输出目录栈，一行一个。
+<DT><B>-v</B>
+
+<DD>
+输出目录栈，一行一个，每个条目前面加上它在栈中的位置索引。
+
+</DL>
+<P>
+
+返回值是 0，除非给出了非法的参数，或者 <I>n</I> 索引超出了目录栈的范围。
+</DL>
+
+<DT><B>disown</B> [<B>-ar</B>] [<B>-h</B>] [<I>jobspec</I> ...]<DD>
+没有选项时，每个
+<I>jobspec</I>
+
+被从正在运行的作业表中删除。如果给出了 <B>-</B> 选项，每个
+<I>jobspec</I>
+
+并不从表中删除，而是被标记，使得在 shell 接到
+<FONT SIZE="-1"><B>SIGHUP</B>
+
+</FONT>
+信号时，不会向作业发出
+<FONT SIZE="-1"><B>SIGHUP</B>
+
+</FONT>
+信号。如果没有给出
+<I>jobspec，</I>
+
+也没有给出
+<B>-a</B>
+
+或者
+<B>-r</B>
+
+选项，将使用当前作业 (<I>current job</I>)。如果没有给出
+<I>jobspec，</I>
+
+选项
+<B>-a</B>
+
+意味着删除或标记所有作业；选项
+<B>-r</B>
+
+不带
+<I>jobspec</I>
+
+参数时限制操作只对正在运行的作业进行。返回值是 0，除非
+<I>jobspec</I>
+
+不指定有效的作业。
+<DT><B>echo</B> [<B>-neE</B>] [<I>arg</I> ...]<DD>
+输出 <I>arg</I>，以空格分开，最后加一个新行符。返回值总是 0。
+如果指定了 <B>-n</B>，将不在尾部添加新行符。如果给出了 <B>-e</B> 选项，
+将允许解释下列反斜杠转义的字符。
+<B>-E</B>
+
+选项禁止这些转义字符的解释，即使在默认解释它们的系统中也是如此。
+shell 选项 <B>xpg_echo</B> 可以用来在运行时判断 <B>echo</B> 是否默认
+展开这些转义字符。
+<B>echo</B>
+
+不将
+<B>--</B>
+
+作为选项的结束。
+<B>echo</B>
+
+解释下列转义序列：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>\a</B>
+
+<DD>
+alert (bell) 响铃
+<DT><B>\b</B>
+
+<DD>
+backspace 回退
+<DT><B>\c</B>
+
+<DD>
+suppress trailing newline 删除尾部新行符
+<DT><B>\e</B>
+
+<DD>
+an escape character 字符 Esc
+<DT><B>\f</B>
+
+<DD>
+form feed 进纸
+<DT><B>\n</B>
+
+<DD>
+new line 新行符
+<DT><B>\r</B>
+
+<DD>
+carriage return 回车
+<DT><B>\t</B>
+
+<DD>
+horizontal tab 水平跳格
+<DT><B>\v</B>
+
+<DD>
+vertical tab 竖直跳格
+<DT><B>\\</B>
+
+<DD>
+backslash 反斜杠
+<DT><B>\0</B><I>nnn</I>
+
+<DD>
+一个八比特字符，它的值是八进制值 <I>nnn</I> (零到三个八进制数字)。
+<DT><B>\</B><I>nnn</I>
+
+<DD>
+一个八比特字符，它的值是八进制值 <I>nnn</I> (一到三个八进制数字)。
+<DT><B>\x</B><I>HH</I>
+
+<DD>
+一个八比特字符，它的值是十六进制值 <I>HH</I> (一到两个十六进制数字)。
+
+</DL>
+</DL>
+
+<DT><B>enable</B> [<B>-adnps</B>] [<B>-f</B> <I>filename</I>] [<I>name</I> ...]<DD>
+允许或禁止 shell 内建命令。禁止一个内建命令使得磁盘上的与内建命令同名
+的文件得以运行，不必使用它的全路径，即使 shell 一般在搜索磁盘上的命令之前
+搜索内建命令。如果使用了 <B>-n</B> 选项，每个 <I>name</I> 都被禁止；否则，
+<I>name</I> 被允许。例如，要使用
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+中搜索到的
+<B>test</B>
+
+命令而不是 shell 内建的那一个，可以运行
+
+``enable -n test''.
+选项
+<B>-f</B>
+
+意味着从共享库
+<I>filename</I>
+
+中加载新的内建命令
+<I>name，</I>
+
+如果系统支持动态加载的话。选项
+<B>-d</B>
+
+将删除曾经用
+<B>-f</B>
+
+加载的内建命令。如果没有给出 <I>name</I> 参数，或者给出了
+<B>-p</B>
+
+选项，将显示 shell 内建命令的列表。如果没有其他选项参数，
+这个列表只包含所有被允许的 shell 内建命令；如果给出了
+<B>-n</B>，将只显示被禁止的内建命令；如果给出了 
+<B>-a</B>，显示的列表中包含所有内建命令，还有命令是否被允许的指示；
+如果给出了 <B>-s</B>，输出被限制为 POSIX <I>special</I> 内建命令。
+返回值是 0，除非
+<I>name</I>
+
+不是 shell 内建命令，或者从共享库中加载新的内建命令时出错。
+<DT><B>eval</B> [<I>arg</I> ...]<DD>
+<I>arg</I> 被读取并连结为单一的命令。这个命令然后被 shell 读取并执行，
+它的退出状态被作为
+<B>eval</B>
+
+的值返回。如果没有
+<I>args</I>，
+
+或仅仅包含空参数，
+<B>eval</B>
+
+返回 0。
+<DT><B>exec</B> [<B>-cl</B>] [<B>-a</B> <I>name</I>] [<I>command</I> [<I>arguments</I>]]<DD>
+如果指定了
+<I>command，</I>
+
+它将替换 shell。不会产生新的进程。
+<I>arguments</I>
+
+成为 <I>command</I> 的参数。如果给出了
+<B>-l</B>
+
+选项，shell 将在传递给
+<I>command</I>
+
+的第 0 个参数前面加上一个连字符 (dash,`-')。这样做和
+<I><A HREF="/cgi-bin/man/man2html?1+login">login</A></I>(1)
+
+相同。选项
+<B>-c</B>
+
+使得命令
+<I>command</I>
+
+在一个空环境中执行。如果给出了
+<B>-a，</B>
+
+shell 会将
+<I>name</I>
+
+作为第 0 个参数传递给要执行的命令。如果由于某种原因
+as the zeroth argument to the executed command.  If
+<I>command</I>
+
+不能被执行，非交互的 shell 将退出，除非 shell 选项
+<B>execfail</B>
+
+被设置为允许，这种情况下它返回失败。如果命令不能执行，交互的 shell 返回失败。
+如果没有指定
+<I>command</I>
+
+任何重定向对当前 shell 发生作用，返回值是 0。如果发生重定向错误，返回状态是 1。
+<DT><B>exit</B> [<I>n</I>]<DD>
+使得 shell 以状态值 <I>n</I> 退出。如果忽略了
+<I>n，</I>
+
+退出状态是最后执行的命令的退出状态。在 shell 终止前，对
+<FONT SIZE="-1"><B>EXIT</B>
+
+</FONT>
+的陷阱将被执行。
+<DT><B>export</B> [<B>-fn</B>] [<I>name</I>[=<I>word</I>]] ...<DD>
+
+<DT><B>export -p</B>
+
+<DD>
+
+给出的名称
+<I>names</I>
+
+被标记为自动地导出到后续执行的命令的环境中。如果给出了
+<B>-f</B>
+
+选项，名称
+<I>names</I>
+
+指的是函数。如果没有给出
+<I>names，</I>
+
+或者如果给出了
+<B>-p</B>
+
+选项，将打印在这个 shell 中被导出的所有名字的列表。选项
+<B>-n</B>
+
+使得以此为名的变量的导出属性被删除。
+<B>export</B>
+
+返回 0，除非遇到了非法的选项，<I>name</I> 之一不是有效的 shell 变量名，
+或者给出了
+<B>-f</B>
+
+选项，而
+<I>name</I>
+
+不是一个函数。
+<DT><B>fc</B> [<B>-e</B> <I>ename</I>] [<B>-nlr</B>] [<I>first</I>] [<I>last</I>]<DD>
+
+<DT><B>fc</B> <B>-s</B> [<I>pat</I>=<I>rep</I>] [<I>cmd</I>]<DD>
+
+命令修复。第一种形式中，历史列表中从
+<I>first</I>
+
+到
+<I>last</I>
+
+范围内的命令都被选取。
+<I>First</I>
+
+和
+<I>last</I>
+
+可以指定为字符串 (可以定位最后一个以此字符串开始的命令) 或者数字 (历史列表中
+的索引，负数被当作相对当前命令号的偏移)。如果没有指定
+<I>last，</I>
+
+它在列举时被设为当前命令 (因此
+``fc -l -10''
+
+将输出最后 10 条命令)，其他情况下被设为
+<I>first。</I>
+
+如果没有指定
+<I>first，</I>
+
+它在编辑时被设为前一个命令，列举是设为 -16。
+<P>
+选项
+<B>-n</B>
+
+使得列举时不显示命令号码。选项
+<B>-r</B>
+
+将命令顺序进行掉换。如果给出了
+<B>-l</B>
+
+选项，命令将列举在标准输出上。否则，将启动
+<I>ename</I>
+
+给出的编辑器，编辑包含这些命令的文件。如果没有给出
+<I>ename，</I>
+
+将使用变量
+<FONT SIZE="-1"><B>FCEDIT</B>
+
+</FONT>
+的值，如果
+<FONT SIZE="-1"><B>FCEDIT</B>
+
+</FONT>
+没有定义就使用
+<FONT SIZE="-1"><B>EDITOR</B>
+
+</FONT>
+的值。如果仍然没有定义，将使用
+
+<I>vi。</I>
+
+编辑结束后，被编辑的命令将回显并执行。
+<P>
+第二种形式中，<I>command</I> 在每个 <I>pat</I> 的实例被 <I>rep</I> 替换后
+都被重新执行。使用这种特性时可以起一个有用的别名：
+``r=fc -s'',
+
+这样输入
+``r cc''
+
+将运行最后的以
+``cc''
+
+开头的命令，输入
+``r''
+
+将重新执行上一个命令。
+<P>
+如果使用第一种形式，返回值是 0，除非遇到了非法的选项，或
+<I>first</I>
+
+或
+<I>last</I>
+
+指定的历史行数超出了范围。如果给出了
+<B>-e</B>
+
+选项，返回值是最后执行的命令的返回值，或着是失败，如果临时文件中的命令
+执行出错。如果使用第二种形式，返回状态是重新执行的命令，除非
+<I>cmd</I>
+
+没有指定一个有效的历史行，这种情况下
+<B>fc</B>
+
+返回失败。
+<DT><B>fg</B> [<I>jobspec</I>]<DD>
+将
+<I>jobspec</I>
+
+恢复至前台，使它成为当前作业。如果
+<I>jobspec</I>
+
+不存在，将使用 shell 意义上的当前作业 <I>current job</I>。返回值是
+被放到前台的命令的状态，或者是失败，如果在禁用作业控制时运行，或者
+在启用作业控制时运行，但
+<I>jobspec</I>
+
+没有指定有效的作业，或
+<I>jobspec</I>
+
+指定了没有使用作业控制的作业。
+<DT><B>getopts</B> <I>optstring</I> <I>name</I> [<I>args</I>]<DD>
+<B>getopts</B>
+
+由 shell 程序用来处理位置参数。
+<I>optstring</I>
+
+包含要识别的选项字符；如果某个字符跟随着冒号，那么这个选项需要一个参数，
+需要用空白和它隔离开。冒号和问号字符不能用作选项字符。每次它执行时，
+<B>getopts</B>
+
+将下一个选项放在 shell 变量
+<I>name</I>
+
+中，如果
+<I>name</I>
+
+不存在就初始化它；下一个要处理的参数的索引放在变量
+<FONT SIZE="-1"><B>OPTIND</B>
+
+</FONT>
+中。每次 shell 或 shell 脚本被执行的时候
+<FONT SIZE="-1"><B>OPTIND</B>
+
+</FONT>
+被初始化为 1。当某个选项需要参数时，
+<B>getopts</B>
+
+将那个参数放到变量
+<FONT SIZE="-1"><B>OPTARG</B>
+
+</FONT>
+中。shell 不会自动重置
+<FONT SIZE="-1"><B>OPTIND；</B>
+
+</FONT>
+在相同的 shell 中，如果要使用新的参数集合而需要多次调用
+<B>getopts</B>
+
+时，必须手动重置它。
+<P>
+当遇到选项结束的时候，<B>getopts</B> 以大于 0 的值退出。
+<B>OPTIND</B> 被设置为第一个非选项的参数的索引，<I>name</I> 被设置为 ?。
+<P>
+<B>getopts</B>
+
+通常解释位置参数，但是如果
+<I>args</I>
+
+中给出了更多参数，
+<B>getopts</B>
+
+将解释它们。
+<P>
+<B>getopts</B>
+
+能以两种方式报告错误。如果
+<I>optstring</I>
+
+的第一个字符是冒号，将使用
+<I>silent</I>
+
+安静的错误报告。通常的操作中，遇到非法选项或缺少选项的参数时将打印出
+诊断信息。如果变量
+<FONT SIZE="-1"><B>OPTERR</B>
+
+</FONT>
+被设置为 0，不会显示错误消息，即使
+<I>optstring</I>
+
+的第一个字符不是冒号。
+<P>
+如果发现了一个非法的选项，
+<B>getopts</B>
+
+向
+<I>name</I>
+
+中置入 ?，并且如果不是安静模式的话，打印错误消息并取消
+<FONT SIZE="-1"><B>OPTARG</B>
+
+</FONT>
+的定义。如果
+<B>getopts</B>
+
+是安静模式，找到的选项字符将置入
+<FONT SIZE="-1"><B>OPTARG，</B>
+
+</FONT>
+不会打印诊断消息。
+<P>
+如果没有找到需要的参数，并且
+<B>getopts</B>
+
+不是安静模式，将向
+<I>name</I>
+
+置入一个问号 (<B>?</B>)，取消
+<FONT SIZE="-1"><B>OPTARG</B>
+
+</FONT>
+的定义，打印出诊断消息。如果
+<B>getopts</B>
+
+是安静模式，那么将向
+<I>name</I>
+
+置入一个冒号 (<B>:</B>) 并且
+<FONT SIZE="-1"><B>OPTARG</B>
+
+</FONT>
+将设置为找到的选项字符。
+<P>
+<B>getopts</B>
+
+返回真，如果找到了指定的/未被指定的选项。它返回假，如果遇到了选项结束
+或者发生了错误。
+<DT><B>hash</B> [<B>-lr</B>] [<B>-p</B> <I>filename</I>] [<B>-dt</B>] [<I>name</I>]<DD>
+对于每个
+<I>name</I>,
+
+通过搜索
+<B>$PATH</B>
+
+中的目录，找到命令的全路径名并记录它。如果给出了 
+<B>-p</B>
+
+选项，不会进行路径搜索，直接将
+<I>filename</I>
+
+作为命令的全路径名。选项
+<B>-r</B>
+
+使得 shell 忘记所有已记录的位置。选项
+<B>-d</B>
+
+使得 shell 忘记已记录的 <I>name</I> 的位置。如果给出了
+<B>-t</B>
+
+选项，每个 <I>name</I> 对应的全路径名被打印出来。如果给出多个
+<I>name</I> 作为 <B>-t</B> 的参数，<I>name</I> 将在已记录的全路径名
+之前被打印出来。选项
+<B>-l</B>
+
+使得输出以一种可以重用为输入的格式显示。如果没有给出参数，
+或者只给出了 <B>-l</B> 选项，已记录的命令的信息将被打印出来。
+返回真，除非
+<I>name</I>
+
+没有找到或给出了非法的选项。
+<DT><B>help</B> [<B>-s</B>] [<I>pattern</I>]<DD>
+显示关于内建命令的有用的信息。如果指定了
+<I>pattern (模式)，</I>
+
+<B>help</B>
+
+给出关于所有匹配
+<I>pattern</I>
+
+的命令的详细帮助；否则所有内建命令的帮助和 shell 控制结构将被打印出来。
+选项 <B>-s</B> 限制信息显示为简短的用法概要。
+返回 0，除非没有匹配
+<I>pattern</I>
+
+的命令。
+<DT><B>history [</B><I>n</I>]<DD>
+
+<DT><B>history</B> <B>-c</B><DD>
+<DT><B>history -d</B> <I>offset</I><DD>
+<DT><B>history</B> <B>-anrw</B> [<I>filename</I>]<DD>
+<DT><B>history</B> <B>-p</B> <I>arg</I> [<I>arg ...</I>]<DD>
+<DT><B>history</B> <B>-s</B> <I>arg</I> [<I>arg ...</I>]<DD>
+
+不带选项的话，显示带行号的命令历史列表。列出的行中含有
+<B>*</B>
+
+的已经被修改过。参数
+<I>n</I>
+
+使得只显示最后
+<I>n</I>
+
+行。如果给出了 <I>filename</I>，它被用做历史文件名；没有的话，将使用
+<FONT SIZE="-1"><B>HISTFILE</B>
+
+</FONT>
+的值作为历史文件名。选项如果给出，则具有下列意义：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>-c</B>
+
+<DD>
+清空历史列表，删除所有条目。
+<DT><B>-d</B> <I>offset</I><DD>
+删除 <I>offset</I> 位置的历史条目。
+<DT><B>-a</B>
+
+<DD>
+将 ``新'' 的历史条目 (自当前 <B>bash</B> 会话开始输入的历史命令)
+追加到历史文件中。
+<DT><B>-n</B>
+
+<DD>
+将尚未从历史文件中读取的历史条目读入当前历史列表。这些行是当前
+<B>bash</B> 会话开始之后，才追加到历史文件中的行。
+<DT><B>-r</B>
+
+<DD>
+读取历史文件的内容，使用它们作为当前历史。
+<DT><B>-w</B>
+
+<DD>
+将当前历史列表写入历史文件，覆盖历史文件的原有内容。
+<DT><B>-p</B>
+
+<DD>
+对后续的 <I>args</I> 进行历史替换，在标准输出上显示结果。
+不会将结果存入历史列表。每个 <I>args</I> 都必须被引用，来禁止
+普通的命令扩展。
+<DT><B>-s</B>
+
+<DD>
+将
+<I>args</I>
+
+保存到历史列表中，作为单独的条目。历史列表中的最后一个命令在添加
+<I>args</I>
+
+之前被删除。
+
+</DL>
+<P>
+
+返回 0，除非遇到了非法的选项，读/写历史文件发生错误，在 <B>-d</B> 的
+参数中给出了无效的 <I>offset</I>，或者对 <B>-p</B> 的后续参数进行历史扩展失败。
+</DL>
+
+<DT><B>jobs</B> [<B>-lnprs</B>] [ <I>jobspec</I> ... ]<DD>
+
+<DT><B>jobs</B> <B>-x</B> <I>command</I> [ <I>args</I> ... ]<DD>
+
+第一种形式列出正在运行的作业。选项具有下列意义：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>-l</B>
+
+<DD>
+普通信息之外，列出进程ID。
+<DT><B>-p</B>
+
+<DD>
+只列出作业的进程组 leader 的进程ID。
+<DT><B>-n</B>
+
+<DD>
+只显示从上次用户得知它们的状态之后，状态发生改变的作业的信息。
+<DT><B>-r</B>
+
+<DD>
+限制只输出正在运行的作业。
+<DT><B>-s</B>
+
+<DD>
+限制只输出停止的作业。
+
+</DL>
+<P>
+
+如果给出了
+<I>jobspec</I>
+
+输出被限制为仅此作业的信息。
+返回 0，除非遇到了非法的选项或给出了非法的
+<I>jobspec。</I>
+
+<P>
+
+如果给出了
+<B>-x</B>
+
+选项，作业
+<B>jobs</B>
+
+将
+<I>command</I>
+
+或
+<I>args</I>
+
+中的任何
+<I>jobspec</I>
+
+替换为相应的进程组ID，执行
+<I>command，</I>
+
+传递参数
+<I>args</I>
+
+给它并返回它的退出状态。
+</DL>
+
+<DT><B>kill</B> [<B>-s</B> <I>sigspec</I> | <B>-n</B> <I>signum</I> | <B>-</B><I>sigspec</I>] [<I>pid</I> | <I>jobspec</I>] ...<DD>
+
+<DT><B>kill</B> <B>-l</B> [<I>sigspec</I> | <I>exit_status</I>]<DD>
+
+向以
+<I>pid</I>
+
+或
+<I>jobspec</I>
+
+为名的进程发送名为
+<I>sigspec</I>
+
+或
+<I>signum</I>
+
+的信号。
+<I>sigspec</I>
+
+可以是一个信号名称，类似
+<FONT SIZE="-1"><B>SIGKILL</B>
+
+</FONT>
+或信号编号；
+<I>signum</I>
+
+是一个信号编号。如果
+<I>sigspec</I>
+
+是一个信号名称，那么可以有，也可以没有
+<FONT SIZE="-1"><B>SIG</B>
+
+</FONT>
+前缀。如果没有给出
+<I>sigspec，</I>
+
+那么假设是
+<FONT SIZE="-1"><B>SIGTERM。</B>
+
+</FONT>
+参数
+<B>-l</B>
+
+将列出所有信号的名称。如果给出
+<B>-l</B>
+
+时还有任何参数，将列出参数对应的信号名称，返回状态 0。
+<B>-l</B>
+
+的 <I>exit_status</I> 参数是一个数字，指定了一个信号编号或被信号
+终止的进程的退出状态值。
+<B>kill</B>
+
+返回真，如果至少成功发送了一个信号，或者返回假，如果发生了错误或遇到了
+非法的选项。
+<DT><B>let</B> <I>arg</I> [<I>arg</I> ...]<DD>
+每个
+<I>arg</I>
+
+都是要求值的算术表达式 (参见
+<FONT SIZE="-1"><B>算术求值</B>(ARITHMETIC<B>EVALUATION)</B>
+
+</FONT>
+章节)。如果最后一个参数
+<I>arg</I>
+
+求值结果是 0，
+<B>let</B>
+
+返回 1；否则返回 0。
+<DT><B>local</B> [<I>option</I>] [<I>name</I>[=<I>value</I>] ...]<DD>
+对每个参数将创建一个名为
+<I>name </I>
+
+的局部变量并赋予值
+<I>value。</I>
+
+<I>option</I> 可以是任何 <B>declare</B> 接受的值。当
+<B>local</B>
+
+用于函数内部时，它使得变量
+<I>name</I>
+
+作用域局限于函数和它的子进程。没有操作数时，
+<B>local</B>
+
+将局部变量的列表写到标准输出。不在函数内部使用
+<B>local</B>
+
+会导致出错。返回 0，除非在函数之外使用了
+<B>local，</B>
+
+给出了非法的
+<I>name，</I>
+
+或者 <I>name</I> 是一个只读的变量。
+<DT><B>logout</B>
+
+<DD>
+退出登录 shell。
+<DT><B>popd</B> [-<B>n</B>] [+<I>n</I>] [-<I>n</I>]<DD>
+从目录栈中删除条目。没有参数的话，从栈中删除顶层目录，执行
+<B>cd</B>
+
+切换到新的顶层目录。如果给出了参数，有下列的含义：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>+</B><I>n</I><DD>
+删除
+<B>dirs</B>
+
+给出的列表中从左数第 <I>n</I> 个条目 (从 0 算起)。例如：
+``popd +0''
+
+删除第一个目录，
+``popd +1''
+
+第二个。
+<DT><B>-</B><I>n</I><DD>
+删除
+<B>dirs</B>
+
+给出的列表中从右数第 <I>n</I> 个条目 (从 0 算起)。例如：
+``popd -0''
+
+删除最后一个目录，
+``popd -1''
+
+删除倒数第二个。
+<DT><B>-n</B>
+
+<DD>
+阻止从栈中删除目录之后改变目录，这时只对栈进行操作。
+
+</DL>
+<P>
+
+如果命令
+<B>popd</B>
+
+成功，还要执行一个
+<B>dirs，</B>
+
+返回 0。
+<B>popd</B>
+
+返回假，如果遇到了非法的选项，目录栈为空，指定了目录栈中不存在的条目，
+或者改变目录失败。
+</DL>
+
+<DT><B>printf</B> <I>format</I> [<I>arguments</I>]<DD>
+在 <I>format</I> 控制下将格式化的 <I>arguments</I> 写到标准输出。
+<I>format</I> 是一个字符串，包含三种类型的对象：普通字符，被简单地
+复制到标准输出，转义字符，被转换并复制到标准输出，格式说明，每一个
+都使得相邻的下一个 <I>argument</I> 被打印出来。
+在标准的 <I><A HREF="/cgi-bin/man/man2html?1+printf">printf</A></I>(1) 格式之外，<B>%b</B> 使得 <B>printf</B> 展开相应
+<I>arguments</I> 中的反斜杠转义序列，<B>%q</B> 使得 <B>printf</B> 将
+相应的 <I>argument</I> 以一种可以重用为 shell 输入的格式输出。
+<P>
+<I>format</I> 在需要时被重用，以处理所有的 <I>arguments</I>。
+如果 <I>format</I> 需要比所提供的更多的 <I>arguments</I>，
+多出的格式说明视为已经提供了相应的 0 值或空字符串。
+成功的话返回值是 0，失败则是非 0 值。
+<DT><B>pushd</B> [<B>-n</B>] [<I>dir</I>]<DD>
+
+<DT><B>pushd</B> [<B>-n</B>] [+<I>n</I>] [-<I>n</I>]<DD>
+
+将目录推入目录栈，或者轮换栈中的内容，使栈的顶部成为当前工作目录。
+没有参数时，交换顶部两个目录，返回 0，除非目录栈为空。如果给出了参数，
+它们有如下含义：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>+</B><I>n</I><DD>
+轮换栈中内容，使得
+<B>dirs</B>
+
+给出的列表中从左数第 <I>n</I> 个目录 (从 0 数起) 成为目录栈的顶部。
+<DT><B>-</B><I>n</I><DD>
+轮换栈中内容，使得
+<B>dirs</B>
+
+给出的列表中从右数第 <I>n</I> 个目录 (从 0 数起) 成为目录栈的顶部。
+<DT><B>-n</B>
+
+<DD>
+阻止向栈中添加目录之后改变目录，这时只对栈进行操作。
+<DT><I>dir</I>
+
+<DD>
+添加
+<I>dir</I>
+
+到栈顶，使得它成为新的当前工作目录。
+
+</DL>
+<P>
+
+如果命令
+<B>pushd</B>
+
+成功，还要执行一个
+<B>dirs。</B>
+
+如果使用第一种形式，
+<B>pushd</B>
+
+返回 0，除非 cd 切换到目录
+<I>dir</I>
+
+失败。使用第二中形式时，
+<B>pushd</B>
+
+返回 0，除非目录栈为空，指定了目录栈中不存在的元素，或者
+切换到指定的新的当前目录失败。
+</DL>
+
+<DT><B>pwd</B> [<B>-LP</B>]<DD>
+打印当前工作目录的绝对路径名。如果给出了
+<B>-P</B>
+
+选项，或者设置了内建命令
+<B>set</B>
+
+的
+<B>-o physical</B>
+
+选项，打印出的路径名中不会包含符号链接。如果使用了
+<B>-L</B>
+
+选项，打印出的路径中可能包含符号链接。
+返回 0，除非在读取当前目录名时出错或给出了非法的选项。
+<DT><B>read</B> [<B>-ers</B>] [<B>-u</B> <I>fd</I>] [<B>-t</B> <I>timeout</I>] [<B>-a</B> <I>aname</I>] [<B>-p</B> <I>prompt</I>] [<B>-n</B> <I>nchars</I>] [<B>-d</B> <I>delim</I>] [<I>name</I> ...]<DD>
+从标准输入读入一行，或从 <B>-u</B> 选项的参数中给出的文件描述符 <I>fd</I> 中
+读取，第一个词被赋予第一个
+<I>name</I>,
+
+第二个词被赋予第二个
+<I>name</I>,
+
+以此类推，多余的词和其间的分隔符被赋予最后一个
+<I>name</I>.
+
+如果从输入流读入的词数比名称数少，剩余的名称被赋予空值。
+<FONT SIZE="-1"><B>IFS</B>
+
+</FONT>
+中的字符被用来将行拆分成词。
+反斜杠字符 (<B>\</B>) 被用于删除读取的下一字符的特殊含义，以及续行。
+如果给出了选项，将包含下列含义：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>-a </B><I>aname</I>
+
+<DD>
+词被赋以数组变量
+<I>aname</I>
+
+的连续的下标，从 0 开始。在赋新值之前，
+<I>aname</I>
+
+被取消定义。其他 <I>name</I> 参数被忽略。
+<DT><B>-d </B><I>delim</I>
+
+<DD>
+<I>delim</I> 的第一个字符被用于结束输入行，而不是新行符。
+<DT><B>-e</B>
+
+<DD>
+如果标准输入来自终端，将使用
+<B>readline</B>
+
+(参见上面的
+<FONT SIZE="-1"><B>READLINE</B>
+
+</FONT>
+章节) 来获得输入行。
+<DT><B>-n </B><I>nchars</I>
+
+<DD>
+<B>read</B> 读入 <I>nchars</I> 个字符后返回，而不是等待一整行输入。
+<DT><B>-p </B><I>prompt</I>
+
+<DD>
+读取任何输入之前，在标准错误显示提示 <I>prompt</I>，末尾没有新行符。
+提示只有在输入来自终端时才会显示。
+<DT><B>-r</B>
+
+<DD>
+反斜杠不作为转义字符。反斜杠被认为行的一部分。特殊地，一对反斜杠-新行符不作为续行。
+<DT><B>-s</B>
+
+<DD>
+安静模式。如果输入来自终端，字符将不会回显。
+<DT><B>-t </B><I>timeout</I>
+
+<DD>
+使得 <B>read</B> 超时并返回失败，如果在 <I>timeout</I> 秒内没有读入完整的一行输入。
+如果 <B>read</B> 不是从终端或管道读取输入，那么这个选项无效。
+<DT><B>-u </B><I>fdFP</I>
+
+<DD>
+从文件描述符 <I>fd</I> 中读取输入。
+
+</DL>
+<P>
+
+如果没有给出
+<I>names，</I>
+
+读取的一行将赋予变量
+<FONT SIZE="-1"><B>REPLY</B>。
+
+</FONT>
+返回值是 0，除非遇到了 EOF，<B>readP 超时，或给出了非法的文件描述符作为 -u</B> 的参数。
+</DL>
+
+<DT><B>readonly</B> [<B>-apf</B>] [<I>name</I> ...]<DD>
+
+给出的 <I>name</I> 将被标记为只读的；
+<I>names</I>
+
+的值不能被后来的赋值语句改变。如果给出了
+<B>-f</B>
+
+选项，<I>names</I> 对应的函数也被标记。选项
+<B>-a</B>
+
+限制变量只能是数组类型。如果没有给出
+<I>name</I>
+
+参数，或者如果给出了
+<B>-p</B>
+
+选项，将打印所有只读的名称。选项
+<B>-p</B>
+
+使得输出以一种可以被重新用作输入的格式显示。
+返回值是 0，除非遇到了非法的选项，
+<I>names</I>
+
+之一不是有效的 shell 变量名，或选项
+<B>-f</B>
+
+中给出的
+<I>name</I>
+
+不是一个函数。
+<DT><B>return</B> [<I>n</I>]<DD>
+使得一个函数以指定值
+<I>n</I>
+
+退出。如果忽略了
+<I>n，</I>
+
+返回状态是函数体中执行的最后一个命令的退出状态。如果在函数外使用，但是是在一个以
+<B>.</B>
+
+(<B>source</B>) 命令执行的脚本内，它使得 shell 中止执行脚本，返回
+<I>n</I>
+
+或脚本中执行的最后一个命令的退出状态。如果在函数外使用，并且不是在以 
+<B>.</B> 执行的脚本内，返回状态是假。
+<DT><B>set</B> [<B>--abefhkmnptuvxBCHP</B>] [<B>-o</B> <I>option</I>] [<I>arg</I> ...]<DD>
+不带选项时，shell 变量的名称和值将以一种可以重用为输入的格式显示。
+输出根据当前语言环境进行排序。指定了选项的时候，它们设置或取消了 shell 的属性。
+处理完选项之后剩余的任何参数都被作为位置参数的值被赋值，分别赋予
+<B>$1</B>,
+
+<B>$2</B>,
+
+<B>...</B>
+
+<B>$</B><I>n</I>.
+
+如果给出了选项，那么具有以下含义：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>-a</B>
+
+<DD>
+自动将被修改或创建的变量和函数标志为导出至后续命令的环境中。
+<DT><B>-b</B>
+
+<DD>
+后台作业结束时立即报告状态，而不是在下次显示主提示符前报告。只有在启用作业控制时才有效。
+<DT><B>-e</B>
+
+<DD>
+立即退出，如果 <I>simple command</I> (简单命令，参见上面的
+<FONT SIZE="-1"><B>SHELL GRAMMAR 语法)</B>
+
+</FONT>
+以非零值退出。shell 不会退出，如果失败的命令是
+<I>until</I>
+
+或
+<I>while</I>
+
+循环的一部分，
+<I>if</I>
+
+语句的一部分，
+<B>&amp;&amp;</B>
+
+或
+<B>||</B>
+
+序列的一部分，或者命令的返回值是由
+<B>!</B>
+
+翻转得到。针对 <B>ERR</B> 的陷阱，如果设置的话，将在 shell 退出前执行。
+<DT><B>-f</B>
+
+<DD>
+禁止路径扩展。
+<DT><B>-h</B>
+
+<DD>
+在查找并执行命令时，记住它们的位置。这是默认启用的。
+<DT><B>-k</B>
+
+<DD>
+所有以赋值语句形式出现的参数都被加入到命令执行的环境中，不仅是命令名前面那些。
+<DT><B>-m</B>
+
+<DD>
+监视模式。作业控制被启用。在支持这个选项的系统中，它在交互 shell 中是默认启用的 (参见上面的
+<FONT SIZE="-1"><B>JOB CONTROL 作业控制)。</B>
+
+</FONT>
+后台进程在单独的进程组中运行，结束时将打印出包含它们退出状态的一行信息。
+<DT><B>-n</B>
+
+<DD>
+读取命令，但不执行。这可以用在检查 shell 脚本中的语法错误。交互 shell 中它被忽略。
+<DT><B>-o </B><I>option-name</I>
+
+<DD>
+<I>option-name</I> 可以是如下之一：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>allexport</B>
+
+<DD>
+与
+<B>-a</B>
+
+相同。
+<DT><B>braceexpand</B>
+
+<DD>
+与
+<B>-B</B>
+
+相同。
+<DT><B>emacs</B>
+
+<DD>
+使用 emacs 样式的命令行编辑界面。这个选项在交互 shell 中默认启用，除非 shell 以
+<B>--noediting</B>
+
+选项启动。
+<DT><B>errexit</B>
+
+<DD>
+与
+<B>-e</B>
+
+相同。
+<DT><B>hashall</B>
+
+<DD>
+与
+<B>-h</B>
+
+相同。
+<DT><B>histexpand</B>
+
+<DD>
+与
+<B>-H</B>
+
+相同。
+<DT><B>history</B>
+
+<DD>
+允许记录命令历史，如上述
+<FONT SIZE="-1"><B>HISTORY</B>
+
+</FONT>
+中的描述。这个选项在交互 shell 中默认启用。
+<DT><B>ignoreeof</B>
+
+<DD>
+它的效果是好像已经执行了 shell 命令
+
+``IGNOREEOF=10''
+一样 (参见上面的
+<B>Shell Variables 变量)。</B>
+
+<DT><B>keyword</B>
+
+<DD>
+与
+<B>-k</B>
+
+相同。
+<DT><B>monitor</B>
+
+<DD>
+与
+<B>-m</B>
+
+相同。
+<DT><B>noclobber</B>
+
+<DD>
+与
+<B>-C</B>
+
+相同。
+<DT><B>noexec</B>
+
+<DD>
+与
+<B>-n</B>
+
+相同。
+<DT><B>noglob</B>
+
+<DD>
+与
+<B>-f</B>
+
+相同。
+<B>nolog</B>
+
+当前被忽略。
+<DT><B>notify</B>
+
+<DD>
+与
+<B>-b</B>
+
+相同。
+<DT><B>nounset</B>
+
+<DD>
+与
+<B>-u</B>
+
+相同。
+<DT><B>onecmd</B>
+
+<DD>
+与
+<B>-t</B>
+
+相同。
+<DT><B>physical</B>
+
+<DD>
+与
+<B>-P</B>
+
+相同。
+<DT><B>posix</B>
+
+<DD>
+如果默认操作与 POSIX 1003.2 不同的话，改变
+<B>bash</B>
+
+的行为，来满足标准 (<I>posix mode</I>)。
+<DT><B>privileged</B>
+
+<DD>
+与
+<B>-p</B>
+
+相同。
+<DT><B>verbose</B>
+
+<DD>
+与
+<B>-v</B>
+
+相同。
+<DT><B>vi</B>
+
+<DD>
+使用 vi 样式的命令行编辑界面。
+<DT><B>xtrace</B>
+
+<DD>
+与
+<B>-x</B>
+
+相同。
+<P>
+</DL>
+<P>
+
+如果给出了不带 <I>option-name</I> 的
+<B>-o</B>
+
+选项，当前选项的值将被打印出来。如果给出了不带 <I>option-name</I> 的
+<B>+o</B>
+
+选项，将在标准输出显示一系列可以重建当前选项设定的
+<B>set</B>
+
+命令。
+</DL>
+
+<DT><B>-p</B>
+
+<DD>
+打开
+<I>privileged mode (特权模式)。</I>
+
+在这个模式中，不会处理
+<FONT SIZE="-1"><B>$ENV</B>
+
+</FONT>
+和
+<FONT SIZE="-1"><B>$BASH_ENV</B>
+
+</FONT>
+文件，shell 函数不会从环境中继承，环境中如果有变量
+<FONT SIZE="-1"><B>SHELLOPTS，</B>
+
+</FONT>
+也将被忽略。如果 shell 启动时的有效用户(组) ID 与真实用户(组) ID 不同，并且没有给出 <B>-p</B> 选项，
+将执行这些操作，有效用户 ID 将设置为真实用户 ID。如果启动是给出了 <B>-p</B> 选项，有效用户 ID 不会
+被重置。将这个选项关闭使得有效用户和组 ID 被设置为真实用户和组 ID。
+<DT><B>-t</B>
+
+<DD>
+读取并执行一个命令之后退出。
+<DT><B>-u</B>
+
+<DD>
+在进行参数扩展时，将未定义的变量作为错误。如果试图扩展未定义的变量，shell 将输出一条错误消息;
+如果是非交互的 shell，shell 将以非零值退出。
+<DT><B>-v</B>
+
+<DD>
+在读取输入的同时打印出来。
+<DT><B>-x</B>
+
+<DD>
+扩展每个简单命令之后，显示
+<FONT SIZE="-1"><B>PS4</B>
+
+</FONT>
+的值，接着显示命令和它扩展后的参数。
+<DT><B>-B</B>
+
+<DD>
+shell 执行花括号扩展 (参见上面的
+<B>Brace Expansion)。</B>
+
+这是默认允许的。
+<DT><B>-C</B>
+
+<DD>
+如果设置的话，
+<B>bash</B>
+
+使用重定向操作符
+<B>&gt;</B>,
+
+<B>&gt;&amp;</B>,
+
+和
+<B>&lt;&gt;</B>
+
+时，不会覆盖已存在的文件。可以使用重定向操作符
+<B>&gt;|</B>
+
+代替
+<B>&gt;</B>
+
+来创建输出文件，从而绕过这个限制。
+<DT><B>-H</B>
+
+<DD>
+允许
+Enable
+<B>!</B>
+
+样式的历史替换。在交互 shell 中这个选项是默认启用的。
+<DT><B>-P</B>
+
+<DD>
+如果设置的话，shell 在执行类似
+<B>cd</B>
+
+的，改变当前工作目录的命令时，不会跟随符号连接。它将使用物理的目录结构来代替。默认情况下，
+<B>bash</B>
+
+在执行改变当前目录的命令时跟随路径的逻辑链。
+<DT><B>--</B>
+
+<DD>
+如果这个选项没有参数，将取消位置参数的定义。否则，位置参数将设置为
+<I>arg</I>，即使它们以
+<B>-</B>
+
+开始。
+<DT><B>-</B>
+
+<DD>
+通知信号的结束，使得所有剩余的 <I>arg</I> 被赋予位置参数。
+<B>-x</B>
+
+和
+<B>-v</B>
+
+选项被关闭。如果没有 <I>arg</I>，位置参数将不会改变。
+
+</DL>
+<P>
+
+这个选项默认是关闭的，除非另外说明。使用 + 而不是 - 使得这些选项被关闭。选项都可以作为参数，
+在 shell 启动时指定。当前的选项集合可以从
+<B>$-</B>
+
+找到。返回值总是真，除非遇到了非法的选项。
+</DL>
+
+<DT><B>shift</B> [<I>n</I>]<DD>
+从 <I>n</I>+1 ... 开始的选项被重命名为
+<B>$1</B>
+
+<B>....</B>
+
+从 <B>$#</B> 向下直到 <B>$#</B>-<I>n</I>+1 的选项被取消定义。
+<I>n</I>
+
+必须是非负整数，小于或等于 <B>$#</B>。如果
+<I>n</I>
+
+是 0，不会改变参数。如果没有给出
+<I>n，</I>
+
+就假定它是 1。如果
+<I>n</I>
+
+比 <B>$#</B> 大，位置参数不会改变。返回值大于 0，如果
+<I>n</I>
+
+比
+<B>$#</B>
+
+大或小于 0；否则返回 0。
+<DT><B>shopt</B> [<B>-pqsu</B>] [<B>-o</B>] [<I>optname</I> ...]<DD>
+对于控制可选的 shell 行为的变量，改变它们的值。没有选项或者有
+<B>-p</B>
+
+选项时，将显示所有可设置的选项列表，以及它们是否已经设置的指示。
+<B>-p</B> 使得输出以一种可以被重用为输入的形式显示。
+其他选项有如下含义：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>-s</B>
+
+<DD>
+允许(设置) 每个 <I>optname</I>。
+<DT><B>-u</B>
+
+<DD>
+禁止(取消) 每个 <I>optname</I>。
+<DT><B>-q</B>
+
+<DD>
+禁止通常的输出 (安静模式)；返回状态指示了 <I>optname</I> 是否被设置。
+如果对
+<B>-q</B>
+
+给出了多个 <I>optname</I> 参数，如果所有 <I>optname</I> 都被允许，返回值就是 0；
+否则返回非零值。
+<DT><B>-o</B>
+
+<DD>
+限制 <I>optname</I> 的值为内建命令
+<B>set</B>
+
+的
+<B>-o</B>
+
+选项定义的值。
+
+</DL>
+<P>
+
+如果使用
+<B>-s</B>
+
+或
+<B>-u</B>
+
+时没有给出 <I>optname</I> 参数，显示将分别限于被设置或被取消的选项。
+除非另外说明，<B>shopt</B> 选项默认被禁止(取消)。
+<P>
+
+返回值在列出选项时是 0，如果所有 <I>optname</I> 都被允许的话，否则是非零值。
+当设置或取消选项时，返回值是 0，除非 <I>optname</I> 是非法的 shell 选项。
+<P>
+
+<B>shopt</B> 选项的列表是：
+
+<P>
+
+
+<DL COMPACT>
+<DT><B>cdable_vars</B>
+
+<DD>
+如果设置的话，内建命令
+<B>cd</B>
+
+的参数如果不是目录，就假定是一个变量，它的值是要切换到的目录名。
+<DT><B>cdspell</B>
+
+<DD>
+如果设置的话，
+<B>cd</B>
+
+命令中目录的细微拼写错误能够得以纠正。检查的错误包括字符错位，缺字符，
+重复输入同一字符。如果找到了正确的值，将打印正确的文件名，命令将继续。
+这个选项只能在交互 shell 中使用。
+<DT><B>checkhash</B>
+
+<DD>
+如果设置的话，<B>bash</B> 在执行命令前检测散列表中的命令是否存在。
+如果一个被散列的命令不再存在，将进行正常的路径搜索。
+<DT><B>checkwinsize</B>
+
+<DD>
+如果设置的话，<B>bash</B> 在每条命令执行后检测窗口大小，如果需要的话就更新
+<FONT SIZE="-1"><B>LINES</B>
+
+</FONT>
+和
+<FONT SIZE="-1"><B>COLUMNS</B>
+
+</FONT>
+的值。
+<DT><B>cmdhist</B>
+
+<DD>
+如果设置的话，
+<B>bash</B>
+
+试着将一个多行命令的所有行放到同一个历史条目中。这样使得
+多行命令可以容易地重新修改。
+<DT><B>dotglob</B>
+
+<DD>
+如果设置的话，
+<B>bash</B>
+
+会把以 `.' 开始的文件名包含在路径名扩展的结果中。
+<DT><B>execfail</B>
+
+<DD>
+如果设置的话，非交互的 shell 如果不能执行作为参数提供给内建命令
+<B>exec</B>
+
+的文件时将不会退出。交互的 shell 在
+<B>exec</B>
+
+失败时不会退出。
+<DT><B>expand_aliases</B>
+
+<DD>
+如果设置的话，别名被扩展，就像上面
+<FONT SIZE="-1"><B>ALIASES</B>
+
+</FONT>
+中讲到的一样。这个选项在交互 shell 中是默认启用的。
+<DT><B>extglob</B>
+
+<DD>
+如果设置的话，将允许上面 <B>Pathname Expansion</B> 中提到的扩展模式匹配特性。
+<DT><B>histappend</B>
+
+<DD>
+如果设置的话，在 shell 退出时，历史列表将追加到以
+<B>HISTFILE</B>
+
+的值为名的文件之后，而不是覆盖文件。
+<DT><B>histreedit</B>
+
+<DD>
+如果设置的话，并且正在使用
+<B>readline，</B>
+
+用户可以重新修改失败的历史替换。
+<DT><B>histverify</B>
+
+<DD>
+如果设置的话，并且正在使用
+<B>readline，</B>
+
+历史替换的结果不会立即传给 shell 解释器。结果行被加载到 
+<B>readline</B> 编辑缓冲区，允许进行进一步的修改。
+<DT><B>hostcomplete</B>
+
+<DD>
+如果设置的话，并且正在使用
+<B>readline，</B>
+
+<B>bash</B> 将试着对正在进行补全的包含  的词进行主机名补全
+(参见上面的
+<FONT SIZE="-1"><B>READLINE</B>
+
+</FONT>
+中的
+<B>Completing</B>
+
+段落)。这是默认允许的。
+<DT><B>huponexit</B>
+
+<DD>
+如果设置的话，在交互的登录 shell 退出时 <B>bash</B> 将向所有作业发出
+<FONT SIZE="-1"><B>SIGHUP</B>
+
+</FONT>
+信号。
+<DT><B>interactive_comments</B>
+
+<DD>
+如果设置的话，将允许在交互 shell 中遇到以
+<B>#</B>
+
+开头的词时忽略这个词和一行中所有剩余的字符 (参见上面的
+<FONT SIZE="-1"><B>COMMENTS 注释)。</B>
+
+</FONT>
+这个选项是默认允许的。
+<DT><B>lithist</B>
+
+<DD>
+如果设置的话，并且允许了
+<B>cmdhist</B>
+
+选项，多行的命令在保存到历史中时将包含新行符，而不是在可能的地方使用分号。
+<DT><B>login_shell</B>
+
+<DD>
+如果 shell 作为登录 shell 启动，将设置这个选项 (参见上面的
+<FONT SIZE="-1"><B>启动(INVOCATION))。</B>
+
+</FONT>
+这个值不可修改。
+<DT><B>mailwarn</B>
+
+<DD>
+如果设置的话，并且 <B>bash</B> 正在检测上次检测以来被存取过的邮件，
+将显示 ``The mail in <I>mailfile</I> has been read''(<I>mailfile</I> 中的邮件已被读取)。
+<DT><B>no_empty_cmd_completion</B>
+
+<DD>
+如果设置的话，并且正在使用
+<B>readline，</B>
+
+试图在空行上执行补全时，
+<B>bash</B>
+
+不会搜索 <B>PATH</B> 来查找可能的补全。
+<DT><B>nocaseglob</B>
+
+<DD>
+如果设置的话，
+<B>bash</B>
+
+进行路径扩展时使用大小写不敏感方式匹配文件名(参见上面的
+<B>Pathname Expansion 路径扩展)。</B>
+
+<DT><B>nullglob</B>
+
+<DD>
+如果设置的话，
+<B>bash</B>
+
+将允许不匹配任何文件的模式扩展为空字符串而不是它们自身(参见上面的
+<B>Pathname Expansion 路径扩展)。</B>
+
+<DT><B>progcomp</B>
+
+<DD>
+如果设置的话，将启用可编程补全功能 (参见上面的 <B>Programmable Completion</B>)。
+这个选项是默认启用的。
+<DT><B>promptvars</B>
+
+<DD>
+如果设置的话，提示字符串要经过上面
+<FONT SIZE="-1"><B>PROMPTING</B>
+
+</FONT>
+中描述的扩展，然后还要经过变量和参数扩展。这个选项是默认启用的。
+<DT><B>restricted_shell</B>
+
+<DD>
+shell 设置这个选项，如果它是以受限模式启用的 (参见下面的
+<FONT SIZE="-1"><B>受限的shell(RESTRICTED SHELL)</B>
+
+</FONT>
+章节)。这个值不能修改。在执行启动文件时，它不会被重置，使得启动文件可以
+得知 shell 是否是受限的。
+<DT><B>shift_verbose</B>
+
+<DD>
+如果设置的话，内建命令
+<B>shift</B>
+
+在偏移量超过位置参数的个数时打印一条错误消息。
+<DT><B>sourcepath</B>
+
+<DD>
+如果设置的话，内建命令 <B>source</B> (<B>.</B>) 使用
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+中的值来查找包含作为参数给出的文件。这个选项默认是启用的。
+<DT><B>xpg_echo</B>
+
+<DD>
+如果设置的话，内建命令 <B>echo</B> 默认扩展反斜杠转义序列。
+</DL>
+</DL>
+
+<DT><B>suspend</B> [<B>-f</B>]<DD>
+挂起 shell 的执行，直到收到一个
+<FONT SIZE="-1"><B>SIGCONT</B>
+
+</FONT>
+信号。选项
+<B>-f</B>
+
+表示如果这是一个登录 shell，那么不要提示，直接挂起。返回值是 0，除非
+shell 是登录 shell 并且没有指定
+<B>-f，</B>
+
+或者没有启用作业控制。
+<DT><B>test</B> <I>expr</I><DD>
+
+<DT><B>[</B> <I>expr</I> <B>]</B><DD>
+返回状态值 0 或 1，根据条件表达式
+<I>expr</I>
+
+的求值而定。每个操作符和操作数都必须是一个单独的参数。表达式使用上面
+<FONT SIZE="-1"><B>条件表达式</B>(CONDITIONAL<B>EXPRESSIONS)</B>
+
+</FONT>
+中的操作构造。
+
+<P>
+
+表达式可以用下列操作符结合，以优先级的降序列出。
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>! </B><I>expr</I>
+
+<DD>
+值为真，如果
+<I>expr</I>
+
+为假。
+<DT><B>( </B><I>expr</I> )
+
+<DD>
+返回 <I>expr</I> 的值。括号可以用来超越操作符的一般优先级。
+<DT><I>expr1</I> -<B>a</B> <I>expr2</I><DD>
+值为真，如果
+<I>expr1</I>
+
+和
+<I>expr2</I>
+
+都为真。
+<DT><I>expr1</I> -<B>o</B> <I>expr2</I><DD>
+值为真，如果
+<I>expr1</I>
+
+或
+<I>expr2</I>
+
+为真。
+
+</DL>
+<P>
+
+<B>test</B> 和 <B>[</B> 
+使用基于参数个数的一系列规则，对条件表达式进行求值。
+
+<P>
+
+
+<DL COMPACT>
+<DT>0 arguments<DD>
+表达式为假。
+<DT>1 argument<DD>
+表达式为真，当且仅当参数非空。
+<DT>2 arguments<DD>
+如果第一个参数是 <B>!</B>，表达式为真，当且仅当第二个参数为空。
+如果第一个参数是上面
+<FONT SIZE="-1"><B>条件表达式</B>(CONDITIONAL<B>EXPRESSIONS)</B>
+
+</FONT>
+中列出的单目条件运算符之一，表达式为真，当且仅当单目测试为真。
+如果第一个参数不是合法的单目条件运算符，表达式为假。
+<DT>3 arguments<DD>
+如果第二个参数是上面
+<FONT SIZE="-1"><B>条件表达式</B>(CONDITIONAL<B>EXPRESSIONS)</B>
+
+</FONT>
+中列出的二进制条件操作符之一，表达式的结果是使用第一和第三个参数作为操作数的二进制测试的结果。
+如果第一个参数是 <B>!</B>，表达式值是使用第二和第三个参数进行双参数测试的结果取反。
+如果第一个参数是 <B>(</B>，第三个参数是 <B>)</B>，结果是对第二个参数进行单参数测试的结果。
+否则，表达式为假。这种情况下 <B>-a</B> 和 <B>-o</B> 操作符被认为二进制操作符。
+<DT>4 arguments<DD>
+如果第一个参数是 <B>!</B>，结果是由剩余参数组成的三参数表达式结果取反。
+否则，表达式被根据上面列出的优先级规则解释并执行。
+<DT>5 或更多 arguments<DD>
+表达式被根据上面列出的优先级规则解释并执行。
+</DL>
+</DL>
+
+
+<DT><B>times</B>
+
+<DD>
+对 shell 以及 shell 运行的进程，打印累计的用户和系统时间。
+返回状态是 0。
+<DT><B>trap</B> [<B>-lp</B>] [<I>arg</I>] [<I>sigspec</I> ...]<DD>
+当 shell 收到信号
+<I>sigspec</I>
+
+时，命令
+<I>arg</I>
+
+将被读取并执行。如果没有给出
+<I>arg</I>
+
+或者给出的是
+<B>-</B>,
+
+所有指定的信号被设置为它们的初始值 (进入 shell 时它们的值)。如果
+<I>arg</I>
+
+是空字符串，
+<I>sigspec</I>
+
+指定的信号被 shell 和它启动的命令忽略。如果
+<I>arg</I>
+
+不存在，并且给出了
+<B>-p</B>
+
+那么与每个
+<I>sigspec</I>
+
+相关联的陷阱命令将被显示出来。如果没有给出任何参数，或只给出了
+<B>-p，</B>
+
+<B>trap</B>
+
+将打印出与每个信号编号相关的命令列表。每个
+<I>sigspec</I>
+
+可以是 &lt;<I>signal.h</I>&gt; 定义的信号名，或是一个信号编号。
+如果
+<I>sigspec</I>
+
+是
+<FONT SIZE="-1"><B>EXIT</B>
+
+</FONT>
+(0)，命令 
+<I>arg</I>
+
+将在 shell 退出时执行。如果
+<I>sigspec</I>
+
+是
+<FONT SIZE="-1"><B>DEBUG</B>,
+
+</FONT>
+命令
+<I>arg</I>
+
+将在每个简单命令 (<I>simple command</I>，参见上面的
+<FONT SIZE="-1"><B>SHELL GRAMMAR)</B>
+
+</FONT>
+之后执行。如果
+<I>sigspec</I>
+
+是
+<FONT SIZE="-1"><B>ERR</B>,
+
+</FONT>
+命令
+<I>arg</I>
+
+将在任何命令以非零值退出时执行。如果失败的命令是
+<I>until</I>
+
+或
+<I>while</I>
+
+循环的一部分，
+<I>if</I>
+
+语句的一部分，
+<B>&amp;&amp;</B>
+
+或
+<B>||</B>
+
+序列的一部分，或者命令的返回值是通过
+<B>!</B>
+
+转化而来，
+<FONT SIZE="-1"><B>ERR</B>
+
+</FONT>
+陷阱将不会执行。选项
+<B>-l</B>
+
+使得 shell 打印信号名和对应编号的列表。
+shell 忽略的信号不能被捕捉或重置。在子进程中，被捕捉的信号在进程创建时被重置为初始值。
+返回值为假，如果
+<I>sigspec</I>
+
+非法；否则
+<B>trap</B>
+
+返回真。
+<DT><B>type</B> [<B>-aftpP</B>] <I>name</I> [<I>name</I> ...]<DD>
+没有选项时，指示每个
+<I>name</I>
+
+将如何被解释，如果用作一个命令名。如果使用了
+<B>-t</B>
+
+选项，
+<B>type</B>
+
+打印一个字符串，内容是如下之一：
+<I>alias</I>,
+
+<I>keyword</I>,
+
+<I>function</I>,
+
+<I>builtin</I>,
+
+或
+<I>file ，</I>
+
+如果
+<I>name</I>
+
+分别是一个别名，shell 保留字，函数，内建命令或磁盘文件。如果没有找到
+<I>name，</I>
+
+那么不会打印任何东西，返回退出状态假。如果使用了
+<B>-p</B>
+
+选项，
+<B>type</B>
+
+返回如果
+<I>name</I>
+
+作为命令名，将被执行的磁盘文件名；或者返回空，如果
+
+``type -t name''
+不会返回
+<I>file</I>.
+
+选项
+<B>-P</B>
+
+选项强制对每个 <I>name</I> 搜索
+<FONT SIZE="-1"><B>PATH，</B>
+
+</FONT>
+即使
+
+``type -t name''
+不会返回
+<I>file</I>.
+
+如果命令在散列中，
+<B>-p</B>
+
+和
+<B>-P</B>
+
+将打印散列的值，而不是
+<FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+中首先出现的那一个文件。如果使用了
+<B>-a</B>
+
+选项，
+<B>type</B>
+
+打印所有包含可执行的名称
+<I>name</I>
+
+的场合。结果包括别名和函数，当且仅当没有同时使用
+<B>-p</B>
+
+选项。使用
+<B>-a</B>
+
+时不会查找散列中的命令表。选项
+<B>-f</B>
+
+阻止 shell 进行查找，就像在内建命令 <B>command</B> 中一样。
+<B>type</B>
+
+返回真，如果找到了任何参数。什么都没找到则返回假。
+<DT><B>ulimit</B> [<B>-SHacdflmnpstuv</B> [<I>limit</I>]]<DD>
+在支持它的系统上，对 shell 和它启动的进程，提供对可用资源的控制。
+选项 <B>-H</B> 和 <B>-S</B> 指定为所给资源设定的硬性和柔性限额。
+硬性限额在设置后不能增加；柔性限额可以增加，直到与硬性限额相等。
+如果没有给出 <B>-H</B> 或 <B>-S</B> 选项，将同时设置硬性和柔性限额。
+<I>limit</I>
+
+的值可以是一个数字，单位是指定资源的单元值，或者是特殊值
+<B>hard</B>,
+
+<B>soft</B>,
+
+或
+<B>unlimited</B>
+
+之一，意思分别是当前硬性限额，当前柔性限额和没有限额。如果忽略了
+<I>limit，</I>
+
+将打印出当前对资源的柔性限额值，除非给出了 <B>-H</B> 选项。当指定多于一个
+资源时，限额名称和单位将在值之前打印出来。其他选项按照如下意义解释：
+<DL COMPACT><DT><DD>
+
+<DL COMPACT>
+<DT><B>-a</B>
+
+<DD>
+报告所有当前限额
+<DT><B>-c</B>
+
+<DD>
+core 文件的最大值
+<DT><B>-d</B>
+
+<DD>
+进程数据段的最大值
+<DT><B>-f</B>
+
+<DD>
+shell 创建的文件的最大值
+<DT><B>-l</B>
+
+<DD>
+内存中可以锁定的最大值
+<DT><B>-m</B>
+
+<DD>
+常驻内存的最大值
+<DT><B>-n</B>
+
+<DD>
+打开的文件描述符最大个数 (大多数系统不允许设置这个值)
+<DT><B>-p</B>
+
+<DD>
+管道大小，以 512 字节的块为单位 (这个值可能不能设置)
+<DT><B>-s</B>
+
+<DD>
+栈的最大值
+<DT><B>-t</B>
+
+<DD>
+cpu 时间总数的最大值，以秒计
+<DT><B>-u</B>
+
+<DD>
+用户可以运行的最大进程数
+<DT><B>-v</B>
+
+<DD>
+shell 可用的虚拟内存总量的最大值
+
+</DL>
+<P>
+
+如果给出了
+<I>limit，</I>
+
+它将是指定资源的新限额 (选项
+<B>-a</B>
+
+只显示它们)。如果没有给出选项，则假设有
+<B>-f。</B>
+
+值的递增间隔是 1024 字节，除了
+<B>-t</B>
+
+单位是 秒，
+<B>-p</B>
+
+单位是 512 字节的块个数，
+<B>-n</B>
+
+和
+<B>-u</B>
+
+是不可调节的值。返回 0，除非给出了非法的选项或参数，或者在设置新的限额时发生了错误。
+</DL>
+
+<DT><B>umask</B> [<B>-p</B>] [<B>-S</B>] [<I>mode</I>]<DD>
+用户创建文件的掩码被设置为
+<I>mode</I>.
+
+如果
+<I>mode</I>
+
+以数字开始，它被解释为一个八进制数；否则被解释为类似于
+<I><A HREF="/cgi-bin/man/man2html?1+chmod">chmod</A></I>(1)
+
+接受的符号形式的模式掩码。如果忽略了
+<I>mode，</I>
+
+将打印当前掩码值。选项
+<B>-S</B>
+
+使得掩码以符号形式打印；默认输出是八进制数。如果给出了
+<B>-p</B>
+
+选项，并且忽略了
+<I>mode，</I>
+
+输出将是一种可以重用为输入的形式。返回值是 0，如果成功改变了模式，或者没有给出 <I>mode</I>。
+其他情况返回假。
+<DT><B>unalias</B> [-<B>a</B>] [<I>name</I> ...]<DD>
+从已定义的别名列表中删除 <I>name</I>。如果给出了
+<B>-a</B>
+
+将删除所有别名定义。返回值是真，除非给出的
+<I>name</I>
+
+不是已定义的别名。
+<DT><B>unset</B> [-<B>fv</B>] [<I>name</I> ...]<DD>
+将每个
+<I>name</I>
+
+对应的变量或函数删除。如果没有给出选项，或者给出了
+<B>-v</B>
+
+选项，
+<I>name</I>
+
+仅包括 shell 变量。只读的变量不能被取消定义。如果给出了
+<B>-f</B>
+
+选项，
+<I>name</I>
+
+仅包括 shell 函数，函数的定义将被删除。每个被取消定义的变量或函数都被从后续命令的环境中删除。
+如果
+<FONT SIZE="-1"><B>RANDOM</B>,
+
+</FONT>
+<FONT SIZE="-1"><B>SECONDS</B>,
+
+</FONT>
+<FONT SIZE="-1"><B>LINENO</B>,
+
+</FONT>
+<FONT SIZE="-1"><B>HISTCMD</B>,
+
+</FONT>
+<FONT SIZE="-1"><B>FUNCNAME</B>,
+
+</FONT>
+<FONT SIZE="-1"><B>GROUPS</B>,
+
+</FONT>
+或者
+<FONT SIZE="-1"><B>DIRSTACK</B>
+
+</FONT>
+中的任何一个被取消定义，它们将丧失特殊的属性，即使它们后来被重新定义。
+退出状态是真，除非
+<I>name</I>
+
+不存在或是只读的。
+<DT><B>wait</B> [<I>n</I>]<DD>
+等待指定的进程，返回它的终止状态。
+<I>n</I>
+
+可以是进程 ID 或一个作业号；如果给出的是作业号，将等待作业的管道中所有进程。如果没有给出
+<I>n，</I>
+
+将等待所有当前处于激活状态的子进程，返回状态是 0。如果
+<I>n</I>
+
+指定了不存在的进程或作业，返回状态是 127。否则，返回状态是所等待的最后一个进程或作业的退出状态。
+
+
+</DL>
+<A NAME="lbCZ">&nbsp;</A>
+<H2>受限的shell(RESTRICTED SHELL)</H2>
+
+
+<P>
+
+如果
+<B>bash</B>
+
+以
+<B>rbash</B>
+
+名称启动，或者启动时使用了
+<B>-r</B>
+
+选项，那么它成为受限的 shell。
+受限的 shell 一般用来建立一个比标准的 shell 受到更多控制的环境。
+它的行为与
+<B>bash</B>
+
+一致，除了下列行为是不允许的 (disallowed) 或不会运行的 (not performed)。
+<DL COMPACT>
+<DT>&bull;<DD>
+使用 <B>cd</B> 来改变路径；
+<DT>&bull;<DD>
+设置或取消
+<B>SHELL</B>,
+
+<B>PATH</B>,
+
+<B>ENV</B>,
+
+或
+<B>BASH_ENV</B>
+
+变量的值；
+<DT>&bull;<DD>
+指定的命令名中包含
+<B>/</B>
+
+；
+<DT>&bull;<DD>
+指定包含
+<B>/</B>
+
+的文件名作为传递给内建命令
+<B>.</B>
+
+的参数；
+<DT>&bull;<DD>
+指定包含斜杠 (slash) 的文件名作为
+<B>-p</B>
+
+选项的参数，传递给
+<B>hash</B>
+
+内建命令；
+<DT>&bull;<DD>
+启动时从 shell 环境中导入 (import) 函数定义；
+<DT>&bull;<DD>
+启动时解释 shell 环境中 <B>SHELLOPTS</B> 的值；
+<DT>&bull;<DD>
+使用 &gt;, &gt;|, &lt;&gt;, &gt;&amp;, &amp;&gt;, 和 &gt;&gt; 等重定向操作符重定向输出；
+<DT>&bull;<DD>
+使用
+<B>exec</B>
+
+内建命令来以另一个命令替换 shell；
+<DT>&bull;<DD>
+使用
+<B>enable</B>
+
+内建命令的
+<B>-f</B>
+
+和
+<B>-d</B>
+
+选项来增加和删除内建命令；
+<DT>&bull;<DD>
+使用 <B>enable</B> 内建命令来允许和禁止 shell 内建命令；
+<DT>&bull;<DD>
+指定
+<B>command</B>
+
+内建命令的
+<B>-p</B>
+
+选项；
+<DT>&bull;<DD>
+使用 <B>set +r</B> 或 <B>set +o restricted</B> 来关闭受限模式。
+</DL>
+<P>
+
+这些限制在所有启动文件读取之后才会生效。
+<P>
+
+当一个 shell 脚本作为一个命令执行时 (参见上面的
+<FONT SIZE="-1"><B>命令执行(COMMAND EXECUTION)</B>
+
+</FONT>
+章节)，
+<B>rbash</B>
+
+关闭为执行脚本而孵化 (spawn) 的 shell 的所有限制。
+
+
+<A NAME="lbDA">&nbsp;</A>
+<H2>参见(SEE ALSO)</H2>
+
+
+<DL COMPACT>
+<DT><I>Bash Reference Manual</I>, Brian Fox and Chet Ramey<DD>
+<DT><I>The Gnu Readline Library</I>, Brian Fox and Chet Ramey<DD>
+<DT><I>The Gnu History Library</I>, Brian Fox and Chet Ramey<DD>
+<DT><I>Portable Operating System Interface (POSIX) Part 2: Shell and Utilities</I>, IEEE<DD>
+<DT><I><A HREF="/cgi-bin/man/man2html?1+sh">sh</A></I>(1), <I><A HREF="/cgi-bin/man/man2html?1+ksh">ksh</A></I>(1), <I><A HREF="/cgi-bin/man/man2html?1+csh">csh</A></I>(1)<DD>
+<DT><I><A HREF="/cgi-bin/man/man2html?1+emacs">emacs</A></I>(1), <I><A HREF="/cgi-bin/man/man2html?1+vi">vi</A></I>(1)<DD>
+<DT><I><A HREF="/cgi-bin/man/man2html?3+readline">readline</A></I>(3)<DD>
+
+</DL>
+<A NAME="lbDB">&nbsp;</A>
+<H2>文件(FILES)</H2>
+
+
+<DL COMPACT>
+<DT>
+<I>/bin/bash</I>
+
+<DD>
+<B>bash</B> 可执行文件
+<DT>
+<I>/etc/profile</I>
+
+<DD>
+系统范围的初始化文件，登录 shell 会执行它
+<DT>
+<I>~/.bash_profile</I>
+
+<DD>
+个人初始化文件，登录 shell 会执行它
+<DT>
+<I>~/.bashrc</I>
+
+<DD>
+个人的每个交互式 shell 启动时执行的文件
+<DT>
+<I>~/.bash_logout</I>
+
+<DD>
+个人的登录 shell 清理文件，当一个登录 shell 退出时会执行它
+<DT>
+<I>~/.inputrc</I>
+
+<DD>
+个人的 <I>readline</I> 初始化文件
+
+</DL>
+<A NAME="lbDC">&nbsp;</A>
+<H2>作者(AUTHORS)</H2>
+
+Brian Fox, Free Software Foundation
+<BR>
+
+<A HREF="mailto:bfox@gnu.org">bfox@gnu.org</A>
+<P>
+
+Chet Ramey, Case Western Reserve University
+<BR>
+
+<A HREF="mailto:chet@ins.CWRU.Edu">chet@ins.CWRU.Edu</A>
+<A NAME="lbDD">&nbsp;</A>
+<H2>报告BUGS (BUG REPORTS)</H2>
+
+如果你发现一个
+<B>bash</B>
+
+中的 bug，你应当报告它。但是首先，
+你应当确定它真的是一个 bug，并且它在你使用的最新版本的
+<B>bash</B>
+
+中存在。
+<P>
+
+一旦你认定存在那样一个 bug，使用
+<I>bashbug</I>
+
+命令来提交一个错误报告。
+如果你有固定住址，鼓励你用邮政的方式提交一份！
+建议和有关 <B>bash</B> "哲学" (`philosophical') 的 "错误报告" 可以寄给
+<I><A HREF="mailto:bug-bash@gnu.org">bug-bash@gnu.org</A></I> 或者贴到 Usenet 新闻组
+<B>gnu.bash.bug</B>
+
+之上。
+<P>
+
+所有错误报告应当包括：
+<P>
+
+
+<DL COMPACT>
+<DT><B>bash</B> 的版本号<DD>
+<DT>硬件信息和操作系统<DD>
+<DT>用来编译的编译器<DD>
+<DT>对 bug 行为的描述<DD>
+<DT>可以激活这个 bug 的一个短小的脚本或者什么 "秘诀" (recipe)<DD>
+
+</DL>
+<P>
+
+<I>bashbug</I>
+
+会自动在它提供的错误报告模板中插入前三项。
+<P>
+
+关于这份手册页的评论和错误报告请直接提交到
+<I><A HREF="mailto:chet@ins.CWRU.Edu">chet@ins.CWRU.Edu</A></I>.
+
+<A NAME="lbDE">&nbsp;</A>
+<H2>BUGS</H2>
+
+<P>
+
+它太大了，并且有点慢。
+<P>
+
+<B>bash</B>
+
+和传统版本的
+<B>sh</B>
+
+之间有一些细微的差别，大部分是因为
+<FONT SIZE="-1"><B>POSIX</B>
+
+</FONT>
+规约的要求。
+<P>
+
+别名机制在一些应用中会混淆。
+<P>
+
+Shell 内建命令和函数不可终止/重新开始。
+<P>
+
+组合的命令和使用 `a ; b ; c' 形式的命令序列在进程试图暂停时不能很好处理。
+当一个进程中止，shell 会立即执行序列中的下一条命令。
+也可以将命令的序列放在圆括号中，来强制启动子 shell，这样就可以将它们作为一个单元中止了。
+<P>
+
+在 <B>$(</B>...<B>)</B> 命令替换中的注释不会被解释，直到执行替换的时候。
+这将延迟报错，直到命令开始执行之后的一段时间。
+<P>
+
+数组变量还不能导出 (export)。
+<A NAME="lbDF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>袁乙钧 &lt;<A HREF="mailto:bbbush@163.com">bbbush@163.com</A>&gt;</B>
+
+<A NAME="lbDG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2004.03.05</B>
+
+<A NAME="lbDH">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">概述(SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">版权所有(COPYRIGHT)</A><DD>
+<DT><A HREF="#lbAE">描述(DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAF">选项(OPTIONS)</A><DD>
+<DT><A HREF="#lbAG">参数(ARGUMENTS)</A><DD>
+<DT><A HREF="#lbAH">启动(INVOCATION)</A><DD>
+<DT><A HREF="#lbAI">定义(DEFINITIONS)</A><DD>
+<DT><A HREF="#lbAJ">保留字(RESERVED WORDS)</A><DD>
+<DT><A HREF="#lbAK">shell语法(SHELL GRAMMAR)</A><DD>
+<DL>
+<DT><A HREF="#lbAL">Simple Commands 简单命令</A><DD>
+<DT><A HREF="#lbAM">Pipelines 管道</A><DD>
+<DT><A HREF="#lbAN">Lists 序列</A><DD>
+<DT><A HREF="#lbAO">Compound Commands 复合命令</A><DD>
+</DL>
+<DT><A HREF="#lbAP">注释(COMMENTS)</A><DD>
+<DT><A HREF="#lbAQ">引用(QUOTING)</A><DD>
+<DT><A HREF="#lbAR">参数(PARAMETERS)</A><DD>
+<DL>
+<DT><A HREF="#lbAS">Positional Parameters 位置参数</A><DD>
+<DT><A HREF="#lbAT">Special Parameters 特殊参数</A><DD>
+<DT><A HREF="#lbAU">Shell Variables 变量</A><DD>
+<DT><A HREF="#lbAV">Arrays</A><DD>
+</DL>
+<DT><A HREF="#lbAW">扩展(EXPANSION)</A><DD>
+<DL>
+<DT><A HREF="#lbAX">Brace Expansion</A><DD>
+<DT><A HREF="#lbAY">Tilde Expansion</A><DD>
+<DT><A HREF="#lbAZ">Parameter Expansion</A><DD>
+<DT><A HREF="#lbBA">Command Substitution</A><DD>
+<DT><A HREF="#lbBB">Arithmetic Expansion</A><DD>
+<DT><A HREF="#lbBC">Process Substitution</A><DD>
+<DT><A HREF="#lbBD">Word Splitting</A><DD>
+<DT><A HREF="#lbBE">Pathname Expansion</A><DD>
+<DT><A HREF="#lbBF">Quote Removal</A><DD>
+</DL>
+<DT><A HREF="#lbBG">重定向(REDIRECTION)</A><DD>
+<DL>
+<DT><A HREF="#lbBH">Redirecting Input</A><DD>
+<DT><A HREF="#lbBI">Redirecting Output</A><DD>
+<DT><A HREF="#lbBJ">Appending Redirected Output (添加到重定向后的输出尾部)</A><DD>
+<DT><A HREF="#lbBK">Redirecting Standard Output and Standard Error</A><DD>
+<DT><A HREF="#lbBL">Here Documents</A><DD>
+<DT><A HREF="#lbBM">Here Strings</A><DD>
+<DT><A HREF="#lbBN">Duplicating File Descriptors (复制文件描述符)</A><DD>
+<DT><A HREF="#lbBO">Moving File Descriptors</A><DD>
+<DT><A HREF="#lbBP">Opening File Descriptors for Reading and Writing</A><DD>
+</DL>
+<DT><A HREF="#lbBQ">别名(ALIASES)</A><DD>
+<DT><A HREF="#lbBR">函数(FUNCTIONS)</A><DD>
+<DT><A HREF="#lbBS">算术求值(ARITHMETIC EVALUATION)</A><DD>
+<DT><A HREF="#lbBT">条件表达式(CONDITIONAL EXPRESSIONS)</A><DD>
+<DT><A HREF="#lbBU">简单命令扩展(SIMPLE COMMAND EXPANSION)</A><DD>
+<DT><A HREF="#lbBV">命令执行(COMMAND EXECUTION)</A><DD>
+<DT><A HREF="#lbBW">命令执行环境(COMMAND EXECUTION ENVIRONMENT)</A><DD>
+<DT><A HREF="#lbBX">环境(ENVIRONMENT)</A><DD>
+<DT><A HREF="#lbBY">退出状态(EXIT STATUS)</A><DD>
+<DT><A HREF="#lbBZ">信号(SIGNALS)</A><DD>
+<DT><A HREF="#lbCA">作业控制(JOB CONTROL)</A><DD>
+<DT><A HREF="#lbCB">提示符(PROMPTING)</A><DD>
+<DT><A HREF="#lbCC">readline库(READLINE)</A><DD>
+<DL>
+<DT><A HREF="#lbCD">Readline Notation</A><DD>
+<DT><A HREF="#lbCE">Readline Initialization 初始化</A><DD>
+<DT><A HREF="#lbCF">Readline Key Bindings</A><DD>
+<DT><A HREF="#lbCG">Readline Variables</A><DD>
+<DT><A HREF="#lbCH">Readline Conditional Constructs</A><DD>
+<DT><A HREF="#lbCI">Searching</A><DD>
+<DT><A HREF="#lbCJ">Readline Command Names</A><DD>
+<DT><A HREF="#lbCK">Commands for Moving 移动</A><DD>
+<DT><A HREF="#lbCL">Commands for Manipulating the History 操纵历史行</A><DD>
+<DT><A HREF="#lbCM">Commands for Changing Text 改变文本</A><DD>
+<DT><A HREF="#lbCN">Killing and Yanking 剪切和粘贴</A><DD>
+<DT><A HREF="#lbCO">Numeric Arguments 数值参数</A><DD>
+<DT><A HREF="#lbCP">Completing 补全</A><DD>
+<DT><A HREF="#lbCQ">Keyboard Macros 宏</A><DD>
+<DT><A HREF="#lbCR">Miscellaneous</A><DD>
+<DT><A HREF="#lbCS">Programmable Completion 可编程补全</A><DD>
+</DL>
+<DT><A HREF="#lbCT">历史(HISTORY)</A><DD>
+<DT><A HREF="#lbCU">历史扩展(HISTORY EXPANSION)</A><DD>
+<DL>
+<DT><A HREF="#lbCV">Event Designators</A><DD>
+<DT><A HREF="#lbCW">Word Designators</A><DD>
+<DT><A HREF="#lbCX">修饰符 (Modifiers)</A><DD>
+</DL>
+<DT><A HREF="#lbCY">shell 内建命令(SHELL BUILTIN COMMANDS)</A><DD>
+<DT><A HREF="#lbCZ">受限的shell(RESTRICTED SHELL)</A><DD>
+<DT><A HREF="#lbDA">参见(SEE ALSO)</A><DD>
+<DT><A HREF="#lbDB">文件(FILES)</A><DD>
+<DT><A HREF="#lbDC">作者(AUTHORS)</A><DD>
+<DT><A HREF="#lbDD">报告BUGS (BUG REPORTS)</A><DD>
+<DT><A HREF="#lbDE">BUGS</A><DD>
+<DT><A HREF="#lbDF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbDG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbDH">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

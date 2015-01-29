@@ -1,0 +1,680 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of GROFF</TITLE>
+</HEAD><BODY>
+<H1>GROFF</H1>
+Section: User Commands  (1)<BR>Updated: 21 December 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+groff - groff 文档排版系统前端
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>groff</B>
+
+[
+<B>-abehilpstvzCENRSUVXZ</B>
+
+]
+[
+<B>-w</B><I>name</I>
+
+]
+[
+<B>-W</B><I>name</I>
+
+]
+[
+<B>-m</B><I>name</I>
+
+]
+[
+<B>-F</B><I>dir</I>
+
+]
+[
+<B>-I</B><I>dir</I>
+
+]
+[
+<B>-T</B><I>dev</I>
+
+]
+[
+<B>-f</B><I>fam</I>
+
+]
+[
+<B>-M</B><I>dir</I>
+
+]
+[
+<B>-d</B><I>cs</I>
+
+]
+[
+<B>-r</B><I>cn</I>
+
+]
+[
+<B>-n</B><I>num</I>
+
+]
+[
+<B>-o</B><I>list</I>
+
+]
+[
+<B>-P</B><I>arg</I>
+
+]
+[
+<B>-L</B><I>arg</I>
+
+]
+[
+<I>files</I>...
+
+]
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>groff</B>
+
+是 groff 文档排版系统的前端。 一般来说， 它运行
+<B>troff</B>
+
+程序和一个同选择的设备相对应的后处理器。 可选的设备有
+<DL COMPACT>
+<DT><B>ps</B>
+
+<DD>
+PostScript 打印机和查看器。
+<DT><B>dvi</B>
+
+<DD>
+TeX dvi 格式。
+<DT><B>X75</B>
+
+<DD>
+一个 75 点每英寸的 X11 查看器。
+<DT><B>X100</B>
+
+<DD>
+一个 100 点每英寸的 X11 查看器。
+<DT><B>ascii</B>
+
+<DD>
+打字机一类的设备。
+<DT><B>latin1</B>
+
+<DD>
+用 ISO Latin-1 字符集的打字机设备。
+<DT><B>lj4</B>
+
+<DD>
+一个兼容 HP LaserJet4 的(或者其它兼容 PCL5 的) 打印机。
+<DT><B>html</B>
+
+<DD>
+输出 HTML 格式。
+</DL>
+<P>
+
+在设备描述文件里， 设备的后处理器是通过
+<B>postpro</B>
+
+命令指定的。 这个可以被
+<B>-X</B>
+
+选项改写。
+<P>
+
+默认的设备是
+<B>ps</B>。
+
+它可以选择用
+<B>pic</B>,
+
+<B>eqn</B>,
+
+<B>tbl</B>,
+
+<B>refer</B>,
+
+或者
+<B>soelim</B>
+
+等预处理器。
+<P>
+
+如果没有任何选项， 可以用一个单独的
+<B>-</B>
+
+来代替。 文件名
+<B>-</B>
+
+代表标准输入。
+<P>
+
+<B>grog</B>
+
+命令可以根据文件格式猜测相应的 groff 命令。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+<DL COMPACT>
+<DT><B>-h</B>
+
+<DD>
+打印帮助信息。
+<DT><B>-e</B>
+
+<DD>
+用 eqn 预处理。
+<DT><B>-t</B>
+
+<DD>
+用 tbl 预处理。
+<DT><B>-p</B>
+
+<DD>
+用 pic 预处理。
+<DT><B>-s</B>
+
+<DD>
+用 soelim 预处理。
+<DT><B>-I</B><I>dir</I>
+
+<DD>
+此选项在
+<B><A HREF="/cgi-bin/man/man2html?1+soelim">soelim</A></B>(1)
+
+中描述。 此选项包含
+<B>-s</B>
+
+选项。
+<DT><B>-R</B>
+
+<DD>
+用 refer 预处理。 没有传输参数给
+<B>refer</B>
+
+的机制， 因为很多 refer 选项在文件里有相应的命令。 细节请参照
+<B><A HREF="/cgi-bin/man/man2html?1+refer">refer</A></B>(1)<B>。</B>
+
+<DT><B>-v</B>
+
+<DD>
+使
+<B>groff</B>
+
+运行的程序打印出版本号。
+<DT><B>-V</B>
+
+<DD>
+在标准输出打印管道线， 而不执行它。
+<DT><B>-z</B>
+
+<DD>
+禁止
+<B>troff</B>
+
+输出。 只有出错信息显示出来。
+<DT><B>-Z</B>
+
+<DD>
+不后处理
+<B>troff</B>
+
+的输出。 一般
+<B>groff</B>
+
+会自动运行相应的后处理器。
+<DT><B>-P</B><I>arg</I>
+
+<DD>
+把
+<I>arg</I>
+
+传给后处理器。 每个参数都要用单独的
+<B>-P</B>
+
+选项分开。 注意
+<B>groff</B>
+
+在传
+<I>arg</I>
+
+给后处理器时不会在前加上
+<B>- 。</B>
+
+<DT><B>-l</B>
+
+<DD>
+把输出送到打印机， 所用的命令在设备描述文件中用
+<B>print</B>
+
+命令分开。
+<DT><B>-L</B><I>arg</I>
+
+<DD>
+把
+<I>arg</I>
+
+传给打印机。 每个参数都要用单独的
+<B>-L</B>
+
+选项分开。 注意
+<B>groff</B>
+
+在传
+<I>arg</I>
+
+给后处理器时不会在前加上
+<B>- 。</B>
+
+<DT><B>-T</B><I>dev</I>
+
+<DD>
+生成针对
+<I>dev</I>
+
+设备的输出。 默认的设备是
+<B>ps</B>。
+
+<DT><B>-X</B>
+
+<DD>
+用
+<B>gxditview</B>
+
+预览， 而不是用一般的后处理器。
+<B>Groff</B>
+
+会传给
+<B>gxditview</B>
+
+一个
+<B>-printCommand</B>
+
+选项， 这样如果有
+<B>-l</B>
+
+选项
+<B>Print</B>
+
+就会做
+<B>groff</B>
+
+会做的事。 除非有
+<B>-Tps</B>
+
+选项， 否则这并不能产生好的输出。
+<DT><B>-N</B>
+
+<DD>
+在 eqn 分割符出不产生新行符（newline）。 这个同
+<B>eqn</B>
+
+中的
+<B>-N</B>
+
+选项有一样的作用。
+<DT><B>-S</B>
+
+<DD>
+安全模式。 把
+<B>-S</B>
+
+选项传给
+<B>pic</B>
+
+并且对
+<B>troff</B>
+
+用
+<B>-msafer</B>
+
+宏。 （默认开启）
+<DT><B>-U</B>
+
+<DD>
+不安全模式。 用以前的不安全的特性。
+<DT><B>-a</B>
+
+<DD>
+
+<BR>
+
+
+<DT>
+
+<B>-b</B>
+
+
+<DD>
+
+<DT>
+
+<B>-i</B>
+
+
+<DD>
+
+<DT>
+
+<B>-C</B>
+
+
+<DD>
+
+<DT>
+
+<B>-E</B>
+
+
+<DD>
+
+<DT>
+
+<B>-w</B><I>name</I>
+
+
+<DD>
+
+<DT>
+
+<B>-W</B><I>name</I>
+
+
+<DD>
+
+<DT>
+
+<B>-m</B><I>name</I>
+
+
+<DD>
+
+<DT>
+
+<B>-o</B><I>list</I>
+
+
+<DD>
+
+<DT>
+
+<B>-d</B><I>cs</I>
+
+
+<DD>
+
+<DT>
+
+<B>-r</B><I>cn</I>
+
+
+<DD>
+
+<DT>
+
+<B>-F</B><I>dir</I>
+
+
+<DD>
+
+<DT>
+
+<B>-M</B><I>dir</I>
+
+
+<DD>
+
+<DT>
+
+<B>-f</B><I>fam</I>
+
+
+<DD>
+
+<DT>
+
+<B>-n</B><I>num</I>
+
+这些都在
+<B><A HREF="/cgi-bin/man/man2html?1+troff">troff</A></B>(1)
+
+中描述。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>环境 (ENVIRONMENT)</H2>
+
+<DL COMPACT>
+<DT><FONT SIZE="-1"><B>GROFF_COMMAND_PREFIX</B>
+
+</FONT>
+<DD>
+如果这个变量设为
+<I>X</I>，
+
+<B>groff</B>
+
+会运行
+<I>X</I><B>troff</B><I>，</I>
+
+而不是
+<B>troff</B>。
+
+这也适用于
+<B>tbl</B>，
+
+<B>pic</B>，
+
+<B>eqn</B>，
+
+<B>refer</B>，
+
+和
+<B>soelim。</B>但并不适用于
+
+<B>grops</B>，
+
+<B>grodvi</B>，
+
+<B>grotty</B>，
+
+<B>grolj4</B>，
+
+<B>grohtml</B>，
+
+和
+<B>gxditview</B>。
+
+<DT><FONT SIZE="-1"><B>GROFF_TMAC_PATH</B>
+
+</FONT>
+<DD>
+一个冒号分开的列表， 包含寻找宏文件的路径。
+<DT><FONT SIZE="-1"><B>GROFF_TYPESETTER</B>
+
+</FONT>
+<DD>
+缺省设备。
+<DT><FONT SIZE="-1"><B>GROFF_FONT_PATH</B>
+
+</FONT>
+<DD>
+一个冒号分开的列表， 包含寻找
+<B>dev</B><I>name</I>
+
+的路径。
+<DT><FONT SIZE="-1"><B>PATH</B>
+
+</FONT>
+<DD>
+<B>groff</B>
+
+执行命令的搜寻路径。
+<DT><FONT SIZE="-1"><B>GROFF_TMPDIR</B>
+
+</FONT>
+<DD>
+临时文件目录。 如果没有设置此变量但是设置了
+<B></B><FONT SIZE="-1"><B>TMPDIR</B></FONT><B>
+</B>
+
+临时文件就会在那个目录中创建。 否则临时文件就会在
+<B>/tmp</B>
+
+中创建。 
+<B><A HREF="/cgi-bin/man/man2html?1+grops">grops</A></B>(1)
+
+和
+<B><A HREF="/cgi-bin/man/man2html?1+refer">refer</A></B>(1)
+
+命令都会创建临时文件。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>文件 (FILES)</H2>
+
+
+u+3n<DL COMPACT>
+<DT>
+<DD>
+
+
+<B>/usr/lib/groff/font/dev</B><I>name</I><B>/DESC</B>
+
+<I>name</I>
+
+设备的设备描述文件。
+<DT><B>/usr/lib/groff/font/dev</B><I>name</I><B>/</B><I>F</I>
+
+<DD>
+<I>name</I>
+
+设备的
+<I>F</I>
+
+字体的字体文件。
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者 (AUTHOR)</H2>
+
+<DD>James Clark &lt;<A HREF="mailto:jjc@jclark.com">jjc@jclark.com</A>&gt;
+<A NAME="lbAI">&nbsp;</A>
+<H2>错误 (BUGS)</H2>
+
+报错误报告给 <A HREF="mailto:bug-groff@gnu.org">bug-groff@gnu.org</A>。 请包含一个完整的报告， 还有一个能使错误再次出现的例子，
+并注明用的是 groff 的哪个版本。
+<A NAME="lbAJ">&nbsp;</A>
+<H2>版权 (COPYRIGHT)</H2>
+
+版权所有 &#169; 1989, 1990, 1991, 1992, 1999 自由软件基金会
+<P>
+
+这一程序是自由软件， 你可以遵照自由软件基金会出版的 GNU 通用公共许可
+证条款来修改和重新发布这一程序。 或者用许可证的第二版， 或者（根据你的选
+择）用任何更新的版本。
+<P>
+
+发布 groff 程序的目的是希望它有用， 但没有任何担保。 甚至没有适合特定目
+的的隐含的担保。 更详细的情况请参阅 GNU 通用公共许可证。
+<P>
+
+你应该已经和程序一起收到一份 GNU 通用公共许可证的副本。 如果还没有， 写信给：
+The Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
+MA02139, USA
+<A NAME="lbAK">&nbsp;</A>
+<H2>获取 (AVAILABILITY)</H2>
+
+groff 的最新版本可以通过匿名 ftp 从 <A HREF="ftp://ftp.gnu.org">ftp.gnu.org</A>/gnu/groff 得到。
+<A NAME="lbAL">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+grog">grog</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+troff">troff</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+tbl">tbl</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+pic">pic</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+eqn">eqn</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+soelim">soelim</A></B>(1)<B>,</B>
+
+<B><A HREF="/cgi-bin/man/man2html?1+refer">refer</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+grops">grops</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+grodvi">grodvi</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+grotty">grotty</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+grohtml">grohtml</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+gxditview">gxditview</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?5+groff_font">groff_font</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?5+groff_out">groff_out</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?7+groff_man">groff_man</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?7+groff_ms">groff_ms</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?7+groff_me">groff_me</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?7+groff_char">groff_char</A></B>(7),
+
+<B><A HREF="/cgi-bin/man/man2html?7+groff_msafer">groff_msafer</A></B>(7)
+
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/8/29</B>
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">环境 (ENVIRONMENT)</A><DD>
+<DT><A HREF="#lbAG">文件 (FILES)</A><DD>
+<DT><A HREF="#lbAH">作者 (AUTHOR)</A><DD>
+<DT><A HREF="#lbAI">错误 (BUGS)</A><DD>
+<DT><A HREF="#lbAJ">版权 (COPYRIGHT)</A><DD>
+<DT><A HREF="#lbAK">获取 (AVAILABILITY)</A><DD>
+<DT><A HREF="#lbAL">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAM">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAN">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAO">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

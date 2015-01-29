@@ -1,0 +1,106 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of ECPG</TITLE>
+</HEAD><BODY>
+<H1>ECPG</H1>
+Section: PostgreSQL Client Applications (1)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ecpg - 嵌入的 SQL C 预处理器
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<B>ecpg</B> [ <B></B><I>option</I><B></B>...<B> </B>] <I>file</I>...
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>ecpg</B> 是一个嵌入的用于C 语言的 SQL 预编译器。 它把嵌有 SQL 语句的 C 程序通过将 SQL 调用替换成特殊的函数调用的方法转换成普通的 C 代码。 然后输出的文件就可以用任何 C 编译工具进行处理。
+<P>
+
+<B>clusterdb</B> 将把命令行上给出的每个输入文件转换成对应的 C 输出文件。 输入文件最好有 .pgc 的扩展名， 这样，这个扩展将被替换成 .c 来决定输出文件名。 如果输入文件的扩展不是 .pgc，那么输出文件名将通过在全文件名后面附加 .c 来生成。 输出文件名也可以用 -o 选项覆盖。
+<P>
+
+<BR>&nbsp;本手册页并不描述嵌入的&nbsp;SQL&nbsp;语句，参阅&nbsp;Chapter&nbsp;29&nbsp;获更多信息。
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+<P>
+
+<B>clusterdb</B> 接受下列命令行参数：
+<DL COMPACT>
+<DT><B>-c</B><DD>
+<BR>&nbsp;为&nbsp;SQL&nbsp;代码自动生成某种&nbsp;C&nbsp;代码。目前，这个选项可以用于&nbsp;EXEC&nbsp;SQL&nbsp;TYPE。
+<DT><B>-C </B><I>mode</I><DD>
+<BR>&nbsp;设置一个兼容模式。mode&nbsp;可以是&nbsp;INFORMIX&nbsp;或者&nbsp;INFORMIX_SE。
+<DT><B>-D </B><I>symbol</I><DD>
+<BR>&nbsp;定义一个&nbsp;C&nbsp;预编译器符号。
+<DT><B>-i</B><DD>
+<BR>&nbsp;同时也分析系统包含文件。
+<DT><B>-I </B><I>include-path</I><B></B><DD>
+<BR>&nbsp;声明一个附加的包含路径。用于寻找通过&nbsp;EXEC&nbsp;SQL&nbsp;INCLUDE&nbsp;包含的文件。缺省是&nbsp;.（当前目录），&nbsp;/usr/local/include，&nbsp;在编译时定义的PostgreSQL&nbsp;包含路径（缺省：&nbsp;/usr/local/pgsql/include）和&nbsp;/usr/include。顺序如上。
+<DT><B>-o </B><I>filename</I><DD>
+<BR>&nbsp;声明ecpg应该把它的所有输出写到给出的&nbsp;filename里。
+<DT><B>-t</B><DD>
+<BR>&nbsp;打开自动提交模式。在这种模式象，每个查询都自动提交，&nbsp;除非它是包围在一个明确的事务块中。在缺省模式下，&nbsp;命令只是在发出&nbsp;EXEC&nbsp;SQL&nbsp;COMMIT&nbsp;的时候提交。
+<DT><B>-v</B><DD>
+<BR>&nbsp;打印额外的信息，包括版本和包含路径。
+<DT><B>--help</B><DD>
+<BR>&nbsp;显示一个命令用法的简单摘要，然后退出。
+<DT><B>--version</B><DD>
+<BR>&nbsp;显示版本信息，然后退出。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<BR>&nbsp;在编译预处理的&nbsp;C&nbsp;代码文件的时候，编译器需要能够找到&nbsp;PostgreSQL&nbsp;包含目录里面的&nbsp;ECPG&nbsp;头文件。因此，我们在调用编译器的时候可能需要使用&nbsp;-I&nbsp;&nbsp;（比如，-I/usr/local/pgsql/include）。
+<BR>&nbsp;使用了嵌入&nbsp;SQL&nbsp;的&nbsp;C&nbsp;代码必须和&nbsp;libecpg&nbsp;库链接，比如，使用这样的链接选项：&nbsp;-L/usr/local/pgsql/lib&nbsp;-lecpg
+<BR>&nbsp;这些目录的实际值可以通过&nbsp;<I><A HREF="/cgi-bin/man/man2html?1+pg_config">pg_config</A></I>(1)&nbsp;找到。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;如果你有一个叫&nbsp;prog1.pgc&nbsp;的嵌入&nbsp;SQL&nbsp;的&nbsp;C&nbsp;源代码，你可以用下面的命令序列创建一个可执行程序：
+<P>
+<PRE>
+ecpg prog1.pgc
+cc -I/usr/local/pgsql/include -c prog1.c
+cc -o prog1 prog1.o -L/usr/local/pgsql/lib -lecpg
+
+</PRE>
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

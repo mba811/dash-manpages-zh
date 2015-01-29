@@ -1,0 +1,438 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of VIM</TITLE>
+</HEAD><BODY>
+<H1>VIM</H1>
+Section: User Commands  (1)<BR>Updated: 1998 December 28<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+vim - Vi IMproved, 一个程序员的文本编辑器
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<BR>
+
+<B>vim</B>
+
+[options] [file ..]
+<BR>
+
+<B>vim</B>
+
+[options] -
+<BR>
+
+<B>vim</B>
+
+[options] -t tag
+<BR>
+
+<B>vim</B>
+
+[options] -q [errorfile]
+<P>
+
+<BR>
+
+<B>ex</B>
+
+<BR>
+
+<B>view</B>
+
+<BR>
+
+<B>gvim</B>
+
+<B>gview</B>
+
+<BR>
+
+<B>rvim</B>
+
+<B>rview</B>
+
+<B>rgvim</B>
+
+<B>rgview</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>Vim</B>
+
+是 一个 同 Vi 向上兼容的 文本 编辑器, 可以 用来 编辑
+任何 ASCII 文本, 特别 适合 用来 编辑 程序.
+<P>
+
+它对 Vi 作了 许多 增强: 多层撤销, 多窗口, 多缓冲区(buffer),
+高亮度 语法显示, 命令行编辑, 文件名匹配, 在线帮助, 可视选定,
+等等. 用
+&quot;:help vi_diff.txt&quot; 看
+<B>Vim</B>
+
+和 Vi 的差别 的 摘要.
+<P>
+
+在运行
+<B>Vim</B>
+
+的时候 可以用 &quot;:help&quot; 命令 获得 很多 帮助.
+参考 下面的 在线帮助 一节.
+<P>
+
+一般 可用
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>vim file<BR>
+<P>
+
+命令 打开
+<B>Vim</B>
+
+来 编辑 一个 文件. 概括的说, 可以用
+<P>
+
+<TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT>vim [options] [filelist]<BR>
+<P>
+
+命令 来运行
+<B>Vim .</B>
+
+如果 没有 文件名, 编辑器 就会 打开 一个 空的 缓冲区.
+否则 就会用 下面 四个中的一个 来选择 要编辑的 文件.
+<DL COMPACT>
+<DT>file ..<DD>
+文件名列表. 第一个 会 作为 当前 文件 读入 缓冲区, 光标 会
+停在 缓冲区的 第一行. 你 可以用 &quot;:next&quot; 命令 转到 其它的 文件.
+如果 要编辑 一个以 &quot;-&quot; 开头的 文件. 在文件 列表 前面 加上 &quot;--&quot;.
+<DT>-<DD>
+从 标准输入 读取 被编辑的 文件. 从 标准 错误输出 (应该 是个
+终端) 读入 命令.
+<DT>-t {tag}<DD>
+被 编辑的 文件 和 光标的 初始位置 由 标记 (tag) 决定， 标记
+有点像 一种 goto 标签 (goto label).
+在 标记文件中 找到 标记, 相应的 文件 成为 当前文件, 相应的 命令
+被执行. 这种方式 常用于 C 程序, 标记 就是 函数名, 当前文件 就是
+包含 那个函数的 文件, 光标 停留在 函数的 开始处.
+见 &quot;:help tag-commands&quot;。
+<DT>-q [errorfile]<DD>
+运行时 进入 快速修复模式.
+读取 [errorfile] 文件 并显示 第一个 错误. 如果 没有 [errorfile] 文件,
+文件名 由 'errorfile' 选项 决定 (在 Amiga 为 &quot;AztecC.Err&quot;, 在
+其他系统中 为 &quot;errors.vim&quot;). 可以 用 &quot;:cn&quot; 命令 跳到 其它错误处.
+见 &quot;:help quickfix&quot;。
+</DL>
+<P>
+
+<B>Vim</B>
+
+会 根据 不同命令 有 不同的 表现, 尽管 它们 可能 是 一个 可执行 文件.
+<DL COMPACT>
+<DT>vim<DD>
+正常 模式, 所有 都是 默认状态.
+<DT>ex<DD>
+以 Ex 模式 运行. 用 &quot;:vi&quot; 命令 进入 正常模式. 也可以 加上 &quot;-e&quot; 选项
+进入 此模式.
+<DT>view<DD>
+以 只读模式 运行. 你被禁止 写文件. 也可以 加上 &quot;-R&quot; 选项 进入 此模式.
+<DT>gvim gview<DD>
+GUI 版本。
+开启 一个 新的窗口. 也可以 加上 &quot;-g&quot; 选项 进入 此模式.
+<DT>rvim rview rgvim rgview<DD>
+同 上面的 相同, 只是 加上了 限制, 不能运行 shell 程序, 也 不能 暂停
+<B>Vim .</B>
+
+也 可以 加上 &quot;-Z&quot; 选项 进入 此模式.
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+所有选项 都可以 以 任何顺序 出现, 可以 在文件名前, 也可以 在文件名后.
+没有 参数的 选项 可以 出现在 一个 &quot;-&quot; 后面.
+<DL COMPACT>
+<DT>+[num]<DD>
+对于 第一个 文件, 光标 会停在 第 &quot;num&quot; 行. 如果 没有 &quot;num&quot; , 则 光标
+会停在 最后一行.
+<DT>+/{pat}<DD>
+对于 第一个文件, 光标 会停在 {pat} 第一次 出现的 地方. 搜寻 模式
+见 &quot;:help search-pattern&quot;。
+<DT>+{command}<DD>
+<DT>-c {command}<DD>
+读入 第一个 文件后 会 执行 {command} 命令. {command} 应为 Ex 命令.
+如果 {command} 中 包含有 空格, 必须 用双引号 括住 (这个取决于所用的 shell).
+例: Vim &quot;+set si&quot; main.c
+<BR>
+
+注意: 你 最多 可以用 10 个 &quot;+&quot; 或者 &quot;-c&quot; 命令.
+<DT>-b<DD>
+二进制模式. 设置 一些选项, 这样 就可以 用来 编辑 二进制 和 可执行 文件 了.
+<DT>-C<DD>
+兼容. 设置 'compatible' 选项. 这样 就算 存在 .vimrc 文件
+<B>Vim</B>
+
+也会 基本上 象 Vi 一样了.
+<DT>-d {device}<DD>
+打开 {device} 用作终端， 只在 Amiga 下。
+例：
+&quot;-d con:20/30/600/150&quot;.
+<DT>-e<DD>
+以 Ex 模式 运行
+<B>Vim ，</B>
+
+就像 运行 &quot;ex&quot; 一样。
+<DT>-f<DD>
+前台 运行。 对于 GUI 版本， 
+<B>Vim</B>
+
+不会 同运行它的 shell 分离。
+在 Amiga 中，
+<B>Vim</B>
+
+不会 重新启动 来 开启一个 新窗口. 这个选项 会用在当
+<B>Vim</B>
+
+被 另外一个 程序执行, 并且 这个程序 想等编辑动作 结束后 再运行
+的 时候 (如 mail). 在 Amiga 上 &quot;:sh&quot; 和 &quot;:!&quot; 不会起作用.
+<DT>-F<DD>
+如果
+<B>Vim</B>
+
+编译时 加入了 对 从右到左 书写的 文件 FKMAP 以及 Farsi 键盘映射 的支持,
+<B>Vim</B>
+
+会 以 Farsi 模式 运行, 比如 设置 'fkmap' 和 'rightleft' 选项.不然
+<B>Vim</B>
+
+会 显示 一条 错误信息 并 终止.
+<DT>-g<DD>
+如果
+<B>Vim</B>
+
+编译时 加入 GUI 支持, 会开启 GUI, 不然
+<B>Vim</B>
+
+会 显示 一条 错误信息 并 终止.
+<DT>-h<DD>
+<B>Vim</B>
+
+显示 命令行 参数 和 选项的 帮助, 然后 终止.
+<DT>-H<DD>
+如果
+<B>Vim</B>
+
+编译时 加入了 对 从右到左 书写的 文件 RIGHTLEFT 以及 Hebrew 键盘映射
+的支持， 
+<B>Vim</B>
+
+会以 Hebrew 模式 运行, 比如 设置 'hkmap' 和 'rightleft' 选项. 不然
+<B>Vim</B>
+
+会 显示 一条 错误信息 并 终止.
+<DT>-i {viminfo}<DD>
+准许 使用 viminfo 文件, 这个 选项 设置 使用的 文件名, 默认的 是
+&quot;~/.viminfo&quot;. 用 &quot;NONE&quot; 文件名 也可以 跳过 使用 .viminfo 文件.
+<DT>-L<DD>
+同 -r 一样.
+<DT>-l<DD>
+Lisp 模式.
+打开 'lisp' 和 'showmatch' 选项.
+<DT>-m<DD>
+禁止 修改文件. 设置 'write' 选项, 这样 就不能 写文件了.
+<DT>-N<DD>
+非兼容 模式. 设置 'compatible' 选项. 这样
+<B>Vim</B>
+
+会 表现得 更好, 就算 .vimrc 文件 不存在 也会 同 Vi 不兼容.
+<DT>-n<DD>
+禁止 交换文件, 这样 在崩溃后 就 不能 恢复 文件了. 对于 编辑
+在很慢的 媒体中的 文件 很有好处 (比如软盘), 也可以 用 &quot;:set uc=0&quot;
+禁止交换, 用 &quot;:set uc=200&quot; 开启 交换.
+<DT>-o[N]<DD>
+打开 N 个窗口. 如果没有 N, 为 每个文件 开一个 窗口.
+<DT>-R<DD>
+只读 模式.  设置 'readonly' 选项. 你 仍然 可以 编辑 缓冲区, 但是 不能
+重写文件. 如果 你要 重写文件, 必须在 Ex 命令中 用惊叹号, 比如 &quot;:w!&quot;.
+-R 选项 隐含了 -n 选项 (见下). 'readonly' 选项 可以 用 &quot;:set noro&quot; 设置.
+见 &quot;:help 'readonly'&quot;.
+<DT>-r<DD>
+列出 交换文件, 显示 关于 恢复文件的 信息.
+<DT>-r {file}<DD>
+恢复 模式. 交换文件 是 用来 恢复 在 编辑过程中 崩溃了的 文件.
+交换 文件名 是 被编辑文件名 后面 加上 &quot;.swp&quot;. 见 &quot;:help recovery&quot;.
+<DT>-s<DD>
+安静 模式. 只在 用 &quot;Ex&quot; 启动 或者 用了 &quot;-e&quot; 选项 才有用.
+<DT>-s {scriptin}<DD>
+读入 脚本文件 {scriptin}. 文件里的 字符 就像 你 直接 输入 一样的, 也
+可以 用 &quot;:source! {scriptin}&quot; 命令 实现 这个功能. 如果 在 编辑器 结束前
+就 读到了 文件尾, 就 接着 从键盘 读入.
+<DT>-T {terminal}<DD>
+告诉
+<B>Vim</B>
+
+你 用的 终端的 名字, 只有 当 不能 自动确定 的时候 才这样. 它 必须是
+<B>Vim</B>
+
+(builtin) 能辨认的 终端 或者是 在 termcap 或者 terminfo 文件中 定义了的.
+<DT>-u {vimrc}<DD>
+用 {vimrc} 文件 里的 命令 来初始化, 跳过 所有 其它的 初始化, 用 这个
+来编辑 特殊类型的 文件. 也可以 用 &quot;NONE&quot; 来 跳过 所有初始化. 在 vim 中
+用 &quot;:help initialization&quot; 查看 更多信息.
+<DT>-U {gvimrc}<DD>
+用 {gvimrc} 文件 里的 命令 来初始化 GUI, 跳过 所有 其它的 GUI 初始化, 也
+可以 用 &quot;NONE&quot; 来跳过 所有 GUI 初始化. 在 vim 中 用 &quot;:help gui-init&quot; 查看
+更多信息.
+<DT>-V<DD>
+冗长 显示. 显示 执行 初始化代码 和 读入的 文件, 并且 写 viminfo 文件.
+<DT>-v<DD>
+以 Vi 模式运行
+<B>Vim ,</B>
+
+就像 运行 &quot;vi&quot; 一样, 只有 运行 &quot;ex&quot; 时 才有用.
+<DT>-w {scriptout}<DD>
+所有 在
+<B>Vim</B>
+
+退出前 你键入的 字符 都会被 存入 {scriptout} 文件. 这 用来 创建一个
+脚本文件, 你 可以用 &quot;vim -s&quot; 和 &quot;:source!&quot; 来使用. 如果 {scriptout} 存在, 会
+把 字符 追加到 后面.
+<DT>-W {scriptout}<DD>
+同 -w 一样， 但是 是覆盖 原来的文件.
+<DT>-x<DD>
+写文件时 加密. 会提示你 输入密码.
+<DT>-Z<DD>
+受限 模式. 同运行 以 &quot;r&quot; 开头的 程序 同效.
+<DT>--<DD>
+表明 选项结束. 在此之后的 参数 都会被认为 是 文件名, 可以 用这个
+来编辑 一个 以 '-' 开头 的文件.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>在线帮助 (ON-LINE HELP)</H2>
+
+在
+<B>Vim</B>
+
+中键入 &quot;:help&quot; 来 获得 帮助. 用 &quot;:help subject&quot; 来 获得 关于 一个
+特定主题的 帮助. 例如 用 &quot;:help ZZ&quot; 来 获得 关于 &quot;ZZ&quot; 的帮助.
+用 &lt;Tab&gt; 和 CTRL-D 来 完成 帮助主题 (&quot;:help cmdline-completion&quot;).
+可以 用 标记 从 一个地方 跳到 另一个 地方 (有点像 超文本连接, 见 &quot;:help&quot;).
+所有的 文档 都可以 这样 来浏览, 比如 &quot;:help syntax.txt&quot;.
+<A NAME="lbAG">&nbsp;</A>
+<H2>文件 (FILES)</H2>
+
+<DL COMPACT>
+<DT>/usr/share/vim/vim56/doc/*.txt<DD>
+<B>Vim</B>
+
+文档文件. 用 &quot;:help doc-file-list&quot; 获得 完整的 列表.
+<DT>/usr/share/vim/vim56/doc/tags<DD>
+在 文档文件中 查找信息 用的 标签文件.
+<DT>/usr/share/vim/vim56/syntax/syntax.vim<DD>
+系统 语法 初始化 文件.
+<DT>/usr/share/vim/vim56/syntax/*.vim<DD>
+各种语言的 语法文件.
+<DT>/usr/share/vim/vimrc<DD>
+系统
+<B>Vim</B>
+
+初始化文件.
+<DT>/usr/share/vim/gvimrc<DD>
+系统 gvim 初始化文件.
+<DT>/usr/share/vim/vim56/optwin.vim<DD>
+&quot;:options&quot; 命令 所用的 脚本文件, 这是个 查看 和 设置选项的 很好的 办法.
+<DT>/usr/share/vim/vim56/menu.vim<DD>
+gvim 的 系统菜单 初始化文件.
+<DT>/usr/share/vim/vim56/bugreport.vim<DD>
+用来 生成 错误报告的 脚本文件, 见 &quot;:help bugs&quot;.
+<DT>/usr/share/vim/vim56/filetype.vim<DD>
+根据 文件名 来判定 文件类型 的 脚本文件, 见 &quot;:help 'filetype'&quot;.
+<DT>/usr/share/vim/vim56/scripts.vim<DD>
+根据 文件内容 来判定 文件类型 的 脚本文件, 见 &quot;:help 'filetype'&quot;.
+</DL>
+<P>
+
+最新 信息 参见 VIM 主页：
+<BR>
+
+&lt;URL:<A HREF="http://www.vim.org/">http://www.vim.org/</A>&gt;
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+vimtutor">vimtutor</A>(1)
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>作者 (AUTHOR)</H2>
+
+Most of
+<B>Vim</B>
+
+的大部分 都是 Bram Moolenaar 在 很多人的 帮助下 完成的.
+见 &quot;:help credits&quot;.
+<BR>
+
+虽然 不大会有 最早的 代码存在, 但是
+<B>Vim</B>
+
+基于 Stevie 写的代码, 之后被 Tim Thompson，
+Tony Andrews and G.R. (Fred) Walter 修改, 然后 才形成的.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>错误 (BUGS)</H2>
+
+多半都有. 用 &quot;:help todo&quot; 看 已知问题的 列表.
+<P>
+
+注意 有些 被 报告为 错误的 事实上 是 应为 太相信 所有的 行为
+都应该 同 Vi 一样, 如果 你因为 它 和 Vi 不一样 而 认为 它 是个
+错误, 你 应该 好好 看看 vi_diff.txt 文件 (或者 在 Vim 中
+键入 :help vi_diff.txt), 并且 看看 'compatible' 和 'cpoptions' 选项.
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/8/30</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">在线帮助 (ON-LINE HELP)</A><DD>
+<DT><A HREF="#lbAG">文件 (FILES)</A><DD>
+<DT><A HREF="#lbAH">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAI">作者 (AUTHOR)</A><DD>
+<DT><A HREF="#lbAJ">错误 (BUGS)</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

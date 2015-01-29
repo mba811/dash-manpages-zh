@@ -1,0 +1,92 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DROP AGGREGATE</TITLE>
+</HEAD><BODY>
+<H1>DROP AGGREGATE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+DROP AGGREGATE - 删除一个用户定义的聚集函数
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+DROP AGGREGATE <I>name</I> ( <I>type</I> ) [ CASCADE | RESTRICT ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>DROP AGGREGATE</B> 将删除一个现存聚集函数。 执行这条命令的用户必须是该聚集函数的所有者。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;现存的聚集函数名（可以有模式修饰）。
+<DT><B></B><I>type</I><B></B><DD>
+<BR>&nbsp;聚集函数的输入数据类型，或者&nbsp;*&nbsp;，如果这个聚集函数接受任意输入类型。
+<DT><B>CASCADE</B><DD>
+<BR>&nbsp;自动删除依赖于这个聚集的对象。
+<DT><B>RESTRICT</B><DD>
+<BR>&nbsp;如果有任何依赖对象，则拒绝删除这个聚集。这是缺省。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;将类型&nbsp;integer&nbsp;的聚集函数&nbsp;myavg&nbsp;删除：
+<P>
+<PRE>
+DROP AGGREGATE myavg(integer);
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;在&nbsp;SQL&nbsp;标准中没有&nbsp;DROP&nbsp;AGGREGATE&nbsp;语句。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+ALTER AGGREGATE [<B><A HREF="/cgi-bin/man/man2html?7+alter_aggregate">alter_aggregate</A></B>(7)], CREATE AGGREGATE [<B><A HREF="/cgi-bin/man/man2html?l+create_aggregate">create_aggregate</A></B>(l)]
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

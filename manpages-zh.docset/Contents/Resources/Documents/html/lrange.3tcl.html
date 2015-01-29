@@ -1,0 +1,92 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of lrange</TITLE>
+</HEAD><BODY>
+<H1>lrange</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.4<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+lrange - 从一个列表返回一个或多个毗连的元素 
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>lrange </B><I>list first last</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+<I>List</I>  必须是一个有效的 Tcl 列表。这个命令将返回由  <I>first</I>  到 <I>last </I>的元素(包括它们两个)组成的一个新列表。<I>First</I>  或 <I>last</I>  可以是 <B>end</B>  (或它的任何缩写)  来参照这个列表的最后的元素。如果 <I>first</I>   小于零，则作为零来对待。如果 <I>last</I>   大于等于在这个列表中元素的数目，则作为 <B>end</B>  来对待。如果 <I>first</I>  大于 <I>last</I>  则返回一个空串。注意: ``<B>lrange </B><I>list first first</I>'' 不总是与``<B>lindex </B><I>list first</I>'' 产生相同的结果(尽管对未用花括号包围起来的简单字段是相同的)；但它精确的产生与``<B>list [lindex </B><I>list first</I><B>]</B>''相同的结果。 
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+lappend">lappend</A>(n), <A HREF="/cgi-bin/man/man2html?n+lindex">lindex</A>(n), <A HREF="/cgi-bin/man/man2html?n+linsert">linsert</A>(n), <A HREF="/cgi-bin/man/man2html?n+list">list</A>(n), <A HREF="/cgi-bin/man/man2html?n+llength">llength</A>(n), <A HREF="/cgi-bin/man/man2html?n+lreplace">lreplace</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+element, list, range, sublist
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/21</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

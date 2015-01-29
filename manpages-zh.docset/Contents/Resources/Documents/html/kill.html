@@ -1,0 +1,151 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of KILL</TITLE>
+</HEAD><BODY>
+<H1>KILL</H1>
+Section: 10 (1)<BR>Updated: 1994<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME (名称)</H2>
+
+kill - 终止进程
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS(总览)</H2>
+
+<B>kill</B>[<B>-s</B>signal<B>|</B>-p<B>][</B>-a<B>]pid</B>...
+
+<BR>
+
+<B>kill -l [ signal ] </B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION (描述)</H2>
+
+<B>kill</B>
+
+给指定进程发送指定信号. 如果没有指定信号, 则发送 TERM 信号.
+TERM 信号会杀死不能俘获该信号的进程.
+对于其他进程, 可能需要使用 KILL (9) 信号, 因为该信号不能够被俘获.
+<P>
+大多数现代的 shell 有一个内嵌的 kill 函数.
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS (选项)</H2>
+
+<DL COMPACT>
+<DT><B>pid ...</B>
+
+<DD>
+给
+<B>kill</B>
+
+指定一个该发信号的进程列表. 每个
+<I>pid</I>
+
+可为下面四种之一.
+<I>进程名</I>
+
+在这种情况下,发信号给所命名的进程.
+<I>n</I>
+
+这里的
+<I>n</I>
+
+大于 0. 将发信号给 pid 为
+<I>n</I>
+
+的进程.
+<I>-1</I>
+
+在这种情况下, 只要发信号的用户能够控制那些进行,
+将发信号给所有从 MAX_INT 到 2 的进程.
+<I>-n</I>
+
+这里的
+<I>n</I>
+
+大于 1, 在这种情况下, 发信号给属于进程组
+<I>n</I>
+
+的进程. 如果给定一个负的参数, 那么信号
+<I>必须</I>
+
+首先声明, 否则它会被当作信号发送出去.
+<DT><B>-s</B>
+
+<DD>
+指定发送的信号.
+信号可以以信号名或数字的方式给定.
+<DT><B>-p</B>
+
+<DD>
+指定
+<B>kill</B>
+
+只打印命名进程的进程标识
+<I>(pid) ,</I>
+
+而不应发送给它信号.
+<DT><B>-l</B>
+
+<DD>
+打印信号名的列表.这可以在
+<I>/usr/include/linux/signal.h</I>
+
+中找到.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>SEE ALSO (又见)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+bash">bash</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+tcsh">tcsh</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?2+kill">kill</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+sigvec">sigvec</A></B>(2)
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>AUTHOR (作者)</H2>
+
+引自 BSD 4.4. 翻译进程名为进程标识的功能由
+Salvatore Valente &amp;lt;<A HREF="mailto:svalente@mit.edu">svalente@mit.edu</A>&amp;gt;
+加入.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/08/08</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME (名称)</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS(总览)</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION (描述)</A><DD>
+<DT><A HREF="#lbAE">OPTIONS (选项)</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO (又见)</A><DD>
+<DT><A HREF="#lbAG">AUTHOR (作者)</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

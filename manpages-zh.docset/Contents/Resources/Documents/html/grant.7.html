@@ -1,0 +1,245 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of GRANT</TITLE>
+</HEAD><BODY>
+<H1>GRANT</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+GRANT - 定义访问权限
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+GRANT { { SELECT | INSERT | UPDATE | DELETE | RULE | REFERENCES | TRIGGER }
+    [,...] | ALL [ PRIVILEGES ] }
+    ON [ TABLE ] <I>tablename</I> [, ...]
+    TO { <I>username</I> | GROUP <I>groupname</I> | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { { CREATE | TEMPORARY | TEMP } [,...] | ALL [ PRIVILEGES ] }
+    ON DATABASE <I>dbname</I> [, ...]
+    TO { <I>username</I> | GROUP <I>groupname</I> | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { EXECUTE | ALL [ PRIVILEGES ] }
+    ON FUNCTION <I>funcname</I> ([<I>type</I>, ...]) [, ...]
+    TO { <I>username</I> | GROUP <I>groupname</I> | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { USAGE | ALL [ PRIVILEGES ] }
+    ON LANGUAGE <I>langname</I> [, ...]
+    TO { <I>username</I> | GROUP <I>groupname</I> | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+GRANT { { CREATE | USAGE } [,...] | ALL [ PRIVILEGES ] }
+    ON SCHEMA <I>schemaname</I> [, ...]
+    TO { <I>username</I> | GROUP <I>groupname</I> | PUBLIC } [, ...] [ WITH GRANT OPTION ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>GRANT</B> 命令将某对象（表，视图，序列，函数过程语言，或者模式） 上的特定权限给予一个用户或者多个用户或者一组用户。 这些权限将增加到那些已经赋予的权限上，如果存在这些权限的话。
+<P>
+
+<BR>&nbsp;键字&nbsp;PUBLIC&nbsp;表示该权限要赋予所有用户,&nbsp;包括那些以后可能创建的用户。PUBLIC&nbsp;&nbsp;可以看做是一个隐含定义好的组，它总是包括所有用户。&nbsp;任何特定的用户都将拥有直接赋予他/她的权限，加上他/她所处的任何组，&nbsp;以及再加上赋予&nbsp;PUBLIC&nbsp;的权限的总和。
+<P>
+
+<BR>&nbsp;如果声明了&nbsp;WITH&nbsp;GRANT&nbsp;OPTION，那么权限的受予者也可以赋予别人。&nbsp;缺省的时候这是不允许的。赋权选项只能给独立的用户，而不能给组或者&nbsp;PUBLIC。
+<P>
+
+<BR>&nbsp;对对象的所有者（通常就是创建者）而言，没有什么权限需要赋予，&nbsp;因为所有者缺省就持有所有权限。（不过，所有者出于安全考虑可以选择废弃一些他自己的权限。）&nbsp;删除一个对象的权力，或者是任意修改它的权力都不是可赋予的权利所能描述的；&nbsp;它是创建者固有的，并且不能赋予或撤销。
+<P>
+
+<BR>&nbsp;根据对象的不同，初始的缺省权限可能包括给&nbsp;PUBLIC&nbsp;&nbsp;赋予一些权限。缺省设置对于表和模式是没有公开访问权限的；&nbsp;TEMP&nbsp;表为数据库创建权限；EXECUTE&nbsp;权限用于函数；&nbsp;以及&nbsp;USAGE&nbsp;用于语言。对象所有者当然可以撤回这些权限。&nbsp;（出于最大安全性考虑，在创建该对象的同一个事务中发出&nbsp;REVOKE；&nbsp;那么就不会打开给别的用户使用该对象的窗口。）
+<P>
+
+<BR>&nbsp;可能的权限有：
+<DL COMPACT>
+<DT><B>SELECT</B><DD>
+<BR>&nbsp;允许对声明的表，试图，或者序列&nbsp;SELECT&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+select">select</A></B>(7)]&nbsp;任意字段。还允许做
+COPY [<B><A HREF="/cgi-bin/man/man2html?7+copy">copy</A></B>(7)] TO 的源。 对于序列而言，这个权限还允许使用 currval 函数。
+<DT><B>INSERT</B><DD>
+<BR>&nbsp;允许向声明的表&nbsp;INSERT&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+insert">insert</A></B>(7)]&nbsp;一个新行。&nbsp;同时还允许做&nbsp;COPY&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+copy">copy</A></B>(7)]&nbsp;FROM。
+<DT><B>UPDATE</B><DD>
+<BR>&nbsp;允许对声明的表中任意字段做&nbsp;UPDATE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+update">update</A></B>(7)]&nbsp;。&nbsp;SELECT&nbsp;...&nbsp;FOR&nbsp;UPDATE&nbsp;也要求这个权限&nbsp;（除了&nbsp;SELECT&nbsp;权限之外）。比如，&nbsp;这个权限允许使用nextval&nbsp;和&nbsp;setval。
+<DT><B>DELETE</B><DD>
+<BR>&nbsp;允许从声明的表中&nbsp;DELETE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+delete">delete</A></B>(7)]&nbsp;行。
+<DT><B>RULE</B><DD>
+<BR>&nbsp;允许在该表/视图上创建规则。（参阅&nbsp;CREATE&nbsp;RULE&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+create_rule">create_rule</A></B>(7)]&nbsp;语句。）
+<DT><B>REFERENCES</B><DD>
+<BR>&nbsp;要创建一个外键约束，你必须在参考表和被参考表上都拥有这个权限。
+<DT><B>TRIGGER</B><DD>
+<BR>&nbsp;允许在声明表上创建触发器。（参阅
+CREATE TRIGGER [<B><A HREF="/cgi-bin/man/man2html?7+create_trigger">create_trigger</A></B>(7)] 语句。）
+<DT><B>CREATE</B><DD>
+<BR>&nbsp;对于数据库，允许在该数据库里创建新的模式。
+<P>
+<BR>&nbsp;对于模式，允许在该模式中创建新的对象。&nbsp;要重命名一个现有对象，你必需拥有该对象并且。&nbsp;对包含该对象的模式拥有这个权限。
+<DT><B>TEMPORARY</B><DD>
+<DT><B>TEMP</B><DD>
+<BR>&nbsp;允许在使用该数据库的时候创建临时表。
+<DT><B>EXECUTE</B><DD>
+<BR>&nbsp;允许使用指定的函数并且可以使用任何利用这些函数实现的操作符。&nbsp;这是适用于函数的唯一的一种权限类型。&nbsp;（该语法同样适用于聚集函数。）
+<DT><B>USAGE</B><DD>
+<BR>&nbsp;对于过程语言，&nbsp;允许使用指定过程语言创建该语言的函数。&nbsp;这是适用于过程语言的唯一的一种权限类型。
+<P>
+<BR>&nbsp;对于模式，允许访问包含在指定模式中的对象（假设该对象的所有权要求同样也设置了）。&nbsp;最终这些就允许了权限接受者&quot;查询&quot;模式中的对象。
+<DT><B>ALL PRIVILEGES</B><DD>
+<BR>&nbsp;一次性给予所有适用于该对象的权限。&nbsp;PRIVILEGES&nbsp;关键字在&nbsp;PostgreSQL&nbsp;里是可选的，&nbsp;但是严格的&nbsp;SQL&nbsp;要求有这个关键字。
+</DL>
+<P>
+
+<BR>&nbsp;其它命令要求的权限都在相应的命令的参考页上列出。
+<A NAME="lbAE">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+REVOKE [<B><A HREF="/cgi-bin/man/man2html?7+revoke">revoke</A></B>(7)] 命令用于删除访问权限。
+<P>
+
+<BR>&nbsp;我们要注意数据库超级用户可以访问所有对象，&nbsp;而不会受对象的权限设置影响。这个特点类似&nbsp;Unix&nbsp;系统的&nbsp;root&nbsp;&nbsp;的权限。和&nbsp;root&nbsp;一样，除了必要的情况，总是以超级用户身分进行操作是不明智的做法。
+<P>
+
+If a superuser chooses to issue a <B>GRANT</B> or <B>REVOKE</B>
+command, the command is performed as though it were issued by the
+owner of the affected object. In particular, privileges granted via
+such a command will appear to have been granted by the object owner.
+<P>
+
+<BR>&nbsp;目前，要在&nbsp;PostgreSQL&nbsp;里只对某几列赋予权限，&nbsp;你必须创建一个拥有那几行的视图然后给那个视图赋予权限。
+<P>
+
+<BR>&nbsp;使用&nbsp;<B><A HREF="/cgi-bin/man/man2html?1+psql">psql</A></B>(1)&nbsp;的&nbsp;<B>\z</B>&nbsp;命令获取在现有对象上的与权限有关的信息。
+<P>
+<PRE>
+=&gt; \z mytable
+
+        Access privileges for database &quot;lusitania&quot;
+ Schema |  Table  |           Access privileges
+--------+---------+---------------------------------------
+ public | mytable | {=r/postgres,miriam=arwdRxt/postgres,&quot;group todos=arw/postgres&quot;}
+(1 row)
+
+</PRE>
+
+<B>\z</B> 显示的条目解释如下：
+<P>
+<PRE>
+              =xxxx -- 赋予 PUBLIC 的权限
+         uname=xxxx -- 赋予一个用户的权限
+   group gname=xxxx -- 赋予一个组的权限
+
+                  r -- SELECT (&quot;读&quot;)
+                  w -- UPDATE (&quot;写&quot;)
+                  a -- INSERT (&quot;追加&quot;)
+                  d -- DELETE
+                  R -- RULE
+                  x -- REFERENCES
+                  t -- TRIGGER
+                  X -- EXECUTE
+                  U -- USAGE
+                  C -- CREATE
+                  T -- TEMPORARY
+            arwdRxt -- ALL PRIVILEGES (for tables)
+                  * -- 给前面权限的授权选项
+
+              /yyyy -- 授出这个权限的用户
+
+</PRE>
+
+<BR>&nbsp;用户&nbsp;miriam&nbsp;在建完表之后再做下面的语句，&nbsp;就可以得到上面例子的结果
+<P>
+<PRE>
+GRANT SELECT ON mytable TO PUBLIC;
+GRANT SELECT, UPDATE, INSERT ON mytable TO GROUP todos;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;如果一个给定的对象的&nbsp;&quot;Access&nbsp;privileges&quot;&nbsp;字段是空的，&nbsp;这意味着该对象有缺省权限（也就是说，它的权限字段是&nbsp;NULL）。&nbsp;缺省权限总是包括所有者的所有权限，以及根据对象的不同，可能包含一些给&nbsp;PUBLIC&nbsp;&nbsp;的权限。&nbsp;对象上第一个&nbsp;GRANT&nbsp;或者&nbsp;REVOKE&nbsp;&nbsp;将实例化这个缺省权限（比如，产生&nbsp;{=,miriam=arwdRxt}）&nbsp;然后根据每次特定的需求修改它。
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;把表&nbsp;films&nbsp;的插入权限赋予所有用户：
+<P>
+<PRE>
+GRANT INSERT ON films TO PUBLIC;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;赋予用户manuel对视图kinds的所有权限：
+<P>
+<PRE>
+GRANT ALL PRIVILEGES ON kinds TO manuel;
+
+</PRE>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;根据&nbsp;SQL&nbsp;标准，在&nbsp;ALL&nbsp;PRIVILEGES&nbsp;里的&nbsp;PRIVILEGES&nbsp;&nbsp;关键字是必须的。SQL&nbsp;不支持在一条命令里对多个表设置权限。
+<P>
+
+SQL 标准允许在一个表里为独立的字段设置权限：
+<P>
+<PRE>
+GRANT <I>privileges</I>
+    ON <I>table</I> [ ( <I>column</I> [, ...] ) ] [, ...]
+    TO { PUBLIC | <I>username</I> [, ...] } [ WITH GRANT OPTION ]
+
+</PRE>
+
+<P>
+
+SQL 标准对其它类型的对象提供了一个 USAGE 权限：字符集，校勘，转换，域。
+<P>
+
+RULE 权限，以及在数据库，模式，语言和序列上的权限是 PostgreSQL 扩展。
+<A NAME="lbAH">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<P>
+
+REVOKE [<B><A HREF="/cgi-bin/man/man2html?7+revoke">revoke</A></B>(7)]
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">NOTES 注意</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAG">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

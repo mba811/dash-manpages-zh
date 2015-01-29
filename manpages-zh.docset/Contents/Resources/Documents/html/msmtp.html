@@ -1,0 +1,654 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MSMTP</TITLE>
+</HEAD><BODY>
+<H1>MSMTP</H1>
+Section: User Commands  (1)<BR>Updated: 2006-11<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+msmtp - An SMTP client 
+<A NAME="lbAC">&nbsp;</A>
+<H2>概要 (SYNOPSIS)</H2>
+
+<DL COMPACT>
+<DT>发邮件模式 (默认):<DD>
+<B>msmtp</B>
+
+[option...] [--] recipient...
+<BR>
+
+<B>msmtp</B>
+
+[option...] -t [--] [recipient...]
+<DT>服务器消息模式:<DD>
+<B>msmtp</B>
+
+[option...] --serverinfo
+<DT>远程消息队列模式:<DD>
+<B>msmtp</B>
+
+[option...] --rmqs=<I>host</I>|<I>@domain</I>|<I>#queue</I>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+在默认的发邮件模式下，msmtp 从标准输入读取邮件，然后把它送给SMTP 服务器处理
+<BR>
+
+当处于服务器消息模式下，msmtp 会显示SMTP 服务器的有关信息
+<BR>
+
+而当它处于远程消息队列模式时，msmtp 将为主机或者域发出RMQS 请求，或者向SMTP 
+服务器发出队列请求
+<A NAME="lbAE">&nbsp;</A>
+<H2>退出状态 (EXIT STATUS)</H2>
+
+这里使用标准的sendmail 退出状态代码，就像在 sysexits.h 中定义的那样
+
+想快速上手，可跳到EXAMPLES 部分
+<A NAME="lbAF">&nbsp;</A>
+<H2>选项  (OPTIONS)</H2>
+
+这里的选项将覆盖配置文件中的相同选项
+<BR>
+
+他们在某些地方与sendmail 兼容
+<DL COMPACT>
+<DT><B>一般选项 (General options)</B><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>--version<DD>
+显示版本信息。这些信息包括TLS/SSL 库信息（如果有），用于验证的库以及这些库
+所支持的验证方式，还有默认的全局配置文件和用户配置文件信息
+<DT>--help<DD>
+显示帮助
+<DT>-P, --pretend<DD>
+显示使用的配置信息，但不真正执行什么操作。密码将会以 *** 的形式显示
+<DT>-d, --debug<DD>
+显示很多调试信息，包括与SMTP 服务器的所有会话。小心使用这个选项（潜在风险）：
+所有输出没经过什么处理，密码可能以一种极易解码的方式被显示出来
+</DL>
+</DL>
+
+<DT><B>改变操作模式选项 (Changing the mode of operation)</B><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>-S, --serverinfo<DD>
+显示SMTP 服务器的信息并退出。信息中包含了所有支持的特性，如邮件大小限制、
+验证方式、TLS、DSN 等等。如果服务器支持TLS 的话，还有TLS 证书信息
+<DT>--rmqs=(<I>host</I>|<I>@domain</I>|<I>#queue</I>)<DD>
+为指定的主机或者域发送一个开启远程消息队列的请求，或者向SMTP 服务器发送队列
+请求，并退出
+</DL>
+</DL>
+
+<DT><B>配置选项 (Configuration options)</B><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>-C, --file=<I>filename</I><DD>
+用指定的文件代替~/.msmtprc 作为用户配置文件
+<DT>-a, --account=<I>account_name</I><DD>
+用指定的帐号代替&quot;default&quot; 字段中的帐号。这个帐号的设置能以命令行选项的方式进行
+更改。但这个选项不能与 <B>--host</B> 合用
+<DT>--host=<I>hostname</I><DD>
+用命令行指定一个SMTP 服务器，不用配置文件中的任何数据。这个选项不能与
+<B>--account</B> 选项合用
+<DT>--port=<I>number</I><DD>
+设置要连接的端口。参看下面 <B>port</B> 命令
+<DT>--timeout=(<I>off</I>|<I>seconds</I>)<DD>
+设定网络超时。参看下面 <B>timeout</B> 命令。为了兼容老版本，--connect-timeout 
+作为这个选项的别名
+<DT>--protocol=(<I>smtp</I>|<I>lmtp</I>)<DD>
+设定所用的协议。参看下面 <B>protocol</B> 命令
+<DT>--auth[=(<I>on</I>|<I>off</I>|<I>method</I>)]<DD>
+开启或关闭验证，也可随意选择一个验证方式。参看下面 <B>auth</B> 命令
+<DT>--user=<I>[username]</I><DD>
+设置或清空用于验证的用户名。参看下面 <B>user</B> 命令
+<DT>--tls[=(<I>on</I>|<I>off</I>)]<DD>
+开启或关闭TLS 加密。参看 <B>tls</B> 命令
+<DT>--tls-starttls[=(<I>on</I>|<I>off</I>)]<DD>
+开启或关闭TLS 加密的STARTTLS 。参看下面 <B>tls_starttls</B> 命令
+<DT>--tls-trust-file=[<I>file</I>]<DD>
+设置或清空TLS 加密的trust file。参看下面 <B>tls_trust_file</B> 命令
+<DT>--tls-key-file=[<I>file</I>]<DD>
+设置或清空TLS 加密的key file。参看下面 <B>tls_key_file</B> 命令
+<DT>--tls-cert-file=[<I>file</I>]<DD>
+设置或清空TLS 加密的cert file。参看下面 <B>tls_cert_file</B> 命令
+<DT>--tls-certcheck[=(<I>on</I>|<I>off</I>)]<DD>
+开启或关闭TLS 加密的证书检验。参看下面 <B>tls_certcheck</B> 命令
+<DT>--tls-force-sslv3[=(<I>on</I>|<I>off</I>)]<DD>
+强制使用SSLv3。参看下面 <B>tls_force_sslv3</B> 命令
+<DT>--domain=[<I>string</I>]<DD>
+设置SMTP EHLO (or LMTP LHLO)命令的参数。参看 <B>domain</B> 命令
+</DL>
+</DL>
+
+<DT><B>发件模式的选项 (Options specific to sendmail mode)</B><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>--auto-from[=(<I>on</I>|<I>off</I>)]<DD>
+开启或关闭automatic envelope-from addresses。默认关闭。参看下面
+<B>auto_from</B> 命令
+<DT>-f, --from=<I>address<DD>
+设定envelope-from address。仅当 auto_from</I> 关闭时才有用
+<BR>
+
+如果未用 <B>--account</B> 或 <B>--host</B> 指定帐号，这个选项会选择第一个拥有给
+定envelope-from address 的帐号。看看 <B>from</B> 命令。如果没找到符合条件的帐号
+，就用&quot;default&quot;
+<DT>--maildomain=[<I>domain</I>]<DD>
+为生成的envelope-from addresses 指定一个域。仅当 <I>auto_from</I> 开启时才有用。
+参看下面 <B>maildomain</B> 命令
+<DT>-N, --dsn-notify=(<I>off</I>|<I>cond</I>)<DD>
+设置或清空DSN notification conditions。参看下面 <B>dsn_notify</B> 命令
+<DT>-R, --dsn-return=(<I>off</I>|<I>ret</I>)<DD>
+设置或清空 DSN notification amount。参看下面 <B>dsn_return</B> 命令。注意为
+兼容sendmail ，<I>hdrs</I> 被定义成 <I>headers</I> 的别名
+<DT>--keepbcc[=(<I>on</I>|<I>off</I>)]<DD>
+是否保留Bcc header。参看下面 <B>keepbcc</B> 命令
+<DT>-X, --logfile=[<I>file</I>]<DD>
+设置或清除log file。参看下面 <B>logfile</B> 命令
+<DT>--syslog[=(<I>on</I>|<I>off</I>|<I>facility</I>)]<DD>
+是否启用syslog。参看下面 <B>syslog</B> 命令
+<DT>-t, --read-recipients<DD>
+从邮件的To, Cc, Bcc headers 处提取收件人地址，而不从命令行读入
+<DT>--<DD>
+从这以后的参数均被认为是收件人地址，即使以 '-' 开头。这标志着选项列表结束了
+</DL>
+</DL>
+
+</DL>
+<P>
+
+以下选项可用，但兼容的sendmail 忽略。
+<BR>
+
+-B<I>type</I>, -bm, -F<I>name</I>, -G, -h<I>N</I>, -i, -L <I>tag</I>, -m, -n, -O
+<I>option=value</I>, -o<I>x</I> <I>value</I>, -v
+<A NAME="lbAG">&nbsp;</A>
+<H2>用法 (USAGE)</H2>
+
+通常，全局配置文件和(或)用户配置文件包含了SMTP 服务器以及如何与之通信的所有信
+息。但是，几乎所有的选项也可以在命令行上配置
+<P>
+
+SMTP 服务器的信息以 <I>accounts</I> 方式组织在一起。每个帐号描述了一台SMTP 服
+务器的主机名、验证设置、TLS 设置等等。每个配置文件能定义多个帐号
+<P>
+
+在发件模式，必须要有一个envelope-from，这被作为原始发件人发送给SMTP 服务器。
+当 <I>auto_from</I> 开启时，Envelope-from 的地址也能自动生成，或者也能明确地
+用 <B>form</B> 或 <B>--from</B> 设定。<I>auto_from</I> 能生成形如 <A HREF="mailto:user@domain">user@domain</A>
+这样的地址。user 部分将以 <B>$USER</B> 代替，如果不行，就用 <B>$LOGNAME</B> 
+代替，再不行的话，就用当前登录的用户名。domain 部分能用 <B>maildomain</B> 设
+定。如果maildomain 未设好，envelope-from 中将只有用户名，而不含域名。
+<P>
+
+用户能选择用哪个帐号，以下方法三选一：
+<DL COMPACT>
+<DT>--account=<I>id</I><DD>
+用给定帐号。命令行选项会覆盖配置文件中的设定
+<DT>--host=<I>hostname</I><DD>
+只用来自命令行的选项，不用配置文件中的
+<DT>--from=<I>address</I><DD>
+从全局或用户配置文件中选择与 <B>from</B> 命令指定的地址匹配的envelop-from 地址。
+只有 <B>--account</B> 和 <B>--host</B> 都没有设定时才用得到这个选项
+</DL>
+<P>
+
+如果以上选项一个都没用到，又或者用了 <B>--from</B> 但没有一个帐号与 <B>from</B>
+命令的结果匹配，那就使用&quot;default&quot; 帐号
+<A NAME="lbAH">&nbsp;</A>
+<H2>配置文件 (CONFIGURATION FILES)</H2>
+
+如果全局配置文件存在并可读，会调用文件SYSCONFDIR/msmtprc，SYSCONFDIR 依赖于你的
+系统。用 <B>--version</B> 可以找到用了哪个目录
+<BR>
+
+如果用户配置文件存在并可读，就调用它(默认是~/.msmtprc )。用户配置中的帐号会覆盖
+全局配置中的相同帐号。除了拥有者的读写权外，决不给配置文件其它多余的权限。无论
+哪个配置文件中的设置都可以用命令行选项更改
+<P>
+
+配置文件是个普通文本而已，忽略空行和注释行(以'#'开头)
+<BR>
+
+其它行必须包含一条命令以及可能的参数
+<BR>
+
+如果参数的第一个或最后一个有空白，要用双引号(&quot;)括起来
+<BR>
+
+如果文件的第一个字符是&quot;~&quot;，将会用$HOME 代替。如果命令能接受一个 <I>on</I> 参数，
+它也会接受空参数并默认它是 <I>on</I> 参数。
+<BR>
+
+命令的集合形成groups 。每组以 <B>account</B> 命令开头，接着是SMTP 服务器的设置
+<P>
+
+想快速上手，可跳到EXAMPLES 部分
+<P>
+
+命令说明如下：
+<DL COMPACT>
+<DT>defaults<DD>
+设置defaults。接下去的设置命令将当前配置文件中的所有帐号指定默认值
+<DT>account <I>name</I> [:<I>account</I>[,...]]<DD>
+开始定义新帐号，填充默认值
+<BR>
+
+如果有逗号和预先定义好的帐号名跟在account 后面，所有列表中的帐号会拥有同样的
+设置，并填充默认值
+<DT>host <I>hostname</I><DD>
+邮件发送目的地SMTP 服务器，参数可以是主机名或者网络地址。每个帐号都必须包含
+这个命令
+<DT>port <I>number</I><DD>
+SMTP 服务器监听端口。默认端口会从你操作系统的service database 中获取。对于
+SMTP 来说，服务名是&quot;smtp&quot; (默认端口25)，除非使用不带STARTTLS 的TLS ，在此种
+情况下服务名是&quot;ssmtp&quot;(445)。对于LMTP，服务名是&quot;lmtp&quot;
+<DT>timeout (<I>off</I>|<I>seconds</I>)<DD>
+设置或清除网络超时(以秒计)。<I>off</I> 参数表示不设超时，这意味着使用操作系统
+默认的超时设定
+<BR>
+
+为与老版本兼容， <I>connect_timeout</I> 可作为这条命令的别名
+<DT>protocol (<I>smtp</I>|<I>lmtp</I>)<DD>
+设置所用的协议，目前只支持SMTP 和LMTP，默认SMTP。想知道默认端口，看上面的
+<B>port</B> 命令 
+<DT>auto_from [(<I>on</I>|<I>off</I>)]<DD>
+是否允许automatic envelope-from。默认不允许。开启时，会生成类似<A HREF="mailto:user@domain">user@domain</A> 形
+式的envelope-from。 user 部分将以 <B>$USER</B> 代替，如果不行，就用
+<B>$LOGNAME</B> 代替，再不行的话，就用当前登录的用户名。domain 部分能用
+<B>maildomain</B> 设定。如果maildomain 未设好，envelope-from 中将只有用户名，而
+不含域名。关闭时，，envelope-from 必须明确指定
+<DT>from <I>envelope_from</I><DD>
+设置envelope-from，仅当 <I>auto_from</I> 关闭时才有用
+<DT>maildomain [<I>domain</I>]<DD>
+设置envelope 域名部分。仅当 <I>auto_from</I> 开启时才有用，域名可以为空
+<DT>auth [(<I>on</I>|<I>off</I>|<I>method</I>)]<DD>
+这条命令控制是否允许SMTP 验证。你没有必要自己来设定验证方式，只要用了 <I>on</I>
+参数，msmtp 会为你选择一个最佳方案(看下面)。
+<BR>
+
+你可能需要用 <B>user</B> 命令来设置一个用户名，用 <B>password</B> 命令设置一个
+密码。如果不指定密码，而msmtp 运行时发现在验证时又需要密码，msmtp 会试着从
+~/.netrc 中找一个，如果不行的话，msmtp 会提示你输入一个
+<BR>
+
+支持的验证方式有 <I>plain</I>, <I>cram-md5</I>, <I>digest-md5</I>, <I>gssapi</I>,
+<I>external</I>, <I>login</I>, and <I>ntlm</I> 。注意由于可能缺少下面的验证库，你
+会有一个或多个验证方式不能用。用 <B>--version</B> 选项看看支持哪些方法。
+<BR>
+
+<I>plain</I> 和 <I>login</I> 把你的验证信息在网上以明文传输，因此应该仅把它们和
+<B>tls</B> 命令一起用。
+<BR>
+
+如果不自己选择方式的话，msmtp 会选择SMTP 服务器支持的最安全的方式，安全指你的
+信息在网上不会以明文发送。在TLS 加密连接下任何一种验证方式都是安全的。如果不
+用TLS ，只有gssapi,digest-md5,cram-md5 and ntlm 是安全的。
+<BR>
+
+<I>external</I> 方法比较特殊：真正的验证操作位于SMTP 协议之外，发送TLS 客户端
+证书(看 <B>tls_cert_file</B> 命令)就是个典型例子。<I>external</I> 只确认这次验
+证对于给定的用户是否成功，如果不给用户名的话，就只确认验证是否成功。[注：总之
+它就把具体验证和加密的事情全推给了外面程序，与msmtp 无关了]。msmtp 不会选这种
+验证方式，你必须亲自指定。
+<DT>user [<I>username</I>]<DD>
+设置用于SMTP 验证的用户名，参数为空时清除用户名。证验操作必须用 <B>auth</B> 命
+令激活
+<DT>password [<I>secret</I>]<DD>
+设置用于SMTP 验证的密码，参数为空时清除密码。证验操作必须用 <B>auto</B> 命令
+激活。如果不指定密码，而验证操作又需要密码，msmtp 会试着从 ~/.netrc 中找一个，
+如果不行的话，msmtp 会提示你输入一个
+<DT>ntlmdomain [<I>domain</I>]<DD>
+设置用于 <I>ntlm</I> 验证方式的域名，默认不用域名(等同于空参数)。但有些服务器好
+像要的，即便给出的是任意字符串
+<DT>tls [(<I>on</I>|<I>off</I>)]<DD>
+是否允许TLS/SSL 加密连接。不是每个服务器都支持TLS ，但有了TLS，可以防止有人偷听
+与SMTP 的对话。除非用 <B>tls_certcheck</B> 命令关闭服务器证书验证，否则每次都要
+完备性检查。为全面发挥TLS/SSL 效力，推荐用 <B>tls_trust_file</B> 命令(看下面)
+<DT>tls_starttls [(<I>on</I>|<I>off</I>)]<DD>
+缺省状态下，TLS 加密以STARTTLS SMTP 命令激活。关闭后，TLS 加密会立即启动(这是
+有名的SMTP tunneled through TLS/SSL)。默认端口是465
+<BR>
+
+为兼容老版本， <B>tls_nostarttls</B> 作为 <B>tls_starttls off</B> 的别名
+<DT>tls_trust_file [<I>file</I>]<DD>
+这条命令激活严格的服务器证书验证。这个文件必须包含一个或多个以PEM 格式存在的受
+信任的证书注册机构(CAs)。空参数会关闭这个特性。msmtp 通过受信文件验证服务器的
+可靠性
+<DT>tls_key_file [<I>file</I>]<DD>
+与 <B>tls_cert_file</B> 命令一起，使msmtp 在需要时发一份客户端证书给SMTP 服务
+器。这个文件必须包含PEM 格式证书的私钥。空参数会关闭这个特性
+<DT>tls_cert_file [<I>file</I>]<DD>
+与 <B>tls_key_file</B> 命令一起，使msmtp 在需要时发一份客户端证书给SMTP 服务器。
+这个文件必须包含PEM 格式的证书。空参数会关闭这个特性
+<DT>tls_certcheck [(<I>on</I>|<I>off</I>)]<DD>
+当TLS 启用时，默认对服务器证书进行完备性检查。如果没有检查未通过，会取消TLS 
+连接。
+<BR>
+
+为兼容老版本， <B>tls_nocertcheck</B> 作为 <B>tls_certcheck off</B> 的别名
+<DT>tls_force_sslv3 [(<I>on</I>|<I>off</I>)]<DD>
+强制使用TLS/SSL 的SSLv3 版本。可能在一些用SSL 的老旧服务器上有用。不过万不得
+已，别用这个
+<DT>dsn_notify (<I>off</I>|<I>condition</I>)<DD>
+设定在哪在情况下，邮件系统应该发送DSN (Delivery Status Notification)信息。
+<I>off</I> 参数明确关闭DSN 请求，这意味着让邮件决定什么时候发DSN 信息，默认如
+此。 <I>condition</I> 可以是 <I>never</I> ，从不发送请求。或者是以逗号(没有空
+格！)分隔的一个或多个下列参数： <I>failure</I> 失败时发送， <I>delay</I> 延迟时
+发送， <I>success</I> 成功时发送。SMTP 服务器必须支持DSN 才行。
+<DT>dsn_return (<I>off</I>|<I>amount</I>)<DD>
+在一封邮件中允许返回多少DSN 信息。 <I>off</I> 明确关闭DSN 请求，这意味着让邮件
+系统决定，默认如此。 <I>amount</I> 可以是 <I>headers</I> 只返回信息头，<I>full</I> 返回邮件全部内容。SMTP 服务器必须支持DSN 才行
+<DT>domain <I>argument</I><DD>
+用来设定SMTP EHLO(or LMTP LHLO)命令的参数。默认是 <I>localhost</I> (笨方法，但
+有效)。其它可能的选择有：邮件地址的域名部分(provider.example for <A HREF="mailto:joe@provider">joe@provider</A>.
+example)，或者如果可能的话给出你主机的完整域名
+<DT>keepbcc [(<I>on</I>|<I>off</I>)]<DD>
+当发送邮件时是否保留Bcc header 信息，默认不保留。
+<DT>logfile [<I>file</I>]<DD>
+不给参数会关闭记录，默认如此。
+<BR>
+
+当选择一个logfile 时，msmtp 会为每一封指定logfile 帐号的邮件添加一行记录
+<BR>
+
+记录中会包含如下信息：日期、时间、SMTP 服务器名字、是否用TLS、是否验证、用于
+验证的用户名(仅当用了验证后)、信件来自哪里、收件人地址、发出去的邮件大小(仅
+当发送成功时)、SMTP 状态代码、SMTP 错误信息(仅当发送失败且错误信息可得时)、
+错误信息(仅当发送失败且错误信息可得时)、退出代码(来自 sysexits.h；EX_OK 代表
+发送成功)
+<BR>
+
+如果文件是一短横(-)，msmtp 就把记录信息输出至标准输出
+<DT>syslog [(<I>on</I>|<I>off</I>|<I>facility</I>)]<DD>
+是否允许syslog 。facility 可以是LOG_USER、LOG_MAIL、LOG_LOCAL0...LOG_LOCAL7 诸多策略中的一个，默认是LOG_USER。
+<BR>
+
+每次msmtp 通过含有这条命令的帐号发邮件时，它均会在syslog 服务中以选定的策略追
+加一条记录
+<BR>
+
+记录中会包含如下信息：日期、时间、SMTP 服务器名字、是否用TLS、是否验证、用于
+验证的用户名(仅当用了验证后)、信件来自哪里、收件人地址、发出去的邮件大小(仅
+当发送成功时)、SMTP 状态代码、SMTP 错误信息(仅当发送失败且错误信息可得时)、
+错误信息(仅当发送失败且错误信息可得时)、退出代码(来自 sysexits.h；EX_OK 代表
+发送成功)
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>范例 (EXAMPLES)</H2>
+
+<B>配置文件 (Configuration file)</B>
+
+<P>
+
+# Set default values for all following accounts.
+<BR>
+
+defaults
+<BR>
+
+tls on
+<BR>
+
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+<BR>
+
+logfile ~/.msmtp.log
+<BR>
+
+<P>
+<BR>
+
+# A freemail service
+<BR>
+
+account freemail
+<BR>
+
+host smtp.freemail.example
+<BR>
+
+from <A HREF="mailto:joe_smith@freemail.example">joe_smith@freemail.example</A>
+<BR>
+
+auth on
+<BR>
+
+user joe.smith
+<BR>
+
+password secret
+<BR>
+
+<P>
+<BR>
+
+# A second mail address at the same freemail service
+<BR>
+
+account freemail2 : freemail
+<BR>
+
+from <A HREF="mailto:joey@freemail.example">joey@freemail.example</A>
+<BR>
+
+<P>
+<BR>
+
+# The SMTP server of the provider.
+<BR>
+
+account provider
+<BR>
+
+host mail.provider.example
+<BR>
+
+from <A HREF="mailto:smithjoe@provider.example">smithjoe@provider.example</A>
+<BR>
+
+auth on
+<BR>
+
+user 123456789
+<BR>
+
+password my_password
+<BR>
+
+<P>
+<BR>
+
+# Set a default account
+<BR>
+
+account default : provider
+<BR>
+
+<P>
+<P>
+
+<B>在Mutt 中使用msmtp (Using msmtp with Mutt)</B>
+
+<P>
+
+为msmtp 建立一个配置文件，然后把下面几行加到Mutt 配置文件中去
+<BR>
+
+<B>set sendmail=/path/to/msmtp</B>
+
+<BR>
+
+<B>set use_from=yes</B>
+
+<BR>
+
+<B>set realname=Your Name</B>
+
+<BR>
+
+<B>set from=<A HREF="mailto:you@example.com">you@example.com</A></B>
+
+<BR>
+
+<B>set envelope_from=yes</B>
+
+<BR>
+
+envelope_from=yes 让Mutt 用msmtp的
+<B>-f</B>
+
+参数。这样msmtp 会选择符合<A HREF="mailto:you@example.com">you@example.com</A> 的第一个帐号
+<BR>
+
+你也可以选用
+<B>-a</B>
+
+参数
+<BR>
+
+<B>set sendmail=/path/to/msmtp -a my-account</B>
+
+<BR>
+
+或者从命令行中设定所有内容
+<BR>
+
+<B>set sendmail=/path/to/msmtp --host=mailhub -f <A HREF="mailto:me@example.com">me@example.com</A> --tls</B>
+
+<P>
+
+如果你有多个邮件帐号，并且想让Mutt 用
+<B>-f</B>
+
+参数让你可以在帐号之间轻松切换，把下面几行加到Mutt 配置文件中去
+<BR>
+
+<B>macro generic&nbsp;&lt;esc&gt;1&nbsp;:set from=<A HREF="mailto:you@example.com">you@example.com</A></B>
+
+<BR>
+
+<B>macro generic&nbsp;&lt;esc&gt;2&nbsp;:set from=<A HREF="mailto:you@your-employer.example">you@your-employer.example</A></B>
+
+<BR>
+
+<B>macro generic&nbsp;&lt;esc&gt;3&nbsp;:set from=<A HREF="mailto:you@some-other-provider.example">you@some-other-provider.example</A></B>
+
+<P>
+
+<B>在mail 中用上msmtp (Using msmtp with mail)</B>
+
+<P>
+
+定义一个默认帐号，然后把下面一行放在 ~/.mailrc 中
+<BR>
+
+<B>set sendmail=/path/to/msmtp</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>文件/系统环境 (FILES / ENVIRONMENT)</H2>
+
+<DL COMPACT>
+<DT>SYSCONFDIR/msmtprc<DD>
+全局配置文件。用
+<B>--version</B>
+
+找出系统中的SYSCONFDIR 在哪里
+<DT>~/.msmtprc<DD>
+用户配置文件
+<DT>~/.netrc<DD>
+文件.netrc 包含了登录信息。如果在配置文件中没有找到密码信息的话，msmtp 会在提
+示用户输入之前先找这个文件。 .netrc 的用法在
+<B><A HREF="/cgi-bin/man/man2html?5+netrc">netrc</A></B>(5)
+
+或 
+<B><A HREF="/cgi-bin/man/man2html?1+ftp">ftp</A></B>(1)
+
+中能找到
+<BR>
+
+<DT>$USER, $LOGNAME<DD>
+在构造信件来源地址时，这些变量会覆盖用户的登录名。如果未指定$USER，就用$LOGNAME 
+<DT>$TMPDIR<DD>
+建立临时文件的地方。如果未设置就用系统默认定义
+<BR>
+
+仅当用到
+<B>-t/--read-recipients</B>
+
+选项时，才会创建临时文件。这个文件用于缓存邮件头，不包括邮件本身，所以文件不
+会太大
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<H2>作者 (AUTHORS)</H2>
+
+msmtp was written by Martin Lambers &lt;<A HREF="mailto:marlam@marlam.de">marlam@marlam.de</A>&gt;.
+<BR>
+
+Other authors are listed in the AUTHORS file in the source distribution.
+<A NAME="lbAL">&nbsp;</A>
+<H2>参看 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+mutt">mutt</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+mail">mail</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?8+sendmail">sendmail</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?5+netrc">netrc</A></B>(5)
+
+or
+<B><A HREF="/cgi-bin/man/man2html?1+ftp">ftp</A></B>(1)
+
+<BR>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+&quot;Nickel Cobalt&quot; &lt;<A HREF="mailto:angelerosster@gmail.com">angelerosster@gmail.com</A>&gt;
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2007/05/01
+<A NAME="lbAO">&nbsp;</A>
+<H2>[中文版校对人]</H2>
+
+&quot;Nickel Cobalt&quot; &lt;<A HREF="mailto:angelerosster@gmail.com">angelerosster@gmail.com</A>&gt;
+<A NAME="lbAP">&nbsp;</A>
+<H2>《中文MAN-PAGE计划》</H2>
+
+<A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">概要 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">退出状态 (EXIT STATUS)</A><DD>
+<DT><A HREF="#lbAF">选项  (OPTIONS)</A><DD>
+<DT><A HREF="#lbAG">用法 (USAGE)</A><DD>
+<DT><A HREF="#lbAH">配置文件 (CONFIGURATION FILES)</A><DD>
+<DT><A HREF="#lbAI">范例 (EXAMPLES)</A><DD>
+<DT><A HREF="#lbAJ">文件/系统环境 (FILES / ENVIRONMENT)</A><DD>
+<DT><A HREF="#lbAK">作者 (AUTHORS)</A><DD>
+<DT><A HREF="#lbAL">参看 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAM">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAN">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAO">[中文版校对人]</A><DD>
+<DT><A HREF="#lbAP">《中文MAN-PAGE计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

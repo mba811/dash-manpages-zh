@@ -1,0 +1,104 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MAN.CONF</TITLE>
+</HEAD><BODY>
+<H1>MAN.CONF</H1>
+Section: File Formats (5)<BR>Updated: 30 Mar 1994<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+man.conf - man 的 设 定 资 料
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述</H2>
+
+<P>
+
+<B><A HREF="/cgi-bin/man/man2html?1+man">man</A></B>(1)
+
+<A HREF="/cgi-bin/man/man2html?1+man">man</A>(1) 会 读 取 本 档 。 man.conf 的 内 容 包 含 了 (a) 如 何 建 立 man 搜 寻 路 径 的 资 讯 , (b) man 所 使 用 的 程 式 ( nroff, egn, tbl 等 等 ) 的 完 整 路 径 设 定 (c) 对 特 定 副 档 名 的 解 压 缩 程 式 。
+<P>
+
+<BR>&nbsp;若&nbsp;需&nbsp;特&nbsp;别&nbsp;指&nbsp;定&nbsp;设&nbsp;定&nbsp;档&nbsp;可&nbsp;利&nbsp;用&nbsp;:
+<P>
+
+<DL COMPACT><DT><DD>
+man -C private_man.conf ...
+</DL>
+
+<P>
+
+man.conf 中 的 指 令 可 附 加 选 项 。 nroff 的 常 用 选 项 可 在 <A HREF="/cgi-bin/man/man2html?1+grotty">grotty</A>(1) 找 到 。 例 如 , 为 了 取 代 默 认 值
+<P>
+
+<DL COMPACT><DT><DD>
+<PRE>
+NROFF /usr/bin/groff -mandoc -Tlatin1
+</PRE>
+
+</DL>
+
+<P>
+
+我 们 可 以 用
+<P>
+
+<DL COMPACT><DT><DD>
+<PRE>
+NROFF /usr/bin/groff -mandoc -Tlatin1 -P-u -P-b
+</PRE>
+
+</DL>
+
+<P>
+
+以 抑 制 底 线 与 重 打 的 功 能 。
+<A NAME="lbAD">&nbsp;</A>
+<H2>文件 FILES</H2>
+
+<I>@man_config_file@</I>
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+col">col</A>(1), (g)<A HREF="/cgi-bin/man/man2html?1+eqn">eqn</A>(1), (g)<A HREF="/cgi-bin/man/man2html?1+pic">pic</A>(1), <A HREF="/cgi-bin/man/man2html?1+groff">groff</A>(1), <A HREF="/cgi-bin/man/man2html?1+grotty">grotty</A>(1), (g)<A HREF="/cgi-bin/man/man2html?1+refer">refer</A>(1), (g)<A HREF="/cgi-bin/man/man2html?1+tbl">tbl</A>(1),
+<A HREF="/cgi-bin/man/man2html?1+less">less</A>(1), man (1) and <A HREF="/cgi-bin/man/man2html?1+compress">compress</A>(1), <A HREF="/cgi-bin/man/man2html?1+gzip">gzip</A>(1).
+<P>
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>软件教程之Linux Man</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001.01.01</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">描述</A><DD>
+<DT><A HREF="#lbAD">文件 FILES</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

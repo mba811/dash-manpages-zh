@@ -1,0 +1,104 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of source</TITLE>
+</HEAD><BODY>
+<H1>source</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+source - 把一个文件或资源作为一个 Tcl 脚本来求值
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>source </B><I>fileName</I>
+<P>
+<B>source</B> <B>-rsrc </B><I>resourceName </I>?<I>fileName</I>?
+<P>
+<B>source</B> <B>-rsrcid </B><I>resourceId </I>?<I>fileName</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令接受指定文件或资源的内容并把它们作为一个文本脚本传递给 
+Tcl 解释器。<B>source</B> 
+的返回值是在脚本中最后执行的命令的返回值。如果在对这个脚本的内容进行求值时发生了一个错误，则 
+<B>source</B> 命令将返回这个错误。如果在脚本中调用了 <B>return</B> 
+命令，则文件的剩余部分将被跳过(skip)而 <B>source</B> 
+命令将正常的返回 <B>return</B> 命令的结果。
+<P>
+
+这个命令的 <I>-rsrc</I> 和 <I>-rsrcid</I> 形式只能在 Macintosh 
+计算机上获得。此命令的这个版本允许你从一个 <B>TEXT </B>资源中 
+source 一个脚本。你可以通过名字或 id 指定要 source 的 <B>TEXT</B> 
+资源。缺省的 Tcl 查找所有打开的资源文件，其中包括当前应用和任何装载的 
+C 扩展(所打开的资源文件)。另一种选择，你可以指定在其中能找到 
+<B>TEXT</B> 资源的 <I>fileName</I>。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+file, script
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/30</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAF">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAG">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAH">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

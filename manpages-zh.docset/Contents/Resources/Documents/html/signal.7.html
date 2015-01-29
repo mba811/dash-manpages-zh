@@ -1,0 +1,194 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SIGNAL</TITLE>
+</HEAD><BODY>
+<H1>SIGNAL</H1>
+Section: Linux Programmer's Manual (7)<BR>Updated: April 14, 1996<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+signal - 有效信号的清单
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+下面 列出 Linux 支持的 信号. 某些 信号 依赖于 体系结构(architecture). 
+<P>
+首先, POSIX.1 描述了 下列 信号.
+<P>
+<P>
+<P>
+
+<TABLE>
+<TR VALIGN=top><TD>信号</TD><TD ALIGN=center>值</TD><TD ALIGN=center>动作</TD><TD>说明<BR></TD></TR>
+<TR VALIGN=top><TD><HR></TD><TD><HR></TD><TD><HR></TD><TD><HR></TD></TR>
+<TR VALIGN=top><TD><B>SIGINT</B></TD><TD ALIGN=center>&nbsp;2</TD><TD ALIGN=center>A</TD><TD>从键盘输入的中断<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGQUIT</B></TD><TD ALIGN=center>&nbsp;3</TD><TD ALIGN=center>C</TD><TD>从键盘输入的退出<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGILL</B></TD><TD ALIGN=center>&nbsp;4</TD><TD ALIGN=center>C</TD><TD>无效硬件指令<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGABRT</B></TD><TD ALIGN=center>&nbsp;6</TD><TD ALIGN=center>C</TD><TD>非正常终止, 可能来自 <I><A HREF="/cgi-bin/man/man2html?3+abort">abort</A></I>(3)<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGFPE</B></TD><TD ALIGN=center>&nbsp;8</TD><TD ALIGN=center>C</TD><TD>浮点运算例外<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGKILL</B></TD><TD ALIGN=center>&nbsp;9</TD><TD ALIGN=center>AEF</TD><TD>杀死进程信号<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGSEGV</B></TD><TD ALIGN=center>11</TD><TD ALIGN=center>C</TD><TD>无效的内存引用<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGPIPE</B></TD><TD ALIGN=center>13</TD><TD ALIGN=center>A</TD><TD>管道中止: 写入无人读取的管道<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGALRM</B></TD><TD ALIGN=center>14</TD><TD ALIGN=center>A</TD><TD>来自 <I><A HREF="/cgi-bin/man/man2html?2+alarm">alarm</A></I>(2) 的超时信号<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGTERM</B></TD><TD ALIGN=center>15</TD><TD ALIGN=center>A</TD><TD>终止信号<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGUSR1</B></TD><TD ALIGN=center>30,10,16</TD><TD ALIGN=center>A</TD><TD>用户定义的信号 1<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGUSR2</B></TD><TD ALIGN=center>31,12,17</TD><TD ALIGN=center>A</TD><TD>用户定义的信号 2<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGCHLD</B></TD><TD ALIGN=center>20,17,18</TD><TD ALIGN=center>B</TD><TD>子进程结束或停止<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGCONT</B></TD><TD ALIGN=center>19,18,25</TD><TD ALIGN=center></TD><TD>继续停止的进程<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGSTOP</B></TD><TD ALIGN=center>17,19,23</TD><TD ALIGN=center>DEF</TD><TD>停止进程<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGTSTP</B></TD><TD ALIGN=center>18,20,24</TD><TD ALIGN=center>D</TD><TD>终端上发出的停止信号<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGTTIN</B></TD><TD ALIGN=center>21,21,26</TD><TD ALIGN=center>D</TD><TD>后台进程试图从控制终端(tty)输入<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGTTOU</B></TD><TD ALIGN=center>22,22,27</TD><TD ALIGN=center>D</TD><TD>后台进程试图在控制终端(tty)输出<BR></TD></TR>
+</TABLE>
+
+<P>
+下面的 信号 定义 在 SUSv2 中, 而 POSIX.1 没有 定义.
+<P>
+<P>
+<P>
+
+<TABLE>
+<TR VALIGN=top><TD>信号</TD><TD ALIGN=center>值</TD><TD ALIGN=center>动作</TD><TD>说明<BR></TD></TR>
+<TR VALIGN=top><TD><HR></TD><TD><HR></TD><TD><HR></TD><TD><HR></TD></TR>
+<TR VALIGN=top><TD><B>SIGPOLL</B></TD><TD ALIGN=center></TD><TD ALIGN=center>A</TD><TD>I/O就绪事件 (Sys V). 等同于SIGIO<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGPROF</B></TD><TD ALIGN=center>27,27,29</TD><TD ALIGN=center>A</TD><TD>系统资源定时器(Profiling timer)超时 <BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGSYS</B></TD><TD ALIGN=center>12,-,12</TD><TD ALIGN=center>C</TD><TD>用错误参数调用系统例程 (SVID)<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGTRAP</B></TD><TD ALIGN=center>5</TD><TD ALIGN=center>C</TD><TD>跟踪/断点自陷<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGURG</B></TD><TD ALIGN=center>16,23,21</TD><TD ALIGN=center>B</TD><TD>套接口上出现 urgent 情况 (4.2 BSD)<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGVTALRM</B></TD><TD ALIGN=center>26,26,28</TD><TD ALIGN=center>A</TD><TD>虚拟超时时钟 (4.2 BSD)<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGXCPU</B></TD><TD ALIGN=center>24,24,30</TD><TD ALIGN=center>C</TD><TD>超过了CPU时间限制 (4.2 BSD)<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGXFSZ</B></TD><TD ALIGN=center>25,25,31</TD><TD ALIGN=center>C</TD><TD>超过了文件大小限制 (4.2 BSD)<BR></TD></TR>
+</TABLE>
+
+<P>
+(这里的 SIGSYS, SIGXCPU, SIGXFSZ, 以及 某些 系统上 的 SIGBUS, 
+Linux 的 缺省动作 (到2.3.27版) 是 A(结束), 而 SUSv2 声明是 C(结束且核心转储).)
+<P>
+下面 是 其他 几个 信号.
+<P>
+<P>
+<P>
+
+<TABLE>
+<TR VALIGN=top><TD>信号</TD><TD ALIGN=center>值</TD><TD ALIGN=center>动作</TD><TD>说明<BR></TD></TR>
+<TR VALIGN=top><TD><HR></TD><TD><HR></TD><TD><HR></TD><TD><HR></TD></TR>
+<TR VALIGN=top><TD><B>SIGEMT</B></TD><TD ALIGN=center>7,-,7</TD><TD ALIGN=center></TD><TD><BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGSTKFLT</B></TD><TD ALIGN=center>-,16,-</TD><TD ALIGN=center>A</TD><TD>协处理器堆栈错误<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGIO</B></TD><TD ALIGN=center>23,29,22</TD><TD ALIGN=center>A</TD><TD>I/O 有效信号 (4.2 BSD)<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGCLD</B></TD><TD ALIGN=center>-,-,18</TD><TD ALIGN=center></TD><TD>等同于 SIGCHLD<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGPWR</B></TD><TD ALIGN=center>29,30,19</TD><TD ALIGN=center>A</TD><TD>电源无效 (System V)<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGINFO</B></TD><TD ALIGN=center>29,-,-</TD><TD ALIGN=center></TD><TD>等同于 SIGPWR<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGLOST</B></TD><TD ALIGN=center>-,-,-</TD><TD ALIGN=center>A</TD><TD>文件锁丢失<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGWINCH</B></TD><TD ALIGN=center>28,28,20</TD><TD ALIGN=center>B</TD><TD>窗口大小调整信号 (4.3 BSD, Sun)<BR></TD></TR>
+<TR VALIGN=top><TD><B>SIGUNUSED</B></TD><TD ALIGN=center>-,31,-</TD><TD ALIGN=center>A</TD><TD>未使用的信号 (将成为 SIGSYS)<BR></TD></TR>
+</TABLE>
+
+<P>
+这里的 - 指 信号 不存在; 可能 给出 三个值, 第一个值 一般 用于 alpha 和 sparc,
+中间的值 用于 i386, ppc 和 sh, 最后一个 是 mips 的.
+信号29 在 alpha机上 是
+<B>SIGINFO</B>
+
+/
+<B>SIGPWR</B>
+
+, 而在 sparc机上 是
+<B>SIGLOST</B>
+
+<P>
+<P>
+<P>
+
+&quot;动作(Action)&quot;栏 的 字母 有 下列 含义:
+<DL COMPACT>
+<DT>A<DD>
+缺省动作是结束进程.
+<DT>B<DD>
+缺省动作是忽略这个信号.
+<DT>C<DD>
+缺省动作是结束进程, 并且核心转储.
+<DT>D<DD>
+缺省动作是停止进程.
+<DT>E<DD>
+信号不能被捕获.
+<DT>F<DD>
+信号不能被忽略.
+</DL>
+<P>
+
+(译注: 这里 &quot;结束&quot; 指 进程 终止 并 释放资源, &quot;停止&quot; 指 进程 停止 运行,
+但是 资源 没有 释放, 有可能 继续 运行.)
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>遵循 (CONFORMING TO)</H2>
+
+POSIX.1
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>BUGS</H2>
+
+<B>SIGIO</B>
+
+和
+<B>SIGLOST</B>
+
+有 相同的 值. 后者 在 内核 源码 中 被注释 掉了,
+但是 某些 软件 构造的 进程 仍然 认为 信号29 是
+<B>SIGLOST</B>.
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+kill">kill</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?2+kill">kill</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?2+setitimer">setitimer</A></B>(2)
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@iname.com">xuming@iname.com</A>&gt;</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/15</B>
+
+第一版
+<BR>
+
+<B>2001/11/24</B>
+
+第一次修订
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAD">遵循 (CONFORMING TO)</A><DD>
+<DT><A HREF="#lbAE">BUGS</A><DD>
+<DT><A HREF="#lbAF">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

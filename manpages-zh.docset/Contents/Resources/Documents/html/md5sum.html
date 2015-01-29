@@ -1,0 +1,142 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MD5SUM</TITLE>
+</HEAD><BODY>
+<H1>MD5SUM</H1>
+Section: FSF (1)<BR>Updated: December 1999<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+md5sum - 计算检验MD5效验码
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>../src/md5sum</B>
+
+[<I>OPTION</I>] [<I>FILE</I>]...
+<BR>
+
+<B>../src/md5sum</B>
+
+[<I>OPTION</I>] <I>--check </I>[<I>FILE</I>]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+
+<P>
+
+显示 或 检验 MD5 效验码. 如果 没有 FILE 或者 FILE 是 - 时, 就从 标准 输入 读入.
+<DL COMPACT>
+<DT><B>-b</B>, <B>--binary</B><DD>
+以 二进制 模式 读入 文件 (DOS/Windows 下 默认)
+<DT><B>-c</B>, <B>--check</B><DD>
+对 给定 的 文件 检验 MD5 效验码
+<DT><B>-t</B>, <B>--text</B><DD>
+以 文本 模式 读入 文件 (默认)
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H3>下面 的 两个 选项 只在 检验 效验码 时用:</H3>
+
+<DL COMPACT>
+<DT><B>--status</B><DD>
+不显示 任何 输出, 用 返回码 表示 成功 与否
+<DT><B>-w</B>, <B>--warn</B><DD>
+对于 错误 的 MD5 效验码 行 的 格式 发出 警告
+<DT><B>--help</B><DD>
+显示 这个 帮助 然后 退出
+<DT><B>--version</B><DD>
+显示 版本 信息 然后 退出
+</DL>
+<P>
+
+效验码 用 RFC 1321 中 描述 的 算法 生成. 当 检验 的 时候, 输入 必需 是 这个
+程序 以前 的 输出. 默认 的 模式 是 显示 一行 数据, 包括 效验码, 一个 指示 类型
+的 字符 (`*' 表示 二进制, ` ' 表示 文本), 和 每个 文件 的 名字.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>作者 (AUTHOR)</H2>
+
+Ulrich Drepper
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>错误报告 (REPORTING BUGS)</H2>
+
+把 错误 报告 给 &lt;<A HREF="mailto:bug-textutils@gnu.org">bug-textutils@gnu.org</A>&gt;.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>版权 (COPYRIGHT)</H2>
+
+版权所有 &#169; 1999 自由软件基金会
+<BR>
+
+这一程序是自由软件； 拷贝条件见源文件。
+没有任何担保； 甚至没有适合特定目的的隐含的担保。 
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+完整的 
+<B>md5sum</B>
+
+文档 用 Texinfo 手册页 的 形式 写成. 如果
+<B>info</B>
+
+和
+<B>md5sum</B>
+
+程序 都 正确 的 安装 在 你的 机子 上, 用
+<DL COMPACT>
+<DT><DD>
+<B>info md5sum</B>
+
+</DL>
+<P>
+
+命令 能够 查看 完整 的 手册页.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/31</B>
+
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DL>
+<DT><A HREF="#lbAE">下面 的 两个 选项 只在 检验 效验码 时用:</A><DD>
+</DL>
+<DT><A HREF="#lbAF">作者 (AUTHOR)</A><DD>
+<DT><A HREF="#lbAG">错误报告 (REPORTING BUGS)</A><DD>
+<DT><A HREF="#lbAH">版权 (COPYRIGHT)</A><DD>
+<DT><A HREF="#lbAI">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAJ">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAK">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAL">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

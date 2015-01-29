@@ -1,0 +1,367 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of IFCONFIG</TITLE>
+</HEAD><BODY>
+<H1>IFCONFIG</H1>
+Section: Linux Programmer's Manual (8)<BR>Updated: 4 August 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+ifconfig - 配置网络接口
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>ifconfig [接口]</B>
+
+<BR>
+
+<B>ifconfig 接口 [aftype] options | address ...</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>ifconfig</B>
+
+用于配置常驻内核的网络接口。它用于在引导成功时设定网络接口。
+此后，只在需要调试及系统调整时才使用。
+<P>
+
+如没有给出参数，
+<B>ifconfig</B>
+
+显示当前有效接口的状态。如给定单个
+<B>接口</B>
+
+作为参数，它只显示给出的那个接口的状态；
+如果给出一个
+<B>-a</B>
+
+参数，它会显示所有接口的状态，包括那些停用的接口。
+否则就对一个接口进行配置。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>地址族</H2>
+
+如果跟在接口名称后的第一个参数是它支持地址族的名称，
+那么这个地址族被用于翻译和显示所有的协议地址。
+当前支持的地址族包括
+<B>inet</B>
+
+(
+<I>TCP/IP</I>
+
+，缺省)，
+<B>inet6</B>
+
+(
+<I>IPv6</I>
+
+)
+，
+<B>ax25</B>
+
+(
+<I>AMPR</I>
+
+无线分组 )，
+<B>ddp</B>
+
+(
+<I>Appletalk</I>
+
+2 代)，
+<B>ipx</B>
+
+(
+<I>Novell IPX</I>
+
+) 和
+<B>netrom </B>
+
+(
+<I>AMPR</I>
+
+无线分组)。
+<A NAME="lbAF">&nbsp;</A>
+<H2>选项</H2>
+
+<B>接口</B>
+
+接口名称。通常是一个后跟单元号的驱动设备名，
+例如第一个以太接口
+<I>eth0 。</I>
+
+<DL COMPACT>
+<DT><B>up</B>
+
+<DD>
+此选项激活接口。如果给接口声明了地址，等于隐含声明了这个选项。
+<DT><B>down   </B>
+
+<DD>
+此选项使接口驱动设备关闭。
+<DT><B>[-]arp</B>
+
+<DD>
+允许或禁止在接口上使用
+<B>ARP</B>
+
+协议。
+<DT><B>[-]promisc</B>
+
+<DD>
+允许或禁止接口置于混杂模式。
+如果选用，则接口可以接收网络上的所有分组。
+<DT><B>[-]allmulti</B>
+
+<DD>
+允许或禁止
+<B>组播模式（all-multicast） 。</B>
+
+如果选用，则接口可以接收网络上的所有组播分组。
+<DT><B>metric N</B>
+
+<DD>
+将接口度量值设置为整数 N。
+(译注：度量值表示在这个路径上发送一个分组的成本,就是通过多少个路由）
+<DT><B>mtu N</B>
+
+<DD>
+此选项设定接口的最大传输单元
+<I>MTU。</I>
+
+<DT><B>dstaddr addr</B>
+
+<DD>
+为点到点链路(如
+<I>PPP</I>
+
+)设定一个远程 IP 地址。此选项现已废弃；用
+<I>pointopoint</I>
+
+选项替换。
+<DT><B>netmask addr</B>
+
+<DD>
+为接口设定 IP 网络掩码。缺省值通常是 A，B 或 C 类的网络掩码
+(由接口的 IP 地址推出)，但也可设为其它值。
+<DT><B>add addr/prefixlen</B>
+
+<DD>
+为接口加入一个
+<I>IPv6</I>
+
+地址。
+<DT><B>del addr/prefixlen</B>
+
+<DD>
+为接口删除一个
+<I>IPv6</I>
+
+地址。
+<DT><B>tunnel aa.bb.cc.dd</B>
+
+<DD>
+建立一个新的
+<B>SIT</B>
+
+(在
+<I>IPv4</I>
+
+中的
+<I>IPv6</I>
+
+)设备，为给定的目的地址建立通道。
+<DT><B>irq addr</B>
+
+<DD>
+为接口设定所用的中断值。
+并不是所有的设备都能动态更改自己的中断值。
+<DT><B>io_addr addr</B>
+
+<DD>
+为接口设定起始输入/输出地址。
+<DT><B>mem_start addr</B>
+
+<DD>
+设定接口所用的共享内存起始地址。只有少数设备需要。
+<DT><B>media type</B>
+
+<DD>
+设定接口所用的物理端口或介质类型。并不是所有设备都会
+更改这项值，而且它们支持的类型可能并相同。典型的
+<B>type</B>
+
+是
+<I>10base2</I>
+
+(细缆以太网)，
+<I>10baseT</I>
+
+(双绞线 10Mbps 以太网)，
+<I>AUI</I>
+
+(外部收发单元接口)等等。介质类型为
+<B>auto</B>
+
+则用于让设备自动判断介质。
+同样，并非所有设备都可以这样工作。
+<DT><B>[-]broadcast [addr]</B>
+
+<DD>
+如果给出了地址参数，
+则可以为接口设定该协议的广播地址。
+否则，为接口设置(或清除)
+<I>IFF_BROADCAST</I>
+
+标志。
+<DT><B>[-]pointopoint [addr]</B>
+
+<DD>
+此选项允许接口置为
+<B>点到点</B>
+
+模式，这种模式在两台主机间建立一条无人可以监听的直接链路。
+<BR>
+
+如果还给出了地址参数，则设定链路另一方的协议地址，正如废弃的
+<I>dstaddr</I>
+
+选项的功能。否则，为接口设置(或清除)
+<I>IFF_POINTOPOINT</I>
+
+标志。
+<DT><B>hw class address</B>
+
+<DD>
+如接口驱动程序支持，则设定接口的硬件地址。
+此选项必须后跟硬件的类型名称和硬件地址等价的可打印
+<I>ASCII</I>
+
+字符。当前支持的硬件类型包括
+<I>ether</I>
+
+(以太网)，
+<I>ax25</I>
+
+(AMPR AX.25)，
+<I>ARCnet</I>
+
+和
+<I>netrom</I>
+
+(AMPR NET/ROM)。
+<DT><B>multicast</B>
+
+<DD>
+为接口设定组播标志。
+通常无须用此选项因为接口本身会正确设定此标志。
+<DT><B>address</B>
+
+<DD>
+为接口分配的
+<B>IP</B>
+
+地址。
+<DT><B>txqueuelen length</B>
+
+<DD>
+为接口设定传输队列的长度。可以为具有高时延的低速接口设定
+较小值以避免在象
+<I>telnet</I>
+
+这样烦人的交互通信时大量高速的传输。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>注意</H2>
+
+从内核版本 2.2 起不再有别名接口的显式接口统计信息了。
+打印出的源地址统计信息被同一接口的所有别名地址共享。
+打印出的源地址统计信息被同一接口的所有别名地址共享。
+如果你需要每个地址的统计信息，就应该用
+<B><A HREF="/cgi-bin/man/man2html?8+ipchains">ipchains</A>(8)</B>
+
+命令为地址加入显式的记帐规则。
+<A NAME="lbAH">&nbsp;</A>
+<H2>相关文件</H2>
+
+<I>/proc/net/socket</I>
+
+<BR>
+
+<I>/proc/net/dev</I>
+
+<BR>
+
+<I>/proc/net/if_inet6</I>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>BUGS</H2>
+
+当显示
+<I>appletalk DDP</I>
+
+和
+<I>IPX</I>
+
+地址时不能用此命令进行更改，但可以用这条命令显示。
+<A NAME="lbAJ">&nbsp;</A>
+<H2>又见</H2>
+
+<A HREF="/cgi-bin/man/man2html?8+route">route</A>(8), <A HREF="/cgi-bin/man/man2html?8+netstat">netstat</A>(8), <A HREF="/cgi-bin/man/man2html?8+arp">arp</A>(8), <A HREF="/cgi-bin/man/man2html?8+rarp">rarp</A>(8), <A HREF="/cgi-bin/man/man2html?8+ipchains">ipchains</A>(8)
+<A NAME="lbAK">&nbsp;</A>
+<H2>作者</H2>
+
+Fred N. van Kempen, &lt;<A HREF="mailto:waltje@uwalt.nl.mugnet.org">waltje@uwalt.nl.mugnet.org</A>&gt;
+Alan Cox, &lt;<A HREF="mailto:Alan.Cox@linux.org">Alan.Cox@linux.org</A>&gt;
+Phil Blundell, &lt;<A HREF="mailto:Philip.Blundell@pobox.com">Philip.Blundell@pobox.com</A>&gt;
+Andi Kleen, &lt;<A HREF="mailto:ak@muc.de">ak@muc.de</A>&gt;
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>meaculpa &lt;<A HREF="mailto:meaculpa@21cn.com">meaculpa@21cn.com</A>&gt;</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/12/08</B>
+
+<P>
+<A NAME="lbAN">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<DL COMPACT>
+<DT><B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<DD>
+<P>
+<P>
+</DL>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">地址族</A><DD>
+<DT><A HREF="#lbAF">选项</A><DD>
+<DT><A HREF="#lbAG">注意</A><DD>
+<DT><A HREF="#lbAH">相关文件</A><DD>
+<DT><A HREF="#lbAI">BUGS</A><DD>
+<DT><A HREF="#lbAJ">又见</A><DD>
+<DT><A HREF="#lbAK">作者</A><DD>
+<DT><A HREF="#lbAL">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAM">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAN">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

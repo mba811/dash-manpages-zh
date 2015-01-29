@@ -1,0 +1,152 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SHOW</TITLE>
+</HEAD><BODY>
+<H1>SHOW</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+SHOW - 显示运行时参数的数值
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+SHOW <I>name</I>
+SHOW ALL
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>SHOW</B> 将显示当前运行时参数的数值。 这些变量可以通过 SET 语句来设置，或者通过编辑 postgresql.conf， 或者通过 PGOPTIONS 环境变量，（在使用libpq或者以 libpq 为基础的应用的时候。） 或者在postmaster启动时用命令行参数来设置。 参阅 Section 16.4 ``Run-time Configuration'' 获取细节。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;运行时参数的名称。可用的参数在&nbsp;Section&nbsp;16.4&nbsp;``Run-time&nbsp;Configuration''&nbsp;里面有文档，以及&nbsp;SET&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+set">set</A></B>(7)]&nbsp;手册页。&nbsp;另外，还有几个参数可以显示，但是不能设置：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>SERVER_VERSION</B><DD>
+<BR>&nbsp;显示服务器的版本号。
+<DT><B>SERVER_ENCODING</B><DD>
+<BR>&nbsp;显示服务器断的字符集编码。目前，这个参数只能显示但不能设置，&nbsp;因为编码是在创建数据库的时候决定的。
+<DT><B>LC_COLLATE</B><DD>
+<BR>&nbsp;显示数据库的字符集区域设置（字符顺序）。目前，这个参数只能显示&nbsp;但不能设置，因为设置是在&nbsp;initdb&nbsp;的时候设置的。
+<DT><B>LC_CTYPE</B><DD>
+<BR>&nbsp;为字符集分类显示数据库的区域设置。目前，这个参数只能显示，不能设置，&nbsp;因为它的设置是在&nbsp;initdb&nbsp;的时候决定的。
+<DT><B>IS_SUPERUSER</B><DD>
+<BR>&nbsp;如果当前事务认证标识符有超级用户权限，则为真。
+</DL>
+</DL>
+
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>ALL</B><DD>
+<BR>&nbsp;显示所有当前会话参数。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES</H2>
+
+<P>
+
+<BR>&nbsp;函数&nbsp;current_setting&nbsp;生成相同输出。&nbsp;参阅&nbsp;Section&nbsp;9.13&nbsp;``Miscellaneous&nbsp;Functions''&nbsp;。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;显示当前&nbsp;DateStyle&nbsp;的设置：
+<P>
+<PRE>
+SHOW DateStyle;
+ DateStyle
+-----------
+ ISO, MDY
+(1 row)
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;显示参数geqo的当前设置：
+<P>
+<PRE>
+SHOW geqo;
+ geqo
+------
+ on
+(1 row)
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;显示所有设置：
+<P>
+<PRE>
+SHOW ALL;
+             name              |                setting
+-------------------------------+---------------------------------------
+ australian_timezones          | off
+ authentication_timeout        | 60
+ checkpoint_segments           | 3
+    .
+    .
+    .
+ wal_debug                     | 0
+ wal_sync_method               | fdatasync
+(94 rows)
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+SHOW 命令是 PostgreSQL 扩展。
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+SET [<B><A HREF="/cgi-bin/man/man2html?7+set">set</A></B>(7)]
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO</A><DD>
+<DT><A HREF="#lbAJ">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

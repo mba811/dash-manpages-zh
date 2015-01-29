@@ -1,0 +1,389 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of MORE</TITLE>
+</HEAD><BODY>
+<H1>MORE</H1>
+Section: User Commands  (1)<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+<BR>BSD mandoc<BR>
+Linux 0.98
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+<B>more</B>
+
+ - 在显示器上阅读文件的过滤器
+
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>more</B>
+
+[-<B>dlfpcsu</B>
+
+]
+
+[-<B>num</B>
+
+]
+
+[+/ pattern]
+
+[+ linenum]
+
+[<I>file ...</I>
+
+]
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>More</B>
+
+是 一个 过滤器, 用于 分页 显示 (一次一屏) 文本. 这个 版本 非常 基本.
+用户 应该 知道
+<A HREF="/cgi-bin/man/man2html?1+less">less</A>(1)
+
+
+提供了
+<A HREF="/cgi-bin/man/man2html?1+more">more</A>(1)
+
+
+的 模拟, 并且 做了 增强.
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTION)</H2>
+
+下面 介绍 命令行选项. 选项 可以 从 环境变量
+<B>MORE</B>
+
+中获取 (要 确保 它们 以 短横线 开头 (``-'')), 但是 命令行选项 能够 覆盖 它们.
+<DL COMPACT>
+<P>
+
+<DT><B>-num</B>
+
+
+<DD>
+这个选项指定屏幕的行数 (以整数表示).
+<DT><B>-d</B>
+
+
+<DD>
+让
+<B>more</B>
+
+给 用户 显示 提示信息 &quot;[Press space to continue, 'q' to quit.]&quot;, 
+当 用户 按下 其他键 时, 显示 &quot;[Press 'h' for instructions.]&quot;,
+而不是 扬声器 鸣笛.
+<DT><B>-l</B>
+
+
+<DD>
+<B>More</B>
+
+在 通常情况下 把
+<B>^L</B>
+
+(form feed) 当做 特殊字符, 遇到 这个字符 就会 暂停.
+-<B>l</B>
+
+选项 可以 阻止 这种特性.
+<DT><B>-f</B>
+
+
+<DD>
+使
+<B>more</B>
+
+计数 逻辑行, 而不是 屏幕行 (就是说, 长行 不会 断到 下一行).
+<DT><B>-p</B>
+
+
+<DD>
+不卷屏, 而是 清除 整个屏幕, 然后 显示 文本.
+<DT><B>-c</B>
+
+
+<DD>
+不卷屏, 而是 从 每一屏的 顶部 开始 显示 文本, 每 显示完 一行, 
+就 清除 这一行的 剩余部分.
+<DT><B>-s</B>
+
+
+<DD>
+把 重复的空行 压缩成 一个 空行.
+<DT><B>-u</B>
+
+
+<DD>
+防止下划线.
+<DT><B>+/</B>
+
+
+<DD>
+在 显示 每个文件 前, 搜索
+<B>+/</B>
+
+选项 指定的 文本串.
+<DT><B>+num</B>
+
+
+<DD>
+从行号
+<B>num </B>
+
+开始显示.
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>命令 (COMMAND)</H2>
+
+<B>more</B>
+
+的交互命令基于
+<A HREF="/cgi-bin/man/man2html?1+vi">vi</A>(1).
+
+
+有些命令 以 一个 十进制数字 开始, 在 下面的描述 里 称之为 k. 后面的 描述中,
+^X 指 control-X.
+<P>
+
+<DL COMPACT>
+<P>
+
+<DT><B>h or ?</B>
+
+
+
+
+
+
+<DD>
+帮助: 显示 这些 命令 的 摘要. 你 如果 忘掉 所有 其他的命令, 请记住这个.
+<DT><B>SPACE</B>
+
+
+<DD>
+显示 接下来的 k 行文本. 缺省值 是 当前的屏幕大小.
+<DT><B>z</B>
+
+
+<DD>
+显示 接下来的 k 行文本. 缺省值 是 当前的屏幕大小. 参数 成为 新的缺省值.
+<DT><B>RETURN</B>
+
+
+<DD>
+显示 接下来的 k 行文本. 缺省值 是 1. 参数 成为 新的缺省值.
+<DT><B>d or ^D</B>
+
+
+
+
+
+
+<DD>
+卷屏 k 行. 缺省值 是 当前的 卷屏大小, 初始化为 11. 参数 成为 新的缺省值.
+<DT><B>
+</B>
+
+<B>q</B>
+
+<B>或</B>
+
+<B>Q</B>
+
+<B>或</B>
+
+<B>INTERRUPT</B>
+
+<DD>
+
+退出.
+<DT><B>s</B>
+
+
+<DD>
+向前跳过 k 行文本. 缺省值 是 1.
+<DT><B>f</B>
+
+
+<DD>
+向前跳过 k 屏文本. 缺省值 是 1.
+<DT><B>b or ^B</B>
+
+
+
+
+
+
+<DD>
+向后跳回 k 屏文本. 缺省值 是 1.
+<DT><B></B>
+
+
+<DD>
+跳到 上一次 搜索 开始 的 地方.
+<DT><B>=</B>
+
+
+<DD>
+显示当前行号.
+<DT><B>/ </B><I>pattern</I>
+
+
+
+
+
+
+<DD>
+搜索 第 k 个 符合 正则表达式的 文本串. 缺省值 是 1.
+<DT><B>n</B>
+
+
+<DD>
+搜索 最后 第 k 个 符合 正则表达式的 文本串. 缺省值 是 1.
+<DT><B>!&lt;cmd&gt; or :!&lt;cmd&gt;</B>
+
+
+
+
+
+
+<DD>
+在子 shell 中执行 &lt;cmd&gt;.
+<DT><B>v</B>
+
+
+<DD>
+启动 /usr/bin/vi, 指向 当前行.
+<DT><B>^L</B>
+
+
+<DD>
+刷新屏幕.
+<DT><B>:n</B>
+
+
+<DD>
+跳到 后面 第 k 个 文件.  缺省值 是 1.
+<DT><B>:p</B>
+
+
+<DD>
+跳到 前面 第 k 个 文件.  缺省值 是 1.
+<DT><B>:f</B>
+
+
+<DD>
+显示 当前文件名 和 行号.
+<DT><B>.</B>
+
+
+<DD>
+重复上次命令.
+</DL>
+<P>
+
+<A NAME="lbAG">&nbsp;</A>
+<H2>环境 (ENVIRONMENT)</H2>
+
+<B>More</B>
+
+利用 下面的 环境变量 (如果 它们 存在):
+<DL COMPACT>
+<P>
+
+<DT><B>MORE</B>
+
+
+<DD>
+这个变量 设置 你 喜欢的
+<B>more </B>
+
+选项.
+<DT><B>SHELL</B>
+
+
+<DD>
+当前使用的 shell (一般说来 就是 登录 shell).
+<DT><B>TERM</B>
+
+
+<DD>
+指定 终端类型, more 用它来 获取 操作屏幕 所需的 终端特性.
+</DL>
+<P>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<A HREF="/cgi-bin/man/man2html?1+vi">vi</A>(1)
+
+
+<A HREF="/cgi-bin/man/man2html?1+less">less</A>(1)
+
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>作者 (AUTHOR)</H2>
+
+<DD>Eric Shienbrood, UC Berkeley
+<BR>
+
+Modified by Geoff Peck, UCB to add underlining, single spacing
+<BR>
+
+Modified by John Foderaro, UCB to add -c and MORE environment variable
+<A NAME="lbAJ">&nbsp;</A>
+<H2>历史 (HISTORY)</H2>
+
+<B>more</B>
+
+命令 出现在
+BSD 3.0
+ 
+本手册页 描述了
+<B>more</B>
+
+version 5.19 (Berkeley 6/29/88), 目前 它 用在 Linux 社团. 
+制作文档时 使用了 其他几个版本 的 手册页, 
+并且 根据 源程序 作了 扩充.
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+徐明 &lt;<A HREF="mailto:xuming@users.sourceforge.net">xuming@users.sourceforge.net</A>&gt;
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+2003/05/13
+<A NAME="lbAM">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTION)</A><DD>
+<DT><A HREF="#lbAF">命令 (COMMAND)</A><DD>
+<DT><A HREF="#lbAG">环境 (ENVIRONMENT)</A><DD>
+<DT><A HREF="#lbAH">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAI">作者 (AUTHOR)</A><DD>
+<DT><A HREF="#lbAJ">历史 (HISTORY)</A><DD>
+<DT><A HREF="#lbAK">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAL">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAM">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

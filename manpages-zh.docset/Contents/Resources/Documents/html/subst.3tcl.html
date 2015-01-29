@@ -1,0 +1,120 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of subst</TITLE>
+</HEAD><BODY>
+<H1>subst</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 7.4<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+subst - 进行反斜杠、命令、和变量替换
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>subst </B>?<B>-nobackslashes</B>? ?<B>-nocommands</B>? ?<B>-novariables</B>? <I>string</I>
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令在它的 <I>string</I> 
+参数上进行变量替换、命令替换、和反斜杠替换并返回被完全替换了的结果。 
+进行替换的方式与 Tcl 命令的方式完全相同，<I>string</I> 
+参数实际上被替换了两次，第一次是由 Tcl 
+分析器以通常的方式为 Tcl 命令进行替换，而第二次是由 <I>subst</I> 
+命令对它的参数进行替换。
+<P>
+
+如指定了 <B>-nobackslashes</B>、<B>-nocommands</B>、或 <B>-novariables</B> 
+中的任意一个，则不进行相应的替换。例如，如果指定了 <B>-nocommands</B>，就不进行命令替换: 
+开方括号和闭方括号被作为没有特殊解释的普通字符对待。
+<P>
+
+注意: 在进行替代的时候，<I>subst</I> 
+对双引号或花括号不做特殊的对待。例如，脚本
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>set a 44
+subst {xyz {$a}}</B>
+
+</PRE>
+
+</DL>
+
+
+返回 ``<B>xyz {44}</B>'', 而不是 ``<B>xyz {$a}</B>''.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?n+eval">eval</A>(n)
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+backslash substitution, command substitution, variable substitution
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/10/30</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAF">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAG">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAH">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAI">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

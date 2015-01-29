@@ -1,0 +1,455 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE TABLE</TITLE>
+</HEAD><BODY>
+<H1>CREATE TABLE</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE TABLE - 定义一个新表
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE [ [ GLOBAL | LOCAL ] { TEMPORARY | TEMP } ] TABLE <I>table_name</I> (
+    { <I>column_name</I> <I>data_type</I> [ DEFAULT <I>default_expr</I> ] [ <I>column_constraint</I> [, ... ] ]
+    | <I>table_constraint</I>
+    | LIKE <I>parent_table</I> [ { INCLUDING | EXCLUDING } DEFAULTS ] }  [, ... ]
+)
+[ INHERITS ( <I>parent_table</I> [, ... ] ) ]
+[ WITH OIDS | WITHOUT OIDS ]
+[ ON COMMIT { PRESERVE ROWS | DELETE ROWS | DROP } ]
+
+where <I>column_constraint</I> is:
+
+[ CONSTRAINT <I>constraint_name</I> ]
+{ NOT NULL | NULL | UNIQUE | PRIMARY KEY |
+  CHECK (<I>expression</I>) |
+  REFERENCES <I>reftable</I> [ ( <I>refcolumn</I> ) ] [ MATCH FULL | MATCH PARTIAL | MATCH SIMPLE ]
+    [ ON DELETE <I>action</I> ] [ ON UPDATE <I>action</I> ] }
+[ DEFERRABLE | NOT DEFERRABLE ] [ INITIALLY DEFERRED | INITIALLY IMMEDIATE ]
+
+and <I>table_constraint</I> is:
+
+[ CONSTRAINT <I>constraint_name</I> ]
+{ UNIQUE ( <I>column_name</I> [, ... ] ) |
+  PRIMARY KEY ( <I>column_name</I> [, ... ] ) |
+  CHECK ( <I>expression</I> ) |
+  FOREIGN KEY ( <I>column_name</I> [, ... ] ) REFERENCES <I>reftable</I> [ ( <I>refcolumn</I> [, ... ] ) ]
+    [ MATCH FULL | MATCH PARTIAL | MATCH SIMPLE ] [ ON DELETE <I>action</I> ] [ ON UPDATE <I>action</I> ] }
+[ DEFERRABLE | NOT DEFERRABLE ] [ INITIALLY DEFERRED | INITIALLY IMMEDIATE ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE TABLE</B> 将在当前数据库创建一个新的， 初始为空的表。该表将由发出此命令的用户所有。
+<P>
+
+<BR>&nbsp;如果给出了模式名（比如，CREATE&nbsp;TABLE&nbsp;myschema.mytable&nbsp;...），&nbsp;那么表是在指定模式中创建的。否则它在当前模式中创建。临时表存在于一个特殊的模式里，&nbsp;因此创建临时表的时候不能给出模式名。表名字必需和同一模式中其他表，序列，索引或者视图相区别。
+<P>
+
+<B>CREATE TABLE</B> 还自动创建一个数据类型， 该数据类型代表对应该表一行的复合类型。 因此，表不能和同模式中的现有数据类型同名。
+<P>
+
+<BR>&nbsp;一个表的字段数不能超过&nbsp;1600。（实际上，真正的限制比这低，因为还有元组长度的约束）。
+<P>
+
+<BR>&nbsp;可选的约束子句声明约束（或者测试），新行或者更新的行必须满足这些约束才能成功插入或更新。&nbsp;约束是一个它是一个&nbsp;SQL&nbsp;对象，它以多种方式协助我们协助我们在表上定义有效的数值集合。
+<P>
+
+<BR>&nbsp;定义约束又两种方法：表约束和列约束。一个列约束是作为一个列定义的一部分定义的。&nbsp;而表约束并不和某个列绑在一起，&nbsp;它可以作用于多于一个列上。每个列约束也可以写成表约束；&nbsp;如果某个约束只影响一个列，那么列约束只是符号上的简洁方式而已。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B>TEMPORARY 或 TEMP</B><DD>
+<BR>&nbsp;如果声明了此参数，则该表创建为临时表。临时表在会话结束时自动删除，&nbsp;或者是（可选）在当前事务的结尾（参阅下面的&nbsp;ON&nbsp;COMMIT）。&nbsp;现有同名永久表在临时表存在期间在本会话过程中是不可见的，&nbsp;除非它们是用模式修饰的名字引用的。&nbsp;任何在临时表上创建的索引也都会自动删除。
+<P>
+<BR>&nbsp;我们可以选择在&nbsp;TEMPORARY&nbsp;或&nbsp;TEMP&nbsp;前面放上&nbsp;GLOBAL&nbsp;或者&nbsp;LOCAL。&nbsp;这样对&nbsp;PostgreSQL&nbsp;没有任何区别，可以参阅&nbsp;Compatibility&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+create_table">create_table</A></B>(7)]。
+<DT><B></B><I>table_name</I><B></B><DD>
+<BR>&nbsp;要创建的表的名字（可以用模式修饰）。
+<DT><B></B><I>column_name</I><B></B><DD>
+<BR>&nbsp;在新表中要创建的字段名字。
+<DT><B></B><I>data_type</I><B></B><DD>
+<BR>&nbsp;该字段的数据类型。它可以包括数组说明符。
+<DT><B>DEFAULT</B><DD>
+DEFAULT 子句给它所出现的字段一个缺省数值。 该数值可以是任何不含变量的表达式（不允许使用子查询和对本表中的其它字段的交叉引用）。 缺省表达式的数据类型必须和字段类型匹配。
+<P>
+<BR>&nbsp;缺省表达式将被用于任何未声明该字段数值的插入操作。&nbsp;如果字段上没有缺省值，那么缺省是&nbsp;NULL。
+<DT>LIKE 子句声明一个表，新表自动从这个表里面继承所有字段名， 他们的数据类型，以及非空约束。<DD>
+<P>
+<BR>&nbsp;和&nbsp;INHERITS&nbsp;不同，新表与继承过来的表之间在创建动作完毕之后是完全无关的。&nbsp;插入新表的数据不会在父表中表现出来。
+<BR>&nbsp;
+<BR>&nbsp;字段缺省表达式只有在声明了&nbsp;INCLUDING&nbsp;DEFAULTS&nbsp;之后才会继承过来。&nbsp;缺省是排除缺省表达式。
+<DT><B>INHERITS ( </B><I>parent_table</I><B> [, ... ] )</B><DD>
+<BR>&nbsp;可选的&nbsp;INHERITS&nbsp;子句声明一列表，这个新表自动从这列表中继承所有字段。&nbsp;如果在多于一个父表中存在同名的字段，那么就会报告一个错误，除非这些字段的数据类型在每个父表里都是匹配的。&nbsp;如果没有冲突，那么重复的字段在新表中融合成一个字段。&nbsp;如果新表的字段名列表中包括和继承的字段同名的，那么它的数据类型也必须和上面一样与继承字段匹配，并且这些字段定义会融合成一个。&nbsp;不过，同名的继承和新字段声明可以声明不同的约束：所有的继承过来的约束以及声明的约束都融合到一起，并且全部应用于新表。&nbsp;如果新表为该字段明确的声明了一个缺省数值，那么此缺省数值覆盖任何来自继承字段声明的缺省值。&nbsp;否则，任何为该字段声明了缺省数值的父表都必须声明相同的缺省，否则就会报告一个错误。
+<DT><B>WITH OIDS</B><DD>
+<DT><B>WITHOUT OIDS</B><DD>
+<BR>&nbsp;这个可选的子句声明新表中的行是否应该拥有赋予它们的&nbsp;OID&nbsp;（对象标识）。&nbsp;缺省是有&nbsp;OID。（如果新表从任何有&nbsp;OID&nbsp;的表继承而来，那么就算这条命令说了&nbsp;WITHOUT&nbsp;OIDS，&nbsp;也会强制&nbsp;WITH&nbsp;OIDS。）
+<P>
+<BR>&nbsp;声明&nbsp;WITHOUT&nbsp;OIDS&nbsp;允许用户禁止为行或者表生成&nbsp;OID。&nbsp;这么做对大表是值得的，因为这样可以减少&nbsp;OID&nbsp;消耗并且推迟&nbsp;32&nbsp;位&nbsp;OID&nbsp;计数器的消耗。&nbsp;一旦该计数器重叠，那么就不能再假设&nbsp;OID&nbsp;的唯一，这样它的实用性就大打折扣。&nbsp;声明&nbsp;WITHOUT&nbsp;OIDS&nbsp;还会减少在磁盘上存储每行的空间，每行减少&nbsp;4&nbsp;字节，因此也可以改进性能。
+<DT><B>CONSTRAINT </B><I>constraint_name</I><B></B><DD>
+<BR>&nbsp;列或表约束的可选名字。如果没有声明，则由系统生成一个名字。
+<DT><B>NOT NULL</B><DD>
+<BR>&nbsp;字段不允许包含&nbsp;NULL&nbsp;数值。
+<DT><B>NULL</B><DD>
+<BR>&nbsp;该字段允许包含&nbsp;NULL&nbsp;数值。这是缺省。
+<P>
+<BR>&nbsp;这个子句的存在只是为和那些非标准&nbsp;SQL&nbsp;数据库兼容。&nbsp;我们不建议在新应用中使用它。
+<DT><B>UNIQUE (column constraint)</B><DD>
+<DT><B>UNIQUE ( </B><I>column_name</I><B> [, ... ] ) (table constraint)</B><DD>
+UNIQUE 声明一个规则，表示一个表里的一个或者多个独立的字段组合的分组只能包含唯一的数值。 表的唯一约束的行为和列约束的一样，只不过多了跨多行的能力。
+<P>
+<BR>&nbsp;对于唯一约束的用途而言，系统认为&nbsp;NULL&nbsp;数值是不相等的。
+<P>
+<BR>&nbsp;每个唯一表约束都必须命名一个字段的集合，该集合必须和其它唯一约束命名字段集合或者该表定义的主键约束不同。&nbsp;（否则就只是同样的约束写了两次。）
+<DT><B>PRIMARY KEY (column constraint)</B><DD>
+<DT><B>PRIMARY KEY ( </B><I>column_name</I><B> [, ... ] ) (table constraint)</B><DD>
+<BR>&nbsp;主键约束表明表中的一个或者一些字段只能包含唯一（不重复）非&nbsp;NULL&nbsp;的数值。&nbsp;从技术上讲，PRIMARY&nbsp;KEY&nbsp;只是&nbsp;UNIQUE&nbsp;和&nbsp;NOT&nbsp;NULL&nbsp;的组合，不过把一套字段标识为主键同时也体现了模式设计的元数据，&nbsp;因为主键意味着其它表可以拿这套字段用做行的唯一标识。
+<P>
+<BR>&nbsp;一个表只能声明一个主键，不管是作为字段约束还是表约束。
+<P>
+<BR>&nbsp;主键约束应该定义在同个表上的一个与其它唯一约束所定义的不同的字段集合上。
+<DT><B>CHECK (</B><I>expression</I><B>)</B><DD>
+CHECK 约束声明一个生成布尔结果的子句， 一次插入或者更新操作若想成功则里面的新行或者被更新的行必须满足这个条件。 声明为字段约束的检查约束应该只引用该字段的数值，而在表约束里出现的表达式可以引用多个字段。
+<P>
+<BR>&nbsp;目前，CHECK&nbsp;表达式不能包含子查询也不能引用除当前行字段之外的变量。
+<DT><B>REFERENCES </B><I>reftable</I><B> [ ( </B><I>refcolumn</I><B> ) ] [ MATCH </B><I>matchtype</I><B> ] [ ON DELETE </B><I>action</I><B> ] [ ON UPDATE </B><I>action</I><B> ] (column constraint)</B><DD>
+<DT><B>FOREIGN KEY ( </B><I>column</I><B> [, ... ] )</B><DD>
+<BR>&nbsp;这些子句声明一个外键约束，外键约束声明一个由新表中一列或者多列组成的组应该只包含匹配引用的表&nbsp;reftable&nbsp;中对应引用的字段&nbsp;refcolumn&nbsp;中的数值。&nbsp;如果省略&nbsp;refcolumn，&nbsp;则使用&nbsp;reftable&nbsp;的主键。&nbsp;被引用字段必须是被引用表中的唯一字段或者主键。
+<P>
+<BR>&nbsp;向这些字段插入的数值将使用给出的匹配类型与参考表中的参考列中的数值进行匹配。&nbsp;有三种匹配类型：MATCH&nbsp;FULL，&nbsp;MATCH&nbsp;PARTIAL，和&nbsp;MATCH&nbsp;SIMPLE，它也是缺省匹配类型。&nbsp;MATCH&nbsp;FULL&nbsp;将不允许一个多字段外键的字段为&nbsp;NULL，除非所有外键字段都为&nbsp;NULL。&nbsp;MATCH&nbsp;SIMPLE&nbsp;允许某些外键字段为&nbsp;NULL&nbsp;而外键的其它部分不是&nbsp;NULL。MATCH&nbsp;PARTIAL&nbsp;&nbsp;还没实现。
+<P>
+<BR>&nbsp;另外，当被参考字段中的数据改变的时候，那么将对本表的字段中的数据执行某种操作。&nbsp;ON&nbsp;DELETE&nbsp;子句声明当被参考表中的被参考行将被删除的时候要执行的操作。&nbsp;类似，ON&nbsp;UPDATE&nbsp;子句声明被参考表中被参考字段更新为新值的时候要执行的动作。&nbsp;如果该行被更新，但被参考的字段实际上没有变化，那么就不会有任何动作。&nbsp;下面是每个子句的可能的动作：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>NO ACTION</B><DD>
+<BR>&nbsp;生成一个错误，表明删除或者更新将产生一个违反外键约束的动作。&nbsp;它是缺省动作。
+<DT><B>RESTRICT</B><DD>
+<BR>&nbsp;和&nbsp;NO&nbsp;ACTION&nbsp;一样，只是动作不可推迟，&nbsp;即使约束剩下的部分是可以推迟的也马上发生。
+<DT><B>CASCADE</B><DD>
+<BR>&nbsp;删除任何引用了被删除行的行，或者分别把引用行的字段值更新为被参考字段的新数值。
+<DT><B>SET NULL</B><DD>
+<BR>&nbsp;把引用行数值设置为&nbsp;NULL。
+<DT><B>SET DEFAULT</B><DD>
+<BR>&nbsp;把引用列的数值设置为它们的缺省值。
+</DL>
+</DL>
+
+</DL>
+<P>
+
+<P>
+<BR>&nbsp;如果主键字段经常更新，那么我们给&nbsp;REFERENCES&nbsp;&nbsp;字段增加一个索引可能是合适的，这样与&nbsp;REFERENCES&nbsp;字段相关联的&nbsp;NO&nbsp;ACTION&nbsp;&nbsp;和&nbsp;CASCADE&nbsp;动作可以更有效地执行。
+<DL COMPACT>
+<DT><B>DEFERRABLE</B><DD>
+<DT><B>NOT DEFERRABLE</B><DD>
+<BR>&nbsp;这两个关键字设置该约束是否可推迟。一个不可推迟的约束将在每条命令之后马上检查。&nbsp;可以推迟的约束检查可以推迟到事务结尾（使用&nbsp;SET&nbsp;CONSTRAINTS&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+set_constraints">set_constraints</A></B>(7)]&nbsp;&nbsp;命令）。&nbsp;缺省是&nbsp;NOT&nbsp;DEFERRABLE。目前只有外键约束接受这个子句。所有其它约束类型都是不可推迟的。
+<DT><B>INITIALLY IMMEDIATE</B><DD>
+<DT><B>INITIALLY DEFERRED</B><DD>
+<BR>&nbsp;如果约束是可推迟的，那么这个子句声明检查约束的缺省时间。&nbsp;如果约束是&nbsp;INITIALLY&nbsp;IMMEDIATE，&nbsp;那么每条语句之后就检查它。这个是缺省。如果约束是&nbsp;INITIALLY&nbsp;DEFERRED，那么只有在事务结尾才检查它。&nbsp;约束检查的时间可以用&nbsp;SET&nbsp;CONSTRAINTS&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+set_constraints">set_constraints</A></B>(7)]&nbsp;命令修改。
+<DT><B>ON COMMIT</B><DD>
+<BR>&nbsp;我们可以用&nbsp;ON&nbsp;COMMIT&nbsp;控制临时表在事务块结尾的行为。这三个选项是：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>PRESERVE ROWS</B><DD>
+<BR>&nbsp;在事务结尾不发生任何特定的动作。这是缺省行为。
+<DT><B>DELETE ROWS</B><DD>
+<BR>&nbsp;临时表的所有行在每次事务结尾都被删除。实际上，在每次提交的时候都自动&nbsp;<B><A HREF="/cgi-bin/man/man2html?7+truncate">truncate</A></B>(7)&nbsp;&nbsp;。
+<DT><B>DROP</B><DD>
+<BR>&nbsp;在当前事务块的结尾，临时表将被删除。
+</DL>
+</DL>
+
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<DL COMPACT>
+<DT>&bull;<DD>
+<BR>&nbsp;如果一个应用使用了&nbsp;OID&nbsp;标识表中的特定行，那么我们建议在该表的&nbsp;oid&nbsp;字段上创建一个唯一约束，以确保该表的&nbsp;OID&nbsp;即使在计数器重叠之后也是唯一的。如果你需要一个整个数据库范围的唯一标识，&nbsp;那么就要避免假设&nbsp;OID&nbsp;是跨表唯一的，你可以用&nbsp;tableoid&nbsp;和行&nbsp;OID&nbsp;的组合来实现这个目的。&nbsp;（将来的&nbsp;PostgreSQL&nbsp;很可能为每个表使用独立的&nbsp;OID&nbsp;计数器，&nbsp;因此包括&nbsp;tableoid&nbsp;组成数据库范围内的唯一标识将是必须的，而不是可选的。）
+<P>
+<DL COMPACT><DT><DD>
+<B>提示: </B>
+
+对那些没有主键的表，我们不建议使用 WITHOUT OIDS， 因为如果既没有 OID 又没有唯一数据键字，那么就很难标识特定的行。
+</DL>
+
+<P>
+<DT>&bull;<DD>
+PostgreSQL 自动为每个唯一约束和主键约束创建一个索引以确保唯一性。 因此，我们不必为主键字段创建明确的索引。（参阅 CREATE INDEX [<B><A HREF="/cgi-bin/man/man2html?7+create_index">create_index</A></B>(7)]获取更多信息。）
+<DT>&bull;<DD>
+<BR>&nbsp;唯一约束和主键在目前的实现里是不能继承的。&nbsp;这样，如果把继承和唯一约束组合在一起会导致无法运转。
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;创建表&nbsp;films&nbsp;和&nbsp;distributors：
+<P>
+<PRE>
+CREATE TABLE films (
+    code        <A HREF="/cgi-bin/man/man2html?5+char">char</A>(5) CONSTRAINT firstkey PRIMARY KEY,
+    title       varchar(40) NOT NULL,
+    did         integer NOT NULL,
+    date_prod   date,
+    kind        varchar(10),
+    len         interval hour to minute
+);
+
+</PRE>
+
+<P>
+<PRE>
+CREATE TABLE distributors (
+     did    integer PRIMARY KEY DEFAULT nextval('serial'),
+     name   varchar(40) NOT NULL CHECK (name &lt;&gt; '')
+);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;创建一个带有&nbsp;2&nbsp;维数组的表：
+<P>
+<PRE>
+CREATE TABLE array (
+    vector  int[][]
+);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;为表&nbsp;films&nbsp;定义一个唯一表约束。&nbsp;唯一表约束可以在表的一个或多个字段上定义：
+<P>
+<PRE>
+CREATE TABLE films (
+    code        <A HREF="/cgi-bin/man/man2html?5+char">char</A>(5),
+    title       varchar(40),
+    did         integer,
+    date_prod   date,
+    kind        varchar(10),
+    len         interval hour to minute,
+    CONSTRAINT production UNIQUE(date_prod)
+);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;定义一个检查列约束：
+<P>
+<PRE>
+CREATE TABLE distributors (
+    did     integer CHECK (did &gt; 100),
+    name    varchar(40)
+);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;定义一个检查表约束：
+<P>
+<PRE>
+CREATE TABLE distributors (
+    did     integer,
+    name    varchar(40)
+    CONSTRAINT con1 CHECK (did &gt; 100 AND name &lt;&gt; '')
+);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;为表&nbsp;films&nbsp;定义一个主键表约束。&nbsp;主键表约束可以定义在表上的一个或多个字段。
+<P>
+<PRE>
+CREATE TABLE films (
+    code        <A HREF="/cgi-bin/man/man2html?5+char">char</A>(5),
+    title       varchar(40),
+    did         integer,
+    date_prod   date,
+    kind        varchar(10),
+    len         interval hour to minute,
+    CONSTRAINT code_title PRIMARY KEY(code,title)
+);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;为表&nbsp;distributors&nbsp;定义一个主键约束。&nbsp;下面两个例子是等效的，第一个例子使用了表约束语法，&nbsp;第二个使用了列约束表示法。
+<P>
+<PRE>
+CREATE TABLE distributors (
+    did     integer,
+    name    varchar(40),
+    PRIMARY KEY(did)
+); 
+
+</PRE>
+
+<P>
+<PRE>
+CREATE TABLE distributors (
+    did     integer PRIMARY KEY,
+    name    varchar(40)
+);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;下面这个例子给字段&nbsp;name&nbsp;赋予了一个文本常量缺省值，&nbsp;并且将字段&nbsp;did&nbsp;的缺省值安排为通过选择序列对象的下一个值生成。&nbsp;modtime&nbsp;的缺省值将是该行插入的时候的时间。
+<P>
+<PRE>
+CREATE TABLE distributors (
+    name      varchar(40) DEFAULT 'Luso Films',
+    did       integer DEFAULT nextval('distributors_serial'),
+    modtime   timestamp DEFAULT current_timestamp
+);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;在表&nbsp;distributors&nbsp;上定义两个&nbsp;NOT&nbsp;NULL&nbsp;列约束，其中之一明确给出了名字：
+<P>
+<PRE>
+CREATE TABLE distributors (
+    did     integer CONSTRAINT no_null NOT NULL,
+    name    varchar(40) NOT NULL
+);
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;为&nbsp;name&nbsp;字段定义一个唯一约束：
+<P>
+<PRE>
+CREATE TABLE distributors (
+    did     integer,
+    name    varchar(40) UNIQUE
+);
+
+</PRE>
+
+<BR>&nbsp;上面的和下面这样作为一个表约束声明是一样的：
+<P>
+<PRE>
+CREATE TABLE distributors (
+    did     integer,
+    name    varchar(40),
+    UNIQUE(name)
+);
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>CREATE TABLE</B> 遵循 SQL92 和 SQL99 的一个子集，一些例外情况在下面列出。
+<A NAME="lbAI">&nbsp;</A>
+<H3>TEMPORARY TABLES 临时表</H3>
+
+<P>
+
+<BR>&nbsp;尽管&nbsp;CREATE&nbsp;TEMPORARY&nbsp;TABLE&nbsp;的语法和&nbsp;SQL&nbsp;标准的类似，&nbsp;但是效果是不同的。在标准里，临时表只是定义一次并且自动存在（从空内容开始）于任何需要它们的会话中。&nbsp;PostgreSQL&nbsp;要求每个会话为它们使用的每个临时表发出它们自己的&nbsp;CREATE&nbsp;TEMPORARY&nbsp;TABLE&nbsp;命令。&nbsp;这样就允许不同的会话将相同的临时表名字用于不同的目的，而标准的实现方法则把一个临时表名字约束为具有相同的表结构。
+<P>
+
+<BR>&nbsp;标准定义的临时表的行为被广泛地忽略了。PostgreSQL&nbsp;&nbsp;在这方面上地行为类似于许多其它&nbsp;SQL&nbsp;数据库
+<P>
+
+<BR>&nbsp;标准中在全局和局部地临时表之间的区别在&nbsp;PostgreSQL&nbsp;&nbsp;里不存在，因为这种区别取决于模块的概念，而&nbsp;PostgreSQL&nbsp;&nbsp;没有这个概念。出于兼容考虑，PostgreSQL&nbsp;将接受临时表声明中的&nbsp;GLOBAL&nbsp;和&nbsp;LOCAL&nbsp;关键字，&nbsp;但是他们没有作用。
+<P>
+
+<BR>&nbsp;临时表的&nbsp;ON&nbsp;COMMIT&nbsp;子句也类似于&nbsp;SQL&nbsp;标准，&nbsp;但是有些区别。如果忽略了&nbsp;ON&nbsp;COMMIT&nbsp;子句，SQL&nbsp;声明缺省的行为是&nbsp;ON&nbsp;COMMIT&nbsp;DELETE&nbsp;ROWS。&nbsp;但是&nbsp;PostgreSQL&nbsp;里的缺省行为是&nbsp;ON&nbsp;COMMIT&nbsp;PRESERVE&nbsp;ROWS。&nbsp;在&nbsp;SQL&nbsp;里不存在&nbsp;ON&nbsp;COMMIT&nbsp;DROP。
+<A NAME="lbAJ">&nbsp;</A>
+<H3>COLUMN CHECK CONSTRAINTS 字段检查约束</H3>
+
+<P>
+
+<BR>&nbsp;SQL&nbsp;标准说&nbsp;CHECK&nbsp;字段约束只能引用他们施用的字段；&nbsp;只有&nbsp;CHECK&nbsp;表约束才能引用多个字段。PostgreSQL&nbsp;并不强制这个限制；它把字段和表约束看作相同的东西。
+<A NAME="lbAK">&nbsp;</A>
+<H3>NULL ``CONSTRAINT'' NULL约束</H3>
+
+<P>
+
+NULL &quot;约束&quot;（实际上不是约束）是 PostgreSQL 对 SQL 标准的扩展， 包括它是为了和其它一些数据库系统兼容（以及为了和 NOT NULL 约束对称）。因为它是任何字段的缺省，所以它的出现只是噪音而已。
+<A NAME="lbAL">&nbsp;</A>
+<H3>INHERITANCE 继承</H3>
+
+<P>
+
+<BR>&nbsp;通过&nbsp;INHERITS&nbsp;子句的多重继承是&nbsp;PostgreSQL&nbsp;语言的扩展。&nbsp;SQL99（但不包括&nbsp;SQL92）使用不同的语法和语义定义了单继承。&nbsp;SQL99&nbsp;风格的继承还没有在&nbsp;PostgreSQL&nbsp;中实现。
+<A NAME="lbAM">&nbsp;</A>
+<H3>OBJECT IDS 对象ID</H3>
+
+<P>
+
+PostgreSQL 的 OID 的概念不标准。
+<A NAME="lbAN">&nbsp;</A>
+<H3>ZERO-COLUMN TABLES 零行表</H3>
+
+<P>
+
+PostgreSQL 允许创建没有字段的表 （比如，CREATE TABLE foo();）。这是对 SQL 标准的扩展， 标准不允许存在零字段表。零字段表本身没什么用，但是禁止他们会给 ALTER TABLE DROP COLUMN带来很奇怪的情况，所以，这个时候忽视标准的限制好想很清楚。
+<A NAME="lbAO">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+ALTER TABLE [<B><A HREF="/cgi-bin/man/man2html?7+alter_table">alter_table</A></B>(7)], DROP TABLE [<B><A HREF="/cgi-bin/man/man2html?l+drop_table">drop_table</A></B>(l)]
+<A NAME="lbAP">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DL>
+<DT><A HREF="#lbAI">TEMPORARY TABLES 临时表</A><DD>
+<DT><A HREF="#lbAJ">COLUMN CHECK CONSTRAINTS 字段检查约束</A><DD>
+<DT><A HREF="#lbAK">NULL ``CONSTRAINT'' NULL约束</A><DD>
+<DT><A HREF="#lbAL">INHERITANCE 继承</A><DD>
+<DT><A HREF="#lbAM">OBJECT IDS 对象ID</A><DD>
+<DT><A HREF="#lbAN">ZERO-COLUMN TABLES 零行表</A><DD>
+</DL>
+<DT><A HREF="#lbAO">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAP">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

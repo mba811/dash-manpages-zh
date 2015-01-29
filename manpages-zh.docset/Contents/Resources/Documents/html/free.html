@@ -1,0 +1,120 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of FREE</TITLE>
+</HEAD><BODY>
+<H1>FREE</H1>
+Section: Linux User's Manual (1)<BR>Updated: 20 Mar 1993 <BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+free - 显示系统中已用和未用的内存空间总和.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>free </B>[<B>-b</B> | <B>-k</B> | <B>-m</B>] [<B>-o</B>] [<B>-s</B>
+
+<I>delay</I>
+
+] [<B>-t</B>] [<B>-V</B>]
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>free</B> 显示 系统中 已用和未用的 物理内存和交换内存, 共享内存和
+内核使用的 缓冲区的 总和.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (Options)</H2>
+
+<B>-b</B> 选项 以字节为单位 显示 内存总和; <B>-k</B> 选项 (缺省的) 
+以 KB 为单位 显示; <B>-m</B> 选项 以 MB 为单位.
+<P>
+<P>
+
+<B>-t</B> 选项 显示 一个 总计行.
+<P>
+<P>
+
+<B>-o</B> 选项 禁止 &quot;buffer adjusted&quot; 行的显示. 除非 指定 <B>free</B> 从
+(相应的) 已用/未用的 内存 减去/加上 缓冲区内存.
+<P>
+<P>
+
+<B>-s</B> 使 <B>free</B> 以 <I>delay</I> 秒为间隔, 连续抽样显示. <I>delay</I> 
+可以设置成浮点数, 它用
+<B><A HREF="/cgi-bin/man/man2html?3+usleep">usleep</A></B>(3)
+
+做 微秒级 延迟.
+<P>
+<P>
+
+<B>-V</B> 显示版本信息.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>文件 (FILES)</H2>
+
+
+
+<I>/proc/meminfo</I>-- 内存信息
+
+
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>另见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+ps">ps</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+top">top</A>(1)</B>
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者</H2>
+
+由 Brian Edmonds 编写
+<P>
+Bug 报告寄给 &lt;<A HREF="mailto:procps-bugs@redhat.com">procps-bugs@redhat.com</A>&gt;
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@iname.com">xuming@iname.com</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/12/17</B>
+
+第一版
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (Options)</A><DD>
+<DT><A HREF="#lbAF">文件 (FILES)</A><DD>
+<DT><A HREF="#lbAG">另见</A><DD>
+<DT><A HREF="#lbAH">作者</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国Linux论坛man手册页翻译计划》</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

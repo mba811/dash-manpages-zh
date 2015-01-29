@@ -1,0 +1,341 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of COPY</TITLE>
+</HEAD><BODY>
+<H1>COPY</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+COPY - 在表和文件之间拷贝数据
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+COPY <I>tablename</I> [ ( <I>column</I> [, ...] ) ]
+    FROM { '<I>filename</I>' | STDIN }
+    [ [ WITH ] 
+          [ BINARY ] 
+          [ OIDS ]
+          [ DELIMITER [ AS ] '<I>delimiter</I>' ]
+          [ NULL [ AS ] '<I>null string</I>' ] ]
+
+COPY <I>tablename</I> [ ( <I>column</I> [, ...] ) ]
+    TO { '<I>filename</I>' | STDOUT }
+    [ [ WITH ] 
+          [ BINARY ]
+          [ OIDS ]
+          [ DELIMITER [ AS ] '<I>delimiter</I>' ]
+          [ NULL [ AS ] '<I>null string</I>' ] ]
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>COPY</B> 在 PostgreSQL表和标准文件系统文件之间交换数据。 COPY TO 把一个表的所有内容都拷贝到一个文件， 而 COPY FROM 从一个文件里拷贝数据到一个表里（把数据附加到表中已经存在的内容里）。
+<P>
+
+<BR>&nbsp;如果声明了一个字段列表，COPY&nbsp;将只在文件和表之间拷贝声明的字段的数据。&nbsp;如果表中有任何不在字段列表里的字段，那么&nbsp;COPY&nbsp;FROM&nbsp;将为那些字段插入缺省值。
+<P>
+
+<BR>&nbsp;带文件名的&nbsp;COPY&nbsp;指示&nbsp;PostgreSQL&nbsp;服务器直接从文件中读写数据。&nbsp;如果声明了文件名，那么该文件必须为服务器可见，而且文件名必须从服务器的角度声明。如果声明的是&nbsp;STDIN&nbsp;或&nbsp;STDOUT，数据通过连接在客户前端和服务器之间流动。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>tablename</I><B></B><DD>
+<BR>&nbsp;现存表的名字（可以有模式修饰）。
+<DT><B></B><I>column</I><B></B><DD>
+<BR>&nbsp;可选的待拷贝字段列表。如果没有声明字段列表，那么将使用所有字段。
+<DT><B></B><I>filename</I><B></B><DD>
+<BR>&nbsp;输入或输出文件的绝对路径名。
+<DT><B>STDIN</B><DD>
+<BR>&nbsp;声明输入是来自客户端应用。
+<DT><B>STDOUT</B><DD>
+<BR>&nbsp;声明输入前往客户端应用。
+<DT><B>BINARY</B><DD>
+<BR>&nbsp;使用二进制格式存储和读取，而不是以文本的方式。&nbsp;在二进制模式下，不能声明&nbsp;DELIMITERS和NULL。
+<DT><B>OIDS</B><DD>
+<BR>&nbsp;声明为每行拷贝内部对象标识（OID）。&nbsp;（如果给那些没有&nbsp;OID&nbsp;的表声明了&nbsp;OIDS&nbsp;选项，则抛出一个错误。）
+<DT><B></B><I>delimiter</I><B></B><DD>
+<BR>&nbsp;用于在文件中每行中分隔各个字段的单个字符。&nbsp;缺省是水平制表符。（tab）
+<DT><B></B><I>null string</I><B></B><DD>
+<BR>&nbsp;一个代表&nbsp;NULL&nbsp;值的字串。缺省是&nbsp;\N&nbsp;（反斜杠-N）。&nbsp;当然，你可以自己挑一个空字串。
+<P>
+<DL COMPACT><DT><DD>
+<B>Note:</B>
+
+注意:  对于COPY FROM，任何匹配这个字串的字串将被存储为 NULL 值， 所以你应该确保你用的字串和COPY TO相同。
+</DL>
+
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<B>COPY</B> 只能用于表，不能用于视图。
+<P>
+
+BINARY 关键字将强制使用二进制对象而不是文本存储/读取所有数据。 这样做在一定程度上比传统的拷贝命令快，但二进制拷贝文件在不同机器体系间的植性不是很好。
+<P>
+
+<BR>&nbsp;你对任何要COPY&nbsp;TO&nbsp;&nbsp;出来的数据必须有选取数据的权限，对任何要&nbsp;COPY&nbsp;FROM&nbsp;入数据的表必须有插入权限。
+<P>
+
+COPY 命令里面的文件必须是由服务器直接读或写的文件，而不是由客户端应用读写。 因此，它们必须位于数据库服务器上或者可以为数据库服务器所访问，而不是由客户端做这些事情。 它们必须是PostgreSQL用户（服务器运行的用户 ID）可以访问到并且可读或者可写，而不是客户端。 COPY 到一个命名文件是只允许数据库超级用户进行的，因为它允许读写任意服务器有权限访问的文件。
+<P>
+
+<BR>&nbsp;不要混淆&nbsp;COPY&nbsp;和&nbsp;psql&nbsp;指令&nbsp;<B>\copy</B>。&nbsp;<B>\copy</B>&nbsp;调用&nbsp;COPY&nbsp;FROM&nbsp;STDIN&nbsp;或者&nbsp;COPY&nbsp;TO&nbsp;STDOUT，&nbsp;然后把数据抓取/存储到一个&nbsp;psql&nbsp;客户端可以访问的文件中。&nbsp;因此，使用&nbsp;<B>\copy</B>&nbsp;的时候，文件访问权限是由客户端而不是服务器端决定的。
+<P>
+
+<BR>&nbsp;我们建议在&nbsp;COPY&nbsp;里的文件名字总是使用绝对路径。&nbsp;在&nbsp;COPY&nbsp;TO&nbsp;的时候是由服务器强制进行的，&nbsp;但是对于&nbsp;COPY&nbsp;FROM，你的确有从一个声明为相对路径的文件里读取的选择。&nbsp;该路径将解释为相对于服务器的工作目录（在数据目录里的什么地方），而不是客户端的工作目录。
+<P>
+
+<B>COPY FROM</B> 会激活所有触发器和检查约束。不过，不会激活规则。
+<P>
+
+<B>COPY</B> 在第一个错误处停下来。这些在 COPY TO中不应该导致问题， 但在 COPY FROM 时目的表会已经接收到早先的行， 这些行将不可见或不可访问，但是仍然会占据磁盘空间。 如果你碰巧是拷贝很大一块数据文件的话， 积累起来，这些东西可能会占据相当大的一部分磁盘空间。你可以调用 VACUUM 来恢复那些磁盘空间。
+<A NAME="lbAG">&nbsp;</A>
+<H2>FILE FORMATS 文件格式</H2>
+
+<A NAME="lbAH">&nbsp;</A>
+<H3>TEXT FORMAT 文本格式</H3>
+
+<P>
+
+<BR>&nbsp;当不带&nbsp;BINARY&nbsp;选项使用&nbsp;COPY&nbsp;时，&nbsp;读写的文件是一个文本文件，每行代表表中一个行。&nbsp;行中的列（字段）用分隔符分开。&nbsp;字段值本身是由与每个字段类型相关的输出函数生成的字符串，&nbsp;或者是输入函数可接受的字串。&nbsp;数据中使用特定的空值字串表示那些为&nbsp;NULL&nbsp;的字段。&nbsp;如果输入文件的任意行包含比预期多或者少的字段，那么&nbsp;COPY&nbsp;FROM&nbsp;将抛出一个错误。&nbsp;如果声明了&nbsp;OIDS，那么&nbsp;OID&nbsp;将作为第一个字段读写，&nbsp;放在所有用户字段前面。
+<P>
+
+<BR>&nbsp;数据的结束可以用一个只包含反斜扛和句点（\.）的行表示。&nbsp;如果从文件中读取数据，那么数据结束的标记是不必要的，&nbsp;因为文件结束起的作用就很好了；但是在&nbsp;3.0&nbsp;之前的客户端协议里，如果在客户端应用之间拷贝数据，&nbsp;那么必须要有结束标记。
+<P>
+
+<BR>&nbsp;反斜扛字符（\）可以用在&nbsp;COPY&nbsp;&nbsp;里给那些会有歧义的字符进行逃逸（否则那些字符会被当做行或者字段分隔符处理）。&nbsp;特别是下面的字符如果是字段值的一部分时，必须前缀一个反斜扛：反斜扛本身，换行符，回车，以及当前分隔符。
+<P>
+
+<BR>&nbsp;声明的空字串被&nbsp;COPY&nbsp;TO&nbsp;不加任何反斜杠发送；与之相对，COPY&nbsp;FROM&nbsp;&nbsp;在删除反斜杠之前拿它的输入与空字串比较。因此，像&nbsp;\N&nbsp;这样的空字串不会和实际数据值&nbsp;\N&nbsp;之间混淆（因为后者会表现成&nbsp;\\N）。
+<P>
+
+<B>COPY FROM</B> 识别下列特殊反斜扛序列：
+<DL COMPACT><DT><DD>
+\b 退格 (ASCII 8)
+<P>
+
+\f 进纸 (ASCII 12)
+<P>
+
+\n 新行 (ASCII 10)
+<P>
+
+\r 回车 (ASCII 13)
+<P>
+
+\t 跳格 (ASCII 9)
+<P>
+
+\v 竖直跳格 (ASCII 11)
+<P>
+
+\<I>digits</I> (反斜杠，后面是三个八进制数值，代表具有指定值的字符)
+</DL>
+
+<BR>&nbsp;目前，COPY&nbsp;TO&nbsp;将绝不会发出一个八进制反斜扛序列，&nbsp;但是它的确使用了上面列出的其它字符用于控制字符。
+<P>
+
+<BR>&nbsp;绝对不要把反斜扛放在一个数据字符N或者句点（.）前面。&nbsp;这样的组合将分别被误认为是空字串(\.)&nbsp;或者数据结束标记&nbsp;(\N)。&nbsp;另外一个没有在上面的表中列出的反斜扛字符就是它自己。
+<P>
+
+<BR>&nbsp;我们强烈建议生成&nbsp;COPY&nbsp;数据的应用八换行符和回车分别转换成&nbsp;\n&nbsp;和&nbsp;\r&nbsp;序列。&nbsp;目前我们可以用一个反斜杠和一个回车表示一个数据回车，以及用一个反斜扛和一个换行符表示一个数据换行符。&nbsp;不过，这样的表示在将来的版本中缺省时可能不会被接受。
+<P>
+
+They are also highly vulnerable to corruption if the COPY file is
+transferred across different machines (for example, from Unix to Windows
+or vice versa).
+<P>
+
+<B>COPY TO</B> 将再每行的结尾是用一个 Unix 风格的换行符(&quot;\n&quot;)， 或者是在 MS Windows 上运行的服务器上用（&quot;\r\n&quot;）标记一行终止，但只是用于COPY到服务器文件里； 为了在不同平台之间一致，COPY TO STDOUT 总是发送 &quot;\n&quot;，不管服务器平台是什么。 COPY FROM 可以处理那些以回车符，或者换行符，或者回车换行符作为行结束的数据。 为了减少在数据中出现的未逃逸的新行或者回车导致的错误，如果输入的行结尾不像上面这些符号， COPY FROM 会发出警告。
+<A NAME="lbAI">&nbsp;</A>
+<H3>BINARY FORMAT 二进制格式</H3>
+
+<P>
+
+<BR>&nbsp;在PostgreSQL&nbsp;7.4&nbsp;中的&nbsp;COPY&nbsp;BINARY&nbsp;&nbsp;的文件格式做了变化。新格式由一个文件头，零或多条元组，&nbsp;以及文件尾组成。文件头和数据现在是网络字节序。
+<A NAME="lbAJ">&nbsp;</A>
+<H3>FILE HEADER 文件头</H3>
+
+<P>
+
+<BR>&nbsp;文件头由&nbsp;15&nbsp;个字节的固定域组成，后面跟着一个变长的头扩展区。&nbsp;固定域是：
+<DL COMPACT>
+<DT><B>Signature 签名</B><DD>
+11-字节的序列 PGCOPY\n\377\r\n\0 --- 请注意字节零是签名是要求的一部分。 （使用这个签名是为了让我们能够很容易看出文件是否已经被一个非 8 位安全的转换器给糟蹋了。 这个签名会被行结尾转换过滤器，删除字节零，删除高位，或者奇偶的改变而改变。）
+<DT><B>Flags field 标志域</B><DD>
+<BR>&nbsp;32&nbsp;位整数掩码表示该文件格式的重要方面。&nbsp;位是从&nbsp;0（LSB）到&nbsp;31&nbsp;（MSB）编码的&nbsp;---&nbsp;请注意这个域是以网络字节序存储的（高位在前），&nbsp;后继的整数都是如此。位&nbsp;16&nbsp;-&nbsp;31&nbsp;是保留用做关键文件格式信息的；&nbsp;如果读者发现一个不认识的位出现在这个范围内，那么它应该退出。&nbsp;位&nbsp;0-15&nbsp;都保留为标志向后兼容的格式使用；读者可以忽略这个范围内的不认识的位。目前只定义了一个标志位，而其它的必须是零：
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><B>Bit 16</B><DD>
+<BR>&nbsp;如果为&nbsp;1，那么在数据中包括了&nbsp;OID；如果为&nbsp;0，则没有
+</DL>
+</DL>
+
+</DL>
+<P>
+
+<DL COMPACT>
+<DT><B>头扩展范围长度</B><DD>
+<BR>&nbsp;32&nbsp;位整数，以字节计的头剩余长度，不包括自身。目前，它是零，&nbsp;后面紧跟第一条元组。对该格式的更多的修改都将允许额外的数据出现在头中。&nbsp;读者应该忽略任何它不知道该如何处理的头扩展数据。
+</DL>
+<P>
+
+<P>
+
+<BR>&nbsp;头扩展数据是一个用来保留一个自定义的数据序列块用的。这个标志域无意告诉读者扩展区的内容是什么。头扩展的具体设计内容留给以后的版本用。
+<P>
+
+<BR>&nbsp;这样设计就允许向下兼容头附加（增加头扩展块，或者设置低位序标志位）以及非向下兼容修改（设置高位标志位以标识这样的修改，&nbsp;并且根据需要向扩展区域增加支持数据）。
+<A NAME="lbAK">&nbsp;</A>
+<H3>TUPLES 元组</H3>
+
+<P>
+
+每条元组都以一个 16 位整数计数开头，该计数是元组中字段的数目。（目前，在一个表里的每条元组都有相同的计数，但可能不会永远这样。）然后后面不断出现元组中的各个字段，字段先是一个 32 位的长度字，后面跟着那么长的字段数据。（长度字并不包括自己，并且可以为零。）一个特例是：-1 表示一个 NULL 字段值。在 NULL 情况下，后面不会跟着数值字节。
+<P>
+
+在数据域之间没有对奇填充或者任何其它额外的数据。
+<P>
+
+目前，一个 COPY BINARY 文件里的所有数据值都假设是二进制格式的（格式代码为一）。预计将来的扩展可能增加一个头域，允许为每个字段声明格式代码。
+<P>
+
+为了判断实际元组数据的正确的二进制格式，你应该阅读 PostgreSQL 源代码，特别是该字段数据类型的 *send 和 *recv 函数（典型的函数可以在源代码的 src/backend/utils/adt/ 目录找到）。
+<P>
+
+如果在文件中包括了 OID，那么该 OID 域立即跟在字段计数字后面。它是一个普通的字段，只不过它没有包括在字段计数。但它包括长度字 --- 这样就允许我们不用花太多的劲就可以处理 4 字节和 8 字节的 OID，并且如果某个家伙允许 OID 是可选的话，那么还可以把 OID 显示成空。
+<A NAME="lbAL">&nbsp;</A>
+<H3>FILE TRAILER 文件尾</H3>
+
+<P>
+
+<BR>&nbsp;文件尾包括保存着&nbsp;-1&nbsp;的一个&nbsp;16&nbsp;位整数字。这样就很容易与一条元组的域计数字相区分。
+<P>
+
+<BR>&nbsp;如果一个域计数字既不是&nbsp;-1&nbsp;也不是预期的字段的数目，那么读者应该报错。&nbsp;这样就提供了对丢失与数据的同步的额外的检查。
+<A NAME="lbAM">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;下面的例子把一个表拷贝到客户端，&nbsp;使用竖直条（|）作为域分隔符：
+<P>
+<PRE>
+COPY country TO STDOUT WITH DELIMITER '|';
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;从一个&nbsp;Unix&nbsp;文件中拷贝数据到一个country表中：
+<P>
+<PRE>
+COPY country FROM '/usr1/proj/bray/sql/country_data';
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;下面是一个可以从&nbsp;STDIN&nbsp;中拷贝数据到表中的例子：
+<P>
+<PRE>
+AF      AFGHANISTAN
+AL      ALBANIA
+DZ      ALGERIA
+ZM      ZAMBIA
+ZW      ZIMBABWE
+
+</PRE>
+
+<BR>&nbsp;请注意在这里每行里的空白实际上是一个水平制表符&nbsp;tab。
+<P>
+
+<BR>&nbsp;下面的是同样的数据，在一台&nbsp;Linux/i586&nbsp;机器上以二进制形式输出。&nbsp;这些数据是用&nbsp;Unix&nbsp;工具&nbsp;<I>od&nbsp;-c</I>&nbsp;过滤之后输出的。&nbsp;该表有三个字段；第一个是&nbsp;<A HREF="/cgi-bin/man/man2html?2+char">char</A>(2)，&nbsp;第二个是&nbsp;text，&nbsp;第三个是integer。所有的行在第三个域都是一个&nbsp;null&nbsp;值。
+<P>
+<PRE>
+0000000   P   G   C   O   P   Y  \n 377  \r  \n  \0  \0  \0  \0  \0  \0
+0000020  \0  \0  \0  \0 003  \0  \0  \0 002   A   F  \0  \0  \0 013   A
+0000040   F   G   H   A   N   I   S   T   A   N 377 377 377 377  \0 003
+0000060  \0  \0  \0 002   A   L  \0  \0  \0 007   A   L   B   A   N   I
+0000100   A 377 377 377 377  \0 003  \0  \0  \0 002   D   Z  \0  \0  \0
+0000120 007   A   L   G   E   R   I   A 377 377 377 377  \0 003  \0  \0
+0000140  \0 002   Z   M  \0  \0  \0 006   Z   A   M   B   I   A 377 377
+0000160 377 377  \0 003  \0  \0  \0 002   Z   W  \0  \0  \0  \b   Z   I
+0000200   M   B   A   B   W   E 377 377 377 377 377 377
+
+</PRE>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<BR>&nbsp;在&nbsp;SQL&nbsp;标准里没有&nbsp;COPY&nbsp;语句。
+<P>
+
+<BR>&nbsp;7.3&nbsp;以前的应用使用下面的语法，现在仍然支持：
+<P>
+<PRE>
+COPY [ BINARY ] <I>tablename</I> [ WITH OIDS ]
+    FROM { '<I>filename</I>' | STDIN }
+    [ [USING] DELIMITERS '<I>delimiter</I>' ]
+    [ WITH NULL AS '<I>null string</I>' ]
+
+COPY [ BINARY ] <I>tablename</I> [ WITH OIDS ]
+    TO { '<I>filename</I>' | STDOUT }
+    [ [USING] DELIMITERS '<I>delimiter</I>' ]
+    [ WITH NULL AS '<I>null string</I>' ]
+
+</PRE>
+
+<A NAME="lbAO">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">FILE FORMATS 文件格式</A><DD>
+<DL>
+<DT><A HREF="#lbAH">TEXT FORMAT 文本格式</A><DD>
+<DT><A HREF="#lbAI">BINARY FORMAT 二进制格式</A><DD>
+<DT><A HREF="#lbAJ">FILE HEADER 文件头</A><DD>
+<DT><A HREF="#lbAK">TUPLES 元组</A><DD>
+<DT><A HREF="#lbAL">FILE TRAILER 文件尾</A><DD>
+</DL>
+<DT><A HREF="#lbAM">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAN">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAO">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,185 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CREATE OPERATOR</TITLE>
+</HEAD><BODY>
+<H1>CREATE OPERATOR</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+CREATE OPERATOR - 定义一个新的操作符
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+CREATE OPERATOR <I>name</I> (
+    PROCEDURE = <I>funcname</I>
+    [, LEFTARG = <I>lefttype</I> ] [, RIGHTARG = <I>righttype</I> ]
+    [, COMMUTATOR = <I>com_op</I> ] [, NEGATOR = <I>neg_op</I> ]
+    [, RESTRICT = <I>res_proc</I> ] [, JOIN = <I>join_proc</I> ]
+    [, HASHES ] [, MERGES ]
+    [, SORT1 = <I>left_sort_op</I> ] [, SORT2 = <I>right_sort_op</I> ]
+    [, LTCMP = <I>less_than_op</I> ] [, GTCMP = <I>greater_than_op</I> ]
+)
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>CREATE OPERATOR</B> 定义一个新的操作符， name。 定义该操作符的用户成为其所有者。如果给出了一个模式名，那么该操作符将在指定的模式中创建。 否则它会在当前模式中创建。
+<P>
+
+<BR>&nbsp;操作符&nbsp;name&nbsp;&nbsp;是一个最多NAMEDATALEN-1&nbsp;长的（缺省为&nbsp;63&nbsp;个）下列字符组成的字串：
+<P>
+<PRE>
++ - * / &lt; &gt; = ~ ! @ # % ^ &amp; | ` ?
+
+</PRE>
+
+<BR>&nbsp;你选择名字的时候有几个限制：
+<DL COMPACT>
+<DT>&bull;<DD>
+-- 和 /* 不能在操作符名字的任何地方出现， 因为它们会被认为是一个注释的开始。
+<DT>&bull;<DD>
+<BR>&nbsp;一个多字符的操作符名字不能以&nbsp;+&nbsp;或&nbsp;-&nbsp;结尾，&nbsp;除非该名字还包含至少下面字符之一：
+<P>
+<PRE>
+~ ! @ # % ^ &amp; | ` ?
+
+</PRE>
+
+<BR>&nbsp;例如，&nbsp;@-&nbsp;是一个允许的操作符名，&nbsp;但&nbsp;*-&nbsp;不是。&nbsp;这个限制允许&nbsp;PostgreSQL&nbsp;&nbsp;分析&nbsp;SQL-有问题的查询而不要求在符号之间有空白。
+</DL>
+<P>
+
+<P>
+
+<BR>&nbsp;操作符&nbsp;!=&nbsp;在输入时映射成&nbsp;&lt;&gt;，&nbsp;因此这两个名称总是相等的。
+<P>
+
+<BR>&nbsp;至少需要定义一个LEFTARG或RIGHTARG。&nbsp;对于双目操作符来说，两者都需要定义。&nbsp;对右目操作符来说，只需要定义LEFTARG，&nbsp;而对于左目操作符来说，只需要定义RIGHTARG。
+<P>
+
+<BR>&nbsp;同样，funcname&nbsp;过程必须已经用&nbsp;CREATE&nbsp;FUNCTION&nbsp;定义过，&nbsp;而且必须定义为接受正确数量的指定类型参数（一个或是两个）。
+<P>
+
+<BR>&nbsp;其它子句声明可选的操作符优化子句。他们的含义在&nbsp;``User-Defined&nbsp;Operators''&nbsp;里定义。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>name</I><B></B><DD>
+<BR>&nbsp;要定义的操作符名字。可用的字符见上文。&nbsp;其名字可以用模式修饰，比如&nbsp;CREATE&nbsp;OPERATOR&nbsp;myschema.+&nbsp;(...)。&nbsp;如果没有模式，则在当前模式中创建操作符。同一个模式中的两个操作符可以有一样的名字，只要他们操作不同的数据类型。这叫做&nbsp;重载。
+<DT><B></B><I>funcname</I><B></B><DD>
+<BR>&nbsp;用于实现该操作符的函数。
+<DT><B></B><I>lefttype</I><B></B><DD>
+<BR>&nbsp;如果存在的话，操作符左手边的参数类型。&nbsp;如果是左目操作符，这个参数可以省略。
+<DT><B></B><I>righttype</I><B></B><DD>
+<BR>&nbsp;如果存在的话，操作符右手边的参数类型。&nbsp;如果是右目操作符，这个参数可以省略。
+<DT><B></B><I>com_op</I><B></B><DD>
+<BR>&nbsp;该操作符对应的交换（commutator）操作符。
+<DT><B></B><I>neg_op</I><B></B><DD>
+<BR>&nbsp;对应的负操作符。
+<DT><B></B><I>res_proc</I><B></B><DD>
+<BR>&nbsp;此操作符约束选择性计算函数。
+<DT><B></B><I>join_proc</I><B></B><DD>
+<BR>&nbsp;此操作符连接选择性计算函数。
+<DT><B>HASHES</B><DD>
+<BR>&nbsp;表明此操作符支持哈希（散列）连接。
+<DT><B>MERGES</B><DD>
+<BR>&nbsp;表明此操作符可以支持一个融合连接。
+<DT><B></B><I>left_sort_op</I><B></B><DD>
+<BR>&nbsp;如果此操作符支持融合连接（join），此操作符的左手边数据的排序操作符。
+<DT><B></B><I>right_sort_op</I><B></B><DD>
+<BR>&nbsp;如果此操作符支持融合连接（join），此操作符的右手边数据的排序操作符。
+<DT><B></B><I>less_than_op</I><B></B><DD>
+<BR>&nbsp;如果这个操作符可以支持融合连接，那么这就是比较这个操作符的输入数据类型的小于操作符。
+<DT><B></B><I>greater_than_op</I><B></B><DD>
+<BR>&nbsp;如果这个操作符不支持融合连接，那么这就是比较输入这个操作符的数据类型的大于操作符。
+</DL>
+<P>
+
+<BR>&nbsp;要在&nbsp;com_op&nbsp;或者其它可选参数里给出一个模式修饰的操作符名，使用&nbsp;OPERATOR()&nbsp;&nbsp;语法，比如
+<P>
+<PRE>
+COMMUTATOR = OPERATOR(myschema.===) ,
+
+</PRE>
+
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;请参阅&nbsp;``User-Defined&nbsp;Operators''&nbsp;中操作符章节获取更多信息。
+<P>
+
+<BR>&nbsp;请使用&nbsp;DROP&nbsp;OPERATOR&nbsp;从数据库中删除用户定义操作符。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;下面命令定义一个新操作符，面积相等，用于&nbsp;box&nbsp;数据类型。
+<P>
+<PRE>
+CREATE OPERATOR === (
+    LEFTARG = box,
+    RIGHTARG = box,
+    PROCEDURE = area_equal_procedure,
+    COMMUTATOR = ===,
+    NEGATOR = !==,
+    RESTRICT = area_restriction_procedure,
+    JOIN = area_join_procedure,
+    HASHES,
+    SORT1 = &lt;&lt;&lt;,
+    SORT2 = &lt;&lt;&lt;
+    -- 因为给出了排序操作符，索引隐含地有 MERGES。
+    -- LTCMP 和 GTCMP 分别假设是 &lt; 和 &gt;
+);
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>CREATE OPERATOR</B> 是 PostgreSQL 扩展。 在SQL标准中没有 CREATE OPERATOR  语句。
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

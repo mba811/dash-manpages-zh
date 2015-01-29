@@ -1,0 +1,374 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DUMPKEYS</TITLE>
+</HEAD><BODY>
+<H1>DUMPKEYS</H1>
+Section: Linux User's Manual (1)<BR>Updated: 09 Oct 1997<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+dumpkeys - 转储显示键盘翻译表
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>dumpkeys [</B>
+
+<I>-hilfn1</I>
+
+<I>-S</I><B>shape</B>
+
+<I>-c</I><B>charset</B>
+
+<I>--help --short-info --long-info --numeric --full-table</I>
+
+<I>--separate-lines </I>
+
+<I>--shape=</I><B>shape</B>
+
+<I>--funcs-only --keys-only --compose-only</I>
+
+<I>--charset=</I><B>charset</B>
+
+<B>]</B>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>dumpkeys</B>
+
+以
+<B><A HREF="/cgi-bin/man/man2html?5+keymaps">keymaps</A></B>(5)
+
+中 描述 的 格式, 在 标准输出 显示 键盘驱动程序 翻译表 的 当前内容.
+<P>
+
+下面 提供了 多种 选项, 可以 控制 输出格式, 也可以 显示 来自 内核 或
+<B><A HREF="/cgi-bin/man/man2html?1+dumpkeys">dumpkeys</A></B>(1)
+
+和
+<B><A HREF="/cgi-bin/man/man2html?1+loadkeys">loadkeys</A></B>(1)
+
+的 其他信息.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTION)</H2>
+
+<DL COMPACT>
+<DT><I>-h --help</I>
+
+<DD>
+在 标准错误 上 显示 版本号 和 简短 的 用法, 然后 结束.
+<P>
+<DT><I>-i --short-info</I>
+
+<DD>
+显示 内核 键盘驱动程序 的 某些 特征:
+<P>
+<DL COMPACT><DT><DD>
+内核 支持的 键值(keycode) 范围:
+<P>
+
+<DL COMPACT><DT><DD>
+这个特征指, 在 键盘映射文件 中, 
+<B>keycode</B>
+
+关键字 后面 可以 使用 什么值. 有关 这个文件 的 语法 和 其他信息 参看
+<B><A HREF="/cgi-bin/man/man2html?5+keymaps">keymaps</A></B>(5).
+
+</DL>
+
+<P>
+单键 可编联(bind) 的 动作(action) 数:
+<P>
+
+<DL COMPACT><DT><DD>
+这个特征指, 通过 修饰键 的 组合, 一个键 能够 发生 多少个 不同的 动作.
+例如, 如果 该值是 16, 那么 一个键 结合 修饰键 可以 产生 多达 16 个 动作.
+此时, 内核 大约 知道 存在 四个 修饰键, 你可以 按下 不同的 修饰键 组合 获得 
+所有 定义的 动作.
+</DL>
+
+<P>
+内核 支持的 动作码(action code) 值域(range):
+<P>
+
+<DL COMPACT><DT><DD>
+这一项 包含 用 十六进制 表示的 动作码 值域. 这些值 能够 
+用在 按键定义 的 右边, 也就是 下面 这行 的 
+<I>vv</I>
+
+部分:
+<P>
+<DL COMPACT><DT><DD>
+<B>keycode</B>
+
+<I>xx</I>
+
+=
+<I>vv vv vv vv</I>
+
+</DL>
+
+<P>
+(有关 按键定义行 的 细节 参见
+<B><A HREF="/cgi-bin/man/man2html?5+keymaps">keymaps</A></B>(5)
+
+).
+<B><A HREF="/cgi-bin/man/man2html?1+dumpkeys">dumpkeys</A></B>(1)
+
+和
+<B><A HREF="/cgi-bin/man/man2html?1+loadkeys">loadkeys</A></B>(1)
+
+支持 符号表示法, 它 比 数字表示法 更优越, 内核 和 内核 之间的 动作码 可能
+不一样, 而 符号名字 一般 不变.
+然而, 动作码值域 列表 可以 用来 判断 内核 是否 支持 
+<B><A HREF="/cgi-bin/man/man2html?1+loadkeys">loadkeys</A></B>(1)
+
+识别的 全部 符号, 或者 内核 支持的 动作 在
+<B><A HREF="/cgi-bin/man/man2html?1+loadkeys">loadkeys</A></B>(1)
+
+中 有没有 对应的 符号名. 你 可以 比较一下 值域列表 和 动作符号表, 参见 下述的
+<I>--long-info</I>
+
+选项.
+</DL>
+
+<P>
+内核 支持的 功能键(function key) 数目:
+<P>
+
+<DL COMPACT><DT><DD>
+这个特征 指 能够 用来 输出 字符串 的 动作码 数目. 
+这些 动作码 往往 编联 键盘上的 功能键 和 编辑键, 输出 标准 escape 序列.
+然而 你 可以 重定义 这些键, 让 它们 输出 命令行, 电子邮件地址 或者 其他什么.
+特别是 某些 编号 的 功能键 和 编辑键 在 键盘上 不存在, 这样 就有了 &quot;空闲的&quot;
+动作码, 例如, 把 它们 和 AltGr-字母组合 编联, 用来 输出 有用的 字符串.
+详情 参见
+<B><A HREF="/cgi-bin/man/man2html?1+loadkeys">loadkeys</A></B>(1).
+
+</DL>
+
+<P>
+功能串(function string):
+<P>
+
+<DL COMPACT><DT><DD>
+可以 用 下面的 命令 查看 当前 的 功能键 定义
+<P>
+<DL COMPACT><DT><DD>
+<B>dumpkeys</B><I>&nbsp;--funcs-only</I>
+
+</DL>
+
+</DL>
+
+</DL>
+
+<P>
+<DT><I>-l --long-info</I>
+
+<DD>
+这个选项 要求
+<B>dumpkeys</B>
+
+显示 较多的 信息. 显示 的 信息 除了
+<I>--short-info</I>
+
+选项 的 内容 外, 增加了
+<B><A HREF="/cgi-bin/man/man2html?1+loadkeys">loadkeys</A></B>(1)
+
+和
+<B><A HREF="/cgi-bin/man/man2html?1+dumpkeys">dumpkeys</A></B>(1)
+
+支持 的 动作 的 符号名 列表, 及 对应的 数值.
+<P>
+<DT><I>-n --numeric</I>
+
+<DD>
+这个选项 阻止
+<B>dumpkeys</B>
+
+把 动作码 翻译成 符号名, 只 显示 十六进制数字.
+<P>
+<DT><I>-f --full-table</I>
+
+<DD>
+这个选项 使
+<B>dumpkeys</B>
+
+跳过 所有 速记形式(short-hand) (参见
+<B><A HREF="/cgi-bin/man/man2html?5+keymaps">keymaps</A></B>(5)),
+
+以 行排格式(canonical) 输出 键值编联. 首先是 keymaps 行, 描述 当前 定义的 
+修饰键 及其 组合. 然后 每个键 显示 一行, 其中 每个 修饰键 的 组合 占 一列.
+例如, 如果 键盘映射表 使用了 七个 修饰键组合, 那么 每行 将显示 七列
+动作码. 这种格式 用于 诸如 对
+<B>dumpkeys</B>
+
+输出 的 后处理 等.
+<P>
+<DT><I>-1 --separate-lines</I>
+
+<DD>
+这个选项 使
+<B>dumpkeys</B>
+
+把 每个 (修饰键,键值)对 用 一行 显示. 前缀 
+<I>plain</I>
+
+表示 没有 使用 修饰键.
+<P>
+<DT><I>-S --shape=</I><B>shape</B>
+
+<DD>
+这个选项 告诉
+<B>dumpkeys</B>
+
+使用 指定的 表格格式. 允许的 表格格式 有
+<B>0</B><I>:</I>
+
+缺省格式 (就象 没使用
+<I>-S</I>
+
+一样);
+<B>1</B>:
+
+和 使用 选项
+<I>--full-table</I>
+
+一样;
+<B>2</B>:
+
+和 使用 选项
+<I>--separate-lines</I>
+
+一样;
+<B>3</B>:
+
+每个 键值 占用 一行 (就象 格式
+<B>1</B>
+
+一样), 直到 遇到 第一个 空项(hole), 然后 每个 (修饰键,键值)对 一行
+(就象 格式
+<B>2</B>
+
+一样).
+<P>
+(译注: 空项 位置 可参考 dumpkeys 不带参数时 显示的 第一行, keymaps 行)
+<P>
+<DT><I>--funcs-only</I>
+
+<DD>
+这个选项 使
+<B>dumpkeys</B>
+
+只显示 功能键 定义的 字符串. 否则
+<B>dumpkeys</B>
+
+既显示 串定义, 也显示 键值编联.
+<P>
+<DT><I>--keys-only</I>
+
+<DD>
+这个选项 使
+<B>dumpkeys</B>
+
+只显示 键值编联. 否则
+<B>dumpkeys</B>
+
+既显示 串定义, 也显示 键值编联.
+<P>
+<DT><I>--compose-only</I>
+
+<DD>
+这个选项 使
+<B>dumpkeys</B>
+
+只显示 组合键(compose key) 定义. 它 只对 支持 组合键 的 内核 有效.
+<P>
+<DT><I>-c</I><B>charset </B><I>--charset=</I><B>charset</B>
+
+<DD>
+这个选项 使
+<B>dumpkeys</B>
+
+根据 指定的 字符集 翻译 字符码值. 它 只影响 字符码值 对 符号名 的 翻译. 用
+<I>--help</I>
+
+选项 可以 列出 
+<I>charset</I>
+
+的 有效值. 如果 没有 指定
+<I>charset,</I>
+
+缺省字符集 是
+<B>iso-8859-1.</B>
+
+这个选项 能够 输出 一个 `charset &quot;iso-8859-X&quot;' 行, 告诉 loadkeys 如何 翻译
+键盘映射表. (例如, &quot;division&quot; 在
+<B>iso-8859-1</B>
+
+中 是 0xf7, 但在
+<B>iso-8859-8</B>
+
+中 是 0xba).
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>文件 (FILE)</H2>
+
+<I>/usr/lib/kbd/keymaps/</I>
+
+推荐 存放 键盘映射 文件 的 目录.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>另见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+loadkeys">loadkeys</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?5+keymaps">keymaps</A></B>(5).
+
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>徐明 &lt;<A HREF="mailto:xuming@iname.com">xuming@iname.com</A>&gt;</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/12/10</B>
+
+第一版
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国Linux论坛man手册页翻译计划》：</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTION)</A><DD>
+<DT><A HREF="#lbAF">文件 (FILE)</A><DD>
+<DT><A HREF="#lbAG">另见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国Linux论坛man手册页翻译计划》：</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

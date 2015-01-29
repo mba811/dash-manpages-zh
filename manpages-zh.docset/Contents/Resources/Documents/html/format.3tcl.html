@@ -1,0 +1,191 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of format</TITLE>
+</HEAD><BODY>
+<H1>format</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.1<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+format - 按 sprintf 的式样格式化一个字符串    
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>format </B><I>formatString </I>?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>INTRODUCTION</H2>
+
+<P>
+
+这个命令按与ANSI C <B>sprintf </B>过程相同的方式生成一个格式化了的字符串(在它的实现中使用了 <B>sprintf</B>)。<I>FormatString</I>      指示如何格式化结果，与 <B>sprintf </B>一样使用      <B>%</B>  转换指定符(specifier)，如果有增添的参数，则它们提供要被替换到结果中的值。<B>format</B>      的返回值是格式化了的字符串。
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>格式化细节 DETAILS ON FORMATTING</H2>
+
+<P>
+
+命令按从左到右的检索(scan) <I>formatString</I> 的方式操作。除了百分号之外的在格式字符串中的每个字符都要添加到结果字符串上。如果字符是一个 <B>%</B>则它不被复制到结果字符串中。转而，在 <B>%</B>  后面的字符被作为一个转换指定符对待。转换指定符控制把下一个连续的(successive) <I>arg</I> 转换成一个特定的格式，并把结果添加到结果字符串中转换指定符的位置上。如果在格式字符串中有多个转换指定符，则每一个控制一个增添的参数 <I>arg</I>。<B>format</B>   命令必须给出足够的 <I>arg</I>s 来满足在 <I>formatString </I>中的所有转换指定符的需要。
+<P>
+
+每个转换指定符可以由六部分组成: 一个 XPG3 位置指定符，一系列标志(flag)，一个最小字段宽度，一个精度，一个长度修饰符(modifier)，和一个转换字符。除了转换字符之外可以省略这些字段中的任何一个。存在的字段必须按上面给出的次序出现。下面的段落依次讨论所有这些字段。
+<P>
+
+如果 <B>%</B>    跟随着一个十进制数值和一个 <B>$</B>, 比如“<B>%2$d</B>”，则要转换的值不接受下一个顺序的参数。转而，它接受由这个数字指示的参数，这里 1  对应于第一个 <I>arg</I>。如果因为在指定符中有 <B>*</B>  字符而转换指定符要求多个参数，则使用连续的参数，开始的参数由这个数值给出。这依从 XPG3 定位指定符约定。如果在 <I>formatString</I>      中有任何定位的指定符则所有指定符必须定位。
+<P>
+
+一个转换指定符的第二部分可以按任意次序包含任何下列的标志字符:    
+<DL COMPACT>
+<DT><B>-</B><DD>
+指定被转换的参数在它的字段中左对齐(数值一般右对齐，如果需要的话，有前导的空格)。  
+<DT><B>+</B><DD>
+指定输出的数值必须有符号，即使是正数。    
+<DT><I>space</I><DD>
+指定如果数值的第一个字符不是一个符号则向数值的开始处添加空格。    
+<DT><B>0</B><DD>
+指定应当在数值的左侧填充零而不是空格。    
+<DT><B>#</B><DD>
+要求一中替代的输出形式。对于 <B>o</B> 和 <B>O</B> 转换它保证第一个数字总是 <B>0</B>。对于 <B>x</B> 或 <B>X</B> 转换，除了零之外，在结果的开始处(分别)添加 <B>0x</B> 或 <B>0X</B>。对于所有浮点数转换(<B>e</B>、<B>E</B>、<B>f</B>、<B>g</B>、和 <B>G</B>) 它保证结果总是一个小数点。对于 <B>g</B> 和 <B>G</B> 转换它指定删除尾部的零。    
+</DL>
+<P>
+
+一个转换指定符的第三部分是给出这个转换的最小字段宽度的一个数字。它典型的被用来按列表的(tabular)输出形式排列(line up)各列(column)。如果被转换的参数包含的字符比这个最小字段宽度少，则填充它来达到这个最小的字段宽度。填充通常是在被转换的参数的左侧添加额外的空格，但是可以使用 <B>0</B>和 <B>-</B> 标志来分别指定在左侧填充零或在右侧填充空格。如果指定最小字段宽度为 <B>*</B> 而不是一个数值，则用给 <B>format</B> 命令的下一个参数确定最小字段宽度；它必须是一个数值字符串。
+<P>
+
+一个转换指定符的第四部分是一个精度，它由一个点号和随后的一个数值组成。在不同的转换中按不同的方式使用这个数值。对于 <B>e</B>、<B>E</B>、和 <B>f</B> 转换它指定出现在小数点右侧的数字的位数。对于 <B>g</B> 和 <B>G</B> 转换它指定出现的数字的总数，包括在小数点两侧的数字(但是，除非指定了 <B>#</B>  标志，省略在小数点后面的尾部的零)。对于正数转换，它指定输出的最小的数字位数(如果需要的话添加前导的零)。对于 <B>s</B>  转换它指定输出的最大的字符数；如果字符串比它长则删除尾部的字符。如果用 <B>*</B>  而不是一个数值来指定精度，则用给 <B>format</B>  命令的下一个参数来确定精度；它必须是一个数值字符串。
+<P>
+
+一个转换指定符的第五部分是一个长度修饰符，它必须是 <B>h</B> 或 <B>l</B>。如果它是 <B>h</B>  则指定数值值在转换之前必须被截断(truncate)成16位值。这个选项很少有用。忽略 <B>l</B> 修饰符。
+<P>
+
+一个转换指定符的最后一部分是确定进行那种转换的一个字母字符。当前支持下列转换字符:     
+<DL COMPACT>
+<DT><B>d</B><DD>
+把整数转换成有符号的十进制字符串。     
+<DT><B>u</B><DD>
+把整数转换成无符号的十进制字符串。     
+<DT><B>i</B><DD>
+把整数转换成有符号的十进制字符串；整数可以是十进制的，八进制的(有一个前导的 <B>0</B>) 或十六进制的(有一个前导的 <B>0x</B>)。    
+<DT><B>o</B><DD>
+把整数转换成无符号八进制字符串。     
+<DT><B>x</B> or <B>X</B><DD>
+把整数转换成无符号十六进制字符串，对 <B>x</B> 使用数字“0123456789abcdef”而对 <B>X</B> 使用数字 “0123456789ABCDEF”。  
+
+
+
+
+
+
+
+<DT><B>c</B><DD>
+把整数转换成它代表的 Unicode 字符。  
+
+
+
+
+
+
+<DT><B>s</B><DD>
+不转换，只是插入字符。     
+<DT><B>f</B><DD>
+浮点数转换成有符号的 <I>xx.yyy </I>形式的十进制字符串，这里的 <I>y </I>的位数由精度确定(缺省: 6)。如果精度是 0 则不输出小数点。     
+<DT><B>e</B> or <B>e</B><DD>
+把浮点数转换成 <I>x.yyy</I><B>e&amp;#177;</B><I>zz </I>形式的科学记数法，这里的 <I>y </I>的位数由精度确定(缺省: 6)。如果精度是 0 则不输出小数点。如果使用 <B>E</B>  式样则输出 <B>E</B>  而不是 <B>e</B>。     
+<DT><B>g</B> or <B>G</B><DD>
+如果指数小于 -4 或大于等于精度，则把富点数按 <B>%e</B> 或 <B>%E</B> 来转换。否则按 <B>%f</B> 转换。省略尾部的零和尾部的小数点。     
+<DT><B>%</B><DD>
+不转换: 只是插入 <B>%</B>。     
+</DL>
+<P>
+
+数值转换，被转换的参数必须是一个正数或浮点数字符串；format 把参数转换成二进制接着依照转换指定符把它再转换成一个字符串。
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>与 ANSI SPRINTF 的区别 DIFFERENCES FROM ANSI SPRINTF</H2>
+
+<P>
+
+除了下列区别之外，format 命令的行为与 ANSI C <B>sprintf</B>  过程相同:     
+<DL COMPACT>
+<DT>[1]<DD>
+当前不支持 <B>%p</B> 和 <B>%n</B>  指定符。     
+<DT>[2]<DD>
+对于 <B>%c</B>  转换，参数必须是一个十进制字符串，它将被转换成相应的字符值。    
+<DT>[3]<DD>
+忽略 <B>l</B>  修饰符；转换整数值总是有如没有修饰符存在，而转换实数值总是有如存在 <B>l</B>  修饰符(例如， 使用类型     <B>double</B>  作为内部表示)。如果指定了 <B>h</B>   
+修饰符则在转换前截断整数值。    
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+<A HREF="/cgi-bin/man/man2html?3+sprintf">sprintf</A>(3), <A HREF="/cgi-bin/man/man2html?n+string">string</A>(n)
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+conversion specifier, format, sprintf, string, substitution
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/08/29</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">INTRODUCTION</A><DD>
+<DT><A HREF="#lbAE">格式化细节 DETAILS ON FORMATTING</A><DD>
+<DT><A HREF="#lbAF">与 ANSI SPRINTF 的区别 DIFFERENCES FROM ANSI SPRINTF</A><DD>
+<DT><A HREF="#lbAG">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAH">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

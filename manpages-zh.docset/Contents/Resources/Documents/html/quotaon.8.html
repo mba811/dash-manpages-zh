@@ -1,0 +1,239 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of QUOTAON</TITLE>
+</HEAD><BODY>
+<H1>QUOTAON</H1>
+Section: Maintenance Commands (8)<BR>Updated: Fri Mar 09 2001<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+quotaon - 开启关闭文件系统配额
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<B>quotaon</B>
+
+[
+<B>-e</B>
+
+|
+<B>d</B>
+
+]
+[
+<B>-vug</B>
+
+]
+<I>filesystem</I>...
+
+<BR>
+
+<B>quotaon</B>
+
+[
+<B>-e</B>
+
+|
+<B>d</B>
+
+]
+[
+<B>-avug</B>
+
+]
+<P>
+
+<B>quotaoff</B>
+
+[
+<B>-e</B>
+
+|
+<B>d</B>
+
+]
+[
+<B>-vug</B>
+
+]
+<I>filesystem</I>...
+
+<BR>
+
+<B>quotaoff</B>
+
+[
+<B>-e</B>
+
+|
+<B>d</B>
+
+]
+[
+<B>-avug</B>
+
+]
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<A NAME="ixAAB"></A>
+<A NAME="ixAAC"></A>
+<A NAME="ixAAD"></A>
+<A NAME="ixAAE"></A>
+<A NAME="ixAAF"></A>
+<A NAME="ixAAG"></A>
+<A NAME="ixAAH"></A>
+<A NAME="ixAAI"></A>
+<A NAME="ixAAJ"></A>
+<A NAME="ixAAK"></A>
+<P>
+
+<B>quotaon</B>
+
+通知系统在一个或者几个文件系统上使用磁盘配额。
+<B>quotaoff</B>
+
+通知系统取消某一个特定的文件系统的所有磁盘配额。 被指定的文件系统必须已经装载。
+<B>quotaon</B>
+
+要求在指定的文件系统的根目录下有相应的配额文件， 用户配额文件是
+<I>aquota.user</I>，
+
+组配额文件是
+<I>aquota.group</I>。
+
+这些文件可以是用
+<B><A HREF="/cgi-bin/man/man2html?8+convertquota">convertquota</A></B>(8)
+
+命令转换旧的配额文件而来， 也可以是用
+<B><A HREF="/cgi-bin/man/man2html?8+quotacheck">quotacheck</A></B>(8)
+
+命令创建的一个全新的文件。 默认是用户和组配额
+都被允许。
+<A NAME="lbAE">&nbsp;</A>
+<H2>选项 (OPTIONS)</H2>
+
+<DL COMPACT>
+<DT><B>-e</B>
+
+<DD>
+开启指定文件系统配额。 当程序名是
+<B>quotaon</B>
+
+时， 此选项是默认的。
+<DT><B>-d</B>
+
+<DD>
+关闭指定文件系统配额。 当程序名是
+<B>quotaoff</B>
+
+时， 此选项是默认的。
+<DT><B>-a</B>
+
+<DD>
+当用在任何文件系统名称的地方时，
+<B>quotaon/quotaoff</B>
+
+将允许/禁止所有在
+<B>/etc/mtab</B>
+
+中指定的文件系统为有磁盘配额的读-写。 这个选项一般被用在系统启动时开启配额。
+<DT><B>-v</B>
+
+<DD>
+为每个开启或关闭配额的文件系统显示一条消息。
+<DT><B>-u</B>
+
+<DD>
+处理用户配额。 这是默认选项。
+<DT><B>-g</B>
+
+<DD>
+处理组配额。
+</DL>
+<P>
+
+<A NAME="lbAF">&nbsp;</A>
+<H2>文件 (FILES)</H2>
+
+
+<DL COMPACT>
+<DT><B>aquota.user</B>
+
+<DD>
+文件系统根目录下的用户配额文件
+<DT><B>aquota.group</B>
+
+<DD>
+文件系统根目录下的组配额文件
+<DT><B>/etc/mtab</B>
+
+<DD>
+已装载的文件系统表
+
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+quota">quota</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?2+quotactl">quotactl</A></B>(2),
+
+<B><A HREF="/cgi-bin/man/man2html?5+fstab">fstab</A></B>(5),
+
+<B><A HREF="/cgi-bin/man/man2html?8+convertquota">convertquota</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+quotacheck">quotacheck</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+setquota">setquota</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+edquota">edquota</A></B>(8),
+
+<B><A HREF="/cgi-bin/man/man2html?8+repquota">repquota</A></B>(8)
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>作者 (AUTHOR)</H2>
+
+Jan Kara &lt;<A HREF="mailto:jack@atrey.karlin.mff.cuni.cz">jack@atrey.karlin.mff.cuni.cz</A>&gt;
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/7/13</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中国 Linux 论坛 man 手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">选项 (OPTIONS)</A><DD>
+<DT><A HREF="#lbAF">文件 (FILES)</A><DD>
+<DT><A HREF="#lbAG">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAH">作者 (AUTHOR)</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">[中国 Linux 论坛 man 手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

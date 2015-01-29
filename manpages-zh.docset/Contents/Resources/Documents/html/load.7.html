@@ -1,0 +1,70 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of LOAD</TITLE>
+</HEAD><BODY>
+<H1>LOAD</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+LOAD - 装载或重载一个共享库文件
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+LOAD '<I>filename</I>'
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<BR>&nbsp;这个命令装载一个共享库文件到PostgreSQL服务器的地址空间。&nbsp;一旦一个文件被装载，如果该文件前面曾经装载过，那么服务器首先会卸载它。&nbsp;这条命令主要用于在一个共享库件修改后卸载和重载它。&nbsp;要利用这个共享库件，我们必须用&nbsp;CREATE&nbsp;FUNCTION&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+create_function">create_function</A></B>(7)]
+命令声明函数。
+<P>
+
+<BR>&nbsp;文件名是和&nbsp;CREATE&nbsp;FUNCTION&nbsp;[<B><A HREF="/cgi-bin/man/man2html?7+create_function">create_function</A></B>(7)]&nbsp;里描写的共享库的名字相同方法声明的；&nbsp;特别要注意等是我们可以依赖搜索路径和自动附加系统标准共享库扩展名的特点。&nbsp;参阅&nbsp;Section&nbsp;31.3&nbsp;``User-Defined&nbsp;Functions''&nbsp;获取更多细节。
+<A NAME="lbAE">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+<B>LOAD</B> 是 PostgreSQL 扩展。
+<A NAME="lbAF">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<P>
+
+CREATE FUNCTION [<B><A HREF="/cgi-bin/man/man2html?7+create_function">create_function</A></B>(7)]
+<A NAME="lbAG">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAG">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

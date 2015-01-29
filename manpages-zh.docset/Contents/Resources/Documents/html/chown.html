@@ -1,0 +1,193 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of CHOWN</TITLE>
+</HEAD><BODY>
+<H1>CHOWN</H1>
+Section: User Commands  (1)<BR>Updated: 1998年11月<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+chown - 修改文件所有者和组别
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览</H2>
+
+<B>chown [</B><I>options</I><B>] </B><I>user</I><B> [:</B><I>group</I><B>] </B><I>file...</I>
+
+<P>
+POSIX 选项：
+<B>[-R]</B>
+
+<P>
+GNU 选项(最短格式):
+<B>[-cfhvR] [--dereference]</B>
+
+<B>[--reference=</B><I>rfile</I><B>]</B>
+
+<B>[--help] [--version] [--]</B>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述</H2>
+
+<B>chown</B>
+
+修改每个由第一个非选项参数声明的给定
+<I>file(文件)</I>
+
+的用户和/或组的所有权.如下:
+如果只给出了用户名(或者数字用户标识),那么该用户即成为每个指定
+文件的所有者,而该文件的组别并不改变.如果用户名后面紧跟着冒号和
+组名(或者是数字组标识),并且它们之间没有空格,那么文件的组所有权
+也随之改变.
+<A NAME="lbAE">&nbsp;</A>
+<H2>GNU细节</H2>
+
+GNU版本允许使用一个点来替代冒号(学BSD的).[因为点是有效的用户
+名中的字符,所以这不被POSIX所接纳.]如果有一个冒号或者点,却没有
+组名跟在用户名后,那么该用户即成为文件的所有者,而且文件的组改为
+该用户的登录组.如果给定了冒号或者点,以及组,但是省略了用户名,那
+么只有文件的组被修改;在这种情况下,
+<B>chown</B>
+
+执行的是与
+<B>chgrp</B>
+
+相同的功能.
+<A NAME="lbAF">&nbsp;</A>
+<H2>POSIX选项</H2>
+
+<DL COMPACT>
+<DT><B>-R</B>
+
+<DD>
+递归地修改目录及其下面内容的所有权.
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>GNU选项</H2>
+
+<DL COMPACT>
+<DT><B>-c, --changes</B>
+
+<DD>
+详尽地描述每个
+<I>file</I>
+
+实际改变了哪些所有权.
+<DT><B>-f, --silent, --quiet</B>
+
+<DD>
+不打印文件所有权不能修改的报错信息.
+<DT><B>-h, --no-dereference</B>
+
+<DD>
+只作用于其本身的符号链接,而不修改它们所指向的文件.
+这只在提供了
+<B>lchown</B>
+
+系统调用的情况下才可用.
+<DT><B>-v, --verbose</B>
+
+<DD>
+详尽地描述对每个
+<I>file</I>
+
+所执行的操作(或者无操作).
+<DT><B>-R, --recursive</B>
+
+<DD>
+递归地修改目录及其下面内容的所有权.
+<DT><B>--dereference</B>
+
+<DD>
+修改符号链接目标端的所有权,而非符号链接自身.
+(fileutils 4.0中实现的新功能.)
+<DT><B>--reference=</B><I>rfile</I>
+
+<DD>
+(fileutils 4.0中实现的新功能.)
+修改
+<I>file</I>
+
+的所有权为
+<I>rfile</I>
+
+的所有权.
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>GNU标准选项</H2>
+
+<DL COMPACT>
+<DT><B>--help</B>
+
+<DD>
+在标准输出上打印一条用法信息,并以成功状态退出.
+<DT><B>--version</B>
+
+<DD>
+在标准输出上打印版本信息,然后以成功状态退出.
+<DT><B>--</B>
+
+<DD>
+终止选项列表.
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<H2>环境变量</H2>
+
+变量LANG, LC_ALL, LC_CTYPE和LC_MESSAGES取其常用义.
+<A NAME="lbAJ">&nbsp;</A>
+<H2>遵循</H2>
+
+POSIX 1003.2不允许使用点作为用户名和组名的分隔符.
+<A NAME="lbAK">&nbsp;</A>
+<H2>备注</H2>
+
+本页描述了包括在fileutils-4.0包中的
+<B>chown;</B>
+
+其它版本会有细微差别.
+请将您的修正和增补建议发到<A HREF="mailto:aeb@cwi.nl">aeb@cwi.nl</A>.
+程序中的bugs请报告到
+<A HREF="mailto:fileutils-bugs@gnu.ai.mit.edu">fileutils-bugs@gnu.ai.mit.edu</A>.
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>riser &lt;<A HREF="mailto:boomer@ccidnet.com">boomer@ccidnet.com</A>&gt;</B>
+
+<A NAME="lbAM">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2000/10/19</B>
+
+<A NAME="lbAN">&nbsp;</A>
+<H2>《中国linux论坛man手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览</A><DD>
+<DT><A HREF="#lbAD">描述</A><DD>
+<DT><A HREF="#lbAE">GNU细节</A><DD>
+<DT><A HREF="#lbAF">POSIX选项</A><DD>
+<DT><A HREF="#lbAG">GNU选项</A><DD>
+<DT><A HREF="#lbAH">GNU标准选项</A><DD>
+<DT><A HREF="#lbAI">环境变量</A><DD>
+<DT><A HREF="#lbAJ">遵循</A><DD>
+<DT><A HREF="#lbAK">备注</A><DD>
+<DT><A HREF="#lbAL">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAM">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAN">《中国linux论坛man手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

@@ -1,0 +1,125 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of TEXI2DVI</TITLE>
+</HEAD><BODY>
+<H1>TEXI2DVI</H1>
+Section: User Commands (1)<BR>Updated: June 2003<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+texi2dvi - 打印 Texinfo 文档
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<B>texi2dvi</B>
+
+[<I>OPTION</I>]... <I>FILE</I>...
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+依次从 Tex 系统中运行每个 Texinfo 或者 LaTex 文件 FILE，直到解决了所有的交叉引用，建立所有的索引。每个包含 FILE 的目录都将被搜索，查找被包含的文件。FILE 的后缀被用来判断它的语言 (LaTex 还是 Texinfo)。
+<P>
+
+需要的时候，在运行 Tex 系统之前，使用 makeinfo 来进行 Texinfo 宏扩展。
+<A NAME="lbAE">&nbsp;</A>
+<H3>操作模式：</H3>
+
+<DL COMPACT>
+<DT><B>-b</B>, <B>--batch</B><DD>
+非交互式
+<DT><B>-c</B>, <B>--clean</B><DD>
+删除所有的辅助文件 (auxiliary)
+<DT><B>-D</B>, <B>--debug</B><DD>
+打开 shell 调试 (设置 <B>-x</B>)
+<DT><B>-h</B>, <B>--help</B><DD>
+显示此帮助，然后退出
+<DT><B>-o</B>, <B>--output</B>=<I>OFILE</I><DD>
+将输出保存于 OFILE (隐含着 <B>--clean</B>)；这种情况下只能指定一个输入文件 FILE
+<DT><B>-q</B>, <B>--quiet</B><DD>
+不显示输出，除非发生错误 (隐含着 <B>--batch</B>)
+<DT><B>-s</B>, <B>--silent</B><DD>
+与 <B>--quiet</B> 相同
+<DT><B>-v</B>, <B>--version</B><DD>
+显示版本信息，然后退出
+<DT><B>-V</B>, <B>--verbose</B><DD>
+报告每一步行为
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H3>调整 TeX：</H3>
+
+<DL COMPACT>
+<DT>-@<DD>
+使用 @input 而不是 \input；只对应预先加载的 Texinfo
+<DT><B>-e</B>, <B>-E</B>, <B>--expand</B><DD>
+强制使用 makeinfo 进行宏扩展
+<DT><B>-I</B> DIR<DD>
+搜索 DIR，查找 Texinfo 文件
+<DT><B>-l</B>, <B>--language</B>=<I>LANG</I><DD>
+指定文件 FILE 的语言 LANG (值为 LaTex 或 Texinfo)
+<DT><B>-p</B>, <B>--pdf</B><DD>
+使用 pdftex 或者 pdflatex 来处理
+<DT><B>-t</B>, <B>--command</B>=<I>CMD</I><DD>
+在输入文件的拷贝中插入 CMD；
+<DT>或 <B>--texinfo</B>=<I>CMD</I><DD>
+累积多个值 (?)
+</DL>
+<P>
+
+环境变量 BIBTEX, LATEX (或 PDFLATEX), MAKEINDEX, MAKEINFO, TEX (或 PDFTEX), 以及 TEXINDEX 的值将用来运行对应的命令，如果设置了它们的话。任何 CMD 字串都被添加到 Texinfo 输入文件的 @setfilename 之后，或者 LaTex 输入文件的第一行。
+<A NAME="lbAG">&nbsp;</A>
+<H2>REPORTING BUGS 报告错误</H2>
+
+将错误报告发送到 <A HREF="mailto:bug-texinfo@gnu.org">bug-texinfo@gnu.org</A>，一般的问题和讨论则发送到 <A HREF="mailto:help-texinfo@gnu.org">help-texinfo@gnu.org</A>。
+Texinfo 主页：<A HREF="http://www.gnu.org/software/texinfo/">http://www.gnu.org/software/texinfo/</A>
+<A NAME="lbAH">&nbsp;</A>
+<H2>COPYRIGHT</H2>
+
+Copyright &#169; 2003 Free Software Foundation, Inc.
+There is NO warranty.  You may redistribute this software
+under the terms of the GNU General Public License.
+For more information about these matters, see the files named COPYING.
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B>texindex</B>
+
+的全部文档以 Texinfo 手册页形式保存。如果你的主机上正确安装了
+<B>info</B>
+
+和
+<B>texindex</B>
+
+程序，命令
+<DL COMPACT>
+<DT><DD>
+<B>info texindex</B>
+
+</DL>
+<P>
+
+将使你可以读取完整的手册。
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DL>
+<DT><A HREF="#lbAE">操作模式：</A><DD>
+<DT><A HREF="#lbAF">调整 TeX：</A><DD>
+</DL>
+<DT><A HREF="#lbAG">REPORTING BUGS 报告错误</A><DD>
+<DT><A HREF="#lbAH">COPYRIGHT</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:18 GMT, January 29, 2015
+</BODY>
+</HTML>

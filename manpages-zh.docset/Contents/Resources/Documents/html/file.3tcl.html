@@ -1,0 +1,279 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of file</TITLE>
+</HEAD><BODY>
+<H1>file</H1>
+Section: Tcl Built-In Commands (3tcl)<BR>Updated: 8.3<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+<BR>
+
+
+
+<PRE>
+<BR>
+<HR></PRE>
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+file - 操纵文件名和属性
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 SYNOPSIS</H2>
+
+<B>file </B><I>option</I> <I>name</I> ?<I>arg arg ...</I>?
+
+<PRE>
+<BR>
+<HR>
+
+</PRE>
+
+<BR>
+
+
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 DESCRIPTION</H2>
+
+<P>
+
+这个命令提供在一个文件名或属性上的一些操作。<I>Name</I> 是一个文件的名字；如果它以波浪线(~)开始，则在执行命令之前进行波浪线替换(详情参见<B>filename</B>  命令的手册条目)。<I>Option</I> 指示对文件名做什么处理。接受 <I>option</I> 的任何唯一的缩写。有效的选项是: 
+<DL COMPACT>
+<DT><B>file atime </B><I>name</I> ?<B>time</B>?<DD>
+返回一个十进制字符串，给出文件 <I>name </I>上次被访问的时间。如果指定了<I>time</I>，它是这个文件要设置成的访问时间。这个时间是用标准的 POSIX 方式(fashion)度量的，即从一个固定的开始时间至今的秒数(通常是1970年1月1日)。如果文件不存在或它的访问时间不可查询或设置则生成一个错误。在 Windows 上，FAT 文件系统不支持访问时间。
+<DT><B>file attributes </B><I>name</I><DD>
+<BR>
+
+<B>file attributes </B><I>name</I> ?<B>option</B>?
+<BR>
+
+<B>file attributes </B><I>name</I> ?<B>option value option value...</B>?
+<DL COMPACT><DT><DD>
+这个子命令返回或设置与一个文件相关联的特定于平台的值。第一种形式返回特定于平台的标志(flag)和它们的值的一个列表。第二种形式返回指定选项的值。第三种形式设置一个或多个值。这些值是:
+<P>
+
+在Unix 上，<B>-group</B>  得到或设置这个文件的组名字。给这个命令一个组ID，而它返回一个组名字。<B>-owner</B> 得到或设置这个文件的属主的名字。这个命令返回属主的名字，而在设置属主的时候要传递给它数值的 ID。<B>-permissions</B>  设置或查询 <A HREF="/cgi-bin/man/man2html?1+chmod">chmod</A>(1) 所使用的八进制代码。这个命令还有限的支持使用 <A HREF="/cgi-bin/man/man2html?1+chmod">chmod</A>(1)的符号属性来做设置，形式是 [ugo]?[[+-=][rwxst],[...]]，这里使用逗号来分隔多个符号属性(例如: <B>u+s，go-rw</B>  为用户添加粘住位(sticky)，为组和其他删除读和写的许可权)。还支持一个简化的 <B>ls</B>式样的字符串，形式是 rwxrwxrwx (必须是 9 个字符)(例如: <B>rwxr-xr-t</B> 等价于01755)。
+<P>
+
+在 Windows 上，<B>-archive</B> 给出值或设置或清除这个文件的归档属性。<B>-hidden</B>  给出值或设置或清除这个文件的隐藏属性。<B>-longname</B>将把每个路径元素扩展成长版本。不能设置这个属性。<B>-readonly</B> 给出值或设置或清除这个文件的只读属性。<B>-shortname</B>    给出一个字符串，在这里每个路径元素被替换成它的短(8.3)版本的文件名。不能设置这个属性。<B>-system</B> 给出值或设置或清除这个文件的系统属性。
+<P>
+
+在 Macintosh 上，<B>-creator</B>给出或设置这个文件的寻找器(Finder)建立者类型。<B>-hidden</B>给出值或设置或清除这个文件的隐藏属性。<B>-readonly</B> 给出值或设置或清除这个文件的只读属性。注意如果打开了文件共享则目录只能被锁定。<B>-type</B> 给出或设置这个文件的寻找器文件类型。    
+</DL>
+
+
+
+
+
+
+
+
+<DT><B>file channels ?</B><I>pattern</I>?<DD>
+如果没有指定 <I>pattern</I>，则返回所有在这个解释器中注册的打开通道的一个列表。如果指定了 <I>pattern</I>，则只返回匹配<I>pattern</I>  的名字。确定匹配使用与 <B>string match</B> 相同的规则。              
+
+
+
+
+
+
+<DT><B>file copy </B>?<B>-force</B>? ?<B>--</B>? <I>source</I> <I>target</I><DD>
+<BR>
+
+<B>file copy </B>?<B>-force</B>? ?<B>--</B>? <I>source</I> ?<I>source</I> ...? <I>targetDir</I>
+<DL COMPACT><DT><DD>
+第一中形式在路径名 <I>target </I>底下做文件或路径 <I>source</I>的一个复件。如果 <I>target</I>   是一个现存的目录，则使用第二种形式。第二种形式在<I>targetDir </I>中做列出的每个 <I>source</I> 文件的一个复件。如果指定一个目录作为一个 <I>source</I>，则这个目录的内容将被递归的复制进 <I>targetDir</I>   中。除非指定 <B>-force</B>  选项否则现存文件将不被覆写。即使指定了 <I>-force</I>  ，尝试覆写一个非空目录，用一个文件覆写一个目录，或者用一个目录覆写一个文件将导致错误。参数按指定的次序被处理，如果有错误的话，在第一个错误处停止(halt)。一个 <B>--</B>   标记选项的结束；在 <B>--</B> 之后的参数即使以 <B>- </B>开始将仍被作为一个 <I>source</I>  来对待。         
+</DL>
+
+<DT><B>file delete </B>?<B>-force</B>? ?<B>--</B>? <I>pathname</I> ?<I>pathname</I> ... ?<DD>
+删除由每个 <I>pathname</I> 参数所指定的文件或目录。只有指定 <B>-force</B>选项才删除非空目录。尝试删除一个不存在文件将导致不作为一个错误来考虑。即使没有指定 <B>-force</B> 
+项，尝试删除一个只读文件将导致文件被删除。参数按指定的次序被处理，如果有错误的话，在第一个错误处停止(halt)。一个 <B>--</B>  标记选项的结束；在 <B>--</B> 之后的参数即使以 <B>- </B>开始将仍被作为一个 <I>pathname</I>来对待。                
+<DT><B>file dirname </B><I>name</I><DD>
+返回一个名字，由在 <I>name</I>  中除了最后一个之外的所有路径组成部分(component)组成。如果 <I>name</I> 是一个相对的文件名并且只包含一个路径元素(element)，则返回“<B>.</B>” (在 Macintosh 上为“<B>:</B>”)。如果 <I>name</I> 参照一个根目录，则返回根目录。例如，
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>file dirname c:/</B>
+
+</PRE>
+
+</DL>
+
+
+返回 <B>c:/</B>. 
+<P>
+
+注意波浪线替换只在必要的时候进行用以补全(complete)命令。例如，                
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>file dirname ~/src/foo.c</B>
+
+</PRE>
+
+</DL>
+
+
+返回 <B>~/src</B>，而  
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>file dirname ~</B>
+
+</PRE>
+
+</DL>
+
+
+返回 <B>/home</B> (or something similar).
+</DL>
+
+<DT><B>file executable </B><I>name</I><DD>
+如果文件对当前用户是可执行的则返回 <B>1</B>，否则返回<B>0</B>。                  
+<DT><B>file exists </B><I>name</I><DD>
+如果文件 <I>name</I>  存在并且当前的用户对找到(lead to)它(所途径)的目录有查找的权利(privilege)则返回<B>1</B>，否则返回 <B>0</B>。            
+<DT><B>file extension </B><I>name</I><DD>
+返回在 <I>name </I>最后那个元素的最后一个点号之后并包括点号的所有在 <I>name</I>中字符。如果在 <I>name</I> 的最后的那个元素中没有点号则返回空串。 
+<DT><B>file isdirectory </B><I>name</I><DD>
+如果文件 <I>name</I>  是一个目录则返回 <B>1</B>，否则返回 <B>0</B>。
+<DT><B>file isfile </B><I>name</I><DD>
+如果文件 <I>name</I>  是一个普通文件则返回 <B>1</B>，否则返回 <B>0</B>。
+<DT><B>file join </B><I>name</I> ?<I>name ...</I>?<DD>
+接受一个或多个文件名并使用对当前平台正确的路径分隔符来组合它们。如果特定的 <I>name</I>是相对的，则它会被连接到前面的文件名参数上。否则，丢弃所有以前的参数，从当前的参数开始进行连接。例如
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>file join a b /foo bar</B>
+
+</PRE>
+
+</DL>
+
+
+返回 <B>/foo/bar</B>.
+<P>
+
+注意任何名字都可以包含分隔符，并且结果总是依从当前平台的规矩:  对 Unix 和 Windows 是 <B>/</B>，对 Macintosh 是 <B>:</B>。
+</DL>
+
+<DT><B>file lstat </B><I>name varName</I><DD>
+除了使用 <I>lstat</I> 调用而不使用 <I>stat </I>之外，与 <B>stat</B>  选项(见后)相同。这意味着如果 <I>name</I> 参照一个符号连接，在 <I>varName</I> 中返回的信息是针对这个连接而不是它所引用的那个文件。在不支持符号连接的系统上这个选项的行为与 <B>stat</B>选项完全一致。               
+<DT><B>file mkdir </B><I>dir</I> ?<I>dir</I> ...?<DD>
+建立每个指定的目录。对于每个指定的路径名 <I>dir</I>  ，象 <I>dir</I> 自身一样，这个命令将建立所有不存在的父目录。如果指定了一个现存的目录，不做动作并不返回错误。尝试用一个目录覆写一个现存的文件将导致一个错误。参数按指定的次序被处理，如果有错误的话，在第一个错误处停止(halt)。
+<DT><B>file mtime </B><I>name</I> ?<I>time</I>?<DD>
+返回一个十进制字符串，给出文件 <I>name</I>上次被修改的时间。如果指定了<I>time</I>    
+，它是这个文件要设置成的修改时间。(等价与 Unix 的 <B>touch</B>)。这个时间是用标准的 POSIX 方式(fashion)度量的，即从一个固定的开始时间至今的秒数(通常是1970年1月1日)。如果文件不存在或它的修改时间不可查询或设置则生成一个错误。
+<DT><B>file nativename </B><I>name</I><DD>
+返回文件的特定于平台的名字。如果这个文件名需要传递给特定于系统的调用，比如对在 Windows 下的 exec 或在 Macintosh 上的 AppleScript 将会有用。
+<DT><B>file owned </B><I>name</I> <DD>
+如果文件 <I>name</I>  由当前用户所有则返回 <B>1</B>，否则返回 <B>0</B>。
+<DT><B>file pathtype </B><I>name</I><DD>
+返回 <B>absolute</B>、<B>relative</B>、<B>volumerelative </B>中的一个。如果 <I>name</I>  参照一个在指定卷上的指定文件，路径类型将是 <B>absolute</B>。如果 <I>name</I> 参照一个相对当前工作目录的一个文件，则路径类型将是 <B>relative</B>。如果 <I>name</I> 参照在指定卷上的相对于当前工作目录的一个文件，或者在当前工作卷上的指定文件，则路径类型是 <B>volumerelative</B>。
+<DT><B>file readable </B><I>name</I><DD>
+如果文件 <I>name</I>  对当前用户是可读的则返回 <B>1</B>，否则返回<B>0</B>。
+<DT><B>file readlink </B><I>name</I><DD>
+返回由 <I>name</I>  给出的符号连接的值(比如，它指向的文件的名字)。如果 <I>name</I> 不是符号连接或它的值不可读，则返回一个错误。在不支持符号连接的系统上这个选项未定义。               
+<DT><B>file rename </B>?<B>-force</B>? ?<B>--</B>? <I>source</I> <I>target</I><DD>
+<DT><B>file rename </B>?<B>-force</B>? ?<B>--</B>? <I>source</I> ?<I>source</I> ...? <I>targetDir</I><DD>
+<DL COMPACT><DT><DD>
+第一种形式接受由路径名<I>source</I> 指定的文件或目录并且把它重命名成 <I>target</I>，如果路径名 <I>target</I>指定了在不同目录下的一个名字，则移动这个文件。如果 <I>target</I> 是一个现存的目录，则使用第二种形式。第二中形式移动每个 <I>source</I> 文件或目录到目录 <I>targetDir </I>中。除非指定了<B>-force</B>选项否则不覆写现存的文件。尝试覆写一个非空目录，用一个文件覆写一个目录，或者用一个目录覆写一个文件将导致错误。参数按指定的次序被处理，如果有错误的话，在第一个错误处停止(halt)。一个 <B>--</B> 标记选项的结束；在 <B>--</B>  之后的参数即使以 <B>- </B>开始将仍被作为一个 <I>source</I> 来对待。         
+</DL>
+
+<DT><B>file rootname </B><I>name</I><DD>
+返回 <I>name</I>  的最后一个组成部分的最后一个“.”之前但不包括这个“.”的 <I>name</I>中的所有字符。如果 <I>name</I> 的最后的组成部分不包含点号，则返回 <I>name</I>。
+<DT><B>file size </B><I>name</I><DD>
+返回给出文件 <I>name</I> 的大小的以字节为单位的一个十进制字符串。如果文件不存在或它的大小不可查询则生成一个错误。      
+<DT><B>file split </B><I>name</I><DD>
+返回一个列表，它的元素是在 <I>name </I>中的路径的组成部分。列表的第一个元素将与  <I>name </I>有相同的路径类型。所有其他元素将是相对的。除了需要确保一个元素是相对的而无歧义之外，丢弃路径分隔符。例如，在 Unix 下                
+<DL COMPACT><DT><DD>
+
+<DL COMPACT><DT><DD>
+<PRE>
+
+<B>file split /foo/~bar/baz</B>
+
+</PRE>
+
+</DL>
+
+
+返回 <B>/  foo  ./~bar  baz</B>   来确保以后的命令在第三个组成部分上不进行波浪线替换。
+</DL>
+
+<DT><B>file stat  </B><I>name varName</I><DD>
+在 <I>name </I>上调用 <B>stat</B>  内核调用，并且使用由 <I>varName</I> 给出的变量来持有从内核调用返回的信息。<I>VarName</I> 被作为一个数组变量来对待，并且给这个变量设置下列元素: <B>atime</B>、<B>ctime</B>、<B>dev</B>、<B>gid</B>、<B>ino</B>、<B>mode</B>、<B>mtime</B>、<B>nlink</B>、<B>size</B>、<B>type</B>、<B>uid</B>。除了 <B>type</B>之外的每个元素都是一个十进制字符串，它们的值来自从 <B>stat</B> 返回的结构中相应的字段。这些值的意义详见 <B>stat</B> 的手册条目。<B>type</B>  元素给出的文件类型与命令 <B>file type  </B>返回的有相同的形式。这个命令返回一个空串。
+<DT><B>file tail </B><I>name</I><DD>
+返回在最后一个目录分隔符之后的在 <I>name</I>中的所有字符。如果 <I>name</I>  不包含分隔符则返回<I>name</I>。
+<DT><B>file type </B><I>name</I><DD>
+返回给出文件 <I>name </I>的类型的一个字符串，它将是<B>file</B>、<B>directory</B>、<B>characterSpecial</B>、 <B>blockSpecial</B>、<B>fifo</B>、<B>link</B>、或 <B>socket</B> 中的一个。   
+<DT><B>file volume</B><DD>
+返回一个适当的 Tcl 列表，给出到挂装在系统上的卷的绝对路径。在Macintosh上，将是挂装驱动器的一个列表，包括本地的和网络的二者。N.B.(?)如果两个驱动器有相同的名字，它们都将出现在卷列表上，但当前没有办法从Tcl 来访问除了第一个之外的任何驱动器。在 UNIX 上，命令将总是返回 &quot;/&quot;，因为所有文件系统都是本地挂装的。在 Windows 上，它将返回可获得的本地驱动器的一个列表(比如，{a:/ c:/})。                
+<DT><B>file writable </B><I>name</I><DD>
+如果文件 <I>name</I>  对当前用户是可写的则返回 <B>1</B>，否则返回 <B>0</B>。   
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<H2>移植要点 PORTABILITY ISSUES</H2>
+
+<DL COMPACT>
+<DT><B>Unix</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<DD>
+这些命令总是使用真实用户和组标识而不使用有效用户和组标识。
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>参见 SEE ALSO</H2>
+
+filename
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>关键字 KEYWORDS</H2>
+
+attributes, copy files, delete files, directory, file, move files, name, rename files, stat
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>寒蝉退士</B>
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/06/21</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>《中国 Linux 论坛 man 手册页翻译计划》:</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">描述 DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">移植要点 PORTABILITY ISSUES</A><DD>
+<DT><A HREF="#lbAF">参见 SEE ALSO</A><DD>
+<DT><A HREF="#lbAG">关键字 KEYWORDS</A><DD>
+<DT><A HREF="#lbAH">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAI">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAJ">《中国 Linux 论坛 man 手册页翻译计划》:</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:22 GMT, January 29, 2015
+</BODY>
+</HTML>

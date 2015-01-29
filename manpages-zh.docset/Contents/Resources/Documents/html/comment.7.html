@@ -1,0 +1,158 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of COMMENT</TITLE>
+</HEAD><BODY>
+<H1>COMMENT</H1>
+Section: SQL Commands (7)<BR>Updated: 2003-11-02<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+COMMENT - 定义或者改变一个对象的评注
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+<P>
+<PRE>
+COMMENT ON
+{
+  TABLE <I>object_name</I> |
+  COLUMN <I>table_name</I>.<I>column_name</I> |
+  AGGREGATE <I>agg_name</I> (<I>agg_type</I>) |
+  CONSTRAINT <I>constraint_name</I> ON <I>table_name</I> |
+  DATABASE <I>object_name</I> |
+  DOMAIN <I>object_name</I> |
+  FUNCTION <I>func_name</I> (<I>arg1_type</I>, <I>arg2_type</I>, ...) |
+  INDEX <I>object_name</I> |
+  OPERATOR <I>op</I> (<I>leftoperand_type</I>, <I>rightoperand_type</I>) |
+  RULE <I>rule_name</I> ON <I>table_name</I> |
+  SCHEMA <I>object_name</I> |
+  SEQUENCE <I>object_name</I> |
+  TRIGGER <I>trigger_name</I> ON <I>table_name</I> |
+  TYPE <I>object_name</I> |
+  VIEW <I>object_name</I>
+} IS <I>'text'</I>
+
+</PRE>
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+<P>
+
+<B>COMMENT</B> 存储一个数据库对象的评注， 这个评注可以很容易用 psql 的 <B>\dd</B>, <B>\d+</B>, 和 <B>\l+</B> 命令检索出来。 其它检索评注的用户接口可以建设在 psql 所用地同样地内部函数的基础上， 也就是 obj_description() 和 col_description()。
+<P>
+
+<BR>&nbsp;要修改一个评注，为同一个对象发出一条新的&nbsp;COMMENT&nbsp;命令即可。每个对象只存储一条评注。&nbsp;要删除评注，在文本字串的位置写上&nbsp;NULL。&nbsp;当删除对象时，评注自动被删除掉。
+<A NAME="lbAE">&nbsp;</A>
+<H2>PARAMETERS 参数</H2>
+
+<DL COMPACT>
+<DT><B></B><I>object_name</I><B></B><DD>
+<DT><B></B><I>table_name.column_name</I><B></B><DD>
+<DT><B></B><I>aggname</I><B></B><DD>
+<DT><B></B><I>constraint_name</I><B></B><DD>
+<DT><B></B><I>func_name</I><B></B><DD>
+<DT><B></B><I>op</I><B></B><DD>
+<DT><B></B><I>rule_name</I><B></B><DD>
+<DT><B></B><I>trigger_name</I><B></B><DD>
+<BR>&nbsp;要加入评注的对象名称。表，索引，序列，视图，类型，域，函数，&nbsp;聚集和操作符的名字可以是模式修饰的。
+<DT>agg_type<DD>
+聚集函数的参数类型，如果函数接受任意数据类型，那么是 *。 
+<DT>large_object_oid<DD>
+大对象的 OID。 
+<DT>PROCEDURAL<DD>
+这个字无用。 
+<DT>sourcetype<DD>
+类型转换的源数据类型名字。 
+<DT>targettype<DD>
+类型转换的目的数据类型名字。 
+<DT><B></B><I>text</I><B></B><DD>
+新的评注。
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>NOTES 注意</H2>
+
+<P>
+
+<BR>&nbsp;一个数据库里的评注只能在改数据库里创建，并且只有在那个数据库里可见，其它库里不可见。
+<BR>&nbsp;
+<BR>&nbsp;需要说明的是目前评注没有安全机制：任何联接到某数据库上的用户都可以看到所有该数据库对象的评注&nbsp;（尽管只有超级用户可以修改不属于他的对象的评注）。因此，不要在评注里放安全性敏感地信息。
+<A NAME="lbAG">&nbsp;</A>
+<H2>EXAMPLES 例子</H2>
+
+<P>
+
+<BR>&nbsp;给表mytable&nbsp;加评注：
+<P>
+<PRE>
+COMMENT ON TABLE mytable IS 'This is my table.';
+
+</PRE>
+
+<BR>&nbsp;再删除它：
+<P>
+<PRE>
+COMMENT ON TABLE mytable IS NULL;
+
+</PRE>
+
+<P>
+
+<BR>&nbsp;一些例子：
+<P>
+<PRE>
+COMMENT ON AGGREGATE my_aggregate (double precision) IS 'Computes sample variance';
+COMMENT ON COLUMN my_table.my_column IS 'Employee ID number';
+COMMENT ON DATABASE my_database IS 'Development Database';
+COMMENT ON DOMAIN my_domain IS 'Email Address Domain';
+COMMENT ON FUNCTION my_function (timestamp) IS 'Returns Roman Numeral';
+COMMENT ON INDEX my_index IS 'Enforces uniqueness on employee ID';
+COMMENT ON OPERATOR ^ (text, text) IS 'Performs intersection of two texts';
+COMMENT ON OPERATOR ^ (NONE, text) IS 'This is a prefix operator on text';
+COMMENT ON RULE my_rule ON my_table IS 'Logs updates of employee records';
+COMMENT ON SCHEMA my_schema IS 'Departmental data';
+COMMENT ON SEQUENCE my_sequence IS 'Used to generate primary keys';
+COMMENT ON TABLE my_schema.my_table IS 'Employee Information';
+COMMENT ON TRIGGER my_trigger ON my_table IS 'Used for RI';
+COMMENT ON TYPE complex IS 'Complex number data type';
+COMMENT ON VIEW my_view IS 'View of departmental costs';
+
+</PRE>
+
+<A NAME="lbAH">&nbsp;</A>
+<H2>COMPATIBILITY 兼容性</H2>
+
+<P>
+
+SQL 标准里没有COMMENT。
+<A NAME="lbAI">&nbsp;</A>
+<H2>译者</H2>
+
+<B>Postgresql 中文网站</B>
+
+<B>何伟平 &lt;<A HREF="mailto:laser@pgsqldb.org">laser@pgsqldb.org</A>&gt;</B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">PARAMETERS 参数</A><DD>
+<DT><A HREF="#lbAF">NOTES 注意</A><DD>
+<DT><A HREF="#lbAG">EXAMPLES 例子</A><DD>
+<DT><A HREF="#lbAH">COMPATIBILITY 兼容性</A><DD>
+<DT><A HREF="#lbAI">译者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:20 GMT, January 29, 2015
+</BODY>
+</HTML>

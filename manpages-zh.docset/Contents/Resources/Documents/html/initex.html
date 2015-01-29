@@ -1,0 +1,601 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of TEX</TITLE>
+</HEAD><BODY>
+<H1>TEX</H1>
+Section: User Commands  (1)<BR>Updated: 10 November 2001<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+tex, virtex, initex - 文本格式化和排版
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS 总览</H2>
+
+<B>tex</B>
+
+[<I>options</I>]
+
+[<I>commands</I>]
+
+
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION 描述</H2>
+
+这份手册页并不全面。此版本的 TeX 完整的文档可以从 info 文件或者手册
+<I>Web2C: A TeX implementation</I>
+
+中找到。
+<P>
+
+TeX
+格式化指定的文件中包含着命令的文本，输出一个设备无关的文件 (称为
+<I>DVI</I>
+
+，即 "设备无关"
+<I>DeVice Independent</I>
+
+的缩写)。在
+<I>The TeX
+book</I>
+
+中讲述了 TeX 的功能和语言。
+TeX 通常与一个大型的预编译的宏包同时使用，有一些特定的排版系统，例如
+LaTeX,
+通常需要很多宏包的支持。
+<P>
+
+这个版本的 TeX 通过查看它的命令行，查找自身是以什么名称被调用的。
+<B>initex</B>
+
+和
+<B>virtex</B>
+
+都是到可执行文件
+<B>tex</B>
+
+的符号链接。当作为
+<B>initex</B>
+
+调用时 (或者使用了
+<B>--ini</B>
+
+选项时)，它可以用于将宏预编译，输出到一个
+<I>.fmt</I>
+
+文件中。当作为
+<B>virtex</B>
+
+调用时，它将使用
+<I>plain</I>
+
+格式。当以任何其他名称调用时，TeX 将使用那个名称作为要使用的格式名称。例如，当作为
+<B>tex</B>
+
+调用时，将使用
+<I>tex</I>
+
+格式，这与
+<I>plain</I>
+
+格式是相同的。
+<I>plain</I>
+
+格式中定义的命令记载在
+<I>The TeX
+book</I>
+
+中。其他常用的格式包括
+<I>latex</I>
+
+和
+<I>amstex</I>
+
+。
+<P>
+
+调用 
+TeX
+时，命令行给出的
+<I>commands</I>
+
+被传递给它作为输入的第一行。(但是通常将扩展的参数作为输入的第一行要简单许
+多，因为 UNIX 命令解释器总是会 "吃掉" 或者错误地解释 TeX 的符号，例
+如反斜杠，除非你引用它们。) 同
+<I>The TeX
+book</I>
+
+书中描述的一致，第一行应当以一个文件名开始，或者是一个控制序列
+<I>\controlsequence</I>,
+
+或者是一个格式名称
+<I>&amp;formatname</I>.
+
+<P>
+
+通常的用法是输入
+<DL COMPACT><DT><DD>
+<I>tex paper</I>
+
+</DL>
+
+来处理
+<I>paper.tex</I>
+
+。名称
+<I>paper</I>
+
+将作为任务名 (``jobname'')，也用来产生输出文件名。
+如果 TeX 没有在第一行获得一个文件名，jobname 将是
+<I>texput</I>
+
+。当查找一个文件时，TeX 查找带有和不带默认扩展名
+(<I>.tex</I>)
+
+的文件，除非名称中已包含了此扩展名。如果
+<I>paper</I>
+
+是任务名(``jobname'')，错误消息的日志记录，包含着比通常屏幕上显示的内容更加详细的内容，将保存为
+<I>paper.log</I>
+
+，输出文件将保存为
+<I>paper.dvi</I>
+
+。
+<P>
+
+这个版本的 TeX 可以查看文件
+<I>paper.tex</I>
+
+的第一行，看它是否以特殊序列
+<I>%&amp;</I>
+
+开始。如果第一行以
+<B>%&amp;</B><I>format</I>
+
+<B>--translate-file</B><I>&nbsp;tcxname</I>
+
+开始，那么 TeX 将使用指定的格式和转换表
+<I>tcxname</I>
+
+来处理源文件。格式名称和
+<B>--translate-file</B>
+
+转换定义都可以被忽略，但是不能同时忽略。这个设定超越了基于可执行文件名称的格式选择。
+选项
+<B>--parse-first-line</B>
+
+或者配置中的变量
+<B>parse_first_line</B>
+
+控制了是否允许这样的行为。
+<P>
+
+在 TeX 的错误提示下回应
+<I>e</I>
+
+将使得系统默认的编辑器被启动，修改当前文件的当前行。环境变量 TEXEDIT 可以用来修改所用的编辑器。它可以包含一个字符串 &quot;%s&quot;，指定文件名要替换的位置，以及字符串 &quot;%d&quot;，指定行号 (如果有的话) 要替换的位置。例如，要使用
+<B>emacs</B>
+
+，可以这样设置 TEXEDIT 字符串，使用
+<B>sh</B>
+
+命令
+<DL COMPACT><DT><DD>
+<I>TEXEDIT=&quot;emacs +%d %s&quot;; export TEXEDIT</I>
+</DL>
+
+<P>
+
+为了方便，库中有一个文件
+<I>null.tex</I>
+
+，内容为空。当 TeX 找不到可能的输入时，它会一直让用户输入另一个文件名；如果不想输入任何东西，回应 `null' 可以跳出这个循环。也可以输入 EOF 字符 (通常是 control-D)。
+<P>
+
+
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS 选项</H2>
+
+这个版本的 TeX 可以解释下列命令行选项。
+<DL COMPACT>
+<DT><B>--file-line-error-style</B>
+
+<DD>
+<BR>
+
+打印错误消息，以
+<I>file:line:error</I>
+
+的形式，与大多数编译器格式化消息的方式相似。
+<DT><B>--fmt</B><I>&nbsp;format</I>
+
+<DD>
+<BR>
+
+使用
+<I>format</I>
+
+作为要使用的格式名，而不是调用
+TeX 的名称或者
+<I>%&amp;</I>
+
+一行指定的内容。
+<DT><B>--help</B>
+
+<DD>
+<BR>
+
+打印帮助信息，然后退出。
+<DT><B>--ini</B>
+
+<DD>
+<BR>
+
+成为
+<B>initex</B>
+
+，用于转储格式 (dump formats)；如果调用的程序名是
+<B>initex</B>
+
+，那么隐含这个选项。
+<DT><B>--interaction</B><I>&nbsp;mode</I>
+
+<DD>
+<BR>
+
+设置交互模式。mode 可以是
+<I>batchmode</I>,
+
+<I>nonstopmode</I>,
+
+<I>scrollmode</I>,
+
+和
+<I>errorstopmode</I>
+
+其中之一。这些模式的含义与相应的
+\commands
+相同。
+<DT><B>--ipc</B>
+
+<DD>
+<BR>
+
+将 DVI 输出发送到一个 socket，同时像通常那样输出到文件。这个选项是否可用取决于安装程序的选择。
+<DT><B>--ipc-start</B>
+
+<DD>
+<BR>
+
+与
+<B>--ipc</B>
+
+类似，并且同时也在另一段启动服务器。这个选项是否可用取决于安装程序的选择。
+<DT><B>--jobname</B><I>&nbsp;name</I>
+
+<DD>
+<BR>
+
+使用
+<I>name</I>
+
+作为作业名，而不是从输入文件名获得。
+<DT><B>--kpathsea-debug</B><I>&nbsp;bitmask</I>
+
+<DD>
+<BR>
+
+根据位掩码，设置路径搜索调试标志。细节请参见
+<I>Kpathsea</I>
+
+手册页。
+<DT><B>--maketex</B><I>&nbsp;fmt</I>
+
+<DD>
+<BR>
+
+启用
+mktex<I>fmt</I>
+
+，这里
+<I>fmt</I>
+
+必须是
+<I>tex</I>
+
+或者
+<I>tfm</I>
+
+之一。
+<DT><B>--mltex</B>
+
+<DD>
+<BR>
+
+启用 MLTeX 扩展。
+<DT><B>--no-maketex</B><I>&nbsp;fmt</I>
+
+<DD>
+<BR>
+
+禁用
+mktex<I>fmt</I>
+
+这里
+<I>fmt</I>
+
+必须是
+<I>tex</I>
+
+或者
+<I>tfm</I>
+
+之一。
+<DT><B>--output-comment</B><I>&nbsp;string</I>
+
+<DD>
+<BR>
+
+使用
+<I>string</I>
+
+作为 DVI 文件的注释，而不是时间。
+<DT><B>--parse-first-line</B>
+
+<DD>
+<BR>
+
+如果主输入文件的第一行以
+<I>%&amp;</I>
+
+开始，就解释它，从中查找一个转储名称或者一个
+<B>--translate-file</B>
+
+选项。
+<DT><B>--progname</B><I>&nbsp;name</I>
+
+<DD>
+<BR>
+
+伪装是程序
+<I>name</I>
+
+。这对所用格式和搜索路径都有影响。
+<DT><B>--recorder</B>
+
+<DD>
+<BR>
+
+启用文件名记录。这将在一个扩展名为
+<I>.fls</I>
+
+的文件中记录输入和输出中打开的所有文件。
+<DT><B>--shell-escape</B>
+
+<DD>
+<BR>
+
+启用
+<B>\write18{</B><I>command</I><B>}</B>
+
+结构。
+<I>command</I>
+
+可以是任何 Bourne shell 命令。出于安全原因，这个结构通常被禁止。
+<DT><B>--translate-file</B><I>&nbsp;tcxname</I>
+
+<DD>
+<BR>
+
+使用
+<I>tcxname</I>
+
+转换表。
+<DT><B>--version</B>
+
+<DD>
+<BR>
+
+显示版本信息，然后退出。
+
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>ENVIRONMENT 环境</H2>
+
+参见 Kpathsearch 库的文档 (手册页的 `Path specifications' 节点) 来查看使用环境变量的精确的细节。
+<B>kpsewhich</B>
+
+实用工具可以用来查询变量的值。
+<P>
+
+警告：在大多数 TeX 格式中，不能直接传给 TeX 带有 ~ 的文件名，因为 ~ 是一个有特殊意义的字符，它将被扩展，不会作为文件名的一部分。其他程序，例如 Metafont，没有这个问题。
+<P>
+
+<DL COMPACT>
+<DT>TEXMFOUTPUT<DD>
+通常，TeX 将输出文件放在当前目录。如果不能在那里创建任何输出文件，它试着在环境变量 TEXMFOUTPUT 指定的目录中创建它。这个参数没有默认值。例如，假设命令是
+<I>tex paper</I>
+
+并且当前目录不可写，如果 TEXMFOUTPUT 设置为
+<I>/tmp</I>
+
+，TeX 试图创建
+<I>/tmp/paper.log</I>
+
+(还有
+<I>/tmp/paper.dvi</I>
+
+，如果产生了任何输出。)
+<DT>TEXINPUTS<DD>
+<I>\input</I>
+
+和
+<I>\openin</I>
+
+文件的搜索路径。它们一般应当以 ``.'' 开始，使得用户文件可以先于系统文件被找到。空路径成分将被替换为
+<I>texmf.cnf</I>
+
+文件中定义的路径。例如，设置 TEXINPUTS 为 &quot;.:/home/usr/tex:&quot; 来将当前目录和 ``/home/user/tex'' 添加到标准的搜索路径之前。
+<DT>TEXEDIT<DD>
+切换为编辑器的命令模板。默认值通常是
+<B>vi</B>
+
+，在 TeX 编译时进行设置。
+
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<H2>FILES 文件</H2>
+
+下面提到的文件的位置在各个系统中是不相同的。使用
+<B>kpsewhich</B>
+
+实用工具来找到它们的位置。
+<DL COMPACT>
+<DT><I>texmf.cnf</I>
+
+<DD>
+配置文件。它包含着搜索路径的定义，还有其他配置参数，例如
+<B>parse_first_line</B>.
+
+<DT><I>tex.pool</I>
+
+<DD>
+编码的文本，是 TeX 的提示消息。
+<DT><I>texfonts.map</I>
+
+<DD>
+文件名映射定义。
+<DT><I>*.tfm</I>
+
+<DD>
+TeX 字体的度量的文件。
+<DT><I>*.fmt</I>
+
+<DD>
+简写的 TeX 格式 (.fmt) 文件。
+<DT><I>$TEXMFMAIN/tex/plain/base/plain.tex</I>
+
+<DD>
+基本的宏包，在 TeX
+book 中有详细描述。
+<BR>
+
+
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<H2>BUGS</H2>
+
+这个版本的 TeX 实现了大量的可选的扩展。实际上，其中大部分与 TeX 的定义有或多或少的冲突。当启用这样的扩展时，TeX 启动时打印的提示信息将是
+<B>TeXk</B>
+
+而不是
+<B>TeX</B>
+
+。
+<P>
+
+这个版本的 TeX 在面积增加或减少时不能捕获算术下溢错误。这种情况很少见，但是一旦出现，产生的
+<I>DVI</I>
+
+文件将是无效的。
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>SEE ALSO 参见</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+mf">mf</A></B>(1),
+
+<BR>
+
+Donald E. Knuth,
+<I>The TeX
+book</I>,
+
+Addison-Wesley, 1986, ISBN 0-201-13447-0.
+<BR>
+
+Leslie Lamport,
+<I>LaTeX - A Document Preparation System</I>,
+
+Addison-Wesley, 1985, ISBN 0-201-15790-X.
+<BR>
+
+K. Berry,
+<I>Eplain: Expanded plain TeX</I>,
+
+<A HREF="ftp://ftp.cs.umb.edu/pub/tex/eplain/doc.">ftp://ftp.cs.umb.edu/pub/tex/eplain/doc.</A>
+<BR>
+
+Michael Spivak,
+<I>The Joy of TeX
+</I>,
+
+2nd edition, Addison-Wesley, 1990, ISBN 0-8218-2997-1.
+<BR>
+
+<I>TUGboat</I>
+
+(the journal of the TeX Users Group).
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>TRIVIA 提醒</H2>
+
+TeX，如果发音正确的话，与 ``blecchhh'' 押韵 (rhymes)。使用 typewriter 字体时，正确的拼写是 ``TeX'' 而不是 ``TEX'' 或者 ``tex''。
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>AUTHORS 作者</H2>
+
+TeX 的设计者是 by Donald E. Knuth，他用他的 Web 系统实现了它。后来，它分别被 Stanford 的 Howard Tricky 和 Cornell 的 Pavel Curtis 移植到了 Unix。当前随 Unix TeX 发行的这个版本使用了 Web 到 C 的翻译系统
+(<B>web2c</B>)
+
+来产生，
+(<B>web2c</B>)
+
+最初由 Tomas Rokicki 和 Tim Morgan 实现。
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS 总览</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION 描述</A><DD>
+<DT><A HREF="#lbAE">OPTIONS 选项</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT 环境</A><DD>
+<DT><A HREF="#lbAG">FILES 文件</A><DD>
+<DT><A HREF="#lbAH">BUGS</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO 参见</A><DD>
+<DT><A HREF="#lbAJ">TRIVIA 提醒</A><DD>
+<DT><A HREF="#lbAK">AUTHORS 作者</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:19 GMT, January 29, 2015
+</BODY>
+</HTML>

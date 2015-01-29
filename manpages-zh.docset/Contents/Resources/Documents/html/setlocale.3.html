@@ -1,0 +1,268 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of SETLOCALE</TITLE>
+</HEAD><BODY>
+<H1>SETLOCALE</H1>
+Section: Linux Programmer's Manual (3)<BR>Updated: 1999-07-04<BR><A HREF="#index">Index</A>
+<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+setlocale - 设置当前的区域选项
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<H2>总览 (SYNOPSIS)</H2>
+
+<PRE>
+<B>#include &lt;<A HREF="file:///usr/include/locale.h">locale.h</A>&gt;</B>
+
+<B>char *setlocale(int </B><I>category</I><B>, const char * </B><I>locale</I><B>);</B>
+</PRE>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<H2>描述 (DESCRIPTION)</H2>
+
+<B>setlocale()</B>
+
+函数 用来 设置 或者 查询 程序 当前 的 区域选项.
+<P>
+
+如果
+<I>locale</I>
+
+不是
+<B>NULL</B>,
+
+程序 就会 根据 参数 更改 相应的 区域选项.
+<I>category</I>
+
+参数 指定 区域选项 的 哪一部分 需要 更改.
+<DL COMPACT>
+<DT><B>LC_ALL</B>
+
+<DD>
+代表 所有 部分.
+<DT><B>LC_COLLATE</B>
+
+<DD>
+代表 正则 表达式 匹配 (和 范围 表达式[range expressions] 以及 字符类[classes]
+有关系) 和 字符串 排序.
+<DT><B>LC_CTYPE</B>
+
+<DD>
+代表 正则 表达式 匹配, 字符类(character classification), 转换, 区分大小写 的
+比较, 以及 宽字符 函数.
+<DT><B>LC_MESSAGES</B>
+
+<DD>
+代表 可以 本地化的 消息 (自然语言).
+<DT><B>LC_MONETARY</B>
+
+<DD>
+代表 货币 格式.
+<DT><B>LC_NUMERIC</B>
+
+<DD>
+代表 数字 格式 (比如 小数点 和 千位分组符).
+<DT><B>LC_TIME</B>
+
+<DD>
+代表 时间 和 日期 格式.
+</DL>
+<P>
+
+<I>locale</I>
+
+参数 是 一个 指向 字符串的 指针. 此 字符串 为
+<I>category</I>
+
+需要的 设置. 此 字符串 可以是 一个 众所周知 的 区域选项 常量, 如 &quot;C&quot; 或 &quot;da_DK&quot;
+(见下), 也可以是 另外 一个
+<B>setlocale</B>
+
+调用 返回 的 字符串.
+<P>
+
+如果
+<I>locale</I>
+
+是
+<B>&quot;&quot;</B>,
+
+需要 更改 的 部分 会根据 环境变量 做 相应的 设置. 具体的 和 实现 有关. 对于
+glibc 来说, 首先 查看
+
+
+
+
+
+环境变量 LC_ALL (不管
+<I>category</I>),<I>然后</I>查看<I>和</I>category
+
+(LC_COLLATE, LC_CTYPE, LC_MESSAGES, LC_MONETARY, LC_NUMERIC, LC_TIME)
+同名的 环境变量, 最后 查看 环境变量 LANG. 以 先查到 的 环境变量 为准. 如果 其值
+不是 一个 有效 的 区域选项, 区域选项 将 不会改变,
+<B>setlocale</B>
+
+会 返回 NULL.
+
+
+<P>
+
+标准 区域选项
+<B>C</B>
+
+和
+<B>POSIX</B>
+
+是 可移植的; 它的 LC_CTYPE 部分 对应的 是 7 位的 ASCII 字符集.
+<P>
+
+一个 典型的 区域选项 有 如下的 格式:
+<I>language</I>[_<I>territory</I>][.<I>codeset</I>][@<I>modifier</I>],
+
+其中
+<I>language</I>
+
+是 一个 ISO 639 语言 代码,
+<I>territory</I>
+
+是 一个 ISO 3166 国家 代码,
+<I>codeset</I>
+
+是 一个 象
+<B>ISO-8859-1</B>
+
+或者
+<B>UTF-8</B>
+
+的 字符集 或者 编码 标识符. 用 &quot;locale -a&quot;, cf.
+<B><A HREF="/cgi-bin/man/man2html?1+locale">locale</A></B>(1)
+
+可以 获得 一个 系统 支持的 区域选项 的 列表.
+<P>
+
+如果
+<I>locale</I>
+
+是
+<B>NULL</B>,
+
+意味着 只是 查询 当前 的 区域选项 而不 更改它.
+<P>
+
+当 main 程序 开始的 时候 可移植的
+<B>C</B>
+
+区域选项 作为 默认值 被设置. 一个 程序 可以 在 初始化 之后 调用
+<B>setlocale(LC_ALL, )</B>
+
+函数, 并且 从
+<B>localeconv()</B>
+
+调用 的 返回 中 获得 和 区域选项 相关的 信息, 如果
+<B>MB_CUR_MAX &gt; 1</B>
+
+就用 多字节 和 宽字节 函数 来 处理 文本, 用
+<B>strcoll()</B>, <B>wcscoll()</B>
+
+或者
+<B>strxfrm()</B>, <B>wcsxfrm()</B>
+
+来 比较 字符串, 这样 就可以 使 程序 有 较好的 移植性.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<H2>返回值 (RETURN VALUE)</H2>
+
+一个 成功的
+<B>setlocale()</B>
+
+调用 会 返回 一个 表示 当前 区域选项 的 字符串 (指针). 这个 字符串 可能 是在
+静态 存储区 中 分配 的. 之后 用 相应的 category 和 这个 字符串 作为 参数 再去
+调用 这个 函数 会 重新 把 程序 区域选项 的 相应 部分 恢复. 如果 请求 不能 完成
+将会 返回
+<B>NULL .</B>
+
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<H2>遵循 (CONFORMING TO)</H2>
+
+ANSI C, POSIX.1
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<H2>注意 (NOTES)</H2>
+
+Linux (也就是, GNU libc) 支持 可移植的
+<B>&quot;C&quot;</B> 和 <B>&quot;POSIX&quot;</B>
+
+区域选项. 在 以前 它 曾经 支持 欧洲 Latin-1 区域选项
+<B>ISO-8859-1</B>
+
+(比如说 在 libc-4.5.21 和 libc-4.6.27 中), 和 俄罗斯的
+<B>KOI-8</B>
+
+(更 准确点 是, &quot;koi-8r&quot;) 区域选项 (比如 在 libc-4.6.27 中), 所以 设置 一个
+环境变量 LC_CTYPE=ISO-8859-1 就 能够 让 isprint() 返回 正确的 结果. 现在 不讲
+英语 的 欧洲人 会 比以前 更麻烦 一些, 他们 需要 安装 相应 的 区域选项 文件.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H2>参见 (SEE ALSO)</H2>
+
+<B><A HREF="/cgi-bin/man/man2html?1+locale">locale</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?1+localedef">localedef</A></B>(1),
+
+<B><A HREF="/cgi-bin/man/man2html?3+strcoll">strcoll</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+isalpha">isalpha</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+localeconv">localeconv</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?3+strftime">strftime</A></B>(3),
+
+<B><A HREF="/cgi-bin/man/man2html?4+charsets">charsets</A></B>(4),
+
+<B><A HREF="/cgi-bin/man/man2html?7+locale">locale</A></B>(7)
+
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<H2>[中文版维护人]</H2>
+
+<B>唐友 &lt;<A HREF="mailto:tony_ty@263.net">tony_ty@263.net</A>&gt;</B>
+
+<A NAME="lbAJ">&nbsp;</A>
+<H2>[中文版最新更新]</H2>
+
+<B>2001/12/2</B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>[中国Linux论坛man手册页翻译计划]</H2>
+
+<B><A HREF="http://cmpp.linuxforum.net">http://cmpp.linuxforum.net</A></B>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">总览 (SYNOPSIS)</A><DD>
+<DT><A HREF="#lbAD">描述 (DESCRIPTION)</A><DD>
+<DT><A HREF="#lbAE">返回值 (RETURN VALUE)</A><DD>
+<DT><A HREF="#lbAF">遵循 (CONFORMING TO)</A><DD>
+<DT><A HREF="#lbAG">注意 (NOTES)</A><DD>
+<DT><A HREF="#lbAH">参见 (SEE ALSO)</A><DD>
+<DT><A HREF="#lbAI">[中文版维护人]</A><DD>
+<DT><A HREF="#lbAJ">[中文版最新更新]</A><DD>
+<DT><A HREF="#lbAK">[中国Linux论坛man手册页翻译计划]</A><DD>
+</DL>
+<HR>
+This document was created by
+<A HREF="/cgi-bin/man/man2html">man2html</A>,
+using the manual pages.<BR>
+Time: 13:01:21 GMT, January 29, 2015
+</BODY>
+</HTML>

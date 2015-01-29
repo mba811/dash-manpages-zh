@@ -37,10 +37,13 @@ jQuery = PyQuery(content)
 jQuery.find("body").empty()
 
 fileNames = []
-itemTemplate = Template("<a href='html/${name}.html'>${name}</a><br />\n")
+itemTemplate = Template("<a href='html/${fileName}'>${name}</a><br />\n")
 for fileName in os.listdir(os.path.join(docsetPath, "html")):
-    fileNames.append(fileName.split(".")[0])
-    jQuery.find("body").append(itemTemplate.render(name = fileNames[-1]))
+    fileNames.append({
+        "name": fileName.split(".")[0],
+        "fileName": fileName
+    })
+    jQuery.find("body").append(itemTemplate.render(name = fileName.split(".")[0], fileName = fileName))
 fin = codecs.open(os.path.join(docsetPath, "index.html"), "w", "utf-8")
 newContent = jQuery.html()
 fin.write(newContent)
@@ -88,7 +91,7 @@ insertTemplate = Template("INSERT OR IGNORE INTO searchIndex(name, type, path) V
 
 # Step 5: Populate the SQLite Index
 for result in fileNames:
-    sql = insertTemplate.render(name = result, type = "Builtin", path = "html/" + result)
+    sql = insertTemplate.render(name = result["name"], type = "Builtin", path = "html/" + result["fileName"])
     print sql
     cursor.execute(sql)
 db.commit()
@@ -107,7 +110,6 @@ tarFile = tarfile.open(os.path.join(currentPath, "dist", tarFileName), "w:gz")
 for root, dirNames, fileNames in os.walk(output):
     for fileName in fileNames:
         fullPath = os.path.join(root, fileName)
-        print fullPath
         tarFile.add(fullPath)
 tarFile.close()
 

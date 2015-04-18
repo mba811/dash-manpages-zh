@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-@author: garcia.wul
-@contact: garcia.wul@alibaba-inc.com
+@author: Wu Liang
+@contact: 
 @date: 2014/06/23
 """
 
